@@ -4,7 +4,7 @@
 PlayerSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 30
-  productGUID: b3226bda24951ae4abe495abf2ad46ff
+  productGUID: 288bb0913399bc94abde8a281f4b4ec3
   AndroidProfiler: 0
   AndroidFilterTouchesWhenObscured: 0
   AndroidEnableSustainedPerformanceMode: 0
@@ -13,7 +13,7 @@ PlayerSettings:
   useOnDemandResources: 0
   accelerometerFrequency: 60
   companyName: DefaultCompany
-  productName: KHTN6
+  productName: "Gia s\u01B0"
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0.13725491, g: 0.12156863, b: 0.1254902, a: 1}
@@ -612,14 +612,14 @@ PlayerSettings:
   editorAssembliesCompatibilityLevel: 1
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
-  metroPackageName: KHTN6
+  metroPackageName: "Gia s\u01B0"
   metroPackageVersion: 
   metroCertificatePath: 
   metroCertificatePassword: 
   metroCertificateSubject: 
   metroCertificateIssuer: 
   metroCertificateNotAfter: 0000000000000000
-  metroApplicationDescription: KHTN6
+  metroApplicationDescription: "Gia s\u01B0"
   wsaImages: {}
   metroTileShortName: 
   metroTileShowName: 0
@@ -687,14 +687,14 @@ PlayerSettings:
   qnxGraphicConfPath: 
   apiCompatibilityLevel: 6
   captureStartupLogs: {}
-  activeInputHandler: 1
+  activeInputHandler: 2
   windowsGamepadBackendHint: 0
   enableDirectStorage: 0
-  cloudProjectId: 4a6ec45f-29b0-4a16-8a23-7f8637fabe40
+  cloudProjectId: c34a0bba-2ea5-4585-9adf-0abf894a7ffd
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: KHTN6
-  organizationId: minhducypbn
+  projectName: "Gia s\u01B0"
+  organizationId: trangmooncat
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
   hmiLoadingImage: {fileID: 0}
