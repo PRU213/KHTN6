@@ -1,0 +1,886 @@
+fileFormatVersion: 2
+guid: 60347a87bc66f964bbd69d7cede0d59c
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -2258308448195024907
+    second: Quai_0
+  - first:
+      213: -4747311986548220767
+    second: Quai_1
+  - first:
+      213: -6997372472583397404
+    second: Quai_2
+  - first:
+      213: 803915655260662174
+    second: Quai_3
+  - first:
+      213: 940012947127296299
+    second: Quai_4
+  - first:
+      213: -5879266777497002109
+    second: Quai_5
+  - first:
+      213: -5153618887742650820
+    second: Quai_6
+  - first:
+      213: -3840149643705612464
+    second: Quai_7
+  - first:
+      213: -736667842094546223
+    second: Quai_8
+  - first:
+      213: -3374788376660706866
+    second: Quai_9
+  - first:
+      213: -2079986360226592230
+    second: Quai_10
+  - first:
+      213: 8565173564638972162
+    second: Quai_11
+  - first:
+      213: -677831872911092832
+    second: Quai_12
+  - first:
+      213: -8004383597390892573
+    second: Quai_13
+  - first:
+      213: -549208406275954194
+    second: Quai_14
+  - first:
+      213: -320124899711701271
+    second: Quai_15
+  - first:
+      213: 1575495803548452271
+    second: Quai_16
+  - first:
+      213: 2761406530344574100
+    second: Quai_17
+  - first:
+      213: -6772918962768613089
+    second: Quai_18
+  - first:
+      213: 3674851711541800325
+    second: Quai_19
+  - first:
+      213: -7564656314651045554
+    second: Quai_20
+  - first:
+      213: 3514135673986824040
+    second: Quai_21
+  - first:
+      213: -3406891532534020121
+    second: Quai_22
+  - first:
+      213: 4502651656814058718
+    second: Quai_23
+  - first:
+      213: -4347158798167577636
+    second: Quai_24
+  - first:
+      213: -8983956012262543203
+    second: Quai_25
+  - first:
+      213: -680777851382910974
+    second: Quai_26
+  - first:
+      213: -1974382397442560222
+    second: Quai_27
+  - first:
+      213: -54470684730388140
+    second: Quai_28
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationMethod: 0
+  spriteTessellationDetail: -1
+  spriteGeometrySubdivision: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Quai_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 21
+        width: 1254
+        height: 1211
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5f762107e60e8a0e0800000000000000
+      internalID: -2258308448195024907
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Quai_1
+      rect:
+        serializedVersion: 2
+        x: 948
+        y: 1133
+        width: 14
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1acd6db86e82e1eb0800000000000000
+      internalID: -4747311986548220767
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Quai_2
+      rect:
+        serializedVersion: 2
+        x: 280
+        y: 1078
+        width: 8
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4efd1925fc654ee90800000000000000
+      internalID: -6997372472583397404
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Quai_3
+      rect:
+        serializedVersion: 2
+        x: 303
+        y: 1088
+        width: 50
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e99ef257705182b00800000000000000
+      internalID: 803915655260662174
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Quai_4
+      rect:
+        serializedVersion: 2
+        x: 1052
+        y: 1084
+        width: 8
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b216ac58bc89b0d00800000000000000
+      internalID: 940012947127296299
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Quai_5
+      rect:
+        serializedVersion: 2
+        x: 135
+        y: 154
+        width: 9
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 38f198bf306a86ea0800000000000000
+      internalID: -5879266777497002109
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Quai_6
+      rect:
+        serializedVersion: 2
+        x: 199
+        y: 160
+        width: 9
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c360b583deaaa78b0800000000000000
+      internalID: -5153618887742650820
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Quai_7
+      rect:
+        serializedVersion: 2
+        x: 225
+        y: 160
+        width: 17
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 057859abe3c05bac0800000000000000
+      internalID: -3840149643705612464
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Quai_8
+      rect:
+        serializedVersion: 2
+        x: 659
+        y: 160
+        width: 11
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1d2408a2084d6c5f0800000000000000
+      internalID: -736667842094546223
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Quai_9
+      rect:
+        serializedVersion: 2
+        x: 667
+        y: 162
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ec975011ad75a21d0800000000000000
+      internalID: -3374788376660706866
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Quai_10
+      rect:
+        serializedVersion: 2
+        x: 675
+        y: 166
+        width: 15
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a1a4905fc676223e0800000000000000
+      internalID: -2079986360226592230
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Quai_11
+      rect:
+        serializedVersion: 2
+        x: 129
+        y: 154
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2094fdf0afb9dd670800000000000000
+      internalID: 8565173564638972162
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Quai_12
+      rect:
+        serializedVersion: 2
+        x: 595
+        y: 152
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0a352bdb08bd796f0800000000000000
+      internalID: -677831872911092832
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Quai_13
+      rect:
+        serializedVersion: 2
+        x: 601
+        y: 149
+        width: 17
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3e17d87f687bae090800000000000000
+      internalID: -8004383597390892573
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Quai_14
+      rect:
+        serializedVersion: 2
+        x: 619
+        y: 138
+        width: 25
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ee963444dd1d068f0800000000000000
+      internalID: -549208406275954194
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Quai_15
+      rect:
+        serializedVersion: 2
+        x: 737
+        y: 126
+        width: 37
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9ee2dec8910be8bf0800000000000000
+      internalID: -320124899711701271
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Quai_16
+      rect:
+        serializedVersion: 2
+        x: 884
+        y: 138
+        width: 29
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fa5cf9306194dd510800000000000000
+      internalID: 1575495803548452271
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Quai_17
+      rect:
+        serializedVersion: 2
+        x: 954
+        y: 140
+        width: 10
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 49cd1a9db9c725620800000000000000
+      internalID: 2761406530344574100
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Quai_18
+      rect:
+        serializedVersion: 2
+        x: 311
+        y: 101
+        width: 28
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f117bab7612c102a0800000000000000
+      internalID: -6772918962768613089
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Quai_19
+      rect:
+        serializedVersion: 2
+        x: 906
+        y: 113
+        width: 22
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 58d6fa45922bff230800000000000000
+      internalID: 3674851711541800325
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Quai_20
+      rect:
+        serializedVersion: 2
+        x: 1031
+        y: 105
+        width: 13
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e411f4d3921f40790800000000000000
+      internalID: -7564656314651045554
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Quai_21
+      rect:
+        serializedVersion: 2
+        x: 1053
+        y: 119
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 867338cd6c7b4c030800000000000000
+      internalID: 3514135673986824040
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Quai_22
+      rect:
+        serializedVersion: 2
+        x: 963
+        y: 102
+        width: 9
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7e7060f933a48b0d0800000000000000
+      internalID: -3406891532534020121
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Quai_23
+      rect:
+        serializedVersion: 2
+        x: 978
+        y: 103
+        width: 6
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: edcd9b763d1ac7e30800000000000000
+      internalID: 4502651656814058718
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Quai_24
+      rect:
+        serializedVersion: 2
+        x: 1021
+        y: 97
+        width: 11
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cdbe105fa1acba3c0800000000000000
+      internalID: -4347158798167577636
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Quai_25
+      rect:
+        serializedVersion: 2
+        x: 618
+        y: 67
+        width: 18
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d903b5b1b93925380800000000000000
+      internalID: -8983956012262543203
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Quai_26
+      rect:
+        serializedVersion: 2
+        x: 305
+        y: 55
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2003e5da6246d86f0800000000000000
+      internalID: -680777851382910974
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Quai_27
+      rect:
+        serializedVersion: 2
+        x: 307
+        y: 47
+        width: 16
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 22fe6a59ba59994e0800000000000000
+      internalID: -1974382397442560222
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Quai_28
+      rect:
+        serializedVersion: 2
+        x: 354
+        y: 15
+        width: 11
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 45119f9633b7e3ff0800000000000000
+      internalID: -54470684730388140
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Quai_0: -2258308448195024907
+      Quai_1: -4747311986548220767
+      Quai_10: -2079986360226592230
+      Quai_11: 8565173564638972162
+      Quai_12: -677831872911092832
+      Quai_13: -8004383597390892573
+      Quai_14: -549208406275954194
+      Quai_15: -320124899711701271
+      Quai_16: 1575495803548452271
+      Quai_17: 2761406530344574100
+      Quai_18: -6772918962768613089
+      Quai_19: 3674851711541800325
+      Quai_2: -6997372472583397404
+      Quai_20: -7564656314651045554
+      Quai_21: 3514135673986824040
+      Quai_22: -3406891532534020121
+      Quai_23: 4502651656814058718
+      Quai_24: -4347158798167577636
+      Quai_25: -8983956012262543203
+      Quai_26: -680777851382910974
+      Quai_27: -1974382397442560222
+      Quai_28: -54470684730388140
+      Quai_3: 803915655260662174
+      Quai_4: 940012947127296299
+      Quai_5: -5879266777497002109
+      Quai_6: -5153618887742650820
+      Quai_7: -3840149643705612464
+      Quai_8: -736667842094546223
+      Quai_9: -3374788376660706866
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
