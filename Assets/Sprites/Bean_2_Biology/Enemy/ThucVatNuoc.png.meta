@@ -1,0 +1,1380 @@
+fileFormatVersion: 2
+guid: 5f11fbb707ecc654f8147ffe0c4393b3
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 4940602337635018014
+    second: ThucVatNuoc_0
+  - first:
+      213: 5109795011123590482
+    second: ThucVatNuoc_1
+  - first:
+      213: 7916396639609702248
+    second: ThucVatNuoc_2
+  - first:
+      213: -1000292552864061163
+    second: ThucVatNuoc_3
+  - first:
+      213: 4927037652119331853
+    second: ThucVatNuoc_4
+  - first:
+      213: 6593737536110032893
+    second: ThucVatNuoc_5
+  - first:
+      213: -5113967574464835631
+    second: ThucVatNuoc_6
+  - first:
+      213: 541457891067897495
+    second: ThucVatNuoc_7
+  - first:
+      213: 5528548053446130916
+    second: ThucVatNuoc_8
+  - first:
+      213: -3688350492776236027
+    second: ThucVatNuoc_9
+  - first:
+      213: -3534787203147895757
+    second: ThucVatNuoc_10
+  - first:
+      213: -8890255588644243719
+    second: ThucVatNuoc_11
+  - first:
+      213: 3028118239949071397
+    second: ThucVatNuoc_12
+  - first:
+      213: 4013396171660207459
+    second: ThucVatNuoc_13
+  - first:
+      213: -6241127685709188206
+    second: ThucVatNuoc_14
+  - first:
+      213: 3418494485512316163
+    second: ThucVatNuoc_15
+  - first:
+      213: -6025266086521033005
+    second: ThucVatNuoc_16
+  - first:
+      213: -8534074984640096559
+    second: ThucVatNuoc_17
+  - first:
+      213: 8057873930115351617
+    second: ThucVatNuoc_18
+  - first:
+      213: 5612799836580714896
+    second: ThucVatNuoc_19
+  - first:
+      213: 227818747759709376
+    second: ThucVatNuoc_20
+  - first:
+      213: 3888276103644171024
+    second: ThucVatNuoc_21
+  - first:
+      213: 6679525127787852780
+    second: ThucVatNuoc_22
+  - first:
+      213: 8465947203128638273
+    second: ThucVatNuoc_23
+  - first:
+      213: 1836965297538344061
+    second: ThucVatNuoc_24
+  - first:
+      213: 3665767911106443729
+    second: ThucVatNuoc_25
+  - first:
+      213: -7099508167845205261
+    second: ThucVatNuoc_26
+  - first:
+      213: 8138268151926279778
+    second: ThucVatNuoc_27
+  - first:
+      213: 3379478956050888195
+    second: ThucVatNuoc_28
+  - first:
+      213: -3814957904721998537
+    second: ThucVatNuoc_29
+  - first:
+      213: -5210946037573266931
+    second: ThucVatNuoc_30
+  - first:
+      213: 7586723459194159582
+    second: ThucVatNuoc_31
+  - first:
+      213: 4720260665028927778
+    second: ThucVatNuoc_32
+  - first:
+      213: -5726905409865154933
+    second: ThucVatNuoc_33
+  - first:
+      213: 6732309761843022089
+    second: ThucVatNuoc_34
+  - first:
+      213: 678050770427677860
+    second: ThucVatNuoc_35
+  - first:
+      213: -9034153687797952548
+    second: ThucVatNuoc_36
+  - first:
+      213: 4957177740022826256
+    second: ThucVatNuoc_37
+  - first:
+      213: -8836446707658724829
+    second: ThucVatNuoc_38
+  - first:
+      213: 4235262798183369814
+    second: ThucVatNuoc_39
+  - first:
+      213: 6926755849959117664
+    second: ThucVatNuoc_40
+  - first:
+      213: 1404282122490665490
+    second: ThucVatNuoc_41
+  - first:
+      213: 637252883550138363
+    second: ThucVatNuoc_42
+  - first:
+      213: 7271117441941061339
+    second: ThucVatNuoc_43
+  - first:
+      213: -2243124227807568220
+    second: ThucVatNuoc_44
+  - first:
+      213: -5283143479124444287
+    second: ThucVatNuoc_45
+  - first:
+      213: 2723063418795891770
+    second: ThucVatNuoc_46
+  - first:
+      213: -1376148086494468449
+    second: ThucVatNuoc_47
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationMethod: 0
+  spriteTessellationDetail: -1
+  spriteGeometrySubdivision: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: ThucVatNuoc_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 891
+        width: 139
+        height: 132
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e15233f46ab809440800000000000000
+      internalID: 4940602337635018014
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ThucVatNuoc_1
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 885
+        width: 173
+        height: 123
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 255b5116d73a9e640800000000000000
+      internalID: 5109795011123590482
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ThucVatNuoc_2
+      rect:
+        serializedVersion: 2
+        x: 352
+        y: 615
+        width: 431
+        height: 393
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 86748050dc0bcdd60800000000000000
+      internalID: 7916396639609702248
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ThucVatNuoc_3
+      rect:
+        serializedVersion: 2
+        x: 358
+        y: 965
+        width: 25
+        height: 37
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 519a113193f3e12f0800000000000000
+      internalID: -1000292552864061163
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ThucVatNuoc_4
+      rect:
+        serializedVersion: 2
+        x: 728
+        y: 981
+        width: 67
+        height: 36
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d042c89d3aa506440800000000000000
+      internalID: 4927037652119331853
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ThucVatNuoc_5
+      rect:
+        serializedVersion: 2
+        x: 776
+        y: 608
+        width: 371
+        height: 402
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: df77ffd9a59a18b50800000000000000
+      internalID: 6593737536110032893
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ThucVatNuoc_6
+      rect:
+        serializedVersion: 2
+        x: 978
+        y: 973
+        width: 47
+        height: 39
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1df482306998709b0800000000000000
+      internalID: -5113967574464835631
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ThucVatNuoc_7
+      rect:
+        serializedVersion: 2
+        x: 1030
+        y: 999
+        width: 35
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7962fe94515a38700800000000000000
+      internalID: 541457891067897495
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ThucVatNuoc_8
+      rect:
+        serializedVersion: 2
+        x: 1144
+        y: 561
+        width: 379
+        height: 441
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4ec7551c92959bc40800000000000000
+      internalID: 5528548053446130916
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ThucVatNuoc_9
+      rect:
+        serializedVersion: 2
+        x: 362
+        y: 945
+        width: 21
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 50c7feeb4c850dcc0800000000000000
+      internalID: -3688350492776236027
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ThucVatNuoc_10
+      rect:
+        serializedVersion: 2
+        x: 414
+        y: 963
+        width: 19
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 33ce5cf44c9e1fec0800000000000000
+      internalID: -3534787203147895757
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ThucVatNuoc_11
+      rect:
+        serializedVersion: 2
+        x: 760
+        y: 955
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9f6bd6c05a77f9480800000000000000
+      internalID: -8890255588644243719
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ThucVatNuoc_12
+      rect:
+        serializedVersion: 2
+        x: 1096
+        y: 957
+        width: 29
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 524ab0ede79060a20800000000000000
+      internalID: 3028118239949071397
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ThucVatNuoc_13
+      rect:
+        serializedVersion: 2
+        x: 1141
+        y: 945
+        width: 14
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 36528b2ed8272b730800000000000000
+      internalID: 4013396171660207459
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ThucVatNuoc_14
+      rect:
+        serializedVersion: 2
+        x: 766
+        y: 953
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 293b27fcf6f0369a0800000000000000
+      internalID: -6241127685709188206
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ThucVatNuoc_15
+      rect:
+        serializedVersion: 2
+        x: 324
+        y: 937
+        width: 11
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 305e7936f9ee07f20800000000000000
+      internalID: 3418494485512316163
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ThucVatNuoc_16
+      rect:
+        serializedVersion: 2
+        x: 328
+        y: 929
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3dea4b3ea64f16ca0800000000000000
+      internalID: -6025266086521033005
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ThucVatNuoc_17
+      rect:
+        serializedVersion: 2
+        x: 334
+        y: 897
+        width: 17
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1d6daf55400e09980800000000000000
+      internalID: -8534074984640096559
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ThucVatNuoc_18
+      rect:
+        serializedVersion: 2
+        x: 782
+        y: 891
+        width: 15
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1440861a5a153df60800000000000000
+      internalID: 8057873930115351617
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ThucVatNuoc_19
+      rect:
+        serializedVersion: 2
+        x: 1128
+        y: 910
+        width: 15
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 09993c6a6bba4ed40800000000000000
+      internalID: 5612799836580714896
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ThucVatNuoc_20
+      rect:
+        serializedVersion: 2
+        x: 1146
+        y: 909
+        width: 13
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0cc446da1ff592300800000000000000
+      internalID: 227818747759709376
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ThucVatNuoc_21
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 677
+        width: 33
+        height: 40
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 01bc95ae38ee5f530800000000000000
+      internalID: 3888276103644171024
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ThucVatNuoc_22
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 656
+        width: 331
+        height: 232
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ce3371ec6b072bc50800000000000000
+      internalID: 6679525127787852780
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ThucVatNuoc_23
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 703
+        width: 11
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 14bb1b170261d7570800000000000000
+      internalID: 8465947203128638273
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ThucVatNuoc_24
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 664
+        width: 15
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d742e7894363e7910800000000000000
+      internalID: 1836965297538344061
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ThucVatNuoc_25
+      rect:
+        serializedVersion: 2
+        x: 62
+        y: 669
+        width: 9
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1d9768a3e7c6fd230800000000000000
+      internalID: 3665767911106443729
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ThucVatNuoc_26
+      rect:
+        serializedVersion: 2
+        x: 688
+        y: 687
+        width: 7
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3fa2a97afea797d90800000000000000
+      internalID: -7099508167845205261
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ThucVatNuoc_27
+      rect:
+        serializedVersion: 2
+        x: 696
+        y: 639
+        width: 7
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 26ec07a04cfe0f070800000000000000
+      internalID: 8138268151926279778
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ThucVatNuoc_28
+      rect:
+        serializedVersion: 2
+        x: 708
+        y: 677
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 306325d843256ee20800000000000000
+      internalID: 3379478956050888195
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ThucVatNuoc_29
+      rect:
+        serializedVersion: 2
+        x: 712
+        y: 673
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 73d0af78ffb8e0bc0800000000000000
+      internalID: -3814957904721998537
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ThucVatNuoc_30
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 333
+        width: 375
+        height: 305
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d0257b600300fa7b0800000000000000
+      internalID: -5210946037573266931
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ThucVatNuoc_31
+      rect:
+        serializedVersion: 2
+        x: 382
+        y: 579
+        width: 13
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ed1046a3ac4794960800000000000000
+      internalID: 7586723459194159582
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ThucVatNuoc_32
+      rect:
+        serializedVersion: 2
+        x: 394
+        y: 343
+        width: 381
+        height: 267
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2216c4ad01cb18140800000000000000
+      internalID: 4720260665028927778
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ThucVatNuoc_33
+      rect:
+        serializedVersion: 2
+        x: 774
+        y: 339
+        width: 381
+        height: 281
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b8e79b64fd1f580b0800000000000000
+      internalID: -5726905409865154933
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ThucVatNuoc_34
+      rect:
+        serializedVersion: 2
+        x: 1151
+        y: 601
+        width: 12
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9094c802f08fd6d50800000000000000
+      internalID: 6732309761843022089
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ThucVatNuoc_35
+      rect:
+        serializedVersion: 2
+        x: 1470
+        y: 581
+        width: 7
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4ac850f459be86900800000000000000
+      internalID: 678050770427677860
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ThucVatNuoc_36
+      rect:
+        serializedVersion: 2
+        x: 1126
+        y: 543
+        width: 9
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cdf8480061d30a280800000000000000
+      internalID: -9034153687797952548
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ThucVatNuoc_37
+      rect:
+        serializedVersion: 2
+        x: 1132
+        y: 545
+        width: 19
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 015c88ae3ee6bc440800000000000000
+      internalID: 4957177740022826256
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ThucVatNuoc_38
+      rect:
+        serializedVersion: 2
+        x: 1168
+        y: 367
+        width: 351
+        height: 211
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 32ae4517982ae5580800000000000000
+      internalID: -8836446707658724829
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ThucVatNuoc_39
+      rect:
+        serializedVersion: 2
+        x: 1160
+        y: 421
+        width: 15
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 65c8528531da6ca30800000000000000
+      internalID: 4235262798183369814
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ThucVatNuoc_40
+      rect:
+        serializedVersion: 2
+        x: 392
+        y: 326
+        width: 15
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0631caafeb7c02060800000000000000
+      internalID: 6926755849959117664
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ThucVatNuoc_41
+      rect:
+        serializedVersion: 2
+        x: 406
+        y: 325
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 21adc7376230d7310800000000000000
+      internalID: 1404282122490665490
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ThucVatNuoc_42
+      rect:
+        serializedVersion: 2
+        x: 408
+        y: 0
+        width: 363
+        height: 337
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bff691c0f1af7d800800000000000000
+      internalID: 637252883550138363
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ThucVatNuoc_43
+      rect:
+        serializedVersion: 2
+        x: 772
+        y: 0
+        width: 357
+        height: 340
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bde3b071ac238e460800000000000000
+      internalID: 7271117441941061339
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ThucVatNuoc_44
+      rect:
+        serializedVersion: 2
+        x: 1122
+        y: 0
+        width: 399
+        height: 358
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4ae157e3662ded0e0800000000000000
+      internalID: -2243124227807568220
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ThucVatNuoc_45
+      rect:
+        serializedVersion: 2
+        x: 22
+        y: 31
+        width: 385
+        height: 291
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 18bbd5d3ff08ea6b0800000000000000
+      internalID: -5283143479124444287
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ThucVatNuoc_46
+      rect:
+        serializedVersion: 2
+        x: 632
+        y: 21
+        width: 11
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a3c903280c34ac520800000000000000
+      internalID: 2723063418795891770
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ThucVatNuoc_47
+      rect:
+        serializedVersion: 2
+        x: 1086
+        y: 49
+        width: 17
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f96e9224b90f6ece0800000000000000
+      internalID: -1376148086494468449
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      ThucVatNuoc_0: 4940602337635018014
+      ThucVatNuoc_1: 5109795011123590482
+      ThucVatNuoc_10: -3534787203147895757
+      ThucVatNuoc_11: -8890255588644243719
+      ThucVatNuoc_12: 3028118239949071397
+      ThucVatNuoc_13: 4013396171660207459
+      ThucVatNuoc_14: -6241127685709188206
+      ThucVatNuoc_15: 3418494485512316163
+      ThucVatNuoc_16: -6025266086521033005
+      ThucVatNuoc_17: -8534074984640096559
+      ThucVatNuoc_18: 8057873930115351617
+      ThucVatNuoc_19: 5612799836580714896
+      ThucVatNuoc_2: 7916396639609702248
+      ThucVatNuoc_20: 227818747759709376
+      ThucVatNuoc_21: 3888276103644171024
+      ThucVatNuoc_22: 6679525127787852780
+      ThucVatNuoc_23: 8465947203128638273
+      ThucVatNuoc_24: 1836965297538344061
+      ThucVatNuoc_25: 3665767911106443729
+      ThucVatNuoc_26: -7099508167845205261
+      ThucVatNuoc_27: 8138268151926279778
+      ThucVatNuoc_28: 3379478956050888195
+      ThucVatNuoc_29: -3814957904721998537
+      ThucVatNuoc_3: -1000292552864061163
+      ThucVatNuoc_30: -5210946037573266931
+      ThucVatNuoc_31: 7586723459194159582
+      ThucVatNuoc_32: 4720260665028927778
+      ThucVatNuoc_33: -5726905409865154933
+      ThucVatNuoc_34: 6732309761843022089
+      ThucVatNuoc_35: 678050770427677860
+      ThucVatNuoc_36: -9034153687797952548
+      ThucVatNuoc_37: 4957177740022826256
+      ThucVatNuoc_38: -8836446707658724829
+      ThucVatNuoc_39: 4235262798183369814
+      ThucVatNuoc_4: 4927037652119331853
+      ThucVatNuoc_40: 6926755849959117664
+      ThucVatNuoc_41: 1404282122490665490
+      ThucVatNuoc_42: 637252883550138363
+      ThucVatNuoc_43: 7271117441941061339
+      ThucVatNuoc_44: -2243124227807568220
+      ThucVatNuoc_45: -5283143479124444287
+      ThucVatNuoc_46: 2723063418795891770
+      ThucVatNuoc_47: -1376148086494468449
+      ThucVatNuoc_5: 6593737536110032893
+      ThucVatNuoc_6: -5113967574464835631
+      ThucVatNuoc_7: 541457891067897495
+      ThucVatNuoc_8: 5528548053446130916
+      ThucVatNuoc_9: -3688350492776236027
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
