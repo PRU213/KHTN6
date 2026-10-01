@@ -22,6 +22,11 @@ public class PhysicMapController : MonoBehaviour
     public TMP_Text theoryText;       // object 'theory'  <- cột F (keyPoints)
     public TMP_Text explainText;      // chữ trong object 'explain' <- cột G (formulaNote)
 
+    [Header("Vào chơi")]
+    public Button playButton;                 // nút 'play_game' trong theory_physical
+    public GameSelectScreen gameSelectScreen; // màn chọn game
+    public string subjectName = "Vật lý";     // phải khớp cột monID trong sheet
+
     [Header("Link Apps Script (/exec)")]
     public string baseUrl = "DÁN_LINK_EXEC_VÀO_ĐÂY";
 
@@ -35,6 +40,7 @@ public class PhysicMapController : MonoBehaviour
             chapterButtons[i].onClick.AddListener(() => OpenChapter(chapter));
         }
         theoryBackButton.onClick.AddListener(BackToMap);
+        if (playButton) playButton.onClick.AddListener(OpenGameSelect);
 
         mapPanel.SetActive(true);
         theoryPanel.SetActive(false);
@@ -57,6 +63,12 @@ public class PhysicMapController : MonoBehaviour
         theoryText.text = "";
         if (explainText) explainText.text = "";
         StartCoroutine(LoadChapter(id));
+    }
+
+    void OpenGameSelect()
+    {
+        GameSession.Subject = subjectName;   // game sẽ chỉ lấy câu hỏi của môn này
+        if (gameSelectScreen) gameSelectScreen.Open(theoryPanel);
     }
 
     void BackToMap()
