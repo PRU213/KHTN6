@@ -344,73 +344,60 @@ public class NvMover : MonoBehaviour
                 continue;
 
             s.GetWorldCorners(tmpC);
-
             Rect sRect = GetSafeRect(tmpC);
 
-            float sLeft = sRect.xMin;
-            float sRight = sRect.xMax;
+            float sLeft   = sRect.xMin;
+            float sRight  = sRect.xMax;
             float sBottom = sRect.yMin;
+            float sTop    = sRect.yMax;  // Dùng đỉnh Rect thực tế để block cạnh
 
-            // Mặt trên thực tế mà Player đứng được
-            float walkY = GetWalkY(s, sRect);
-
-            // Vật thể được coi là "solid"
-            // từ đáy Rect tới walkY.
-            float solidTop = walkY;
-
-            // Player phải đang nằm ngang phần thân vật thể.
-            //
-            // Nếu chân Player đang đúng trên walkY,
-            // playerBottom < solidTop sẽ FALSE,
-            // nên Player vẫn chạy bình thường trên mặt.
+            // Player phải đang overlap theo chiều dọc với khối địa hình
+            // (thân Player nằm trong vùng chiều cao của platform)
+            // Nếu chân đang đứng đúng trên walkY (≈ sTop - offset),
+            // playerBottom ≈ walkY < sTop → vẫn block, nhưng điều kiện
+            // playerRight <= sLeft hoặc playerLeft >= sRight sẽ loại trừ
+            // những surface không liên quan theo chiều ngang.
             bool verticalOverlap =
-                playerTop > sBottom &&
-                playerBottom < solidTop;
+                playerTop    > sBottom &&
+                playerBottom < sTop;
 
             if (!verticalOverlap)
+                continue;
+
+            // Nếu Player đang đứng trên mặt surface này (chân == walkY),
+            // KHÔNG block cạnh trái/phải để player có thể chạy bình thường.
+            float walkY = GetWalkY(s, sRect);
+            bool standingOnTop = Mathf.Abs(playerBottom - walkY) < 5f;
+            if (standingOnTop)
                 continue;
 
             // ─────────────────────────────
             // PLAYER ĐI SANG PHẢI
             // ─────────────────────────────
-
             if (desiredDx > 0f)
             {
-                float futureRight =
-                    playerRight + resolvedDx;
-
-                // Player hiện đang ở bên trái surface
-                // nhưng frame tiếp theo định xuyên qua cạnh trái.
-                if (playerRight <= sLeft &&
-                    futureRight > sLeft)
+                // Player đang ở bên trái surface, tiến về phía cạnh trái surface
+                if (playerRight <= sLeft + 2f &&
+                    playerRight + resolvedDx > sLeft)
                 {
-                    float allowedDx =
-                        sLeft - playerRight;
-
+                    float allowedDx = sLeft - playerRight;
                     if (allowedDx < resolvedDx)
-                        resolvedDx = allowedDx;
+                        resolvedDx = Mathf.Max(0f, allowedDx);
                 }
             }
 
             // ─────────────────────────────
             // PLAYER ĐI SANG TRÁI
             // ─────────────────────────────
-
             else if (desiredDx < 0f)
             {
-                float futureLeft =
-                    playerLeft + resolvedDx;
-
-                // Player hiện đang ở bên phải surface
-                // nhưng frame tiếp theo định xuyên qua cạnh phải.
-                if (playerLeft >= sRight &&
-                    futureLeft < sRight)
+                // Player đang ở bên phải surface, tiến về phía cạnh phải surface
+                if (playerLeft >= sRight - 2f &&
+                    playerLeft + resolvedDx < sRight)
                 {
-                    float allowedDx =
-                        sRight - playerLeft;
-
+                    float allowedDx = sRight - playerLeft;
                     if (allowedDx > resolvedDx)
-                        resolvedDx = allowedDx;
+                        resolvedDx = Mathf.Min(0f, allowedDx);
                 }
             }
         }
