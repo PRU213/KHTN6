@@ -260,6 +260,7 @@ public class QuestionManager : MonoBehaviour
             GameData.Instance.currentHealth = GameData.Instance.maxHealth;
             GameData.Instance.defeatedEnemies.Clear();
             GameData.Instance.currentEnemyName = "";
+            GameData.Instance.hasSavedPosition = false;
         }
         SceneManager.LoadScene("bean_1");
     }

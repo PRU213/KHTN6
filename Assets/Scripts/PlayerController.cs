@@ -13,308 +13,989 @@ public class PlayerController : MonoBehaviour
     public float climbSpeed = 300f;
 
     [Header("=== TINH CHỈNH VA CHẠM ===")]
-    [Tooltip("Số DƯƠNG: Kéo hộp va chạm lên. Số ÂM: Kéo hộp xuống.")]
+
+    [Tooltip(
+        "Khoảng cách từ đáy RectTransform của Player lên vị trí BÀN CHÂN thật.\n" +
+        "Nếu Player còn bay trên nền: TĂNG giá trị này.\n" +
+        "Nếu Player bị lún vào nền: GIẢM giá trị này."
+    )]
     public float feetOffset = 45f;
-    [Tooltip("Thu hẹp hộp va chạm 2 bên.")]
+
+    [Tooltip("Thu hẹp vùng va chạm ngang của Player.")]
     public float sideShrink = 15f;
 
-    // --- Components ---
+    [Tooltip(
+        "Dung sai khi kiểm tra Player vừa đi xuyên qua mặt Platform.\n" +
+        "Thông thường để 15-25."
+    )]
+    public float landingTolerance = 20f;
+
+    [Tooltip(
+        "Độ sâu tối đa cho phép sửa khi Player đang hơi lún vào Platform."
+    )]
+    public float maxGroundSnap = 100f;
+
+
+    // =========================
+    // COMPONENTS
+    // =========================
+
     private RectTransform rectTransform;
     private Animator animator;
 
-    // --- State ---
+
+    // =========================
+    // STATE
+    // =========================
+
     private Vector2 velocity;
+
     private bool isGrounded;
     private bool isOnLadder;
     private bool isClimbing;
+
     private float moveInput;
     private float climbInput;
 
     private Vector2 startPos;
-    private LadderZone currentLadder; // Thang đang bám
-    private float dropCooldown = 0f;  // Thời gian tạm xuyên nền để chui xuống thang
 
-    // --- Animator Parameter Hashes ---
-    private static readonly int AnimSpeed = Animator.StringToHash("Speed");
-    private static readonly int AnimIsJumping = Animator.StringToHash("IsJumping");
-    private static readonly int AnimIsClimbing = Animator.StringToHash("IsClimbing");
-    private static readonly int AnimIsGrounded = Animator.StringToHash("IsGrounded");
+    private LadderZone currentLadder;
+
+    // Thời gian tạm bỏ va chạm nền khi leo xuống
+    private float dropCooldown = 0f;
+
+    // Moving Platform Player đang đứng trên
+    private MovingPlatform currentMovingPlatform;
+
+    // Cloud Player đang đứng trên
+    private CloudMove currentCloud;
+
+
+    // =========================
+    // ANIMATOR HASH
+    // =========================
+
+    private static readonly int AnimSpeed =
+        Animator.StringToHash("Speed");
+
+    private static readonly int AnimIsJumping =
+        Animator.StringToHash("IsJumping");
+
+    private static readonly int AnimIsClimbing =
+        Animator.StringToHash("IsClimbing");
+
+    private static readonly int AnimIsGrounded =
+        Animator.StringToHash("IsGrounded");
+
+
+    // =========================
+    // UNITY
+    // =========================
 
     void Awake()
     {
-        if (moveSpeed == 280f || moveSpeed == 400f) moveSpeed = 300f;
-        if (jumpForce == 620f || jumpForce == 800f) jumpForce = 600f;
-        // override removed
-
         rectTransform = GetComponent<RectTransform>();
         animator = GetComponent<Animator>();
+
         startPos = rectTransform.anchoredPosition;
     }
 
+
     void Start()
     {
+        if (GameData.Instance != null && GameData.Instance.hasSavedPosition)
+        {
+            rectTransform.anchoredPosition = GameData.Instance.lastPlayerPosition;
+            GameData.Instance.hasSavedPosition = false;
+        }
+
         if (Platform.AllPlatforms.Count == 0)
-            Debug.LogWarning("⚠️ Không tìm thấy Platform nào! Chạy Tools > Tự động Setup Scene bean_1");
+        {
+            Debug.LogWarning(
+                "⚠️ Không tìm thấy Platform nào trong Scene!"
+            );
+        }
     }
+
 
     void Update()
     {
-        if (dropCooldown > 0f) dropCooldown -= Time.deltaTime;
+        // =========================
+        // DROP COOLDOWN
+        // =========================
 
-        // Hồi sinh nếu rớt vực
-        if (rectTransform.anchoredPosition.y < -2000f)
+        if (dropCooldown > 0f)
         {
-            rectTransform.anchoredPosition = startPos;
-            velocity = Vector2.zero;
-            isClimbing = false;
-            currentLadder = null;
+            dropCooldown -= Time.deltaTime;
         }
+
+
+        // =========================
+        // RƠI KHỎI MAP -> RESPAWN
+        // =========================
+        
+        float deathY = -2000f;
+        CameraFollow camFollow = Object.FindFirstObjectByType<CameraFollow>();
+        if (camFollow != null)
+        {
+            // Điểm chết là dưới mép dưới của camera ảo 200px
+            deathY = camFollow.GetVirtualBottomY() - 200f;
+        }
+
+        // Chết khi rớt xuống dưới điểm chết (tính theo anchoredPosition vì nó không đổi khi WorldContainer kéo xuống)
+        if (rectTransform.anchoredPosition.y < deathY || rectTransform.anchoredPosition.y < -2000f)
+        {
+            Respawn();
+            return;
+        }
+
+
+        // =========================
+        // INPUT
+        // =========================
 
         moveInput = Input.GetAxisRaw("Horizontal");
         climbInput = Input.GetAxisRaw("Vertical");
 
-        LadderZone activeLadder = GetActiveLadder();
-        isOnLadder = (activeLadder != null);
 
-        // === BẮT ĐẦU LEO THANG ===
+        // =========================
+        // KIỂM TRA THANG
+        // =========================
+
+        LadderZone activeLadder = GetActiveLadder();
+
+        isOnLadder = activeLadder != null;
+
+
+        // =========================
+        // BẮT ĐẦU LEO
+        // =========================
+
         if (isOnLadder && Mathf.Abs(climbInput) > 0.01f)
         {
             if (!isClimbing)
             {
-                // Hút nhân vật vào giữa thang
-                Vector3 myPos = rectTransform.position;
-                myPos.x = activeLadder.RectTransform.position.x;
-                rectTransform.position = myPos;
+                // Hút Player vào giữa thang
+                Vector3 playerWorldPos = rectTransform.position;
 
-                // Muốn leo XUỐNG từ trên nền đá -> tạm xuyên nền 0.25s
+                playerWorldPos.x =
+                    activeLadder.RectTransform.position.x;
+
+                rectTransform.position = playerWorldPos;
+
+
+                // Leo xuống từ trên Platform
                 if (climbInput < -0.01f && isGrounded)
+                {
                     dropCooldown = 0.25f;
+                }
             }
+
             isClimbing = true;
             currentLadder = activeLadder;
         }
 
-        // Rời thang nếu ra khỏi vùng
+
+        // =========================
+        // RỜI THANG
+        // =========================
+
         if (!isOnLadder)
         {
             isClimbing = false;
             currentLadder = null;
         }
 
-        // Thoát thang nếu bấm ngang mà không bấm lên/xuống
-        if (isClimbing && Mathf.Abs(moveInput) > 0.01f && Mathf.Abs(climbInput) < 0.01f)
+
+        // Bấm ngang -> rời thang
+        if (
+            isClimbing &&
+            Mathf.Abs(moveInput) > 0.01f &&
+            Mathf.Abs(climbInput) < 0.01f
+        )
         {
             isClimbing = false;
             currentLadder = null;
         }
 
-        // === TÍNH VẬN TỐC ===
+
+        // =========================
+        // VELOCITY
+        // =========================
+
         if (isClimbing)
         {
-            velocity.x = 0;
+            velocity.x = 0f;
             velocity.y = climbInput * climbSpeed;
         }
         else
         {
             velocity.x = moveInput * moveSpeed;
+
             velocity.y += gravity * Time.deltaTime;
-            velocity.y = Mathf.Max(velocity.y, -maxFallSpeed);
+
+            velocity.y = Mathf.Max(
+                velocity.y,
+                -maxFallSpeed
+            );
         }
 
-        // Nhảy
-        if (Input.GetButtonDown("Jump") && (isGrounded || isClimbing))
+
+        // =========================
+        // JUMP
+        // =========================
+
+        if (
+            Input.GetButtonDown("Jump") &&
+            (isGrounded || isClimbing)
+        )
         {
             isClimbing = false;
             currentLadder = null;
+
             velocity.y = jumpForce;
+
             isGrounded = false;
         }
 
-        // === DI CHUYỂN ===
+
+        // =====================================================
+        // LƯU VỊ TRÍ CHÂN TRƯỚC KHI DI CHUYỂN
+        // =====================================================
+
+        // Đây là điểm rất quan trọng.
+        // Ta dùng vị trí chân frame trước để xác định
+        // Player có vừa đi xuyên qua mặt Platform hay không.
+        float previousFeetWorldY = GetFeetWorldY();
+
+
+        // =========================
+        // DI CHUYỂN
+        // =========================
+
         Vector2 pos = rectTransform.anchoredPosition;
+
         pos.x += velocity.x * Time.deltaTime;
         pos.y += velocity.y * Time.deltaTime;
+
         rectTransform.anchoredPosition = pos;
 
-        // === GIỚI HẠN TRONG PHẠM VI THANG (FIX LỖI RỚT MAP) ===
+
+        // Reset trạng thái mặt đất cho frame mới.
+        // ResolveCollisions / ClampToLadder sẽ bật lại.
+        isGrounded = false;
+        currentMovingPlatform = null;
+        currentCloud = null;
+
+
+        // =========================
+        // GIỚI HẠN THANG
+        // =========================
+
         if (isClimbing && currentLadder != null)
         {
             ClampToLadder();
         }
 
-        // === VA CHẠM ===
-        isGrounded = false;
-        ResolveCollisions();
+
+        // =========================
+        // VA CHẠM PLATFORM
+        // =========================
+
+        ResolveCollisions(previousFeetWorldY);
+
+
+        // =========================
+        // MOVING PLATFORM
+        // =========================
+
+        if (
+            currentMovingPlatform != null &&
+            isGrounded
+        )
+        {
+            Vector2 ridePos =
+                rectTransform.anchoredPosition;
+
+            ridePos +=
+                currentMovingPlatform.FrameDelta;
+
+            rectTransform.anchoredPosition =
+                ridePos;
+        }
+
+
+        // =========================
+        // CLOUD RIDE (trôi theo mây)
+        // =========================
+
+        if (
+            currentCloud != null &&
+            isGrounded &&
+            currentMovingPlatform == null
+        )
+        {
+            Vector2 ridePos =
+                rectTransform.anchoredPosition;
+
+            ridePos += currentCloud.FrameDelta;
+
+            rectTransform.anchoredPosition =
+                ridePos;
+        }
+
+
+        // =========================
+        // VISUAL
+        // =========================
 
         FlipSprite();
         UpdateAnimator();
     }
 
-    /// <summary>
-    /// KHÓA CỨNG nhân vật trong phạm vi cái thang.
-    /// Không thể tụt thấp hơn chân thang, không thể leo cao hơn đỉnh thang.
-    /// Khi chạm đáy thang → tự động thoát leo, để trọng lực đáp xuống nền bên dưới.
-    /// </summary>
+
+    // =========================================================
+    // RESPAWN
+    // =========================================================
+
+    private void Respawn()
+    {
+        rectTransform.anchoredPosition = startPos;
+
+        velocity = Vector2.zero;
+
+        isClimbing = false;
+        isGrounded = false;
+
+        currentLadder = null;
+        currentMovingPlatform = null;
+
+        CameraFollow camFollow = Object.FindFirstObjectByType<CameraFollow>();
+        if (camFollow != null)
+        {
+            camFollow.ResetCamera();
+        }
+    }
+
+
+    // =========================================================
+    // LADDER CLAMP
+    // =========================================================
+
     private void ClampToLadder()
     {
-        float canvasScale = rectTransform.lossyScale.y;
-        if (canvasScale == 0) canvasScale = 1f;
+        if (currentLadder == null)
+            return;
 
-        Rect ladderRect = GetWorldRect(currentLadder.RectTransform);
 
-        // Lấy vị trí chân nhân vật (world space)
-        Rect playerRect = GetWorldRect(rectTransform);
-        float playerFeetWorld = playerRect.yMin + (feetOffset * canvasScale);
+        Rect ladderRect =
+            GetWorldRect(currentLadder.RectTransform);
 
-        // CHÂN THANG: Nếu chân nhân vật chạm hoặc thấp hơn đáy thang → DỪNG
+        float playerScaleY =
+            GetPlayerScaleY();
+
+        float playerFeetWorld =
+            GetFeetWorldY();
+
+
+        // =====================================================
+        // CHÂN THANG
+        // =====================================================
+
         if (playerFeetWorld <= ladderRect.yMin)
         {
-            // Đẩy nhân vật lên sao cho chân đúng bằng đáy thang
-            float diff = ladderRect.yMin - playerFeetWorld;
-            Vector2 newPos = rectTransform.anchoredPosition;
-            newPos.y += diff / canvasScale;
-            rectTransform.anchoredPosition = newPos;
+            float difference =
+                ladderRect.yMin - playerFeetWorld;
+
+            MovePlayerWorldY(difference);
 
             velocity.y = 0f;
+
             isClimbing = false;
             currentLadder = null;
+
+            return;
         }
 
-        // ĐỈNH THANG: Nếu chân nhân vật cao hơn đỉnh thang → DỪNG
-        float ladderTopExtended = ladderRect.yMax + (80f * canvasScale);
-        if (playerFeetWorld >= ladderTopExtended)
+
+        // =====================================================
+        // ĐỈNH THANG
+        // =====================================================
+
+        float searchDistance =
+            80f * playerScaleY;
+
+        float maxClimbY =
+            ladderRect.yMax + searchDistance;
+
+
+        bool foundPlatform = false;
+
+        float nearestPlatformDistance =
+            float.MaxValue;
+
+
+        foreach (Platform platform in Platform.AllPlatforms)
         {
-            float diff = playerFeetWorld - ladderTopExtended;
-            Vector2 newPos = rectTransform.anchoredPosition;
-            newPos.y -= diff / canvasScale;
-            rectTransform.anchoredPosition = newPos;
-
-            velocity.y = 0f;
-            isClimbing = false;
-            currentLadder = null;
-        }
-    }
-
-    private void ResolveCollisions()
-    {
-        // Bay lên hoặc leo lên → xuyên nền
-        if (velocity.y > 0) return;
-        // Đang leo thang và chủ động di chuyển → bỏ qua va chạm
-        if (isClimbing && Mathf.Abs(climbInput) > 0.01f) return;
-        // Đang chui qua nền đá để vào thang
-        if (dropCooldown > 0f) return;
-
-        float canvasScale = rectTransform.lossyScale.y;
-        if (canvasScale == 0) canvasScale = 1f;
-
-        Rect playerRect = GetWorldRect(rectTransform);
-        playerRect.yMin += feetOffset * canvasScale;
-        playerRect.xMin += sideShrink * canvasScale;
-        playerRect.xMax -= sideShrink * canvasScale;
-
-        float velocityWorldY = velocity.y * canvasScale;
-        float prevYMin = playerRect.yMin - (velocityWorldY * Time.deltaTime);
-        float playerCenterY = (playerRect.yMin + playerRect.yMax) * 0.5f;
-
-        foreach (var platform in Platform.AllPlatforms)
-        {
-            if (platform == null) continue;
-
-            Rect platRect = GetWorldRect(platform.RectTransform);
-            float platformTop = platRect.yMax - (platform.surfaceOffset * canvasScale);
-
-            if (playerRect.xMax <= platRect.xMin || playerRect.xMin >= platRect.xMax)
+            if (platform == null)
                 continue;
 
-            bool fellFromAbove = prevYMin >= platformTop - 15f;
-            bool isCenterAbove = playerCenterY >= platformTop;
+            if (platform.RectTransform == null)
+                continue;
 
-            if (playerRect.yMin <= platformTop && (fellFromAbove || isCenterAbove))
+
+            Rect platformRect =
+                GetWorldRect(platform.RectTransform);
+
+
+            // Thang phải nằm ngang trong Platform
+            bool horizontalOverlap =
+                ladderRect.xMax > platformRect.xMin &&
+                ladderRect.xMin < platformRect.xMax;
+
+            if (!horizontalOverlap)
+                continue;
+
+
+            // QUAN TRỌNG:
+            // Không tự tính yMax - surfaceOffset nữa.
+            // Platform tự trả mặt đất thật.
+            float platformSurfaceY =
+                platform.GetSurfaceWorldY();
+
+
+            float lowerLimit =
+                ladderRect.yMax -
+                (50f * playerScaleY);
+
+            float upperLimit =
+                ladderRect.yMax +
+                searchDistance +
+                (50f * playerScaleY);
+
+
+            if (
+                platformSurfaceY >= lowerLimit &&
+                platformSurfaceY <= upperLimit
+            )
             {
-                float overlapWorld = platformTop - playerRect.yMin;
+                float distance =
+                    Mathf.Abs(
+                        platformSurfaceY -
+                        ladderRect.yMax
+                    );
 
-                Vector2 newPos = rectTransform.anchoredPosition;
-                newPos.y += overlapWorld / canvasScale;
-                rectTransform.anchoredPosition = newPos;
 
-                velocity.y = 0f;
-                isGrounded = true;
-
-                // Chạm đất thì thoát leo
-                if (isClimbing)
+                // Chọn Platform gần đầu thang nhất
+                if (
+                    !foundPlatform ||
+                    distance < nearestPlatformDistance
+                )
                 {
-                    isClimbing = false;
-                    currentLadder = null;
-                }
+                    nearestPlatformDistance = distance;
 
-                playerRect = GetWorldRect(rectTransform);
-                playerRect.yMin += feetOffset * canvasScale;
-                playerRect.xMin += sideShrink * canvasScale;
-                playerRect.xMax -= sideShrink * canvasScale;
-                prevYMin = playerRect.yMin;
-                playerCenterY = (playerRect.yMin + playerRect.yMax) * 0.5f;
+                    maxClimbY =
+                        platformSurfaceY;
+
+                    foundPlatform = true;
+                }
             }
         }
+
+
+        // =====================================================
+        // PLAYER ĐẠT ĐẾN ĐỈNH THANG
+        // =====================================================
+
+        playerFeetWorld =
+            GetFeetWorldY();
+
+
+        if (playerFeetWorld >= maxClimbY)
+        {
+            float difference =
+                playerFeetWorld -
+                maxClimbY;
+
+            // Hạ Player xuống để chân đúng mặt Platform
+            MovePlayerWorldY(-difference);
+
+            velocity.y = 0f;
+
+            isClimbing = false;
+            currentLadder = null;
+
+            isGrounded = true;
+        }
     }
+
+
+    // =========================================================
+    // PLATFORM COLLISION
+    // =========================================================
+
+    private void ResolveCollisions(
+        float previousFeetWorldY
+    )
+    {
+        // Player đang bay lên -> xuyên qua Platform
+        if (velocity.y > 0f)
+            return;
+
+
+        // Đang chủ động leo -> không chặn bởi Platform
+        if (
+            isClimbing &&
+            Mathf.Abs(climbInput) > 0.01f
+        )
+        {
+            return;
+        }
+
+
+        // Đang leo xuống xuyên qua nền
+        if (dropCooldown > 0f)
+            return;
+
+
+        float playerScaleY =
+            GetPlayerScaleY();
+
+
+        Rect playerRect =
+            GetWorldRect(rectTransform);
+
+
+        // Thu nhỏ vùng ngang
+        float shrink =
+            sideShrink * playerScaleY;
+
+        playerRect.xMin += shrink;
+        playerRect.xMax -= shrink;
+
+
+        // Điểm chân hiện tại
+        float currentFeetWorldY =
+            playerRect.yMin +
+            feetOffset * playerScaleY;
+
+
+        float playerCenterY =
+            (playerRect.yMin +
+             playerRect.yMax) * 0.5f;
+
+
+        float tolerance =
+            landingTolerance * playerScaleY;
+
+
+        float maxSnap =
+            maxGroundSnap * playerScaleY;
+
+
+        // =====================================================
+        // TÌM PLATFORM PHÙ HỢP NHẤT
+        // =====================================================
+
+        Platform bestPlatform = null;
+
+        float bestSurfaceY =
+            float.NegativeInfinity;
+
+
+        foreach (Platform platform in Platform.AllPlatforms)
+        {
+            if (platform == null)
+                continue;
+
+            if (platform.RectTransform == null)
+                continue;
+
+
+            Rect platformRect =
+                GetWorldRect(
+                    platform.RectTransform
+                );
+
+
+            // =============================================
+            // CHECK NGANG
+            // =============================================
+
+            bool horizontalOverlap =
+                playerRect.xMax > platformRect.xMin &&
+                playerRect.xMin < platformRect.xMax;
+
+
+            if (!horizontalOverlap)
+                continue;
+
+
+            // =============================================
+            // MẶT PLATFORM THẬT
+            // =============================================
+
+            float surfaceY =
+                platform.GetSurfaceWorldY();
+
+
+            // =============================================
+            // PLAYER VỪA ĐI QUA MẶT PLATFORM
+            // =============================================
+
+            bool crossedSurface =
+                previousFeetWorldY >=
+                surfaceY - tolerance
+                &&
+                currentFeetWorldY <=
+                surfaceY + tolerance;
+
+
+            // =============================================
+            // FIX TRƯỜNG HỢP PLAYER HƠI LÚN
+            // =============================================
+
+            float penetration =
+                surfaceY -
+                currentFeetWorldY;
+
+
+            bool shallowPenetration =
+                currentFeetWorldY <= surfaceY
+                &&
+                penetration >= 0f
+                &&
+                penetration <= maxSnap
+                &&
+                playerCenterY >= surfaceY;
+
+
+            if (
+                !crossedSurface &&
+                !shallowPenetration
+            )
+            {
+                continue;
+            }
+
+
+            // Nếu nhiều Platform chồng nhau,
+            // chọn mặt cao nhất.
+            if (
+                bestPlatform == null ||
+                surfaceY > bestSurfaceY
+            )
+            {
+                bestPlatform = platform;
+                bestSurfaceY = surfaceY;
+            }
+        }
+
+
+        // =====================================================
+        // KHÔNG CÓ PLATFORM
+        // =====================================================
+
+        if (bestPlatform == null)
+            return;
+
+
+        // =====================================================
+        // SNAP CHÂN PLAYER VÀO MẶT PLATFORM
+        // =====================================================
+
+        float worldDifference =
+            bestSurfaceY -
+            currentFeetWorldY;
+
+
+        MovePlayerWorldY(
+            worldDifference
+        );
+
+
+        velocity.y = 0f;
+        isGrounded = true;
+
+
+        // Đáp đất -> thoát leo
+        if (isClimbing)
+        {
+            isClimbing = false;
+            currentLadder = null;
+        }
+
+
+        // =====================================================
+        // MOVING PLATFORM
+        // =====================================================
+
+        MovingPlatform movingPlatform =
+            bestPlatform.GetComponent<MovingPlatform>();
+
+
+        if (movingPlatform != null)
+        {
+            currentMovingPlatform =
+                movingPlatform;
+        }
+
+
+        // =====================================================
+        // CLOUD (trôi theo mây)
+        // =====================================================
+
+        CloudMove cloud =
+            bestPlatform.GetComponent<CloudMove>();
+
+        if (cloud != null)
+        {
+            currentCloud = cloud;
+        }
+    }
+
+
+    // =========================================================
+    // GET ACTIVE LADDER
+    // =========================================================
 
     private LadderZone GetActiveLadder()
     {
-        float canvasScale = rectTransform.lossyScale.y;
-        if (canvasScale == 0) canvasScale = 1f;
+        float playerScaleY =
+            GetPlayerScaleY();
 
-        Rect playerRect = GetWorldRect(rectTransform);
-        float shrinkX = playerRect.width * 0.35f;
+
+        Rect playerRect =
+            GetWorldRect(rectTransform);
+
+
+        // Chỉ lấy vùng giữa Player
+        float shrinkX =
+            playerRect.width * 0.35f;
+
+
         playerRect.xMin += shrinkX;
         playerRect.xMax -= shrinkX;
 
-        foreach (var ladder in LadderZone.AllLadders)
-        {
-            if (ladder == null) continue;
-            Rect ladderRect = GetWorldRect(ladder.RectTransform);
-            ladderRect.yMax += 80f * canvasScale;
 
-            if (playerRect.xMax > ladderRect.xMin && playerRect.xMin < ladderRect.xMax &&
-                playerRect.yMax > ladderRect.yMin && playerRect.yMin < ladderRect.yMax)
+        foreach (
+            LadderZone ladder
+            in LadderZone.AllLadders
+        )
+        {
+            if (ladder == null)
+                continue;
+
+
+            Rect ladderRect =
+                GetWorldRect(
+                    ladder.RectTransform
+                );
+
+
+            // Cho phép bắt thang cao hơn một chút
+            ladderRect.yMax +=
+                80f * playerScaleY;
+
+
+            bool overlap =
+                playerRect.xMax > ladderRect.xMin &&
+                playerRect.xMin < ladderRect.xMax &&
+                playerRect.yMax > ladderRect.yMin &&
+                playerRect.yMin < ladderRect.yMax;
+
+
+            if (overlap)
             {
                 return ladder;
             }
         }
+
+
         return null;
     }
 
-    private Rect GetWorldRect(RectTransform rt)
+
+    // =========================================================
+    // VỊ TRÍ CHÂN PLAYER
+    // =========================================================
+
+    private float GetFeetWorldY()
     {
-        Vector3[] corners = new Vector3[4];
-        rt.GetWorldCorners(corners);
-        float xMin = Mathf.Min(corners[0].x, corners[1].x, corners[2].x, corners[3].x);
-        float xMax = Mathf.Max(corners[0].x, corners[1].x, corners[2].x, corners[3].x);
-        float yMin = Mathf.Min(corners[0].y, corners[1].y, corners[2].y, corners[3].y);
-        float yMax = Mathf.Max(corners[0].y, corners[1].y, corners[2].y, corners[3].y);
-        return new Rect(xMin, yMin, xMax - xMin, yMax - yMin);
+        Rect playerRect =
+            GetWorldRect(rectTransform);
+
+        float playerScaleY =
+            GetPlayerScaleY();
+
+        return
+            playerRect.yMin +
+            feetOffset * playerScaleY;
     }
+
+
+    // =========================================================
+    // PLAYER SCALE
+    // =========================================================
+
+    private float GetPlayerScaleY()
+    {
+        float scaleY =
+            Mathf.Abs(
+                rectTransform.lossyScale.y
+            );
+
+        if (scaleY < 0.0001f)
+            scaleY = 1f;
+
+        return scaleY;
+    }
+
+
+    // =========================================================
+    // DỊCH PLAYER THEO WORLD Y
+    // =========================================================
+
+    private void MovePlayerWorldY(
+        float worldDeltaY
+    )
+    {
+        Vector3 worldPos =
+            rectTransform.position;
+
+        worldPos.y += worldDeltaY;
+
+        rectTransform.position =
+            worldPos;
+    }
+
+
+    // =========================================================
+    // WORLD RECT
+    // =========================================================
+
+    private Rect GetWorldRect(
+        RectTransform rt
+    )
+    {
+        Vector3[] corners =
+            new Vector3[4];
+
+        rt.GetWorldCorners(corners);
+
+
+        float xMin = Mathf.Min(
+            corners[0].x,
+            corners[1].x,
+            corners[2].x,
+            corners[3].x
+        );
+
+
+        float xMax = Mathf.Max(
+            corners[0].x,
+            corners[1].x,
+            corners[2].x,
+            corners[3].x
+        );
+
+
+        float yMin = Mathf.Min(
+            corners[0].y,
+            corners[1].y,
+            corners[2].y,
+            corners[3].y
+        );
+
+
+        float yMax = Mathf.Max(
+            corners[0].y,
+            corners[1].y,
+            corners[2].y,
+            corners[3].y
+        );
+
+
+        return new Rect(
+            xMin,
+            yMin,
+            xMax - xMin,
+            yMax - yMin
+        );
+    }
+
+
+    // =========================================================
+    // FLIP
+    // =========================================================
 
     private void FlipSprite()
     {
-        Vector3 scale = rectTransform.localScale;
+        Vector3 scale =
+            rectTransform.localScale;
+
+
         if (!isClimbing)
         {
-            if (moveInput > 0.01f) scale.x = Mathf.Abs(scale.x);
-            else if (moveInput < -0.01f) scale.x = -Mathf.Abs(scale.x);
-            rectTransform.localScale = scale;
+            if (moveInput > 0.01f)
+            {
+                scale.x =
+                    Mathf.Abs(scale.x);
+            }
+            else if (moveInput < -0.01f)
+            {
+                scale.x =
+                    -Mathf.Abs(scale.x);
+            }
+
+
+            rectTransform.localScale =
+                scale;
         }
     }
 
+
+    // =========================================================
+    // ANIMATOR
+    // =========================================================
+
     private void UpdateAnimator()
     {
-        if (animator == null) return;
-        animator.SetFloat(AnimSpeed, Mathf.Abs(moveInput));
-        animator.SetBool(AnimIsGrounded, isGrounded);
-        animator.SetBool(AnimIsJumping, !isGrounded && !isClimbing);
-        animator.SetBool(AnimIsClimbing, isClimbing);
+        if (animator == null)
+            return;
+
+
+        animator.SetFloat(
+            AnimSpeed,
+            Mathf.Abs(moveInput)
+        );
+
+
+        animator.SetBool(
+            AnimIsGrounded,
+            isGrounded
+        );
+
+
+        animator.SetBool(
+            AnimIsJumping,
+            !isGrounded &&
+            !isClimbing
+        );
+
+
+        animator.SetBool(
+            AnimIsClimbing,
+            isClimbing
+        );
+
 
         if (isClimbing)
         {
-            animator.speed = (Mathf.Abs(climbInput) < 0.01f) ? 0f : 1f;
+            animator.speed =
+                Mathf.Abs(climbInput) < 0.01f
+                ? 0f
+                : 1f;
         }
         else
         {

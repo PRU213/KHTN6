@@ -1,50 +1,93 @@
 using UnityEngine;
 
-/// <summary>
-/// Camera theo dõi nhân vật với hiệu ứng smooth.
-/// Gắn script này vào Main Camera.
-/// </summary>
 public class CameraFollow : MonoBehaviour
 {
-    [Header("=== MỤC TIÊU ===")]
-    [Tooltip("Kéo thả Player vào đây")]
     public Transform target;
+    public float yOffset = 0f;
+    private RectTransform worldContainer;
+    private Canvas canvas;
 
-    [Header("=== THIẾT LẬP ===")]
-    [Tooltip("Độ mượt khi camera di chuyển (càng nhỏ càng mượt)")]
-    public float smoothSpeed = 5f;
+    private static CameraFollow instance;
 
-    [Tooltip("Offset so với nhân vật (x, y, z)")]
-    public Vector3 offset = new Vector3(0f, 1f, -10f);
+    void Awake()
+    {
+        instance = this;
+        canvas = Object.FindAnyObjectByType<Canvas>();
+        if (canvas != null && canvas.renderMode == RenderMode.ScreenSpaceOverlay)
+        {
+            // Lấy danh sách tất cả các child hiện tại của Canvas
+            Transform[] children = new Transform[canvas.transform.childCount];
+            for (int i = 0; i < canvas.transform.childCount; i++)
+            {
+                children[i] = canvas.transform.GetChild(i);
+            }
 
-    [Header("=== GIỚI HẠN MAP ===")]
-    [Tooltip("Bật giới hạn camera theo map")]
-    public bool useBounds = false;
-    public float minX = -10f;
-    public float maxX = 10f;
-    public float minY = -5f;
-    public float maxY = 5f;
+            // Tạo WorldContainer
+            GameObject go = new GameObject("WorldContainer");
+            worldContainer = go.AddComponent<RectTransform>();
+            worldContainer.SetParent(canvas.transform, false);
+            
+            // Ép WorldContainer phủ kín Canvas
+            worldContainer.anchorMin = Vector2.zero;
+            worldContainer.anchorMax = Vector2.one;
+            worldContainer.offsetMin = Vector2.zero;
+            worldContainer.offsetMax = Vector2.zero;
+
+            // Đưa toàn bộ object hiện tại vào trong Container
+            foreach (Transform child in children)
+            {
+                if (child != worldContainer)
+                {
+                    child.SetParent(worldContainer, true);
+                }
+            }
+        }
+    }
+
+    void Start()
+    {
+        if (target == null)
+        {
+            GameObject p = GameObject.Find("Player");
+            if (p != null) target = p.transform;
+        }
+    }
 
     void LateUpdate()
     {
-        if (target == null) return;
+        if (target == null || worldContainer == null) return;
 
-        Vector3 desiredPosition = target.position + offset;
-
-        // Giới hạn camera nếu bật
-        if (useBounds)
+        RectTransform pRt = target.GetComponent<RectTransform>();
+        if (pRt != null)
         {
-            desiredPosition.x = Mathf.Clamp(desiredPosition.x, minX, maxX);
-            desiredPosition.y = Mathf.Clamp(desiredPosition.y, minY, maxY);
+            float targetY = -pRt.anchoredPosition.y + yOffset;
+            
+            // Không cho cuộn camera xuống dưới âm (không nhìn thấy dưới đất)
+            if (targetY > 0) targetY = 0;
+
+            Vector2 pos = worldContainer.anchoredPosition;
+            pos.y = targetY;
+            worldContainer.anchoredPosition = pos;
         }
+    }
 
-        // Smooth lerp
-        Vector3 smoothedPosition = Vector3.Lerp(
-            transform.position,
-            desiredPosition,
-            smoothSpeed * Time.deltaTime
-        );
+    public void ResetCamera()
+    {
+        if (instance != null && this.worldContainer != null)
+        {
+            Vector2 pos = this.worldContainer.anchoredPosition;
+            pos.y = 0;
+            this.worldContainer.anchoredPosition = pos;
+        }
+    }
 
-        transform.position = smoothedPosition;
+    public float GetVirtualBottomY()
+    {
+        if (instance != null && this.worldContainer != null)
+        {
+            // Trả về toạ độ Y tương đối ở sát mép dưới màn hình (để check rơi)
+            return -this.worldContainer.anchoredPosition.y - 1200f;
+        }
+        return -2000f;
     }
 }

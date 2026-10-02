@@ -19,6 +19,10 @@ public class GameData : MonoBehaviour
     /// <summary>Danh sách tên các con quái đã bị tiêu diệt (trả lời đúng)</summary>
     [HideInInspector] public List<string> defeatedEnemies = new List<string>();
 
+    /// <summary>Vị trí nhân vật trước khi chuyển cảnh</summary>
+    [HideInInspector] public Vector2 lastPlayerPosition;
+    [HideInInspector] public bool hasSavedPosition = false;
+
     void Awake()
     {
         if (Instance != null && Instance != this)

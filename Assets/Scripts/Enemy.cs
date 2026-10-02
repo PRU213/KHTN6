@@ -53,6 +53,18 @@ public class Enemy : MonoBehaviour
         // Ghi nhớ tên quái đang giao chiến
         GameData.Instance.currentEnemyName = gameObject.name;
 
+        // Lưu vị trí nhân vật
+        GameObject player = GameObject.Find("Player");
+        if (player != null)
+        {
+            RectTransform playerRT = player.GetComponent<RectTransform>();
+            if (playerRT != null)
+            {
+                GameData.Instance.lastPlayerPosition = playerRT.anchoredPosition;
+                GameData.Instance.hasSavedPosition = true;
+            }
+        }
+
         // Chuyển sang scene câu hỏi
         SceneManager.LoadScene("bean_1_question");
     }
