@@ -1,13 +1,13 @@
 fileFormatVersion: 2
-guid: 5ebf177713dd86d448b923bb3e62595d
+guid: d87289e2f1f6a2743b5928e40fed7fd4
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 904936592497093752
-    second: "\u1EA2nh ChatGPT 10_07_25 29 thg 9, 2026_0"
+      213: 812477129974368030
+    second: HienMK_0
   - first:
-      213: -3595166257482770208
-    second: "\u1EA2nh ChatGPT 10_07_25 29 thg 9, 2026_1"
+      213: -6206749473290296230
+    second: HienMK_1
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -40,7 +40,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 0
+    filterMode: 1
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -80,7 +80,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 0
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -118,13 +118,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: "\u1EA2nh ChatGPT 10_07_25 29 thg 9, 2026_0"
+      name: HienMK_0
       rect:
         serializedVersion: 2
-        x: 107
-        y: 79
-        width: 1919
-        height: 511
+        x: 4
+        y: 3
+        width: 904
+        height: 750
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -133,20 +133,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 87caa0c490bfe8c00800000000000000
-      internalID: 904936592497093752
+      spriteID: e17404025af764b00800000000000000
+      internalID: 812477129974368030
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: "\u1EA2nh ChatGPT 10_07_25 29 thg 9, 2026_1"
+      name: HienMK_1
       rect:
         serializedVersion: 2
-        x: 146
-        y: 352
-        width: 8
-        height: 36
+        x: 898
+        y: 260
+        width: 13
+        height: 19
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -155,8 +155,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 0e8d44a36576b1ec0800000000000000
-      internalID: -3595166257482770208
+      spriteID: a5460b22d323dd9a0800000000000000
+      internalID: -6206749473290296230
       vertices: []
       indices: 
       edges: []
@@ -175,8 +175,8 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      "\u1EA2nh ChatGPT 10_07_25 29 thg 9, 2026_0": 904936592497093752
-      "\u1EA2nh ChatGPT 10_07_25 29 thg 9, 2026_1": -3595166257482770208
+      HienMK_0: 812477129974368030
+      HienMK_1: -6206749473290296230
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

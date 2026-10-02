@@ -9,6 +9,8 @@ EditorBuildSettings:
     path: Assets/Scenes/SampleScene.unity
     guid: 8c9cfa26abfee488c85f1582747f6a02
   - enabled: 1
+    path: Assets/Scenes/HomePage.unity
+    guid: 45788866c305da040971b248e2245198
     path: Assets/Scenes/Biology/bean_1.unity
     guid: 1286f448446d429419e0e492180e8aed
   - enabled: 1
