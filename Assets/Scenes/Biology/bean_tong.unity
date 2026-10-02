@@ -132,6 +132,7 @@ GameObject:
   - component: {fileID: 93519761}
   - component: {fileID: 93519763}
   - component: {fileID: 93519764}
+  - component: {fileID: 93519765}
   m_Layer: 5
   m_Name: cloud_2
   m_TagString: Untagged
@@ -221,6 +222,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 30897a7c82b6b2c4b8252a25c063fd0f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Platform
+  surfaceOffset: 20
+--- !u!114 &93519765
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 93519759}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f948b063b2de00d4b8519984c9cc7f74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Platform
   surfaceOffset: 20
@@ -388,6 +402,7 @@ GameObject:
   - component: {fileID: 105574532}
   - component: {fileID: 105574531}
   - component: {fileID: 105574533}
+  - component: {fileID: 105574534}
   m_Layer: 5
   m_Name: Platform_18
   m_TagString: Untagged
@@ -465,6 +480,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Platform
   surfaceOffset: 35
+--- !u!114 &105574534
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 105574529}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f948b063b2de00d4b8519984c9cc7f74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Platform
+  surfaceOffset: 35
 --- !u!1 &120853084
 GameObject:
   m_ObjectHideFlags: 0
@@ -477,6 +505,7 @@ GameObject:
   - component: {fileID: 120853087}
   - component: {fileID: 120853086}
   - component: {fileID: 120853088}
+  - component: {fileID: 120853089}
   m_Layer: 5
   m_Name: Platform_1
   m_TagString: Untagged
@@ -554,6 +583,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Platform
   surfaceOffset: 35
+--- !u!114 &120853089
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 120853084}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f948b063b2de00d4b8519984c9cc7f74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Platform
+  surfaceOffset: 35
 --- !u!1 &207172628
 GameObject:
   m_ObjectHideFlags: 0
@@ -566,6 +608,7 @@ GameObject:
   - component: {fileID: 207172631}
   - component: {fileID: 207172630}
   - component: {fileID: 207172632}
+  - component: {fileID: 207172633}
   m_Layer: 5
   m_Name: Platform_18
   m_TagString: Untagged
@@ -643,6 +686,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Platform
   surfaceOffset: 35
+--- !u!114 &207172633
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 207172628}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f948b063b2de00d4b8519984c9cc7f74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Platform
+  surfaceOffset: 35
 --- !u!1 &294819246
 GameObject:
   m_ObjectHideFlags: 0
@@ -655,6 +711,7 @@ GameObject:
   - component: {fileID: 294819249}
   - component: {fileID: 294819248}
   - component: {fileID: 294819250}
+  - component: {fileID: 294819251}
   m_Layer: 5
   m_Name: Platform_12
   m_TagString: Untagged
@@ -729,6 +786,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 30897a7c82b6b2c4b8252a25c063fd0f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Platform
+  surfaceOffset: 35
+--- !u!114 &294819251
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 294819246}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f948b063b2de00d4b8519984c9cc7f74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Platform
   surfaceOffset: 35
@@ -921,6 +991,7 @@ GameObject:
   - component: {fileID: 622511347}
   - component: {fileID: 622511346}
   - component: {fileID: 622511348}
+  - component: {fileID: 622511349}
   m_Layer: 5
   m_Name: Platform_0
   m_TagString: Untagged
@@ -998,6 +1069,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Platform
   surfaceOffset: 35
+--- !u!114 &622511349
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 622511344}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f948b063b2de00d4b8519984c9cc7f74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Platform
+  surfaceOffset: 35
 --- !u!1 &692650689
 GameObject:
   m_ObjectHideFlags: 0
@@ -1010,6 +1094,7 @@ GameObject:
   - component: {fileID: 692650692}
   - component: {fileID: 692650691}
   - component: {fileID: 692650693}
+  - component: {fileID: 692650694}
   m_Layer: 5
   m_Name: Platform_11
   m_TagString: Untagged
@@ -1087,6 +1172,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Platform
   surfaceOffset: 35
+--- !u!114 &692650694
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 692650689}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f948b063b2de00d4b8519984c9cc7f74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Platform
+  surfaceOffset: 35
 --- !u!1 &746920988
 GameObject:
   m_ObjectHideFlags: 0
@@ -1099,6 +1197,7 @@ GameObject:
   - component: {fileID: 746920991}
   - component: {fileID: 746920990}
   - component: {fileID: 746920992}
+  - component: {fileID: 746920993}
   m_Layer: 5
   m_Name: Platform_6
   m_TagString: Untagged
@@ -1173,6 +1272,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 30897a7c82b6b2c4b8252a25c063fd0f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Platform
+  surfaceOffset: 35
+--- !u!114 &746920993
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 746920988}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f948b063b2de00d4b8519984c9cc7f74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Platform
   surfaceOffset: 35
@@ -1366,6 +1478,7 @@ GameObject:
   - component: {fileID: 1069842165}
   - component: {fileID: 1069842167}
   - component: {fileID: 1069842168}
+  - component: {fileID: 1069842169}
   m_Layer: 5
   m_Name: cloud
   m_TagString: Untagged
@@ -1458,6 +1571,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Platform
   surfaceOffset: 20
+--- !u!114 &1069842169
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1069842163}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f948b063b2de00d4b8519984c9cc7f74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Platform
+  surfaceOffset: 20
 --- !u!1 &1088967010
 GameObject:
   m_ObjectHideFlags: 0
@@ -1470,6 +1596,7 @@ GameObject:
   - component: {fileID: 1088967013}
   - component: {fileID: 1088967012}
   - component: {fileID: 1088967014}
+  - component: {fileID: 1088967015}
   m_Layer: 5
   m_Name: Platform_2
   m_TagString: Untagged
@@ -1547,6 +1674,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Platform
   surfaceOffset: 35
+--- !u!114 &1088967015
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1088967010}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f948b063b2de00d4b8519984c9cc7f74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Platform
+  surfaceOffset: 35
 --- !u!1 &1096165077
 GameObject:
   m_ObjectHideFlags: 0
@@ -1559,6 +1699,7 @@ GameObject:
   - component: {fileID: 1096165080}
   - component: {fileID: 1096165079}
   - component: {fileID: 1096165081}
+  - component: {fileID: 1096165082}
   m_Layer: 5
   m_Name: Platform_4
   m_TagString: Untagged
@@ -1636,6 +1777,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Platform
   surfaceOffset: 35
+--- !u!114 &1096165082
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1096165077}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f948b063b2de00d4b8519984c9cc7f74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Platform
+  surfaceOffset: 35
 --- !u!1 &1169667971
 GameObject:
   m_ObjectHideFlags: 0
@@ -1648,6 +1802,7 @@ GameObject:
   - component: {fileID: 1169667974}
   - component: {fileID: 1169667973}
   - component: {fileID: 1169667975}
+  - component: {fileID: 1169667976}
   m_Layer: 5
   m_Name: Platform_5
   m_TagString: Untagged
@@ -1725,6 +1880,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Platform
   surfaceOffset: 35
+--- !u!114 &1169667976
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1169667971}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f948b063b2de00d4b8519984c9cc7f74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Platform
+  surfaceOffset: 35
 --- !u!1 &1211552581
 GameObject:
   m_ObjectHideFlags: 0
@@ -1737,6 +1905,7 @@ GameObject:
   - component: {fileID: 1211552584}
   - component: {fileID: 1211552583}
   - component: {fileID: 1211552585}
+  - component: {fileID: 1211552586}
   m_Layer: 5
   m_Name: Platform_3
   m_TagString: Untagged
@@ -1814,6 +1983,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Platform
   surfaceOffset: 35
+--- !u!114 &1211552586
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1211552581}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f948b063b2de00d4b8519984c9cc7f74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Platform
+  surfaceOffset: 35
 --- !u!1 &1216451387
 GameObject:
   m_ObjectHideFlags: 0
@@ -1826,6 +2008,7 @@ GameObject:
   - component: {fileID: 1216451390}
   - component: {fileID: 1216451389}
   - component: {fileID: 1216451391}
+  - component: {fileID: 1216451392}
   m_Layer: 5
   m_Name: Platform_9
   m_TagString: Untagged
@@ -1900,6 +2083,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 30897a7c82b6b2c4b8252a25c063fd0f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Platform
+  surfaceOffset: 35
+--- !u!114 &1216451392
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1216451387}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f948b063b2de00d4b8519984c9cc7f74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Platform
   surfaceOffset: 35
@@ -2304,6 +2500,7 @@ GameObject:
   - component: {fileID: 1297020597}
   - component: {fileID: 1297020596}
   - component: {fileID: 1297020598}
+  - component: {fileID: 1297020599}
   m_Layer: 5
   m_Name: Platform_10
   m_TagString: Untagged
@@ -2378,6 +2575,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 30897a7c82b6b2c4b8252a25c063fd0f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Platform
+  surfaceOffset: 35
+--- !u!114 &1297020599
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1297020594}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f948b063b2de00d4b8519984c9cc7f74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Platform
   surfaceOffset: 35
@@ -2495,6 +2705,7 @@ GameObject:
   - component: {fileID: 1440694986}
   - component: {fileID: 1440694985}
   - component: {fileID: 1440694987}
+  - component: {fileID: 1440694988}
   m_Layer: 5
   m_Name: Platform_17
   m_TagString: Untagged
@@ -2572,6 +2783,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Platform
   surfaceOffset: 35
+--- !u!114 &1440694988
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1440694983}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f948b063b2de00d4b8519984c9cc7f74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Platform
+  surfaceOffset: 35
 --- !u!1 &1442452998
 GameObject:
   m_ObjectHideFlags: 0
@@ -2585,6 +2809,7 @@ GameObject:
   - component: {fileID: 1442453000}
   - component: {fileID: 1442453003}
   - component: {fileID: 1442453002}
+  - component: {fileID: 1442453004}
   m_Layer: 5
   m_Name: Player
   m_TagString: Untagged
@@ -2692,6 +2917,27 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1442453004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1442452998}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e16178e73e0a8964191f97603e99b017, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerController
+  moveSpeed: 300
+  jumpForce: 1200
+  gravity: -2000
+  maxFallSpeed: 1500
+  climbSpeed: 300
+  feetOffset: 45
+  sideShrink: 15
+  landingTolerance: 20
+  maxGroundSnap: 100
 --- !u!1 &1517199778
 GameObject:
   m_ObjectHideFlags: 0
@@ -2755,6 +3001,7 @@ GameObject:
   - component: {fileID: 1526483336}
   - component: {fileID: 1526483338}
   - component: {fileID: 1526483339}
+  - component: {fileID: 1526483340}
   m_Layer: 5
   m_Name: cloud_3
   m_TagString: Untagged
@@ -2847,6 +3094,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Platform
   surfaceOffset: 20
+--- !u!114 &1526483340
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1526483334}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f948b063b2de00d4b8519984c9cc7f74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Platform
+  surfaceOffset: 20
 --- !u!1 &1583859218
 GameObject:
   m_ObjectHideFlags: 0
@@ -2934,6 +3194,7 @@ GameObject:
   - component: {fileID: 1624515500}
   - component: {fileID: 1624515499}
   - component: {fileID: 1624515501}
+  - component: {fileID: 1624515502}
   m_Layer: 5
   m_Name: Platform_8
   m_TagString: Untagged
@@ -3008,6 +3269,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 30897a7c82b6b2c4b8252a25c063fd0f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Platform
+  surfaceOffset: 35
+--- !u!114 &1624515502
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1624515497}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f948b063b2de00d4b8519984c9cc7f74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Platform
   surfaceOffset: 35
@@ -3125,6 +3399,7 @@ GameObject:
   - component: {fileID: 1707628745}
   - component: {fileID: 1707628744}
   - component: {fileID: 1707628746}
+  - component: {fileID: 1707628747}
   m_Layer: 5
   m_Name: Platform_19
   m_TagString: Untagged
@@ -3202,6 +3477,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Platform
   surfaceOffset: 35
+--- !u!114 &1707628747
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1707628742}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f948b063b2de00d4b8519984c9cc7f74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Platform
+  surfaceOffset: 35
 --- !u!1 &1845733875
 GameObject:
   m_ObjectHideFlags: 0
@@ -3214,6 +3502,7 @@ GameObject:
   - component: {fileID: 1845733879}
   - component: {fileID: 1845733878}
   - component: {fileID: 1845733877}
+  - component: {fileID: 1845733880}
   m_Layer: 5
   m_Name: Platform_7
   m_TagString: Untagged
@@ -3291,6 +3580,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1845733875}
   m_CullTransparentMesh: 1
+--- !u!114 &1845733880
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1845733875}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f948b063b2de00d4b8519984c9cc7f74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Platform
+  surfaceOffset: 35
 --- !u!1 &1871826468
 GameObject:
   m_ObjectHideFlags: 0
