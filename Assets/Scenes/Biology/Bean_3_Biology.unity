@@ -131,6 +131,7 @@ GameObject:
   - component: {fileID: 63193237}
   - component: {fileID: 63193236}
   - component: {fileID: 63193238}
+  - component: {fileID: 63193239}
   m_Layer: 5
   m_Name: DatNgan (2)
   m_TagString: Untagged
@@ -202,13 +203,28 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 63193234}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cc2743ad7aea0c541a1fdf5c600ed6c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MoveLeftRight
   distance: 150
   speed: 150
+--- !u!114 &63193239
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 63193234}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f71c09fb84e5fb4c95952e8a4459871, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MovingPlatform
+  speed: 80
+  waitTime: 0.8
+  edgePadding: 10
 --- !u!1 &247440782
 GameObject:
   m_ObjectHideFlags: 0
@@ -296,6 +312,7 @@ GameObject:
   - component: {fileID: 325518262}
   - component: {fileID: 325518261}
   - component: {fileID: 325518263}
+  - component: {fileID: 325518264}
   m_Layer: 5
   m_Name: DatNgan (4)
   m_TagString: Untagged
@@ -367,13 +384,28 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 325518259}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cc2743ad7aea0c541a1fdf5c600ed6c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MoveLeftRight
   distance: 150
   speed: 150
+--- !u!114 &325518264
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 325518259}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f71c09fb84e5fb4c95952e8a4459871, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MovingPlatform
+  speed: 80
+  waitTime: 0.8
+  edgePadding: 10
 --- !u!1 &504297390
 GameObject:
   m_ObjectHideFlags: 0
@@ -481,6 +513,7 @@ GameObject:
   - component: {fileID: 556377666}
   - component: {fileID: 556377668}
   - component: {fileID: 556377667}
+  - component: {fileID: 556377669}
   m_Layer: 5
   m_Name: Dat (5)
   m_TagString: Untagged
@@ -545,6 +578,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 556377665}
   m_CullTransparentMesh: 1
+--- !u!114 &556377669
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 556377665}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f948b063b2de00d4b8519984c9cc7f74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Platform
+  surfaceOffset: 35
 --- !u!1 &577011701
 GameObject:
   m_ObjectHideFlags: 0
@@ -759,6 +805,7 @@ GameObject:
   - component: {fileID: 636969765}
   - component: {fileID: 636969767}
   - component: {fileID: 636969766}
+  - component: {fileID: 636969768}
   m_Layer: 5
   m_Name: DatNgan (1)
   m_TagString: Untagged
@@ -823,6 +870,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 636969764}
   m_CullTransparentMesh: 1
+--- !u!114 &636969768
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 636969764}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f948b063b2de00d4b8519984c9cc7f74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Platform
+  surfaceOffset: 35
 --- !u!1 &688353969
 GameObject:
   m_ObjectHideFlags: 0
@@ -834,6 +894,7 @@ GameObject:
   - component: {fileID: 688353970}
   - component: {fileID: 688353972}
   - component: {fileID: 688353971}
+  - component: {fileID: 688353973}
   m_Layer: 5
   m_Name: Enemy (4)
   m_TagString: Untagged
@@ -898,6 +959,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 688353969}
   m_CullTransparentMesh: 1
+--- !u!114 &688353973
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 688353969}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc2743ad7aea0c541a1fdf5c600ed6c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MoveLeftRight
+  distance: 3
+  speed: 2
 --- !u!1 &754367146
 GameObject:
   m_ObjectHideFlags: 0
@@ -909,6 +984,7 @@ GameObject:
   - component: {fileID: 754367147}
   - component: {fileID: 754367149}
   - component: {fileID: 754367148}
+  - component: {fileID: 754367150}
   m_Layer: 5
   m_Name: DatNgan
   m_TagString: Untagged
@@ -973,6 +1049,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 754367146}
   m_CullTransparentMesh: 1
+--- !u!114 &754367150
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 754367146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f71c09fb84e5fb4c95952e8a4459871, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MovingPlatform
+  speed: 80
+  waitTime: 0.8
+  edgePadding: 10
 --- !u!1 &791100968
 GameObject:
   m_ObjectHideFlags: 0
@@ -984,6 +1075,7 @@ GameObject:
   - component: {fileID: 791100969}
   - component: {fileID: 791100971}
   - component: {fileID: 791100970}
+  - component: {fileID: 791100972}
   m_Layer: 5
   m_Name: DatNgan (6)
   m_TagString: Untagged
@@ -1048,6 +1140,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 791100968}
   m_CullTransparentMesh: 1
+--- !u!114 &791100972
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 791100968}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f71c09fb84e5fb4c95952e8a4459871, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MovingPlatform
+  speed: 100
+  waitTime: 0.8
+  edgePadding: 10
 --- !u!1 &832763640
 GameObject:
   m_ObjectHideFlags: 0
@@ -1134,6 +1241,7 @@ GameObject:
   - component: {fileID: 847643038}
   - component: {fileID: 847643040}
   - component: {fileID: 847643039}
+  - component: {fileID: 847643041}
   m_Layer: 5
   m_Name: DatNgan (5)
   m_TagString: Untagged
@@ -1198,6 +1306,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 847643037}
   m_CullTransparentMesh: 1
+--- !u!114 &847643041
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 847643037}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f71c09fb84e5fb4c95952e8a4459871, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MovingPlatform
+  speed: 100
+  waitTime: 0.8
+  edgePadding: 10
 --- !u!1 &931994457
 GameObject:
   m_ObjectHideFlags: 0
@@ -1284,6 +1407,7 @@ GameObject:
   - component: {fileID: 1115391798}
   - component: {fileID: 1115391800}
   - component: {fileID: 1115391799}
+  - component: {fileID: 1115391801}
   m_Layer: 5
   m_Name: Dat (1)
   m_TagString: Untagged
@@ -1348,6 +1472,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1115391797}
   m_CullTransparentMesh: 1
+--- !u!114 &1115391801
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1115391797}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f948b063b2de00d4b8519984c9cc7f74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Platform
+  surfaceOffset: 35
 --- !u!1 &1198634652
 GameObject:
   m_ObjectHideFlags: 0
@@ -1359,6 +1496,7 @@ GameObject:
   - component: {fileID: 1198634653}
   - component: {fileID: 1198634655}
   - component: {fileID: 1198634654}
+  - component: {fileID: 1198634656}
   m_Layer: 5
   m_Name: Enemy (2)
   m_TagString: Untagged
@@ -1423,6 +1561,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1198634652}
   m_CullTransparentMesh: 1
+--- !u!114 &1198634656
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1198634652}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc2743ad7aea0c541a1fdf5c600ed6c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MoveLeftRight
+  distance: 3
+  speed: 2
 --- !u!1 &1215643663
 GameObject:
   m_ObjectHideFlags: 0
@@ -1509,6 +1661,7 @@ GameObject:
   - component: {fileID: 1256136105}
   - component: {fileID: 1256136107}
   - component: {fileID: 1256136106}
+  - component: {fileID: 1256136108}
   m_Layer: 5
   m_Name: Dat (2)
   m_TagString: Untagged
@@ -1573,6 +1726,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1256136104}
   m_CullTransparentMesh: 1
+--- !u!114 &1256136108
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1256136104}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f948b063b2de00d4b8519984c9cc7f74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Platform
+  surfaceOffset: 35
 --- !u!1 &1396023721
 GameObject:
   m_ObjectHideFlags: 0
@@ -1826,6 +1992,7 @@ GameObject:
   - component: {fileID: 2055201553}
   - component: {fileID: 2055201555}
   - component: {fileID: 2055201554}
+  - component: {fileID: 2055201556}
   m_Layer: 5
   m_Name: DatNgan (3)
   m_TagString: Untagged
@@ -1890,6 +2057,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2055201552}
   m_CullTransparentMesh: 1
+--- !u!114 &2055201556
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2055201552}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f948b063b2de00d4b8519984c9cc7f74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Platform
+  surfaceOffset: 35
 --- !u!1 &2060663877
 GameObject:
   m_ObjectHideFlags: 0
@@ -1901,6 +2081,7 @@ GameObject:
   - component: {fileID: 2060663878}
   - component: {fileID: 2060663880}
   - component: {fileID: 2060663879}
+  - component: {fileID: 2060663881}
   m_Layer: 5
   m_Name: Dat (4)
   m_TagString: Untagged
@@ -1965,6 +2146,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2060663877}
   m_CullTransparentMesh: 1
+--- !u!114 &2060663881
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2060663877}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f948b063b2de00d4b8519984c9cc7f74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Platform
+  surfaceOffset: 35
 --- !u!1 &2068125392
 GameObject:
   m_ObjectHideFlags: 0

@@ -3,8 +3,8 @@ using UnityEngine.SceneManagement;
 
 public class EnemyEncounter : MonoBehaviour
 {
-    [SerializeField] private string enemyId;
-    [SerializeField] private RectTransform playerRect;
+    public string enemyId;
+    public RectTransform playerRect;
     
     private bool triggered = false;
     private RectTransform myRect;

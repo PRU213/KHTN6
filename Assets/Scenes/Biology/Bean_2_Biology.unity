@@ -229,7 +229,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 748.9, y: -369.44}
+  m_AnchoredPosition: {x: 748.9, y: -386.58}
   m_SizeDelta: {x: 474.4186, y: 111.9436}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &329860606
@@ -748,6 +748,7 @@ GameObject:
   - component: {fileID: 829262327}
   - component: {fileID: 829262329}
   - component: {fileID: 829262328}
+  - component: {fileID: 829262330}
   m_Layer: 5
   m_Name: DayLeo (1)
   m_TagString: Untagged
@@ -812,6 +813,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 829262326}
   m_CullTransparentMesh: 1
+--- !u!114 &829262330
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 829262326}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 607656db9d90eeb4aa347915dea3708d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LadderZone
 --- !u!1 &879830909
 GameObject:
   m_ObjectHideFlags: 0
@@ -1404,6 +1417,7 @@ GameObject:
   - component: {fileID: 1259162485}
   - component: {fileID: 1259162484}
   - component: {fileID: 1259162487}
+  - component: {fileID: 1259162488}
   m_Layer: 5
   m_Name: Nv
   m_TagString: Untagged
@@ -1522,6 +1536,27 @@ MonoBehaviour:
   jumpForce: 600
   gravity: 1200
   groundOffset: 48
+--- !u!114 &1259162488
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1259162482}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e16178e73e0a8964191f97603e99b017, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerController
+  moveSpeed: 300
+  jumpForce: 600
+  gravity: -2000
+  maxFallSpeed: 1500
+  climbSpeed: 300
+  feetOffset: 45
+  sideShrink: 15
+  landingTolerance: 20
+  maxGroundSnap: 100
 --- !u!1 &1269844990
 GameObject:
   m_ObjectHideFlags: 0
@@ -1608,6 +1643,7 @@ GameObject:
   - component: {fileID: 1286492495}
   - component: {fileID: 1286492497}
   - component: {fileID: 1286492496}
+  - component: {fileID: 1286492498}
   m_Layer: 5
   m_Name: DayLeo
   m_TagString: Untagged
@@ -1672,6 +1708,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1286492494}
   m_CullTransparentMesh: 1
+--- !u!114 &1286492498
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1286492494}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 607656db9d90eeb4aa347915dea3708d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LadderZone
 --- !u!1 &1436901611
 GameObject:
   m_ObjectHideFlags: 0
