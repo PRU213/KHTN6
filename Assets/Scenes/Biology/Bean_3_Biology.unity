@@ -155,7 +155,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 627, y: -140.27}
+  m_AnchoredPosition: {x: 541.75, y: -140.27}
   m_SizeDelta: {x: 175.7453, y: 114.9401}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &63193236
@@ -222,9 +222,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f71c09fb84e5fb4c95952e8a4459871, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MovingPlatform
-  speed: 80
-  waitTime: 0.8
-  edgePadding: 10
+  speed: 250
+  waitTime: 0.05
+  edgePadding: 50
 --- !u!1 &247440782
 GameObject:
   m_ObjectHideFlags: 0
@@ -236,6 +236,7 @@ GameObject:
   - component: {fileID: 247440783}
   - component: {fileID: 247440785}
   - component: {fileID: 247440784}
+  - component: {fileID: 247440786}
   m_Layer: 5
   m_Name: Dat (3)
   m_TagString: Untagged
@@ -300,6 +301,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 247440782}
   m_CullTransparentMesh: 1
+--- !u!114 &247440786
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 247440782}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f948b063b2de00d4b8519984c9cc7f74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Platform
+  surfaceOffset: 35
 --- !u!1 &325518259
 GameObject:
   m_ObjectHideFlags: 0
@@ -313,6 +327,7 @@ GameObject:
   - component: {fileID: 325518261}
   - component: {fileID: 325518263}
   - component: {fileID: 325518264}
+  - component: {fileID: 325518265}
   m_Layer: 5
   m_Name: DatNgan (4)
   m_TagString: Untagged
@@ -403,9 +418,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f71c09fb84e5fb4c95952e8a4459871, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MovingPlatform
-  speed: 80
-  waitTime: 0.8
-  edgePadding: 10
+  speed: 250
+  waitTime: 0.05
+  edgePadding: 50
+--- !u!114 &325518265
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 325518259}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f948b063b2de00d4b8519984c9cc7f74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Platform
+  surfaceOffset: 35
 --- !u!1 &504297390
 GameObject:
   m_ObjectHideFlags: 0
@@ -418,6 +446,7 @@ GameObject:
   - component: {fileID: 504297393}
   - component: {fileID: 504297392}
   - component: {fileID: 504297394}
+  - component: {fileID: 504297395}
   m_Layer: 5
   m_Name: Nv
   m_TagString: Untagged
@@ -489,7 +518,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 504297390}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ea43af4a7b2f01d45b73e6faaf05b84a, type: 3}
   m_Name: 
@@ -502,6 +531,27 @@ MonoBehaviour:
   jumpForce: 600
   gravity: 1200
   groundOffset: 48
+--- !u!114 &504297395
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 504297390}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e16178e73e0a8964191f97603e99b017, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerController
+  moveSpeed: 300
+  jumpForce: 600
+  gravity: -2000
+  maxFallSpeed: 1500
+  climbSpeed: 300
+  feetOffset: 45
+  sideShrink: 15
+  landingTolerance: 20
+  maxGroundSnap: 100
 --- !u!1 &556377665
 GameObject:
   m_ObjectHideFlags: 0
@@ -895,6 +945,7 @@ GameObject:
   - component: {fileID: 688353972}
   - component: {fileID: 688353971}
   - component: {fileID: 688353973}
+  - component: {fileID: 688353974}
   m_Layer: 5
   m_Name: Enemy (4)
   m_TagString: Untagged
@@ -918,7 +969,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 990.43, y: 438.79}
+  m_AnchoredPosition: {x: 990.43, y: 558}
   m_SizeDelta: {x: 148.89, y: 100.01}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &688353971
@@ -971,8 +1022,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc2743ad7aea0c541a1fdf5c600ed6c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MoveLeftRight
-  distance: 3
-  speed: 2
+  distance: 100
+  speed: 0.8
+--- !u!114 &688353974
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 688353969}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79dd02d57e75c9e4ba84ccca297867fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DragonFloat
+  amplitude: 15
+  frequency: 1.5
+  swayAmplitude: 8
 --- !u!1 &754367146
 GameObject:
   m_ObjectHideFlags: 0
@@ -1061,9 +1127,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f71c09fb84e5fb4c95952e8a4459871, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MovingPlatform
-  speed: 80
-  waitTime: 0.8
-  edgePadding: 10
+  speed: 250
+  waitTime: 0.05
+  edgePadding: 50
 --- !u!1 &791100968
 GameObject:
   m_ObjectHideFlags: 0
@@ -1076,6 +1142,7 @@ GameObject:
   - component: {fileID: 791100971}
   - component: {fileID: 791100970}
   - component: {fileID: 791100972}
+  - component: {fileID: 791100973}
   m_Layer: 5
   m_Name: DatNgan (6)
   m_TagString: Untagged
@@ -1152,9 +1219,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f71c09fb84e5fb4c95952e8a4459871, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MovingPlatform
-  speed: 100
-  waitTime: 0.8
-  edgePadding: 10
+  speed: 250
+  waitTime: 0.05
+  edgePadding: 50
+--- !u!114 &791100973
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 791100968}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f948b063b2de00d4b8519984c9cc7f74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Platform
+  surfaceOffset: 35
 --- !u!1 &832763640
 GameObject:
   m_ObjectHideFlags: 0
@@ -1242,6 +1322,7 @@ GameObject:
   - component: {fileID: 847643040}
   - component: {fileID: 847643039}
   - component: {fileID: 847643041}
+  - component: {fileID: 847643042}
   m_Layer: 5
   m_Name: DatNgan (5)
   m_TagString: Untagged
@@ -1318,9 +1399,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f71c09fb84e5fb4c95952e8a4459871, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MovingPlatform
-  speed: 100
-  waitTime: 0.8
-  edgePadding: 10
+  speed: 200
+  waitTime: 0.05
+  edgePadding: 100
+--- !u!114 &847643042
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 847643037}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f948b063b2de00d4b8519984c9cc7f74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Platform
+  surfaceOffset: 35
 --- !u!1 &931994457
 GameObject:
   m_ObjectHideFlags: 0
@@ -1497,6 +1591,7 @@ GameObject:
   - component: {fileID: 1198634655}
   - component: {fileID: 1198634654}
   - component: {fileID: 1198634656}
+  - component: {fileID: 1198634657}
   m_Layer: 5
   m_Name: Enemy (2)
   m_TagString: Untagged
@@ -1520,7 +1615,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 384.87, y: 438.78}
+  m_AnchoredPosition: {x: 388, y: 582}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1198634654
@@ -1573,8 +1668,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc2743ad7aea0c541a1fdf5c600ed6c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MoveLeftRight
-  distance: 3
-  speed: 2
+  distance: 100
+  speed: 0.8
+--- !u!114 &1198634657
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1198634652}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79dd02d57e75c9e4ba84ccca297867fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DragonFloat
+  amplitude: 20
+  frequency: 1
+  swayAmplitude: 8
 --- !u!1 &1215643663
 GameObject:
   m_ObjectHideFlags: 0
