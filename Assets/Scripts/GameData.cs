@@ -23,6 +23,13 @@ public class GameData : MonoBehaviour
     [HideInInspector] public Vector2 lastPlayerPosition;
     [HideInInspector] public bool hasSavedPosition = false;
 
+    [HideInInspector] public List<QuestionData> allQuestions = new List<QuestionData>();
+
+    // Tính thời gian vượt ải
+    [HideInInspector] public float startTime;
+    [HideInInspector] public float endTime;
+    [HideInInspector] public bool isTimerRunning = false;
+
     void Awake()
     {
         if (Instance != null && Instance != this)

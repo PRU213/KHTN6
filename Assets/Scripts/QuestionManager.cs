@@ -86,11 +86,54 @@ public class QuestionManager : MonoBehaviour
             go.AddComponent<GameData>();
         }
 
+        LoadDynamicQuestions();
         FindUIElements();
         SetupUIComponents();
         UpdateHealthIcons();
         currentQuestion = Random.Range(0, questions.Length);
         ShowQuestion();
+    }
+
+    private void LoadDynamicQuestions()
+    {
+        if (GameData.Instance != null && GameData.Instance.allQuestions != null && GameData.Instance.allQuestions.Count > 0)
+        {
+            string selChapter = PlayerPrefs.GetString("SelectedChapter", "Tất cả");
+            string selDiff = PlayerPrefs.GetString("SelectedDifficulty", "Tổng hợp");
+
+            System.Collections.Generic.List<Question> dynamicQs = new System.Collections.Generic.List<Question>();
+
+            foreach (var q in GameData.Instance.allQuestions)
+            {
+                bool matchChapter = (selChapter == "Tất cả" || q.topic.Trim() == selChapter);
+                bool matchDiff = (selDiff == "Tổng hợp" || q.difficulty.Trim().ToLower() == selDiff.ToLower());
+
+                if (matchChapter && matchDiff)
+                {
+                    Question newQ = new Question();
+                    newQ.questionText = q.question;
+                    newQ.answers = new string[] { q.option_a, q.option_b, q.option_c, q.option_d };
+                    
+                    string co = q.correct_option.Trim().ToUpper();
+                    if (co == "A") newQ.correctIndex = 0;
+                    else if (co == "B") newQ.correctIndex = 1;
+                    else if (co == "C") newQ.correctIndex = 2;
+                    else if (co == "D") newQ.correctIndex = 3;
+                    else newQ.correctIndex = 0;
+
+                    dynamicQs.Add(newQ);
+                }
+            }
+
+            if (dynamicQs.Count > 0)
+            {
+                questions = dynamicQs.ToArray();
+            }
+            else
+            {
+                Debug.LogWarning("Không có câu hỏi nào khớp với độ khó và chương đã chọn! Dùng mặc định.");
+            }
+        }
     }
 
     private void FindUIElements()
@@ -288,6 +331,7 @@ public class QuestionManager : MonoBehaviour
             GameData.Instance.defeatedEnemies.Clear();
             GameData.Instance.currentEnemyName = "";
             GameData.Instance.hasSavedPosition = false;
+            GameData.Instance.startTime = Time.time;
         }
         ReturnToMainScene();
     }
