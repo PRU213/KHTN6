@@ -1,25 +1,25 @@
 fileFormatVersion: 2
-guid: a5d5705be24bd3546aafdf9b026e3ee5
+guid: af24a1cdc50ff06458f499885b8137ad
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -1000588177234623780
-    second: DayLeoo_0
+      213: -2332897026062184957
+    second: "\u1EA2nh ChatGPT 02_14_15 2 thg 10, 2026-1_0"
   - first:
-      213: 1645181844405493109
-    second: DayLeoo_1
+      213: 1349382259233220511
+    second: "\u1EA2nh ChatGPT 02_14_15 2 thg 10, 2026-1_1"
   - first:
-      213: 2692945196627021523
-    second: DayLeoo_2
+      213: -1096569484644234220
+    second: "\u1EA2nh ChatGPT 02_14_15 2 thg 10, 2026-1_2"
   - first:
-      213: 5954888700139877496
-    second: DayLeoo_3
+      213: 6879956041731784602
+    second: "\u1EA2nh ChatGPT 02_14_15 2 thg 10, 2026-1_3"
   - first:
-      213: 3630798931239324801
-    second: DayLeoo_4
+      213: -8844186127757590824
+    second: "\u1EA2nh ChatGPT 02_14_15 2 thg 10, 2026-1_4"
   - first:
-      213: -380589441132874739
-    second: DayLeoo_5
+      213: -5861529854137596667
+    second: "\u1EA2nh ChatGPT 02_14_15 2 thg 10, 2026-1_5"
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -61,7 +61,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -130,35 +130,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: DayLeoo_0
+      name: "\u1EA2nh ChatGPT 02_14_15 2 thg 10, 2026-1_0"
       rect:
         serializedVersion: 2
         x: 15
-        y: 161
-        width: 10
-        height: 11
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: cd28979aa523d12f0800000000000000
-      internalID: -1000588177234623780
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: DayLeoo_1
-      rect:
-        serializedVersion: 2
-        x: 54
         y: 0
-        width: 114
-        height: 664
+        width: 1420
+        height: 1035
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -167,20 +145,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 57d16b2cb2cd4d610800000000000000
-      internalID: 1645181844405493109
+      spriteID: 30e8ff7d382ef9fd0800000000000000
+      internalID: -2332897026062184957
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: DayLeoo_2
+      name: "\u1EA2nh ChatGPT 02_14_15 2 thg 10, 2026-1_1"
       rect:
         serializedVersion: 2
-        x: 13
-        y: 129
+        x: 90
+        y: 114
         width: 12
-        height: 11
+        height: 10
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -189,20 +167,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 3de4c8473634f5520800000000000000
-      internalID: 2692945196627021523
+      spriteID: f976fc3f308f9b210800000000000000
+      internalID: 1349382259233220511
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: DayLeoo_3
+      name: "\u1EA2nh ChatGPT 02_14_15 2 thg 10, 2026-1_2"
       rect:
         serializedVersion: 2
-        x: 0
-        y: 30
-        width: 43
-        height: 59
+        x: 537
+        y: 15
+        width: 11
+        height: 13
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -211,20 +189,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 87433d0f8b304a250800000000000000
-      internalID: 5954888700139877496
+      spriteID: 41c4f341dd338c0f0800000000000000
+      internalID: -1096569484644234220
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: DayLeoo_4
+      name: "\u1EA2nh ChatGPT 02_14_15 2 thg 10, 2026-1_3"
       rect:
         serializedVersion: 2
-        x: 40
-        y: 48
-        width: 15
-        height: 19
+        x: 796
+        y: 122
+        width: 8
+        height: 7
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -233,20 +211,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 18c43632460336230800000000000000
-      internalID: 3630798931239324801
+      spriteID: a9fb9b181938a7f50800000000000000
+      internalID: 6879956041731784602
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: DayLeoo_5
+      name: "\u1EA2nh ChatGPT 02_14_15 2 thg 10, 2026-1_4"
       rect:
         serializedVersion: 2
-        x: 154
+        x: 989
         y: 0
-        width: 16
-        height: 15
+        width: 9
+        height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -255,8 +233,30 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: d04b2047befd7baf0800000000000000
-      internalID: -380589441132874739
+      spriteID: 8de32974393234580800000000000000
+      internalID: -8844186127757590824
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u1EA2nh ChatGPT 02_14_15 2 thg 10, 2026-1_5"
+      rect:
+        serializedVersion: 2
+        x: 1092
+        y: 37
+        width: 9
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 50508c347a9a7aea0800000000000000
+      internalID: -5861529854137596667
       vertices: []
       indices: 
       edges: []
@@ -265,7 +265,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -275,12 +275,12 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      DayLeoo_0: -1000588177234623780
-      DayLeoo_1: 1645181844405493109
-      DayLeoo_2: 2692945196627021523
-      DayLeoo_3: 5954888700139877496
-      DayLeoo_4: 3630798931239324801
-      DayLeoo_5: -380589441132874739
+      "\u1EA2nh ChatGPT 02_14_15 2 thg 10, 2026-1_0": -2332897026062184957
+      "\u1EA2nh ChatGPT 02_14_15 2 thg 10, 2026-1_1": 1349382259233220511
+      "\u1EA2nh ChatGPT 02_14_15 2 thg 10, 2026-1_2": -1096569484644234220
+      "\u1EA2nh ChatGPT 02_14_15 2 thg 10, 2026-1_3": 6879956041731784602
+      "\u1EA2nh ChatGPT 02_14_15 2 thg 10, 2026-1_4": -8844186127757590824
+      "\u1EA2nh ChatGPT 02_14_15 2 thg 10, 2026-1_5": -5861529854137596667
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

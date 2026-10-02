@@ -118,10 +118,10 @@ TextureImporter:
       name: Recay_0
       rect:
         serializedVersion: 2
-        x: 10
-        y: 31
-        width: 492
-        height: 380
+        x: 0
+        y: 0
+        width: 487
+        height: 299
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
