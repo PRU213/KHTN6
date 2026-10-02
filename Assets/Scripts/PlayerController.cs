@@ -67,6 +67,9 @@ public class PlayerController : MonoBehaviour
     // Moving Platform Player đang đứng trên
     private MovingPlatform currentMovingPlatform;
 
+    // Cloud Player đang đứng trên
+    private CloudMove currentCloud;
+
 
     // =========================
     // ANIMATOR HASH
@@ -100,6 +103,12 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
+        if (GameData.Instance != null && GameData.Instance.hasSavedPosition)
+        {
+            rectTransform.anchoredPosition = GameData.Instance.lastPlayerPosition;
+            GameData.Instance.hasSavedPosition = false;
+        }
+
         if (Platform.AllPlatforms.Count == 0)
         {
             Debug.LogWarning(
@@ -124,8 +133,17 @@ public class PlayerController : MonoBehaviour
         // =========================
         // RƠI KHỎI MAP -> RESPAWN
         // =========================
+        
+        float deathY = -2000f;
+        CameraFollow camFollow = Object.FindFirstObjectByType<CameraFollow>();
+        if (camFollow != null)
+        {
+            // Điểm chết là dưới mép dưới của camera ảo 200px
+            deathY = camFollow.GetVirtualBottomY() - 200f;
+        }
 
-        if (rectTransform.anchoredPosition.y < -2000f)
+        // Chết khi rớt xuống dưới điểm chết (tính theo anchoredPosition vì nó không đổi khi WorldContainer kéo xuống)
+        if (rectTransform.anchoredPosition.y < deathY || rectTransform.anchoredPosition.y < -2000f)
         {
             Respawn();
             return;
@@ -267,6 +285,7 @@ public class PlayerController : MonoBehaviour
         // ResolveCollisions / ClampToLadder sẽ bật lại.
         isGrounded = false;
         currentMovingPlatform = null;
+        currentCloud = null;
 
 
         // =========================
@@ -307,6 +326,26 @@ public class PlayerController : MonoBehaviour
 
 
         // =========================
+        // CLOUD RIDE (trôi theo mây)
+        // =========================
+
+        if (
+            currentCloud != null &&
+            isGrounded &&
+            currentMovingPlatform == null
+        )
+        {
+            Vector2 ridePos =
+                rectTransform.anchoredPosition;
+
+            ridePos += currentCloud.FrameDelta;
+
+            rectTransform.anchoredPosition =
+                ridePos;
+        }
+
+
+        // =========================
         // VISUAL
         // =========================
 
@@ -330,6 +369,12 @@ public class PlayerController : MonoBehaviour
 
         currentLadder = null;
         currentMovingPlatform = null;
+
+        CameraFollow camFollow = Object.FindFirstObjectByType<CameraFollow>();
+        if (camFollow != null)
+        {
+            camFollow.ResetCamera();
+        }
     }
 
 
@@ -693,6 +738,19 @@ public class PlayerController : MonoBehaviour
         {
             currentMovingPlatform =
                 movingPlatform;
+        }
+
+
+        // =====================================================
+        // CLOUD (trôi theo mây)
+        // =====================================================
+
+        CloudMove cloud =
+            bestPlatform.GetComponent<CloudMove>();
+
+        if (cloud != null)
+        {
+            currentCloud = cloud;
         }
     }
 

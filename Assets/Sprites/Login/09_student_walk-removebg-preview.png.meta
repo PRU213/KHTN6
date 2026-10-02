@@ -49,7 +49,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -89,7 +89,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -130,19 +130,19 @@ TextureImporter:
       name: 09_student_walk-removebg-preview_0
       rect:
         serializedVersion: 2
-        x: 9
+        x: 8
         y: 39
-        width: 82
-        height: 134
+        width: 83
+        height: 135
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 6d29edbee84f768d0800000000000000
+      spriteID: 0ebec37a437b063499fff025771abc02
       internalID: -2853042944236154154
       vertices: []
       indices: 
@@ -153,18 +153,18 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 96
-        y: 39
+        y: 38
         width: 90
-        height: 134
+        height: 135
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 9aeeb51afcf766fd0800000000000000
+      spriteID: 8d0ac11b2ef360248948640324263620
       internalID: -2349049625885020503
       vertices: []
       indices: 
@@ -174,19 +174,19 @@ TextureImporter:
       name: 09_student_walk-removebg-preview_2
       rect:
         serializedVersion: 2
-        x: 197
-        y: 38
-        width: 82
-        height: 136
+        x: 196
+        y: 37
+        width: 83
+        height: 137
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 02ec391e11822e0e0800000000000000
+      spriteID: 66f8aba7f01eaa748b2e119aa2319939
       internalID: -2242185607212970464
       vertices: []
       indices: 
@@ -206,9 +206,9 @@ TextureImporter:
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: ec88ef0c090d2e350800000000000000
+      spriteID: 13b76e94adebd514389a182a27abada8
       internalID: 6044622970016401614
       vertices: []
       indices: 
@@ -218,19 +218,19 @@ TextureImporter:
       name: 09_student_walk-removebg-preview_4
       rect:
         serializedVersion: 2
-        x: 115
+        x: 114
         y: 3
-        width: 147
-        height: 32
+        width: 148
+        height: 33
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 8339e14c4b6bd7950800000000000000
+      spriteID: ccfef8c673f99b94792fc0e340fd22c7
       internalID: 6448511128965124920
       vertices: []
       indices: 
