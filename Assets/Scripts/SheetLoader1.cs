@@ -24,24 +24,14 @@ public class TheoryItem
 
 public class SheetLoader1 : MonoBehaviour
 {
-    static SheetLoader1 _instance;
-
-    public static SheetLoader1 Instance
-    {
-        get
-        {
-            if (_instance == null)
-                _instance = FindFirstObjectByType<SheetLoader1>(FindObjectsInactive.Include);
-            return _instance;
-        }
-    }
+    public static SheetLoader1 Instance;
 
     public string url =
         "https://script.google.com/macros/s/AKfycbxxE2R2ZoitgM647aQqnebUcG90lhIlodU0DcyiaZuKkLaVWl6oopI-TkeNM8_KKDWhUw/exec";
 
     void Awake()
     {
-        _instance = this;
+        Instance = this;
     }
 
     public IEnumerator GetTheory(string chapterId, Action<TheoryItem> callback)
