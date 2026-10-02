@@ -1,13 +1,10 @@
 fileFormatVersion: 2
-guid: 5ebf177713dd86d448b923bb3e62595d
+guid: 40c64c58a64f9294a984201d559e2717
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 904936592497093752
-    second: "\u1EA2nh ChatGPT 10_07_25 29 thg 9, 2026_0"
-  - first:
-      213: -3595166257482770208
-    second: "\u1EA2nh ChatGPT 10_07_25 29 thg 9, 2026_1"
+      213: 5550980886086179502
+    second: TrangChuBg_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -49,7 +46,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -118,13 +115,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: "\u1EA2nh ChatGPT 10_07_25 29 thg 9, 2026_0"
+      name: TrangChuBg_0
       rect:
         serializedVersion: 2
-        x: 107
-        y: 79
-        width: 1919
-        height: 511
+        x: 0
+        y: 0
+        width: 2730
+        height: 1536
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -133,30 +130,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 87caa0c490bfe8c00800000000000000
-      internalID: 904936592497093752
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: "\u1EA2nh ChatGPT 10_07_25 29 thg 9, 2026_1"
-      rect:
-        serializedVersion: 2
-        x: 146
-        y: 352
-        width: 8
-        height: 36
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 0e8d44a36576b1ec0800000000000000
-      internalID: -3595166257482770208
+      spriteID: eaa562e94bb090d40800000000000000
+      internalID: 5550980886086179502
       vertices: []
       indices: 
       edges: []
@@ -165,7 +140,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -175,8 +150,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      "\u1EA2nh ChatGPT 10_07_25 29 thg 9, 2026_0": 904936592497093752
-      "\u1EA2nh ChatGPT 10_07_25 29 thg 9, 2026_1": -3595166257482770208
+      TrangChuBg_0: 5550980886086179502
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
