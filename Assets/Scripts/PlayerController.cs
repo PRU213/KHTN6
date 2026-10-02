@@ -67,6 +67,9 @@ public class PlayerController : MonoBehaviour
     // Moving Platform Player đang đứng trên
     private MovingPlatform currentMovingPlatform;
 
+    // Platform di chuyển dọc
+    private VerticalMovingPlatform currentVerticalPlatform;
+
     // Cloud Player đang đứng trên
     private CloudMove currentCloud;
 
@@ -75,17 +78,12 @@ public class PlayerController : MonoBehaviour
     // ANIMATOR HASH
     // =========================
 
-    private static readonly int AnimSpeed =
-        Animator.StringToHash("Speed");
-
-    private static readonly int AnimIsJumping =
-        Animator.StringToHash("IsJumping");
-
-    private static readonly int AnimIsClimbing =
-        Animator.StringToHash("IsClimbing");
-
-    private static readonly int AnimIsGrounded =
-        Animator.StringToHash("IsGrounded");
+    private static readonly int AnimSpeed = Animator.StringToHash("Speed");
+    private static readonly int AnimIsRunning = Animator.StringToHash("isRunning");
+    private static readonly int AnimIsJumping = Animator.StringToHash("IsJumping");
+    private static readonly int AnimIsClimbing = Animator.StringToHash("IsClimbing");
+    private static readonly int AnimIsClimbingLower = Animator.StringToHash("isClimbing");
+    private static readonly int AnimIsGrounded = Animator.StringToHash("IsGrounded");
 
 
     // =========================
@@ -103,6 +101,12 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
+        if (feetOffset == -80f || Mathf.Abs(feetOffset) > rectTransform.sizeDelta.y)
+        {
+            // Tự động tính feetOffset dựa trên nửa chiều cao, lui lên 1 tí (khoảng 45% chiều cao tính từ tâm)
+            feetOffset = -(rectTransform.sizeDelta.y * 0.45f);
+        }
+
         if (GameData.Instance != null && GameData.Instance.hasSavedPosition)
         {
             rectTransform.anchoredPosition = GameData.Instance.lastPlayerPosition;
@@ -285,8 +289,8 @@ public class PlayerController : MonoBehaviour
         // ResolveCollisions / ClampToLadder sẽ bật lại.
         isGrounded = false;
         currentMovingPlatform = null;
+        currentVerticalPlatform = null;
         currentCloud = null;
-
 
         // =========================
         // GIỚI HẠN THANG
@@ -297,13 +301,11 @@ public class PlayerController : MonoBehaviour
             ClampToLadder();
         }
 
-
         // =========================
         // VA CHẠM PLATFORM
         // =========================
 
         ResolveCollisions(previousFeetWorldY);
-
 
         // =========================
         // MOVING PLATFORM
@@ -319,6 +321,21 @@ public class PlayerController : MonoBehaviour
 
             ridePos +=
                 currentMovingPlatform.FrameDelta;
+
+            rectTransform.anchoredPosition =
+                ridePos;
+        }
+
+        if (
+            currentVerticalPlatform != null &&
+            isGrounded
+        )
+        {
+            Vector2 ridePos =
+                rectTransform.anchoredPosition;
+
+            ridePos +=
+                currentVerticalPlatform.FrameDelta;
 
             rectTransform.anchoredPosition =
                 ridePos;
@@ -733,11 +750,18 @@ public class PlayerController : MonoBehaviour
         MovingPlatform movingPlatform =
             bestPlatform.GetComponent<MovingPlatform>();
 
-
         if (movingPlatform != null)
         {
             currentMovingPlatform =
                 movingPlatform;
+        }
+
+        VerticalMovingPlatform vMovingPlatform = 
+            bestPlatform.GetComponent<VerticalMovingPlatform>();
+
+        if (vMovingPlatform != null)
+        {
+            currentVerticalPlatform = vMovingPlatform;
         }
 
 
@@ -965,29 +989,15 @@ public class PlayerController : MonoBehaviour
             return;
 
 
-        animator.SetFloat(
-            AnimSpeed,
-            Mathf.Abs(moveInput)
-        );
+        animator.SetFloat(AnimSpeed, Mathf.Abs(moveInput));
+        animator.SetBool(AnimIsRunning, Mathf.Abs(moveInput) > 0.01f);
 
+        animator.SetBool(AnimIsGrounded, isGrounded);
 
-        animator.SetBool(
-            AnimIsGrounded,
-            isGrounded
-        );
+        animator.SetBool(AnimIsJumping, !isGrounded && !isClimbing);
 
-
-        animator.SetBool(
-            AnimIsJumping,
-            !isGrounded &&
-            !isClimbing
-        );
-
-
-        animator.SetBool(
-            AnimIsClimbing,
-            isClimbing
-        );
+        animator.SetBool(AnimIsClimbing, isClimbing);
+        animator.SetBool(AnimIsClimbingLower, isClimbing);
 
 
         if (isClimbing)

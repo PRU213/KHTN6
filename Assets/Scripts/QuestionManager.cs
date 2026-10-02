@@ -96,34 +96,58 @@ public class QuestionManager : MonoBehaviour
     private void FindUIElements()
     {
         Canvas canvas = GetComponent<Canvas>();
-        if (canvas == null) canvas = FindAnyObjectByType<Canvas>();
+        if (canvas == null) canvas = Object.FindFirstObjectByType<Canvas>();
         if (canvas == null) return;
 
         Image[] allImages = canvas.GetComponentsInChildren<Image>(true);
-        int ansIdx = 0, hpIdx = 0;
+        int hpIdx = 0;
         float maxBoardArea = 0f;
+        
+        System.Collections.Generic.List<Image> foundAnswers = new System.Collections.Generic.List<Image>();
 
         foreach (Image img in allImages)
         {
             RectTransform rt = img.rectTransform;
             float w = rt.sizeDelta.x, h = rt.sizeDelta.y;
             float area = w * h;
+            string objName = img.gameObject.name.ToLower();
 
             // Bỏ qua ảnh nền full màn hình
             if (rt.anchorMin == Vector2.zero && rt.anchorMax == Vector2.one) continue;
             
-            // KÍCH THƯỚC MỚI: Nút đáp án (chiều ngang 250 -> 500)
-            if (w > 250 && w < 500 && h > 100 && h < 200 && ansIdx < 4) { answerImages[ansIdx++] = img; continue; }
-            
-            // KÍCH THƯỚC MỚI: Icon máu (khoảng 30-100)
-            if (w > 20 && w < 100 && h > 20 && h < 100 && hpIdx < 3) { healthIcons[hpIdx++] = img; continue; }
+            bool isNamedAnswer = objName.Contains("dapan") || objName.Contains("đáp án") || objName.Contains("đápán");
+            bool isSizedAnswer = w > 250 && w < 550 && h > 100 && h < 200;
 
-            // TÌM BẢNG CÂU HỎI: Lấy khung có diện tích bự nhất trên màn hình (loại trừ các nút ở trên)
-            if (area > maxBoardArea && w > 400 && h > 250) 
+            if (isNamedAnswer || isSizedAnswer)
+            {
+                foundAnswers.Add(img);
+                continue;
+            }
+            
+            bool isNamedHp = objName.Contains("tim") || objName.Contains("heart") || objName.Contains("mau");
+            bool isSizedHp = w > 20 && w < 100 && h > 20 && h < 100;
+
+            if ((isNamedHp || isSizedHp) && hpIdx < 3) 
+            { healthIcons[hpIdx++] = img; continue; }
+
+            // TÌM BẢNG CÂU HỎI: Lấy khung có diện tích bự nhất hoặc tên là khung/bảng
+            if ((area > maxBoardArea && w > 300 && h > 150 && !objName.Contains("bg") && !objName.Contains("background")) || objName.Contains("khung") || objName.Contains("bảng"))
             { 
                 maxBoardArea = area;
                 questionBoard = img; 
             }
+        }
+
+        // Sắp xếp các nút đáp án theo toạ độ Y (từ trên xuống) rồi đến X (từ trái qua)
+        foundAnswers.Sort((a, b) => {
+            int yCompare = b.rectTransform.position.y.CompareTo(a.rectTransform.position.y);
+            if (yCompare == 0) return a.rectTransform.position.x.CompareTo(b.rectTransform.position.x);
+            return yCompare;
+        });
+
+        for (int i = 0; i < Mathf.Min(4, foundAnswers.Count); i++)
+        {
+            answerImages[i] = foundAnswers[i];
         }
     }
 
@@ -250,7 +274,10 @@ public class QuestionManager : MonoBehaviour
 
     private void ReturnToMainScene()
     {
-        SceneManager.LoadScene("bean_1");
+        string currentScene = SceneManager.GetActiveScene().name;
+        if (currentScene.Contains("Bean_2")) SceneManager.LoadScene("Bean_2_Biology");
+        else if (currentScene.Contains("Bean_3")) SceneManager.LoadScene("Bean_3_Biology");
+        else SceneManager.LoadScene("bean_1");
     }
 
     private void RestartGame()
@@ -262,7 +289,7 @@ public class QuestionManager : MonoBehaviour
             GameData.Instance.currentEnemyName = "";
             GameData.Instance.hasSavedPosition = false;
         }
-        SceneManager.LoadScene("bean_1");
+        ReturnToMainScene();
     }
 
     private void UpdateHealthIcons()

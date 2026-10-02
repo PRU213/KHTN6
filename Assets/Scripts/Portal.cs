@@ -25,6 +25,25 @@ public class Portal : MonoBehaviour
 
     void Start()
     {
+        // Tự động gán nextSceneName theo luồng của User
+        string currentScene = SceneManager.GetActiveScene().name;
+        if (currentScene.Contains("bean_1"))
+        {
+            nextSceneName = "Bean_2_Biology";
+        }
+        else if (currentScene.Contains("Bean_2"))
+        {
+            nextSceneName = "video_gioithieu";
+        }
+        else if (currentScene.Contains("video"))
+        {
+            nextSceneName = "bean_tong";
+        }
+        else if (currentScene.Contains("bean_tong") || currentScene.Contains("beantong"))
+        {
+            nextSceneName = "victory";
+        }
+
         // Nếu yêu cầu diệt hết quái, ban đầu sẽ tàng hình
         if (requireAllEnemiesDefeated)
         {

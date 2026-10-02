@@ -29,5 +29,17 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Biology/video_gioithieu.unity
     guid: 6f30b08c39e237f448510b0eb1d1a26c
+  - enabled: 1
+    path: Assets/Scenes/Biology/Bean_3_Biology.unity
+    guid: ee9bcac9e981c4440b0cd767c9ee5ad1
+  - enabled: 1
+    path: Assets/Scenes/Biology/Bean_2_Biology_Question.unity
+    guid: 536866d7e445369439bc336c47f54bf7
+  - enabled: 1
+    path: Assets/Scenes/Biology/Bean_3_Biology_Question.unity
+    guid: e074624e27515144fbf5cacf95bce2cd
+  - enabled: 1
+    path: Assets/Scenes/Biology/luatchoisinhhoc.unity
+    guid: 73c2ac09979cd59489a2020e4f5dee4c
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}

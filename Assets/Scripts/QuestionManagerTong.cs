@@ -128,12 +128,14 @@ public class QuestionManagerTong : MonoBehaviour
     private void FindUIElements()
     {
         Canvas canvas = GetComponent<Canvas>();
-        if (canvas == null) canvas = FindAnyObjectByType<Canvas>();
+        if (canvas == null) canvas = Object.FindFirstObjectByType<Canvas>();
         if (canvas == null) return;
 
         Image[] allImages = canvas.GetComponentsInChildren<Image>(true);
-        int ansIdx = 0, hpIdx = 0;
+        int hpIdx = 0;
         float maxBoardArea = 0f;
+        
+        System.Collections.Generic.List<Image> foundAnswers = new System.Collections.Generic.List<Image>();
 
         foreach (Image img in allImages)
         {
@@ -149,14 +151,20 @@ public class QuestionManagerTong : MonoBehaviour
             if (objName.Contains("player")) continue;
 
             // Nút đáp án (~525 x 192)
-            if (w > 400 && w < 600 && h > 150 && h < 250 && ansIdx < 4)
+            bool isNamedAnswer = objName.Contains("dapan") || objName.Contains("đáp án") || objName.Contains("đápán");
+            bool isSizedAnswer = w > 400 && w < 600 && h > 150 && h < 250;
+
+            if (isNamedAnswer || isSizedAnswer)
             {
-                answerImages[ansIdx++] = img;
+                foundAnswers.Add(img);
                 continue;
             }
 
             // Icon tim (~67 x 72)
-            if (w > 40 && w < 120 && h > 40 && h < 120 && hpIdx < 3)
+            bool isNamedHp = objName.Contains("tim") || objName.Contains("heart") || objName.Contains("mau");
+            bool isSizedHp = w > 40 && w < 120 && h > 40 && h < 120;
+
+            if ((isNamedHp || isSizedHp) && hpIdx < 3)
             {
                 // Bỏ qua bảng máu (604 x 156)
                 if (w > 200) continue;
@@ -170,6 +178,18 @@ public class QuestionManagerTong : MonoBehaviour
                 maxBoardArea = area;
                 questionBoard = img;
             }
+        }
+
+        // Sắp xếp các nút đáp án theo toạ độ Y (từ trên xuống) rồi đến X (từ trái qua)
+        foundAnswers.Sort((a, b) => {
+            int yCompare = b.rectTransform.position.y.CompareTo(a.rectTransform.position.y);
+            if (yCompare == 0) return a.rectTransform.position.x.CompareTo(b.rectTransform.position.x);
+            return yCompare;
+        });
+
+        for (int i = 0; i < Mathf.Min(4, foundAnswers.Count); i++)
+        {
+            answerImages[i] = foundAnswers[i];
         }
     }
 

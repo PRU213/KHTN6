@@ -32,6 +32,10 @@ public class GameData : MonoBehaviour
         }
         Instance = this;
         DontDestroyOnLoad(gameObject);
+
+        // Tự động thêm script kiểm tra thắng màn bean_tong
+        if (GetComponent<VictoryChecker>() == null)
+            gameObject.AddComponent<VictoryChecker>();
     }
 
     /// <summary>Mất 1 máu. Trả về true nếu còn sống.</summary>

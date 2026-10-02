@@ -234,8 +234,9 @@ GameObject:
   - component: {fileID: 164202315}
   - component: {fileID: 164202314}
   - component: {fileID: 164202316}
+  - component: {fileID: 164202317}
   m_Layer: 5
-  m_Name: Ladder_2
+  m_Name: Ladder_3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -310,6 +311,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a9e1c64667fbac4b8f088e1e02db0cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LadderZone
+--- !u!114 &164202317
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 164202312}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 607656db9d90eeb4aa347915dea3708d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LadderZone
 --- !u!1 &281437511
 GameObject:
   m_ObjectHideFlags: 0
@@ -345,8 +358,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 65, y: -284.06}
-  m_SizeDelta: {x: 324.7584, y: 358.49}
+  m_AnchoredPosition: {x: 22.0793, y: -343.8674}
+  m_SizeDelta: {x: 238.9171, y: 238.8751}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &281437513
 MonoBehaviour:
@@ -415,7 +428,7 @@ GameObject:
   - component: {fileID: 298126644}
   - component: {fileID: 298126645}
   m_Layer: 5
-  m_Name: Ladder_4
+  m_Name: Ladder_5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -723,6 +736,7 @@ MonoBehaviour:
   speed: 80
   waitTime: 0.8
   edgePadding: 10
+  defaultTravelDistance: 400
 --- !u!114 &525153306
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1052,6 +1066,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DartTrap
   dartSpeed: 200
+  triggerDistanceX: 1000
   triggerHeightRange: 200
   cooldown: 4
   maxFlyDistance: 2500
@@ -2338,6 +2353,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DartTrap
   dartSpeed: 200
+  triggerDistanceX: 1000
   triggerHeightRange: 200
   cooldown: 4
   maxFlyDistance: 2500
@@ -2776,7 +2792,7 @@ GameObject:
   - component: {fileID: 2037205242}
   - component: {fileID: 2037205243}
   m_Layer: 5
-  m_Name: Ladder_3
+  m_Name: Ladder_4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3131,7 +3147,7 @@ Animator:
   m_GameObject: {fileID: 2106050621}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 6ac8146fde599e649adf6ddb88913c3a, type: 2}
+  m_Controller: {fileID: 9100000, guid: 87df615d1dc7d284fbc5a9bb29404293, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

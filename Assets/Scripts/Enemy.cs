@@ -65,8 +65,16 @@ public class Enemy : MonoBehaviour
             }
         }
 
-        // Chuyển sang scene câu hỏi
-        SceneManager.LoadScene("bean_1_question");
+        // Chuyển sang scene câu hỏi tương ứng
+        string currentScene = SceneManager.GetActiveScene().name;
+        if (currentScene == "bean_1")
+            SceneManager.LoadScene("bean_1_question");
+        else if (currentScene == "Bean_2_Biology")
+            SceneManager.LoadScene("Bean_2_Biology_Question");
+        else if (currentScene == "Bean_3_Biology")
+            SceneManager.LoadScene("Bean_3_Biology_Question");
+        else
+            SceneManager.LoadScene("bean_1_question"); // Default
     }
 
     private Rect GetWorldRect(RectTransform rt)
