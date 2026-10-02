@@ -12,6 +12,9 @@ public class TheoryToGameMenu : MonoBehaviour
     [Header("Nút vào chơi")]
     public Button playButton;
 
+    [Header("Môn của màn này")]
+    public string subjectName = "Hóa học";   // đúng như cột monID trong sheet câu hỏi
+
     void Start()
     {
         if (playButton != null)
@@ -22,6 +25,8 @@ public class TheoryToGameMenu : MonoBehaviour
 
     void OpenGameMenu()
     {
+        GameSession.Subject = subjectName;   // báo cho game biết đang chơi môn nào
+
         if (theoryScreen != null)
             theoryScreen.SetActive(false);
 
