@@ -21,6 +21,9 @@ public class ChonBaiManager : MonoBehaviour
     public string monHocFilter = "Sinh học"; // Changed to Sinh học as per explicit mentions
     public string sheetCSVUrl = "https://docs.google.com/spreadsheets/d/1DcJwlN_fUDdcaQ6IfnlkMJApgWuEUqMhyZv9Kn8vfWo/export?format=csv&gid=1463734910";
     
+    [Header("Item Styling")]
+    public Sprite itemSprite; // Ảnh gắn vào các nút/chương
+    
     private List<QuestionData> allQuestions = new List<QuestionData>();
     private List<string> chapters = new List<string>();
 
@@ -311,6 +314,11 @@ public class ChonBaiManager : MonoBehaviour
         rt.sizeDelta = new Vector2(0, 60);
 
         Image img = btnObj.AddComponent<Image>();
+        if (itemSprite != null)
+        {
+            img.sprite = itemSprite;
+            img.type = Image.Type.Sliced; // Hỗ trợ co giãn nếu ảnh có viền
+        }
         img.color = normalColor;
 
         Button btn = btnObj.AddComponent<Button>();
