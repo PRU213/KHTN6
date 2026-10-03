@@ -24,6 +24,9 @@ public class MovingPlatform : MonoBehaviour
     [Tooltip("Khoảng đệm giữa moving platform và platform lân cận (pixel)")]
     public float edgePadding = 10f;
 
+    [Tooltip("Khoảng cách mặc định di chuyển (nếu không tìm thấy nền cạnh bên)")]
+    public float defaultTravelDistance = 300f;
+
     // --- Platform data ---
     public RectTransform RectTransform { get; private set; }
 
@@ -80,8 +83,8 @@ public class MovingPlatform : MonoBehaviour
         float myY = RectTransform.anchoredPosition.y;
         float myHalfW = RectTransform.sizeDelta.x * 0.5f;
 
-        float nearestLeftEdge = myX - 300f;  // Mặc định nếu không tìm thấy
-        float nearestRightEdge = myX + 300f;
+        float nearestLeftEdge = myX - defaultTravelDistance;  // Mặc định nếu không tìm thấy
+        float nearestRightEdge = myX + defaultTravelDistance;
 
         foreach (var plat in Platform.AllPlatforms)
         {

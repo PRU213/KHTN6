@@ -23,6 +23,11 @@ public class HomeMenuController : MonoBehaviour
 
     void Start()
     {
+        if (GameData.Instance != null)
+        {
+            GameData.Instance.isTimerRunning = false;
+        }
+
         if (btnPhysics != null)
             btnPhysics.onClick.AddListener(() => OpenMap(physicsMap));
 
@@ -30,7 +35,7 @@ public class HomeMenuController : MonoBehaviour
             btnChemistry.onClick.AddListener(() => OpenMap(chemistryMap));
 
         if (btnBiology != null)
-            btnBiology.onClick.AddListener(() => OpenMap(biologyMap));
+            btnBiology.onClick.AddListener(() => UnityEngine.SceneManagement.SceneManager.LoadScene("ChonBai"));
 
         if (backPhysics != null)
             backPhysics.onClick.AddListener(BackToHome);

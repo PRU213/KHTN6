@@ -21,8 +21,11 @@ public class DartTrap : MonoBehaviour
     [Tooltip("Tốc độ bay của phi tiêu (pixel/giây)")]
     public float dartSpeed = 200f;
 
-    [Tooltip("Khoảng cách chênh lệch Y tối đa để kích hoạt (pixel). Phi tiêu chỉ bắn khi Player ở cùng tầng cao.")]
-    public float triggerHeightRange = 200f;
+    [Tooltip("Khoảng cách tiếp cận tối đa (trục X) để kích hoạt bắn (pixel).")]
+    public float triggerDistanceX = 1000f;
+
+    [Tooltip("Khoảng cách chênh lệch Y tối đa để kích hoạt (pixel).")]
+    public float triggerHeightRange = 300f;
 
     [Tooltip("Thời gian chờ trước khi bắn lại (giây)")]
     public float cooldown = 4f;
@@ -61,17 +64,19 @@ public class DartTrap : MonoBehaviour
 
     void Start()
     {
-        // Xác định hướng bắn dựa vào localScale.x
-        // Sprite phi tiêu mặc định chĩa sang trái
-        // scale.x = -1 → hình bị lật → mũi chĩa sang PHẢI → bắn sang PHẢI
-        // scale.x = +1 → hình bình thường → mũi chĩa sang TRÁI → bắn sang TRÁI (nhưng thường muốn bắn về phía player ở phải)
-        
-        // Đơn giản: nếu dart ở bên trái map (x < 0) → bắn sang phải
-        //           nếu dart ở bên phải map (x > 0) → bắn sang trái
-        if (startPos.x < 0)
-            fireDirectionX = 1f;  // bắn sang phải
+        // Nếu dart ở bên trái map (x < 0) → bắn sang phải
+        // nếu dart ở bên phải map (x > 0) → bắn sang trái
+        // Hoặc tự động nhắm về phía player nếu player đã có sẵn
+        GameObject player = GameObject.Find("Player");
+        if (player != null)
+        {
+            RectTransform pRT = player.GetComponent<RectTransform>();
+            fireDirectionX = (pRT.anchoredPosition.x > startPos.x) ? 1f : -1f;
+        }
         else
-            fireDirectionX = -1f; // bắn sang trái
+        {
+            fireDirectionX = (startPos.x < 0) ? 1f : -1f;
+        }
     }
 
     void Update()
@@ -90,14 +95,19 @@ public class DartTrap : MonoBehaviour
 
         if (!isFiring)
         {
-            // Kiểm tra Player có ở cùng tầng cao không
             float playerY = playerRT.anchoredPosition.y;
             float dartY = startPos.y;
             float deltaY = Mathf.Abs(playerY - dartY);
+            
+            float playerX = playerRT.anchoredPosition.x;
+            float dartX = startPos.x;
+            float deltaX = Mathf.Abs(playerX - dartX);
 
-            // Chỉ bắn khi Player ở cùng tầng (chênh lệch Y nhỏ)
-            if (deltaY < triggerHeightRange)
+            // Bắn khi Player lại gần (cùng tầng Y và khoảng cách X đủ gần)
+            if (deltaY < triggerHeightRange && deltaX < triggerDistanceX)
             {
+                // Cập nhật lại hướng bắn cho chắc chắn trúng player
+                fireDirectionX = (playerX > dartX) ? 1f : -1f;
                 isFiring = true;
                 distanceTraveled = 0f;
             }

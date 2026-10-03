@@ -1,50 +1,57 @@
 using UnityEngine;
 using UnityEngine.Networking;
 using System.Collections;
+using System;
 
 public class GoogleSheetAPI : MonoBehaviour
 {
-    private string webAppURL = "https://script.google.com/macros/s/AKfycbzdm32EURe6WzbEO3iEk-fzd8o6lJcpv8QJ1y5JR_X9CuGm8aCBg-I4Xcv4ATrvPlAKOw/exec"; // dán URL bạn vừa copy
+    private string csvURL = "https://docs.google.com/spreadsheets/d/1DcJwlN_fUDdcaQ6IfnlkMJApgWuEUqMhyZv9Kn8vfWo/export?format=csv";
 
-    public void Register(string username, string password, string role)
+    public void Login(string username, string password, string role, Action<bool, string> onComplete)
     {
-        StartCoroutine(PostRegister(username, password, role));
+        StartCoroutine(GetCSVData(username, password, role, onComplete));
     }
 
-    public void Login(string username, string password)
+    IEnumerator GetCSVData(string username, string password, string role, Action<bool, string> onComplete)
     {
-        StartCoroutine(GetLogin(username, password));
-    }
-
-    IEnumerator PostRegister(string username, string password, string role)
-    {
-        WWWForm form = new WWWForm();
-        string json = "{\"username\":\"" + username + "\",\"password\":\"" + password + "\",\"role\":\"" + role + "\"}";
-
-        UnityWebRequest req = new UnityWebRequest(webAppURL, "POST");
-        byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(json);
-        req.uploadHandler = new UploadHandlerRaw(bodyRaw);
-        req.downloadHandler = new DownloadHandlerBuffer();
-        req.SetRequestHeader("Content-Type", "application/json");
-
+        UnityWebRequest req = UnityWebRequest.Get(csvURL);
         yield return req.SendWebRequest();
 
         if (req.result == UnityWebRequest.Result.Success)
-            Debug.Log("Đăng ký thành công: " + req.downloadHandler.text);
+        {
+            string csvData = req.downloadHandler.text;
+            bool isSuccess = false;
+
+            string[] rows = csvData.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            for (int i = 1; i < rows.Length; i++) // Skip header
+            {
+                string[] cols = rows[i].Split(',');
+                if (cols.Length >= 5)
+                {
+                    string dbUser = cols[1].Trim();
+                    string dbPass = cols[2].Trim();
+                    string dbRole = cols[4].Trim();
+
+                    if (dbUser == username && dbPass == password && dbRole.Equals(role, StringComparison.OrdinalIgnoreCase))
+                    {
+                        isSuccess = true;
+                        break;
+                    }
+                }
+            }
+
+            if (isSuccess)
+            {
+                onComplete?.Invoke(true, "Đăng nhập thành công");
+            }
+            else
+            {
+                onComplete?.Invoke(false, "Tên đăng nhập hoặc mật khẩu không đúng");
+            }
+        }
         else
-            Debug.LogError("Lỗi: " + req.error);
-    }
-
-    IEnumerator GetLogin(string username, string password)
-    {
-        string url = $"{webAppURL}?username={UnityWebRequest.EscapeURL(username)}&password={UnityWebRequest.EscapeURL(password)}";
-        UnityWebRequest req = UnityWebRequest.Get(url);
-
-        yield return req.SendWebRequest();
-
-        if (req.result == UnityWebRequest.Result.Success)
-            Debug.Log("Kết quả đăng nhập: " + req.downloadHandler.text);
-        else
-            Debug.LogError("Lỗi: " + req.error);
+        {
+            onComplete?.Invoke(false, "Lỗi kết nối mạng: " + req.error);
+        }
     }
 }

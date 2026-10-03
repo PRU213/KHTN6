@@ -23,6 +23,13 @@ public class GameData : MonoBehaviour
     [HideInInspector] public Vector2 lastPlayerPosition;
     [HideInInspector] public bool hasSavedPosition = false;
 
+    [HideInInspector] public List<QuestionData> allQuestions = new List<QuestionData>();
+
+    // Tính thời gian vượt ải
+    [HideInInspector] public float startTime;
+    [HideInInspector] public float endTime;
+    [HideInInspector] public bool isTimerRunning = false;
+
     void Awake()
     {
         if (Instance != null && Instance != this)
@@ -32,6 +39,10 @@ public class GameData : MonoBehaviour
         }
         Instance = this;
         DontDestroyOnLoad(gameObject);
+
+        // Tự động thêm script kiểm tra thắng màn bean_tong
+        if (GetComponent<VictoryChecker>() == null)
+            gameObject.AddComponent<VictoryChecker>();
     }
 
     /// <summary>Mất 1 máu. Trả về true nếu còn sống.</summary>

@@ -739,6 +739,8 @@ MonoBehaviour:
   currentHealth: 3
   currentEnemyName: 
   defeatedEnemies: []
+  lastPlayerPosition: {x: 0, y: 0}
+  hasSavedPosition: 0
 --- !u!4 &736266723
 Transform:
   m_ObjectHideFlags: 0

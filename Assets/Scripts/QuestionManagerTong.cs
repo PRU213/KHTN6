@@ -118,6 +118,7 @@ public class QuestionManagerTong : MonoBehaviour
             go.AddComponent<GameData>();
         }
 
+        LoadDynamicQuestions();
         FindUIElements();
         SetupUIComponents();
         UpdateHealthIcons();
@@ -125,15 +126,62 @@ public class QuestionManagerTong : MonoBehaviour
         ShowQuestion();
     }
 
+    private void LoadDynamicQuestions()
+    {
+        if (GameData.Instance != null && GameData.Instance.allQuestions != null && GameData.Instance.allQuestions.Count > 0)
+        {
+            string selChapter = PlayerPrefs.GetString("SelectedChapter", "Tất cả");
+            string selDiff = PlayerPrefs.GetString("SelectedDifficulty", "Tổng hợp");
+
+            System.Collections.Generic.List<Question> dynamicQs = new System.Collections.Generic.List<Question>();
+
+            foreach (var q in GameData.Instance.allQuestions)
+            {
+                // QuestionManagerTong handles Biology implicitly because ChonBaiManager filters it.
+                // But just in case, we can filter by monID if we want, or assume GameData only has what we need.
+                
+                bool matchChapter = (selChapter == "Tất cả" || q.topic.Trim() == selChapter);
+                bool matchDiff = (selDiff == "Tổng hợp" || q.difficulty.Trim().ToLower() == selDiff.ToLower());
+
+                if (matchChapter && matchDiff)
+                {
+                    Question newQ = new Question();
+                    newQ.questionText = q.question;
+                    newQ.answers = new string[] { q.option_a, q.option_b, q.option_c, q.option_d };
+                    
+                    string co = q.correct_option.Trim().ToUpper();
+                    if (co == "A") newQ.correctIndex = 0;
+                    else if (co == "B") newQ.correctIndex = 1;
+                    else if (co == "C") newQ.correctIndex = 2;
+                    else if (co == "D") newQ.correctIndex = 3;
+                    else newQ.correctIndex = 0;
+
+                    dynamicQs.Add(newQ);
+                }
+            }
+
+            if (dynamicQs.Count > 0)
+            {
+                questions = dynamicQs.ToArray();
+            }
+            else
+            {
+                Debug.LogWarning("Không có câu hỏi nào khớp với độ khó và chương đã chọn! Dùng mặc định.");
+            }
+        }
+    }
+
     private void FindUIElements()
     {
         Canvas canvas = GetComponent<Canvas>();
-        if (canvas == null) canvas = FindAnyObjectByType<Canvas>();
+        if (canvas == null) canvas = Object.FindFirstObjectByType<Canvas>();
         if (canvas == null) return;
 
         Image[] allImages = canvas.GetComponentsInChildren<Image>(true);
-        int ansIdx = 0, hpIdx = 0;
+        int hpIdx = 0;
         float maxBoardArea = 0f;
+        
+        System.Collections.Generic.List<Image> foundAnswers = new System.Collections.Generic.List<Image>();
 
         foreach (Image img in allImages)
         {
@@ -149,14 +197,20 @@ public class QuestionManagerTong : MonoBehaviour
             if (objName.Contains("player")) continue;
 
             // Nút đáp án (~525 x 192)
-            if (w > 400 && w < 600 && h > 150 && h < 250 && ansIdx < 4)
+            bool isNamedAnswer = objName.Contains("dapan") || objName.Contains("đáp án") || objName.Contains("đápán");
+            bool isSizedAnswer = w > 400 && w < 600 && h > 150 && h < 250;
+
+            if (isNamedAnswer || isSizedAnswer)
             {
-                answerImages[ansIdx++] = img;
+                foundAnswers.Add(img);
                 continue;
             }
 
             // Icon tim (~67 x 72)
-            if (w > 40 && w < 120 && h > 40 && h < 120 && hpIdx < 3)
+            bool isNamedHp = objName.Contains("tim") || objName.Contains("heart") || objName.Contains("mau");
+            bool isSizedHp = w > 40 && w < 120 && h > 40 && h < 120;
+
+            if ((isNamedHp || isSizedHp) && hpIdx < 3)
             {
                 // Bỏ qua bảng máu (604 x 156)
                 if (w > 200) continue;
@@ -170,6 +224,18 @@ public class QuestionManagerTong : MonoBehaviour
                 maxBoardArea = area;
                 questionBoard = img;
             }
+        }
+
+        // Sắp xếp các nút đáp án theo toạ độ Y (từ trên xuống) rồi đến X (từ trái qua)
+        foundAnswers.Sort((a, b) => {
+            int yCompare = b.rectTransform.position.y.CompareTo(a.rectTransform.position.y);
+            if (yCompare == 0) return a.rectTransform.position.x.CompareTo(b.rectTransform.position.x);
+            return yCompare;
+        });
+
+        for (int i = 0; i < Mathf.Min(4, foundAnswers.Count); i++)
+        {
+            answerImages[i] = foundAnswers[i];
         }
     }
 
@@ -307,6 +373,7 @@ public class QuestionManagerTong : MonoBehaviour
             GameData.Instance.defeatedEnemies.Clear();
             GameData.Instance.currentEnemyName = "";
             GameData.Instance.hasSavedPosition = false;
+            GameData.Instance.startTime = Time.time;
         }
         SceneManager.LoadScene("bean_tong");
     }

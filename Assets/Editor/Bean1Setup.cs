@@ -10,64 +10,261 @@ public class Bean1Setup : MonoBehaviour
     {
         EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo();
 
-        // Thêm các cảnh vào Build Settings nếu chưa có
-        AddSceneToBuildSettings("Assets/Scenes/Biology/bean_1.unity");
-        AddSceneToBuildSettings("Assets/Scenes/Biology/bean_1_question.unity");
-        AddSceneToBuildSettings("Assets/Scenes/Biology/Bean_2_Biology.unity");
-        AddSceneToBuildSettings("Assets/Scenes/Biology/bean_tong.unity");
-        AddSceneToBuildSettings("Assets/Scenes/Biology/beantong_question.unity");
+        // Danh sách các màn chơi chính
+        string[] gameScenes = {
+            "Assets/Scenes/Biology/bean_1.unity",
+            "Assets/Scenes/Biology/Bean_2_Biology.unity",
+            "Assets/Scenes/Biology/Bean_3_Biology.unity"
+        };
 
-        // === BEAN_1 ===
-        var scene1 = EditorSceneManager.OpenScene("Assets/Scenes/Biology/bean_1.unity", OpenSceneMode.Single);
-        string res1 = "Loi mo bean_1";
-        if (scene1.IsValid())
+        // Danh sách các màn câu hỏi tương ứng
+        string[] questionScenes = {
+            "Assets/Scenes/Biology/bean_1_question.unity",
+            "Assets/Scenes/Biology/Bean_2_Biology_Question.unity",
+            "Assets/Scenes/Biology/Bean_3_Biology_Question.unity"
+        };
+
+        string results = "";
+
+        // Setup các màn chơi chính
+        for (int i = 0; i < gameScenes.Length; i++)
         {
-            res1 = SetupBean1();
-            EditorSceneManager.SaveScene(scene1);
+            if (!System.IO.File.Exists(gameScenes[i])) continue;
+            AddSceneToBuildSettings(gameScenes[i]);
+            var scene = EditorSceneManager.OpenScene(gameScenes[i], OpenSceneMode.Single);
+            if (scene.IsValid())
+            {
+                string res = SetupBean1();
+                results += $"\n- {System.IO.Path.GetFileNameWithoutExtension(gameScenes[i])}: {res}";
+                EditorSceneManager.SaveScene(scene);
+            }
         }
 
-        // === BEAN_2_BIOLOGY (câu hỏi bean_1) ===
-        var scene2 = EditorSceneManager.OpenScene("Assets/Scenes/Biology/Bean_2_Biology.unity", OpenSceneMode.Single);
-        string res2 = "Loi mo Bean_2_Biology";
-        if (scene2.IsValid())
+        // Setup các màn câu hỏi
+        for (int i = 0; i < questionScenes.Length; i++)
         {
-            res2 = SetupBean1Question();
-            EditorSceneManager.SaveScene(scene2);
+            if (!System.IO.File.Exists(questionScenes[i])) continue;
+            AddSceneToBuildSettings(questionScenes[i]);
+            var scene = EditorSceneManager.OpenScene(questionScenes[i], OpenSceneMode.Single);
+            if (scene.IsValid())
+            {
+                string res = SetupBean1Question();
+                results += $"\n- {System.IO.Path.GetFileNameWithoutExtension(questionScenes[i])}: {res}";
+                EditorSceneManager.SaveScene(scene);
+            }
         }
 
         // === BEAN_TONG ===
-        var scene3 = EditorSceneManager.OpenScene("Assets/Scenes/Biology/bean_tong.unity", OpenSceneMode.Single);
-        string res3 = "Loi mo bean_tong";
-        if (scene3.IsValid())
+        if (System.IO.File.Exists("Assets/Scenes/Biology/bean_tong.unity"))
         {
-            res3 = SetupBeanTong();
-            EditorSceneManager.SaveScene(scene3);
+            AddSceneToBuildSettings("Assets/Scenes/Biology/bean_tong.unity");
+            var scene3 = EditorSceneManager.OpenScene("Assets/Scenes/Biology/bean_tong.unity", OpenSceneMode.Single);
+            if (scene3.IsValid())
+            {
+                string res3 = SetupBeanTong();
+                results += $"\n- bean_tong: {res3}";
+                EditorSceneManager.SaveScene(scene3);
+            }
         }
 
-        // === BEANTONG_QUESTION (scene câu hỏi đã có sẵn) ===
-        var scene4 = EditorSceneManager.OpenScene("Assets/Scenes/Biology/beantong_question.unity", OpenSceneMode.Single);
-        string res4 = "Loi mo beantong_question";
-        if (scene4.IsValid())
+        // === BEANTONG_QUESTION ===
+        if (System.IO.File.Exists("Assets/Scenes/Biology/beantong_question.unity"))
         {
-            res4 = SetupBeanTongQuestion();
-            EditorSceneManager.SaveScene(scene4);
+            AddSceneToBuildSettings("Assets/Scenes/Biology/beantong_question.unity");
+            var scene4 = EditorSceneManager.OpenScene("Assets/Scenes/Biology/beantong_question.unity", OpenSceneMode.Single);
+            if (scene4.IsValid())
+            {
+                string res4 = SetupBeanTongQuestion();
+                results += $"\n- beantong_question: {res4}";
+                EditorSceneManager.SaveScene(scene4);
+            }
         }
 
         // === VIDEO GIOI THIEU ===
-        string res5 = "Khong co scene video_gioithieu";
         if (System.IO.File.Exists("Assets/Scenes/Biology/video_gioithieu.unity"))
         {
             AddSceneToBuildSettings("Assets/Scenes/Biology/video_gioithieu.unity");
             var scene5 = EditorSceneManager.OpenScene("Assets/Scenes/Biology/video_gioithieu.unity", OpenSceneMode.Single);
             if (scene5.IsValid())
             {
-                res5 = SetupVideoGioiThieu();
+                string res5 = SetupVideoGioiThieu();
+                results += $"\n- video_gioithieu: {res5}";
                 EditorSceneManager.SaveScene(scene5);
             }
         }
 
-        EditorUtility.DisplayDialog("Ket qua Setup",
-            $"bean_1: {res1}\nBean_2_Biology: {res2}\nbean_tong: {res3}\nbeantong_question: {res4}\nvideo_gioithieu: {res5}", "OK");
+        EditorUtility.DisplayDialog("Ket qua Setup", "Thành công!\n" + results, "OK");
+    }
+
+    [MenuItem("Tools/2. Setup Riêng Bean 2 (Fix lỗi)")]
+    public static void RunSetupBean2()
+    {
+        EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo();
+
+        string scenePath = "Assets/Scenes/Biology/Bean_2_Biology.unity";
+        if (!System.IO.File.Exists(scenePath))
+        {
+            EditorUtility.DisplayDialog("Lỗi", "Không tìm thấy Bean_2_Biology!", "OK");
+            return;
+        }
+
+        AddSceneToBuildSettings(scenePath);
+        var scene = EditorSceneManager.OpenScene(scenePath, OpenSceneMode.Single);
+        
+        // 1. Sửa lỗi xóa nhầm QuestionManager do phiên bản trước gắn nhầm
+        Canvas canvas = Object.FindAnyObjectByType<Canvas>();
+        if (canvas != null)
+        {
+            QuestionManager qm = canvas.GetComponent<QuestionManager>();
+            if (qm != null) Object.DestroyImmediate(qm);
+            
+            // Xóa các object đáp án sinh ra do lỗi
+            for (int i = canvas.transform.childCount - 1; i >= 0; i--)
+            {
+                Transform child = canvas.transform.GetChild(i);
+                if (child.name.StartsWith("đáp án") || child.name == "bảng" || child.name.StartsWith("tim"))
+                {
+                    Object.DestroyImmediate(child.gameObject);
+                }
+            }
+        }
+
+    // 2. Chạy setup chuẩn
+        string res = SetupBean1();
+        EditorSceneManager.SaveScene(scene);
+
+        EditorUtility.DisplayDialog("Setup Bean 2", "Đã fix xong lỗi hiện đáp án và setup leo trèo/di chuyển!\nKết quả: " + res, "OK");
+    }
+
+    [MenuItem("Tools/3. Setup Riêng Bean 3")]
+    public static void RunSetupBean3()
+    {
+        EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo();
+
+        string scenePath = "Assets/Scenes/Biology/Bean_3_Biology.unity";
+        if (!System.IO.File.Exists(scenePath))
+        {
+            EditorUtility.DisplayDialog("Lỗi", "Không tìm thấy Bean_3_Biology!", "OK");
+            return;
+        }
+
+        AddSceneToBuildSettings(scenePath);
+        var scene = EditorSceneManager.OpenScene(scenePath, OpenSceneMode.Single);
+        
+        // 1. Dọn dẹp lỗi UI (nếu có)
+        Canvas canvas = Object.FindAnyObjectByType<Canvas>();
+        if (canvas != null)
+        {
+            QuestionManager qm = canvas.GetComponent<QuestionManager>();
+            if (qm != null) Object.DestroyImmediate(qm);
+            
+            for (int i = canvas.transform.childCount - 1; i >= 0; i--)
+            {
+                Transform child = canvas.transform.GetChild(i);
+                if (child.name.StartsWith("đáp án") || child.name == "bảng" || child.name.StartsWith("tim"))
+                {
+                    Object.DestroyImmediate(child.gameObject);
+                }
+            }
+        }
+
+        // 2. Chạy setup chuẩn
+        string res = SetupBean1();
+        EditorSceneManager.SaveScene(scene);
+
+        EditorUtility.DisplayDialog("Setup Bean 3", "Đã setup thành công môi trường cho Bean 3!\nKết quả: " + res, "OK");
+    }
+
+    [MenuItem("Tools/4. Liên Kết Các Màn Chơi (Tự động)")]
+    public static void RunSetupLinks()
+    {
+        EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo();
+
+        // 1. Màn luật chơi sinh học -> bean_1
+        if (System.IO.File.Exists("Assets/Scenes/Biology/luatchoisinhhoc.unity"))
+        {
+            AddSceneToBuildSettings("Assets/Scenes/Biology/luatchoisinhhoc.unity");
+            var scene1 = EditorSceneManager.OpenScene("Assets/Scenes/Biology/luatchoisinhhoc.unity", OpenSceneMode.Single);
+            Camera cam = Object.FindAnyObjectByType<Camera>();
+            if (cam != null && cam.GetComponent<SceneTransitionOnClick>() == null)
+            {
+                var st = cam.gameObject.AddComponent<SceneTransitionOnClick>();
+                st.nextSceneName = "bean_1";
+            }
+            EditorSceneManager.SaveScene(scene1);
+        }
+
+        // 2. Màn video giới thiệu -> bean_tong
+        if (System.IO.File.Exists("Assets/Scenes/Biology/video_gioithieu.unity"))
+        {
+            AddSceneToBuildSettings("Assets/Scenes/Biology/video_gioithieu.unity");
+            AddSceneToBuildSettings("Assets/Scenes/Biology/bean_tong.unity");
+            AddSceneToBuildSettings("Assets/Scenes/Biology/victory.unity");
+            var scene2 = EditorSceneManager.OpenScene("Assets/Scenes/Biology/video_gioithieu.unity", OpenSceneMode.Single);
+            var vp = Object.FindAnyObjectByType<UnityEngine.Video.VideoPlayer>();
+            if (vp != null && vp.GetComponent<VideoEndTransition>() == null)
+            {
+                var vet = vp.gameObject.AddComponent<VideoEndTransition>();
+                vet.nextSceneName = "bean_tong";
+            }
+            else
+            {
+                Camera cam = Object.FindAnyObjectByType<Camera>();
+                if (cam != null && cam.GetComponent<VideoEndTransition>() == null)
+                {
+                    var vet = cam.gameObject.AddComponent<VideoEndTransition>();
+                    vet.nextSceneName = "bean_tong";
+                }
+            }
+            EditorSceneManager.SaveScene(scene2);
+        }
+
+        EditorUtility.DisplayDialog("Liên kết", "Đã thiết lập xong luồng chuyển cảnh:\nLuật -> Bean 1 -> Bean 2 -> Video -> Bean Tổng", "OK");
+    }
+
+    [MenuItem("Tools/5. Sửa Lỗi Lún Chân (Cho Màn Hiện Tại)")]
+    public static void FixFootOffset()
+    {
+        int count = 0;
+        
+        // Sửa Platform
+        Platform[] platforms = Object.FindObjectsByType<Platform>(FindObjectsSortMode.None);
+        foreach (var p in platforms)
+        {
+            if (p.surfaceOffset > 10f)
+            {
+                p.surfaceOffset = 5f;
+                EditorUtility.SetDirty(p);
+                count++;
+            }
+        }
+
+        // Sửa Vertical Moving Platform (bị lún)
+        VerticalMovingPlatform[] vmps = Object.FindObjectsByType<VerticalMovingPlatform>(FindObjectsSortMode.None);
+        foreach (var vmp in vmps)
+        {
+            Platform p = vmp.GetComponent<Platform>();
+            if (p != null)
+            {
+                p.surfaceOffset = 5f;
+                EditorUtility.SetDirty(p);
+            }
+        }
+        
+        // Sửa Moving Platform
+        MovingPlatform[] mps = Object.FindObjectsByType<MovingPlatform>(FindObjectsSortMode.None);
+        foreach (var mp in mps)
+        {
+            Platform p = mp.GetComponent<Platform>();
+            if (p != null)
+            {
+                p.surfaceOffset = 5f;
+                EditorUtility.SetDirty(p);
+            }
+        }
+
+        EditorSceneManager.SaveScene(EditorSceneManager.GetActiveScene());
+        EditorUtility.DisplayDialog("Sửa lỗi lún chân", $"Đã nâng vạch vàng lên sát mép trên cho {count} bệ đỡ.\n\nHãy Play thử để xem nhân vật đã đứng trên bề mặt chưa!", "OK");
     }
 
     private static void AddSceneToBuildSettings(string scenePath)
@@ -82,12 +279,25 @@ public class Bean1Setup : MonoBehaviour
     }
 
     // =========================================================
-    // SETUP BEAN_1 (giữ nguyên, không thay đổi)
+    // SETUP GAME SCENE (Chung cho bean_1, bean_2, bean_3...)
     // =========================================================
     private static string SetupBean1()
     {
         Canvas canvas = Object.FindAnyObjectByType<Canvas>();
         if (canvas == null) return "- Không tìm thấy Canvas!";
+
+        // Xóa QuestionManager vì đây là GAME SCENE
+        QuestionManager qm = canvas.GetComponent<QuestionManager>();
+        if (qm != null) Object.DestroyImmediate(qm);
+        // Xóa các object đáp án sinh ra do lỗi copy nhầm
+        for (int i = canvas.transform.childCount - 1; i >= 0; i--)
+        {
+            Transform child = canvas.transform.GetChild(i);
+            if (child.name.StartsWith("đáp án") || child.name == "bảng" || child.name.StartsWith("tim"))
+            {
+                Object.DestroyImmediate(child.gameObject);
+            }
+        }
 
         int plat = 0, lad = 0, ene = 0, dart = 0, moving = 0;
         GameObject playerObj = null;
@@ -102,11 +312,16 @@ public class Bean1Setup : MonoBehaviour
 
             if (rt.anchorMin == Vector2.zero && rt.anchorMax == Vector2.one) continue;
 
-            if (objName.Contains("dart") || objName.Contains("phitieu") || objName.Contains("phi_tieu") || objName.Contains("phi tieu"))
+            if (objName.Contains("dart") || objName.Contains("phitieu") || objName.Contains("phi_tieu") || objName.Contains("phi tieu") || objName.Contains("tendo") || objName.Contains("tên độc") || objName.Contains("tênđộc") || objName.Contains("tên"))
             { SetupDart(img, dart); dart++; continue; }
 
             if (objName.Contains("moving") || objName.Contains("gachdi") || objName.Contains("gach_di") || objName.Contains("gach di"))
-            { SetupMoving(img, moving); moving++; continue; }
+            {
+                SetupMoving(img, moving);
+                MovingPlatform mp = img.GetComponent<MovingPlatform>();
+                if (mp != null) { mp.defaultTravelDistance = 400f; }
+                moving++; continue;
+            }
 
             if (objName.Contains("cloud"))
             {
@@ -116,43 +331,56 @@ public class Bean1Setup : MonoBehaviour
                 continue;
             }
 
-            if (objName.Contains("portal") || objName.Contains("cong"))
+            if (objName.Contains("portal") || objName.Contains("cong") || objName.Contains("cổng"))
             {
                 if (!img.GetComponent<Portal>()) img.gameObject.AddComponent<Portal>();
-                img.gameObject.name = "Portal";
                 continue;
             }
 
             if (objName == "player" || objName == "player_1" || img.GetComponent<Animator>() != null)
             {
-                if (!img.GetComponent<Animator>()) img.gameObject.AddComponent<Animator>();
+                Animator anim = img.GetComponent<Animator>();
+                if (!anim) anim = img.gameObject.AddComponent<Animator>();
+                
+                // Gắn luôn cute2.controller của bean_1 sang cho player theo yêu cầu
+                var controller = UnityEditor.AssetDatabase.LoadAssetAtPath<UnityEditor.Animations.AnimatorController>("Assets/Animation/cute2.controller");
+                if (controller != null) anim.runtimeAnimatorController = controller;
+
                 if (!img.GetComponent<PlayerController>()) img.gameObject.AddComponent<PlayerController>();
-                img.gameObject.name = "Player";
                 playerObj = img.gameObject;
                 continue;
             }
 
-            if (w > 45 && w < 115 && h > 90 && h < 360)
+            if (objName.Contains("gonang") || objName.Contains("go_nang") || objName.Contains("gỗ_nâng") || objName.Contains("gỗ nâng"))
             {
-                if (!img.GetComponent<LadderZone>()) img.gameObject.AddComponent<LadderZone>();
-                img.gameObject.name = "Ladder_" + lad++;
+                VerticalMovingPlatform vmp = img.GetComponent<VerticalMovingPlatform>();
+                if (vmp == null) vmp = img.gameObject.AddComponent<VerticalMovingPlatform>();
+                vmp.speed = 80f; vmp.waitTime = 1f; vmp.defaultTravelDistance = 200f;
+                EditorUtility.SetDirty(vmp);
+                moving++;
                 continue;
             }
 
-            if (objName.Contains("dat") || objName.Contains("nen_dat") || (w > 75 && w < 700 && h > 55 && h < 250))
+            if (objName.Contains("monster") || objName.Contains("monser") || objName.Contains("quai") || objName.Contains("quái") || objName.Contains("enemy") || objName.Contains("slime") || objName.Contains("virus"))
+            {
+                if (!img.GetComponent<Enemy>()) img.gameObject.AddComponent<Enemy>();
+                ene++;
+                continue;
+            }
+
+            if (objName.Contains("dayleo") || objName.Contains("day_leo") || objName.Contains("ladder") || objName.Contains("lader") || objName.Contains("thang") || (w > 45 && w < 115 && h > 90 && h < 360))
+            {
+                if (!img.GetComponent<LadderZone>()) img.gameObject.AddComponent<LadderZone>();
+                lad++;
+                continue;
+            }
+
+            if (objName.Contains("dat") || objName.Contains("nen_dat") || objName.Contains("platform") || objName.Contains("daycau") || objName.Contains("day_cau") || objName.Contains("beo") || objName.Contains("bèo") || objName.Contains("gỗ") || objName.Contains("đảo") || objName.Contains("cầu") || (w > 75 && w < 700 && h > 55 && h < 250))
             {
                 Platform p = img.GetComponent<Platform>();
                 if (p == null) p = img.gameObject.AddComponent<Platform>();
                 EditorUtility.SetDirty(p);
-                img.gameObject.name = "Platform_" + plat++;
-                continue;
-            }
-
-            if (objName.Contains("monster") || objName.Contains("monser") || objName.Contains("quai") || objName.Contains("quái") || (w > 35 && w < 90 && h > 35 && h < 120))
-            {
-                if (img.GetComponent<Platform>() || img.GetComponent<LadderZone>()) continue;
-                if (!img.GetComponent<Enemy>()) img.gameObject.AddComponent<Enemy>();
-                img.gameObject.name = "Enemy_" + ene++;
+                plat++;
                 continue;
             }
         }
