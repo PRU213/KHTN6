@@ -172,10 +172,30 @@ public class PlayerController : MonoBehaviour
 
 
         // =========================
+        // KIỂM TRA LEO & NHẢY BẰNG W
+        // =========================
+
+        bool isWPressed = Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow);
+        bool canClimbUp = true;
+
+        if (activeLadder != null && climbInput > 0.01f)
+        {
+            float feetY = GetFeetWorldY();
+            float ladderTop = GetWorldRect(activeLadder.RectTransform).yMax;
+            if (feetY >= ladderTop - 10f)
+            {
+                canClimbUp = false;
+            }
+        }
+
+        bool shouldStartClimbing = isOnLadder && Mathf.Abs(climbInput) > 0.01f;
+        if (climbInput > 0.01f && !canClimbUp) shouldStartClimbing = false;
+
+        // =========================
         // BẮT ĐẦU LEO
         // =========================
 
-        if (isOnLadder && Mathf.Abs(climbInput) > 0.01f)
+        if (shouldStartClimbing)
         {
             if (!isClimbing)
             {
@@ -249,8 +269,11 @@ public class PlayerController : MonoBehaviour
         // JUMP
         // =========================
 
+        bool allowWJump = (!isOnLadder) || (isOnLadder && !canClimbUp);
+        bool jumpRequested = Input.GetButtonDown("Jump") || (allowWJump && isWPressed);
+
         if (
-            Input.GetButtonDown("Jump") &&
+            jumpRequested &&
             (isGrounded || isClimbing)
         )
         {
@@ -404,7 +427,6 @@ public class PlayerController : MonoBehaviour
         if (currentLadder == null)
             return;
 
-
         Rect ladderRect =
             GetWorldRect(currentLadder.RectTransform);
 
@@ -416,13 +438,70 @@ public class PlayerController : MonoBehaviour
 
 
         // =====================================================
-        // CHÂN THANG
+        // TÌM ĐỈNH VÀ CHÂN THANG DỰA VÀO PLATFORM
         // =====================================================
 
-        if (playerFeetWorld <= ladderRect.yMin)
+        float maxClimbY = ladderRect.yMax;
+        float minClimbY = ladderRect.yMin;
+        
+        bool foundTopPlatform = false;
+        bool foundBottomPlatform = false;
+        
+        float highestPlatformY = float.NegativeInfinity;
+        float lowestPlatformY = float.PositiveInfinity;
+
+        foreach (Platform platform in Platform.AllPlatforms)
+        {
+            if (platform == null || platform.RectTransform == null)
+                continue;
+
+            Rect platformRect =
+                GetWorldRect(platform.RectTransform);
+
+            // Thang phải nằm ngang trong Platform (thêm dung sai cho thang ở mép)
+            float expandX = 20f * playerScaleY;
+            bool horizontalOverlap =
+                ladderRect.xMax + expandX > platformRect.xMin &&
+                ladderRect.xMin - expandX < platformRect.xMax;
+
+            if (!horizontalOverlap)
+                continue;
+
+            float platformSurfaceY = platform.GetSurfaceWorldY();
+
+            // Tìm Platform Đỉnh (Top)
+            if (platformSurfaceY >= ladderRect.yMin && platformSurfaceY <= ladderRect.yMax + (150f * playerScaleY))
+            {
+                if (!foundTopPlatform || platformSurfaceY > highestPlatformY)
+                {
+                    highestPlatformY = platformSurfaceY;
+                    foundTopPlatform = true;
+                }
+            }
+
+            // Tìm Platform Chân (Bottom)
+            if (platformSurfaceY >= ladderRect.yMin - (150f * playerScaleY) && platformSurfaceY <= ladderRect.yMax)
+            {
+                if (!foundBottomPlatform || platformSurfaceY < lowestPlatformY)
+                {
+                    lowestPlatformY = platformSurfaceY;
+                    foundBottomPlatform = true;
+                }
+            }
+        }
+
+        if (foundTopPlatform) maxClimbY = highestPlatformY;
+        if (foundBottomPlatform) minClimbY = lowestPlatformY;
+
+
+        // =====================================================
+        // XỬ LÝ KHI CHẠM CHÂN THANG
+        // =====================================================
+
+        if (playerFeetWorld <= minClimbY)
         {
             float difference =
-                ladderRect.yMin - playerFeetWorld;
+                minClimbY - playerFeetWorld;
 
             MovePlayerWorldY(difference);
 
@@ -430,109 +509,23 @@ public class PlayerController : MonoBehaviour
 
             isClimbing = false;
             currentLadder = null;
+            isGrounded = true; // Bắt buộc chạm đất để không bị rơi
+            
+            // Xoá cooldown rơi xuyên nền để nhân vật không bị lọt xuống đất khi ấn nút xuống
+            dropCooldown = 0f;
 
             return;
         }
 
 
         // =====================================================
-        // ĐỈNH THANG
+        // XỬ LÝ KHI CHẠM ĐỈNH THANG
         // =====================================================
-
-        float searchDistance =
-            80f * playerScaleY;
-
-        float maxClimbY =
-            ladderRect.yMax + searchDistance;
-
-
-        bool foundPlatform = false;
-
-        float nearestPlatformDistance =
-            float.MaxValue;
-
-
-        foreach (Platform platform in Platform.AllPlatforms)
-        {
-            if (platform == null)
-                continue;
-
-            if (platform.RectTransform == null)
-                continue;
-
-
-            Rect platformRect =
-                GetWorldRect(platform.RectTransform);
-
-
-            // Thang phải nằm ngang trong Platform
-            bool horizontalOverlap =
-                ladderRect.xMax > platformRect.xMin &&
-                ladderRect.xMin < platformRect.xMax;
-
-            if (!horizontalOverlap)
-                continue;
-
-
-            // QUAN TRỌNG:
-            // Không tự tính yMax - surfaceOffset nữa.
-            // Platform tự trả mặt đất thật.
-            float platformSurfaceY =
-                platform.GetSurfaceWorldY();
-
-
-            float lowerLimit =
-                ladderRect.yMax -
-                (50f * playerScaleY);
-
-            float upperLimit =
-                ladderRect.yMax +
-                searchDistance +
-                (50f * playerScaleY);
-
-
-            if (
-                platformSurfaceY >= lowerLimit &&
-                platformSurfaceY <= upperLimit
-            )
-            {
-                float distance =
-                    Mathf.Abs(
-                        platformSurfaceY -
-                        ladderRect.yMax
-                    );
-
-
-                // Chọn Platform gần đầu thang nhất
-                if (
-                    !foundPlatform ||
-                    distance < nearestPlatformDistance
-                )
-                {
-                    nearestPlatformDistance = distance;
-
-                    maxClimbY =
-                        platformSurfaceY;
-
-                    foundPlatform = true;
-                }
-            }
-        }
-
-
-        // =====================================================
-        // PLAYER ĐẠT ĐẾN ĐỈNH THANG
-        // =====================================================
-
-        playerFeetWorld =
-            GetFeetWorldY();
-
 
         if (playerFeetWorld >= maxClimbY)
         {
             float difference =
-                playerFeetWorld -
-                maxClimbY;
+                playerFeetWorld - maxClimbY;
 
             // Hạ Player xuống để chân đúng mặt Platform
             MovePlayerWorldY(-difference);

@@ -32,6 +32,11 @@ public class VictoryChecker : MonoBehaviour
 
     private void LoadVictory()
     {
+        if (GameData.Instance != null && GameData.Instance.isTimerRunning)
+        {
+            GameData.Instance.endTime = Time.time;
+            GameData.Instance.isTimerRunning = false;
+        }
         SceneManager.LoadScene("victory");
     }
 }

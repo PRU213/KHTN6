@@ -320,8 +320,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -784.69653, y: -135.08412}
-  m_SizeDelta: {x: 244.1655, y: 335.6324}
+  m_AnchoredPosition: {x: -822, y: -130}
+  m_SizeDelta: {x: 221.0562, y: 340.39}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &546516865
 MonoBehaviour:
@@ -674,8 +674,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -129.68677, y: -204.88086}
-  m_SizeDelta: {x: 199.631, y: 262.2577}
+  m_AnchoredPosition: {x: -114.24, y: -220.0206}
+  m_SizeDelta: {x: 190.52, y: 255.9982}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1073186051
 MonoBehaviour:
@@ -726,7 +726,6 @@ GameObject:
   - component: {fileID: 1076779635}
   - component: {fileID: 1076779637}
   - component: {fileID: 1076779636}
-  - component: {fileID: 1076779639}
   - component: {fileID: 1076779638}
   m_Layer: 5
   m_Name: Biology
@@ -751,8 +750,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -648, y: 162.05995}
-  m_SizeDelta: {x: 403.3555, y: 358.76}
+  m_AnchoredPosition: {x: -605.11615, y: 165.87415}
+  m_SizeDelta: {x: 393.8925, y: 393.8883}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1076779636
 MonoBehaviour:
@@ -793,19 +792,6 @@ CanvasRenderer:
   m_GameObject: {fileID: 1076779634}
   m_CullTransparentMesh: 1
 --- !u!114 &1076779638
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1076779634}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4888bc4b54bd13c428fdabca81099341, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ButtonSceneTransition
-  targetScene: luatchoisinhhoc
---- !u!114 &1076779639
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -884,8 +870,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -381, y: 416.69}
-  m_SizeDelta: {x: 615.6385, y: 246.62}
+  m_AnchoredPosition: {x: -709, y: 428.57}
+  m_SizeDelta: {x: 546.3827, y: 222.8545}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1183518318
 MonoBehaviour:
@@ -953,7 +939,6 @@ GameObject:
   - component: {fileID: 1299963918}
   - component: {fileID: 1299963920}
   - component: {fileID: 1299963919}
-  - component: {fileID: 1299963922}
   - component: {fileID: 1299963921}
   m_Layer: 5
   m_Name: Chemistry
@@ -978,8 +963,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 598.3334, y: 140.12}
-  m_SizeDelta: {x: 358.9869, y: 402.63}
+  m_AnchoredPosition: {x: 682.46924, y: 161.3393}
+  m_SizeDelta: {x: 435.9475, y: 435.9477}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1299963919
 MonoBehaviour:
@@ -1112,8 +1097,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 49.3164, y: 182.6102}
-  m_SizeDelta: {x: 402.7915, y: 399.8591}
+  m_AnchoredPosition: {x: 19.755, y: 194.9}
+  m_SizeDelta: {x: 424.4343, y: 424.43}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1451251366
 MonoBehaviour:
@@ -1222,6 +1207,7 @@ GameObject:
   - component: {fileID: 1725893610}
   - component: {fileID: 1725893609}
   - component: {fileID: 1725893608}
+  - component: {fileID: 1725893612}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -1309,9 +1295,9 @@ RectTransform:
   - {fileID: 1073186050}
   - {fileID: 1809717210}
   - {fileID: 1033501951}
+  - {fileID: 1183518317}
   - {fileID: 1929012707}
   - {fileID: 859378447}
-  - {fileID: 1183518317}
   - {fileID: 1299963918}
   - {fileID: 1451251365}
   - {fileID: 1076779635}
@@ -1323,6 +1309,28 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &1725893612
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1725893607}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1de1c46332ce7448924fb5c13f58203, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HomeMenuController
+  homeCanvas: {fileID: 0}
+  physicsMap: {fileID: 0}
+  chemistryMap: {fileID: 0}
+  biologyMap: {fileID: 0}
+  btnPhysics: {fileID: 0}
+  btnChemistry: {fileID: 1299963921}
+  btnBiology: {fileID: 1076779638}
+  backPhysics: {fileID: 0}
+  backChemistry: {fileID: 0}
+  backBiology: {fileID: 0}
 --- !u!1 &1732877572
 GameObject:
   m_ObjectHideFlags: 0
@@ -1437,7 +1445,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 653, y: -283.63}
+  m_AnchoredPosition: {x: 657, y: -400}
   m_SizeDelta: {x: 281.0419, y: 230.91}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1809717211
