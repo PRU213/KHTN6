@@ -161,8 +161,8 @@ TextureImporter:
       name: "\u1EA2nh ChatGPT 10_07_13 30 thg 9, 2026_1"
       rect:
         serializedVersion: 2
-        x: 359
-        y: 491
+        x: 365
+        y: 494
         width: 362
         height: 555
       alignment: 0
@@ -183,8 +183,8 @@ TextureImporter:
       name: "\u1EA2nh ChatGPT 10_07_13 30 thg 9, 2026_2"
       rect:
         serializedVersion: 2
-        x: 727
-        y: 471
+        x: 733
+        y: 456
         width: 362
         height: 543
       alignment: 0
@@ -227,13 +227,13 @@ TextureImporter:
       name: "\u1EA2nh ChatGPT 10_07_13 30 thg 9, 2026_4"
       rect:
         serializedVersion: 2
-        x: 3
+        x: 6
         y: 0
         width: 362
-        height: 543
+        height: 483
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 56}
+      border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
@@ -252,10 +252,10 @@ TextureImporter:
         x: 362
         y: 0
         width: 362
-        height: 543
+        height: 486
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 71}
+      border: {x: 0, y: 0, z: 0, w: 12}
       customData: 
       outline: []
       physicsShape: []
@@ -296,10 +296,10 @@ TextureImporter:
         x: 1086
         y: 0
         width: 362
-        height: 543
+        height: 477
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 67}
+      border: {x: 0, y: 0, z: 0, w: 3}
       customData: 
       outline: []
       physicsShape: []
