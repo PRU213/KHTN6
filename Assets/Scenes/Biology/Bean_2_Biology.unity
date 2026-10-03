@@ -555,7 +555,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 499.68, y: -444.89}
+  m_AnchoredPosition: {x: 487, y: -492}
   m_SizeDelta: {x: 298.6432, y: 224.6171}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &768669282
@@ -747,7 +747,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 3.6225, y: -356.86}
+  m_AnchoredPosition: {x: 30, y: -242}
   m_SizeDelta: {x: 97.9606, y: 125.7177}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &933809933
@@ -2296,6 +2296,10 @@ MonoBehaviour:
   defeatedEnemies: []
   lastPlayerPosition: {x: 0, y: 0}
   hasSavedPosition: 0
+  allQuestions: []
+  startTime: 0
+  endTime: 0
+  isTimerRunning: 0
 --- !u!4 &1806272909
 Transform:
   m_ObjectHideFlags: 0
