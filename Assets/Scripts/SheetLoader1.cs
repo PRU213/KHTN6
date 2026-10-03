@@ -31,7 +31,7 @@ public class SheetLoader1 : MonoBehaviour
         get
         {
             if (_instance == null)
-                _instance = FindFirstObjectByType<SheetLoader1>(FindObjectsInactive.Include);
+                _instance = FindAnyObjectByType<SheetLoader1>(FindObjectsInactive.Include);
             return _instance;
         }
     }

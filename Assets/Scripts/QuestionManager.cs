@@ -112,9 +112,9 @@ public class QuestionManager : MonoBehaviour
                 {
                     Question newQ = new Question();
                     newQ.questionText = q.question;
-                    newQ.answers = new string[] { q.option_a, q.option_b, q.option_c, q.option_d };
+                    newQ.answers = new string[] { q.optionA, q.optionB, q.optionC, q.optionD };
                     
-                    string co = q.correct_option.Trim().ToUpper();
+                    string co = q.correct.Trim().ToUpper();
                     if (co == "A") newQ.correctIndex = 0;
                     else if (co == "B") newQ.correctIndex = 1;
                     else if (co == "C") newQ.correctIndex = 2;
@@ -139,7 +139,7 @@ public class QuestionManager : MonoBehaviour
     private void FindUIElements()
     {
         Canvas canvas = GetComponent<Canvas>();
-        if (canvas == null) canvas = Object.FindFirstObjectByType<Canvas>();
+        if (canvas == null) canvas = Object.FindAnyObjectByType<Canvas>();
         if (canvas == null) return;
 
         Image[] allImages = canvas.GetComponentsInChildren<Image>(true);
