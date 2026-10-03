@@ -11,8 +11,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/HomePage.unity
     guid: 45788866c305da040971b248e2245198
-    path: Assets/Scenes/Biology/bean_1.unity
-    guid: 1286f448446d429419e0e492180e8aed
   - enabled: 1
     path: Assets/Scenes/Biology/bean_1_question.unity
     guid: ea2c045c48791d5468a1599544aa71f9
@@ -43,5 +41,11 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Biology/luatchoisinhhoc.unity
     guid: 73c2ac09979cd59489a2020e4f5dee4c
+  - enabled: 1
+    path: Assets/Scenes/Biology/victory.unity
+    guid: 82679e4eaa349dc4887fc784bb7ed526
+  - enabled: 1
+    path: Assets/Scenes/Biology/bean_1.unity
+    guid: 1286f448446d429419e0e492180e8aed
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}

@@ -18,7 +18,7 @@ public class VictoryChecker : MonoBehaviour
             if (currentScene.Contains("question")) return;
 
 #pragma warning disable CS0618
-            Enemy[] activeEnemies = FindObjectsOfType<Enemy>();
+            EnemyTong[] activeEnemies = FindObjectsOfType<EnemyTong>();
 #pragma warning restore CS0618
             
             // Nếu không còn quái vật nào -> Chuyển sang màn victory
