@@ -23,6 +23,8 @@ public class HomeMenuController : MonoBehaviour
 
     void Start()
     {
+        AutoFindReferences();
+
         if (GameData.Instance != null)
         {
             GameData.Instance.isTimerRunning = false;
@@ -47,6 +49,41 @@ public class HomeMenuController : MonoBehaviour
             backBiology.onClick.AddListener(BackToHome);
     }
 
+    /// <summary>
+    /// Tự động tìm và gán các GameObject theo tên nếu chưa được gán trong Inspector.
+    /// </summary>
+    void AutoFindReferences()
+    {
+        Transform root = transform.root;
+
+        if (homeCanvas == null)
+        {
+            Transform found = root.Find("HomePage");
+            if (found != null) homeCanvas = found.gameObject;
+        }
+
+        if (physicsMap == null)
+        {
+            Transform found = root.Find("Physical_map_game");
+            if (found != null) physicsMap = found.gameObject;
+        }
+
+        if (chemistryMap == null)
+        {
+            Transform found = root.Find("Chemistry_map_game");
+            if (found != null) chemistryMap = found.gameObject;
+        }
+
+        if (biologyMap == null)
+        {
+            Transform found = root.Find("Biology_map_game");
+            if (found != null) biologyMap = found.gameObject;
+        }
+
+        if (homeCanvas == null)
+            Debug.LogWarning("HomeMenuController: Không tìm thấy 'HomePage' trong scene!");
+    }
+
     void OpenMap(GameObject map)
     {
         if (map == null)
@@ -55,7 +92,7 @@ public class HomeMenuController : MonoBehaviour
             return;
         }
 
-        homeCanvas.SetActive(false);
+        homeCanvas?.SetActive(false);
         map.SetActive(true);
     }
 
@@ -70,6 +107,7 @@ public class HomeMenuController : MonoBehaviour
         if (biologyMap != null)
             biologyMap.SetActive(false);
 
-        homeCanvas.SetActive(true);
+        if (homeCanvas != null)
+            homeCanvas.SetActive(true);
     }
 }
