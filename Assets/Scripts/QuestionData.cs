@@ -1,18 +1,25 @@
 using System;
 
-[System.Serializable]
+[Serializable]
 public class QuestionData
 {
     public string id;
-    public string monID;
+    public string monId;
     public string topic;
     public string difficulty;
     public string question;
-    public string option_a;
-    public string option_b;
-    public string option_c;
-    public string option_d;
-    public string correct_option; // "a", "b", "c", hoac "d"
+    public string optionA;
+    public string optionB;
+    public string optionC;
+    public string optionD;
+    public string correct;      // "A" / "B" / "C" / "D"
     public string explanation;
-    public int points;
+    public int points;          // điểm của câu hỏi (cột points trong sheet)
+}
+
+[Serializable]
+public class QuestionList
+{
+    public bool success;
+    public QuestionData[] questions;
 }
