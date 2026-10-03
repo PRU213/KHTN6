@@ -12,6 +12,9 @@ public class ChemistryMapController : MonoBehaviour
     [Header("Nút quay lại")]
     public Button backTheoryButton;
 
+    [Header("Môn (khớp cột monID trong sheet câu hỏi)")]
+    public string subjectName = "Hóa học";
+
     void Start()
     {
         for (int i = 0; i < chapterButtons.Length; i++)
@@ -35,6 +38,10 @@ public class ChemistryMapController : MonoBehaviour
         string id = "CH_CHM_0" + chapter;
 
         Debug.Log("Đang mở bài: " + id);
+
+        // Báo cho game biết môn và chương người chơi vừa chọn
+        GameSession.Subject = subjectName;
+        GameSession.Chapter = "Chương " + chapter;
 
         theoryPanel.Show(id);
     }
