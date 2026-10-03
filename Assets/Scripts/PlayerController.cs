@@ -139,7 +139,7 @@ public class PlayerController : MonoBehaviour
         // =========================
         
         float deathY = -2000f;
-        CameraFollow camFollow = Object.FindFirstObjectByType<CameraFollow>();
+        CameraFollow camFollow = Object.FindAnyObjectByType<CameraFollow>();
         if (camFollow != null)
         {
             // Điểm chết là dưới mép dưới của camera ảo 200px
@@ -410,7 +410,7 @@ public class PlayerController : MonoBehaviour
         currentLadder = null;
         currentMovingPlatform = null;
 
-        CameraFollow camFollow = Object.FindFirstObjectByType<CameraFollow>();
+        CameraFollow camFollow = Object.FindAnyObjectByType<CameraFollow>();
         if (camFollow != null)
         {
             camFollow.ResetCamera();

@@ -14,7 +14,7 @@ public class VictoryDisplay : MonoBehaviour
     {
         if (scene.name.Equals("victory", System.StringComparison.OrdinalIgnoreCase))
         {
-            Canvas canvas = Object.FindFirstObjectByType<Canvas>();
+            Canvas canvas = Object.FindAnyObjectByType<Canvas>();
             if (canvas != null && GameData.Instance != null && GameData.Instance.startTime > 0)
             {
                 float timeTaken = GameData.Instance.endTime - GameData.Instance.startTime;

@@ -12,29 +12,46 @@ public class KickBall : MonoBehaviour
     [SerializeField] float arcHeight = 120f;
     [SerializeField] float endScale = 0.5f;
 
+    [Header("Khi sút trượt")]
+    [SerializeField] GameObject missText;            // chữ "TRƯỢT!" (tùy chọn, tắt sẵn)
+    [SerializeField] Vector2 missOffset = new Vector2(450f, 150f); // lệch khỏi gôn bao nhiêu
+
     Vector2 startPos;
     Vector3 startScale;
     bool busy;
+
+    public bool IsBusy => busy;
 
     void Start()
     {
         startPos = ball.anchoredPosition;
         startScale = ball.localScale;
-        foreach (var b in answerButtons)
-            b.onClick.AddListener(Kick);
+        // Không còn tự sút khi bấm nút. FootballQuizController sẽ gọi Goal() hoặc Miss().
     }
 
-    public void Kick()
+    // Trả lời đúng: bóng vào gôn
+    public void Goal()
     {
-        if (!busy) StartCoroutine(KickRoutine());
+        if (!busy) StartCoroutine(KickRoutine(true));
     }
 
-    IEnumerator KickRoutine()
+    // Trả lời sai: bóng bay trượt ra ngoài gôn
+    public void Miss()
+    {
+        if (!busy) StartCoroutine(KickRoutine(false));
+    }
+
+    IEnumerator KickRoutine(bool scored)
     {
         busy = true;
         SetButtons(false);
 
         Vector2 end = goalTargets[Random.Range(0, goalTargets.Length)].anchoredPosition;
+        if (!scored)
+        {
+            float side = Random.value < 0.5f ? -1f : 1f;
+            end += new Vector2(side * missOffset.x, missOffset.y);
+        }
         float dir = end.x >= startPos.x ? 1f : -1f;
 
         for (float t = 0; t < 1f; t += Time.deltaTime / flyTime)
@@ -49,11 +66,13 @@ public class KickBall : MonoBehaviour
         }
 
         ball.anchoredPosition = end;
-        goalText.SetActive(true);
+        if (scored) { if (goalText) goalText.SetActive(true); }
+        else { if (missText) missText.SetActive(true); }
         yield return new WaitForSeconds(1f);
 
         // reset về chấm phạt đền
-        goalText.SetActive(false);
+        if (goalText) goalText.SetActive(false);
+        if (missText) missText.SetActive(false);
         ball.anchoredPosition = startPos;
         ball.localScale = startScale;
         ball.localRotation = Quaternion.identity;

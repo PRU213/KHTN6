@@ -1,81 +1,102 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// Lưu trữ trạng thái giữa các màn chơi (Gameplay và Câu hỏi)
 public static class GameSession
 {
-    public static string gameplaySceneName = "Bean_2_Biology";
-    public static string questionSceneName = "Bean_2_Biology_Question";
-    
-    // Vị trí người chơi trước khi chạm trán quái vật
-    public static Vector2 returnPosition = Vector2.zero;
-    
-    // Vị trí bắt đầu của người chơi khi mới vào game
-    public static Vector2 startPosition = Vector2.zero;
-    
-    public static string currentEnemyId = "";
-    public static HashSet<string> killedEnemies = new HashSet<string>();
-    
-    public static int killCount = 0;
-    public static int totalEnemies = 6;
-    
+    // Môn học và chương
+    public static string Subject = "";
+    public static string Chapter = "";
+
+    // Máu của người chơi
+    public static int hp = 3;
+
+    // Scene game cần quay lại sau khi trả lời câu hỏi
+    public static string gameplaySceneName = "SampleScene";
+
+    // Scene câu hỏi (dùng khi gặp quái vật)
+    public static string questionSceneName = "QuestionScene";
+
+    // Vị trí câu hỏi hiện tại
+    private static int currentQuestionIndex = 0;
+
+    // ===== Hạt đậu (Bean) =====
     public static bool hasBean = false;
     public static bool beanSpawned = false;
-    
-    public static int hp = 3;
-    public static int questionIndex = 0;
 
-    // Bắt đầu chạm trán với quái vật
-    public static void StartEncounter(string enemyId, Vector2 playerPos)
+    // ===== Quái vật (Enemy encounter) =====
+    public static int killCount = 0;
+    private static HashSet<string> deadEnemies = new HashSet<string>();
+    private static string currentEncounterEnemyId = "";
+
+    // ===== Vị trí player khi chuyển scene =====
+    public static Vector2 startPosition = Vector2.zero;
+    public static Vector2 returnPosition = Vector2.zero;
+
+    /// <summary>
+    /// Kiểm tra quái vật đã bị tiêu diệt chưa.
+    /// </summary>
+    public static bool IsEnemyDead(string enemyId)
     {
-        currentEnemyId = enemyId;
-        returnPosition = playerPos;
-        hp = 3; // Reset lại số tim (mạng) khi vào câu hỏi
+        return deadEnemies.Contains(enemyId);
     }
 
-    // Xử lý khi trả lời đúng
+    /// <summary>
+    /// Bắt đầu encounter: lưu enemyId và vị trí player để quay lại sau.
+    /// </summary>
+    public static void StartEncounter(string enemyId, Vector2 playerPosition)
+    {
+        currentEncounterEnemyId = enemyId;
+        returnPosition = playerPosition;
+    }
+
+    /// <summary>
+    /// Lấy câu hỏi tiếp theo.
+    /// </summary>
+    public static int GetNextQuestionIndex()
+    {
+        int index = currentQuestionIndex;
+        currentQuestionIndex++;
+        return index;
+    }
+
+    /// <summary>
+    /// Xử lý khi người chơi trả lời đúng.
+    /// </summary>
     public static void OnAnswerCorrect()
     {
-        if (!string.IsNullOrEmpty(currentEnemyId))
+        // Đánh dấu quái vật hiện tại đã chết
+        if (!string.IsNullOrEmpty(currentEncounterEnemyId))
         {
-            killedEnemies.Add(currentEnemyId);
+            deadEnemies.Add(currentEncounterEnemyId);
             killCount++;
+            currentEncounterEnemyId = "";
         }
     }
 
-    // Xử lý khi trả lời sai (Trả về số máu còn lại)
-    public static int OnAnswerWrong()
+    /// <summary>
+    /// Xử lý khi người chơi trả lời sai.
+    /// </summary>
+    public static void OnAnswerWrong()
     {
-        hp--;
-        if (hp < 0) hp = 0;
-        return hp;
+        if (hp > 0)
+        {
+            hp--;
+        }
     }
 
-    // Kiểm tra xem quái vật đã bị tiêu diệt chưa
-    public static bool IsEnemyDead(string id)
-    {
-        return killedEnemies.Contains(id);
-    }
-
-    // Reset lại toàn bộ trạng thái khi Game Over
+    /// <summary>
+    /// Reset dữ liệu khi hết máu hoặc bắt đầu lượt chơi mới.
+    /// </summary>
     public static void ResetAll()
     {
-        returnPosition = Vector2.zero;
-        startPosition = Vector2.zero;
-        currentEnemyId = "";
-        killedEnemies.Clear();
-        killCount = 0;
+        hp = 3;
+        currentQuestionIndex = 0;
         hasBean = false;
         beanSpawned = false;
-        hp = 3;
-        questionIndex = 0;
-    }
-
-    // Lấy câu hỏi tiếp theo
-    public static int GetNextQuestionIndex()
-    {
-        int currentIndex = questionIndex;
-        questionIndex++;
-        return currentIndex;
+        killCount = 0;
+        deadEnemies.Clear();
+        currentEncounterEnemyId = "";
+        startPosition = Vector2.zero;
+        returnPosition = Vector2.zero;
     }
 }
