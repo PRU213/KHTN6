@@ -143,54 +143,39 @@ public class QuestionManager : MonoBehaviour
         if (canvas == null) return;
 
         Image[] allImages = canvas.GetComponentsInChildren<Image>(true);
-        int hpIdx = 0;
         float maxBoardArea = 0f;
-        
-        System.Collections.Generic.List<Image> foundAnswers = new System.Collections.Generic.List<Image>();
 
         foreach (Image img in allImages)
         {
             RectTransform rt = img.rectTransform;
-            float w = rt.sizeDelta.x, h = rt.sizeDelta.y;
-            float area = w * h;
-            string objName = img.gameObject.name.ToLower();
+            string objName = img.gameObject.name.ToLower().Trim();
+            float area = rt.sizeDelta.x * rt.sizeDelta.y;
 
-            // Bỏ qua ảnh nền full màn hình
+            // Bỏ qua ảnh nền
             if (rt.anchorMin == Vector2.zero && rt.anchorMax == Vector2.one) continue;
-            
-            bool isNamedAnswer = objName.Contains("dapan") || objName.Contains("đáp án") || objName.Contains("đápán");
-            bool isSizedAnswer = w > 250 && w < 550 && h > 100 && h < 200;
+            if (objName.Contains("bg") || objName.Contains("background")) continue;
 
-            if (isNamedAnswer || isSizedAnswer)
+            // Tìm Đáp Án (Hỗ trợ cả màn 1 và màn 2)
+            if (objName.Contains("đáp án a") || objName.Contains("dap an a") || objName.Contains("đápán a") || objName == "dapan1") answerImages[0] = img;
+            else if (objName.Contains("đáp án b") || objName.Contains("dap an b") || objName.Contains("đápán b") || objName == "dapan2") answerImages[1] = img;
+            else if (objName.Contains("đáp án c") || objName.Contains("dap an c") || objName.Contains("đápán c") || objName == "dapan3") answerImages[2] = img;
+            else if (objName.Contains("đáp án d") || objName.Contains("dap an d") || objName.Contains("đápán d") || objName == "dapan4") answerImages[3] = img;
+            
+            // Tìm Máu (Hỗ trợ cả màn 1 và màn 2)
+            else if (objName.Contains("máu 1") || objName.Contains("mau 1") || objName == "tim1") healthIcons[0] = img;
+            else if (objName.Contains("máu 2") || objName.Contains("mau 2") || objName == "tim2") healthIcons[1] = img;
+            else if (objName.Contains("máu 3") || objName.Contains("mau 3") || objName == "tim3") healthIcons[2] = img;
+
+            // Tìm Khung Bảng (Khung lớn nhất còn lại hoặc tên là Khung)
+            else if (objName == "khung" || (area > maxBoardArea && rt.sizeDelta.x > 300 && rt.sizeDelta.y > 150))
             {
-                foundAnswers.Add(img);
-                continue;
+                // Loại trừ khung chứa tim (thường dài ngang nhưng mỏng, VD: w=300, h=100)
+                if (objName == "khung" || (rt.sizeDelta.x > 500 && rt.sizeDelta.y > 200))
+                {
+                    maxBoardArea = area;
+                    questionBoard = img;
+                }
             }
-            
-            bool isNamedHp = objName.Contains("tim") || objName.Contains("heart") || objName.Contains("mau");
-            bool isSizedHp = w > 20 && w < 100 && h > 20 && h < 100;
-
-            if ((isNamedHp || isSizedHp) && hpIdx < 3) 
-            { healthIcons[hpIdx++] = img; continue; }
-
-            // TÌM BẢNG CÂU HỎI: Lấy khung có diện tích bự nhất hoặc tên là khung/bảng
-            if ((area > maxBoardArea && w > 300 && h > 150 && !objName.Contains("bg") && !objName.Contains("background")) || objName.Contains("khung") || objName.Contains("bảng"))
-            { 
-                maxBoardArea = area;
-                questionBoard = img; 
-            }
-        }
-
-        // Sắp xếp các nút đáp án theo toạ độ Y (từ trên xuống) rồi đến X (từ trái qua)
-        foundAnswers.Sort((a, b) => {
-            int yCompare = b.rectTransform.position.y.CompareTo(a.rectTransform.position.y);
-            if (yCompare == 0) return a.rectTransform.position.x.CompareTo(b.rectTransform.position.x);
-            return yCompare;
-        });
-
-        for (int i = 0; i < Mathf.Min(4, foundAnswers.Count); i++)
-        {
-            answerImages[i] = foundAnswers[i];
         }
     }
 
@@ -200,17 +185,17 @@ public class QuestionManager : MonoBehaviour
 
         if (questionBoard != null)
         {
+            // Câu hỏi nằm ở nửa trên của vùng trống (y từ 45% đến 75%)
             questionText = CreateText("QuestionText", questionBoard.transform, font,
-                new Vector2(0.05f, 0.35f), new Vector2(0.95f, 0.88f),
-                36, Color.black, TextAnchor.MiddleCenter, FontStyle.Bold); // Đã tăng cỡ chữ
+                new Vector2(0.1f, 0.45f), new Vector2(0.9f, 0.75f),
+                36, Color.black, TextAnchor.MiddleCenter, FontStyle.Bold); 
 
+            // Feedback ở trên cái bảng tên (phía trên cùng, y từ 82% đến 98%)
             feedbackText = CreateText("FeedbackText", questionBoard.transform, font,
-                new Vector2(0.05f, 0.05f), new Vector2(0.95f, 0.32f),
-                30, Color.red, TextAnchor.MiddleCenter, FontStyle.Bold); // Đã tăng cỡ chữ
+                new Vector2(0.2f, 0.82f), new Vector2(0.8f, 0.98f),
+                30, Color.black, TextAnchor.MiddleCenter, FontStyle.Bold); 
             feedbackText.text = "";
         }
-
-        SortAnswersByPosition();
 
         for (int i = 0; i < 4; i++)
         {
@@ -223,8 +208,8 @@ public class QuestionManager : MonoBehaviour
 
             answerTexts[i] = CreateText("AnsText", answerImages[i].transform, font,
                 Vector2.zero, Vector2.one,
-                24, Color.white, TextAnchor.MiddleCenter, FontStyle.Bold, // Đã tăng cỡ chữ
-                new Vector2(10, 5), new Vector2(-10, -5));
+                26, Color.white, TextAnchor.MiddleCenter, FontStyle.Bold,
+                new Vector2(15, 10), new Vector2(-15, -10)); // Cho thụt vào để nằm gọn trong khung
 
             int idx = i;
             btn.onClick.AddListener(() => OnAnswerClicked(idx));
@@ -317,6 +302,12 @@ public class QuestionManager : MonoBehaviour
 
     private void ReturnToMainScene()
     {
+        if (GameData.Instance != null && !string.IsNullOrEmpty(GameData.Instance.lastSceneName))
+        {
+            SceneManager.LoadScene(GameData.Instance.lastSceneName);
+            return;
+        }
+
         string currentScene = SceneManager.GetActiveScene().name;
         if (currentScene.Contains("Bean_2")) SceneManager.LoadScene("Bean_2_Biology");
         else if (currentScene.Contains("Bean_3")) SceneManager.LoadScene("Bean_3_Biology");
@@ -343,9 +334,7 @@ public class QuestionManager : MonoBehaviour
         {
             if (healthIcons[i] != null)
             {
-                Color c = healthIcons[i].color;
-                c.a = (i < currentHp) ? 1f : 0.15f;
-                healthIcons[i].color = c;
+                healthIcons[i].enabled = (i < currentHp);
             }
         }
     }

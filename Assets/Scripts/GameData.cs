@@ -23,6 +23,9 @@ public class GameData : MonoBehaviour
     [HideInInspector] public Vector2 lastPlayerPosition;
     [HideInInspector] public bool hasSavedPosition = false;
 
+    /// <summary>Tên màn chơi trước đó để sau khi trả lời xong quay về</summary>
+    [HideInInspector] public string lastSceneName = "";
+
     [HideInInspector] public List<QuestionData> allQuestions = new List<QuestionData>();
 
     // Tính thời gian vượt ải

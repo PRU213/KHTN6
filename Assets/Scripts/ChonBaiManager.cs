@@ -396,8 +396,8 @@ public class ChonBaiManager : MonoBehaviour
         GameData.Instance.startTime = Time.time;
         GameData.Instance.isTimerRunning = true;
 
-        // Load next scene - user wants to go to "game 1" which is bean_1
-        SceneManager.LoadScene("bean_1");
+        // Load next scene - user wants to go to rules screen before playing
+        SceneManager.LoadScene("luatchoisinhhoc");
     }
 
 }

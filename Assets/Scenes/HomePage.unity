@@ -5079,7 +5079,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1725893608
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5864,7 +5864,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3642627884805189041, guid: b8cdeec00d84b794eb95b124c5345042, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3924741095013996989, guid: b8cdeec00d84b794eb95b124c5345042, type: 3}
       propertyPath: missText
@@ -6692,7 +6692,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &2082637695
 MonoBehaviour:
   m_ObjectHideFlags: 0
