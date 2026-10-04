@@ -8,288 +8,1186 @@ using UnityEngine.UI;
 
 public class FootballQuizController : MonoBehaviour
 {
-    [Header("Khung câu hỏi")]
-    public TMP_Text questionText;          // chữ trong khung xanh trên cùng
+    // =========================================================
+    // UI
+    // =========================================================
 
-    [Header("4 đáp án, theo thứ tự A, B, C, D")]
-    public Button[] answerButtons;         // 4 nút A B C D
-    public TMP_Text[] answerTexts;         // chữ trong từng nút (KHÔNG phải chữ A/B/C/D)
+    [Header("Khung câu hỏi")]
+    public TMP_Text questionText;
+
+    [Header("4 đáp án theo thứ tự A, B, C, D")]
+    public Button[] answerButtons;
+
+    // TMP chứa NỘI DUNG đáp án
+    // KHÔNG phải TMP chỉ chứa chữ A/B/C/D
+    public TMP_Text[] answerTexts;
+
+
+    // =========================================================
+    // UI TÙY CHỌN
+    // =========================================================
 
     [Header("Tùy chọn")]
-    public TMP_Text scoreText;             // hiện điểm (có thể để trống)
-    public TMP_Text explanationText;       // hiện giải thích (có thể để trống)
+    public TMP_Text scoreText;
+    public TMP_Text explanationText;
+
+
+    // =========================================================
+    // FOOTBALL
+    // =========================================================
 
     [Header("Sút bóng")]
-    public KickBall kickBall;              // kéo object đang gắn script KickBall vào
+    public KickBall kickBall;
 
-    [Header("Dữ liệu")]
+
+    // =========================================================
+    // GOOGLE SHEET
+    // =========================================================
+
+    [Header("Google Apps Script")]
     public string baseUrl = "DÁN_LINK_EXEC_VÀO_ĐÂY";
-    public string subject = "Vật lý";      // lọc theo cột monID (dùng khi test riêng game)
-    public string chapter = "Chương 1";    // lọc theo cột Chương/Chủ đề (để trống = lấy cả môn)
 
-    [Header("Cơ cấu câu hỏi mỗi lượt")]
-    public int easyCount = 3;              // câu Dễ (10 điểm)
-    public int mediumCount = 2;            // câu Trung bình (20 điểm)
-    public int hardCount = 1;              // câu Khó (30 điểm)
-    public int targetPoints = 100;         // tổng điểm mong muốn
+
+    // =========================================================
+    // GAME SETTINGS
+    // =========================================================
+
+    [Header("Thiết lập lượt chơi")]
+
+    [Tooltip("Số câu tối đa trong một lượt. 0 = lấy toàn bộ câu phù hợp.")]
+    public int maxQuestions = 10;
+
+    [Tooltip("Sai một câu thì kết thúc game")]
+    public bool wrongAnswerEndsGame = true;
+
+
+    // =========================================================
+    // MÀU PHẢN HỒI
+    // =========================================================
 
     [Header("Màu phản hồi")]
-    public Color correctColor = new Color(0.3f, 0.85f, 0.3f);
-    public Color wrongColor = new Color(0.95f, 0.3f, 0.3f);
+
+    public Color correctColor =
+        new Color(0.3f, 0.85f, 0.3f);
+
+    public Color wrongColor =
+        new Color(0.95f, 0.3f, 0.3f);
+
     public float delayNext = 1.8f;
 
-    [Header("Sự kiện (gắn animation sút bóng, thủ môn...)")]
+
+    // =========================================================
+    // EVENTS
+    // =========================================================
+
+    [Header("Sự kiện")]
+
     public UnityEvent onCorrect;
     public UnityEvent onWrong;
     public UnityEvent onFinished;
 
-    List<QuestionData> questions = new List<QuestionData>();
-    Color[] originalColors;
-    int index;
-    int score;          // tổng điểm
-    int maxScore;       // tổng điểm tối đa của bộ câu hỏi lượt này
-    int correctCount;   // số câu đúng
-    bool locked;
+
+    // =========================================================
+    // RUNTIME
+    // =========================================================
+
+    private List<QuestionData> questions =
+        new List<QuestionData>();
+
+    private Color[] originalColors;
+
+    private int index;
+
+    private int rawScore;
+    private int maxRawScore;
+    private int correctCount;
+
+    private bool locked;
+
+
+    // =========================================================
+    // AWAKE
+    // =========================================================
 
     void Awake()
     {
-        originalColors = new Color[answerButtons.Length];
-        for (int i = 0; i < answerButtons.Length; i++)
+        originalColors =
+            new Color[answerButtons.Length];
+
+        for (int i = 0;
+             i < answerButtons.Length;
+             i++)
         {
             int idx = i;
-            var img = answerButtons[i].GetComponent<Image>();
-            originalColors[i] = img ? img.color : Color.white;
-            answerButtons[i].onClick.AddListener(() => OnAnswer(idx));
+
+            if (answerButtons[i] == null)
+                continue;
+
+            Image img =
+                answerButtons[i]
+                    .GetComponent<Image>();
+
+            originalColors[i] =
+                img != null
+                    ? img.color
+                    : Color.white;
+
+            answerButtons[i]
+                .onClick
+                .AddListener(
+                    () => OnAnswer(idx)
+                );
         }
     }
 
+
+    // =========================================================
+    // MỖI KHI FOOTBALL ĐƯỢC BẬT
+    // =========================================================
+
     void OnEnable()
     {
-        StartCoroutine(LoadQuestions());
+        StopAllCoroutines();
+
+        StartCoroutine(
+            LoadQuestions()
+        );
     }
+
+
+    // =========================================================
+    // LOAD QUESTIONS
+    // =========================================================
 
     IEnumerator LoadQuestions()
     {
+        locked = true;
+
         SetAnswersVisible(false);
-        questionText.text = "Đang tải câu hỏi...";
-        if (explanationText) explanationText.text = "";
-        if (scoreText) scoreText.text = "";
 
-        // Ưu tiên môn do màn lý thuyết gửi sang; nếu trống thì dùng ô Subject (để test riêng game)
-        string mon = string.IsNullOrEmpty(GameSession.Subject) ? subject : GameSession.Subject;
-        string url = baseUrl + "?action=questions&mon=" + UnityWebRequest.EscapeURL(mon);
-        using (UnityWebRequest req = UnityWebRequest.Get(url))
+
+        // =====================================================
+        // DEBUG SESSION
+        // =====================================================
+
+        Debug.Log(
+            "========== FOOTBALL SESSION ==========\n"
+            + "Subject = ["
+            + GameSession.Subject
+            + "]\n"
+            + "Chapter = ["
+            + GameSession.Chapter
+            + "]\n"
+            + "Difficulty = ["
+            + string.Join(
+                ", ",
+                GameSession.Difficulties
+            )
+            + "]\n"
+            + "QuestionType = ["
+            + GameSession.QuestionType
+            + "]"
+        );
+
+
+        // =====================================================
+        // UI LOADING
+        // =====================================================
+
+        if (questionText != null)
         {
-            yield return req.SendWebRequest();
+            questionText.text =
+                "Đang tải câu hỏi...";
+        }
 
-            if (req.result != UnityWebRequest.Result.Success)
+        if (explanationText != null)
+        {
+            explanationText.text = "";
+        }
+
+        if (scoreText != null)
+        {
+            scoreText.text = "0";
+        }
+
+
+        // =====================================================
+        // KIỂM TRA SUBJECT
+        // =====================================================
+
+        string mon =
+            GameSession.Subject;
+
+
+        if (
+            string.IsNullOrWhiteSpace(mon)
+        )
+        {
+            if (questionText != null)
             {
-                questionText.text = "Lỗi kết nối: " + req.error;
+                questionText.text =
+                    "Chưa xác định môn học!";
+            }
+
+            Debug.LogError(
+                "GameSession.Subject đang trống!"
+            );
+
+            yield break;
+        }
+
+
+        // =====================================================
+        // KIỂM TRA DIFFICULTY
+        // =====================================================
+
+        if (
+            GameSession.Difficulties == null
+            ||
+            GameSession.Difficulties.Count == 0
+        )
+        {
+            if (questionText != null)
+            {
+                questionText.text =
+                    "Chưa chọn độ khó!";
+            }
+
+            Debug.LogError(
+                "GameSession.Difficulties đang trống!"
+            );
+
+            yield break;
+        }
+
+
+        string difficultyString =
+            string.Join(
+                ",",
+                GameSession.Difficulties
+            );
+
+
+        // =====================================================
+        // TẠO URL
+        // =====================================================
+
+        string url =
+            baseUrl
+            + "?action=questions"
+            + "&subject="
+            + UnityWebRequest.EscapeURL(mon)
+            + "&difficulty="
+            + UnityWebRequest.EscapeURL(
+                difficultyString
+            );
+
+
+        Debug.Log(
+            "FOOTBALL URL: "
+            + url
+        );
+
+
+        // =====================================================
+        // REQUEST
+        // =====================================================
+
+        using (
+            UnityWebRequest req =
+                UnityWebRequest.Get(url)
+        )
+        {
+            yield return
+                req.SendWebRequest();
+
+
+            if (
+                req.result !=
+                UnityWebRequest.Result.Success
+            )
+            {
+                if (questionText != null)
+                {
+                    questionText.text =
+                        "Lỗi kết nối: "
+                        + req.error;
+                }
+
+                Debug.LogError(
+                    "FOOTBALL REQUEST ERROR: "
+                    + req.error
+                );
+
                 yield break;
             }
 
-            QuestionList list = JsonUtility.FromJson<QuestionList>(req.downloadHandler.text);
-            if (list == null || !list.success || list.questions == null || list.questions.Length == 0)
+
+            Debug.Log(
+                "FOOTBALL JSON: "
+                + req.downloadHandler.text
+            );
+
+
+            // =================================================
+            // PARSE JSON
+            // =================================================
+
+            QuestionList list =
+                JsonUtility
+                    .FromJson<QuestionList>(
+                        req.downloadHandler.text
+                    );
+
+
+            if (
+                list == null
+                ||
+                !list.success
+                ||
+                list.questions == null
+                ||
+                list.questions.Length == 0
+            )
             {
-                questionText.text = "Không có câu hỏi";
-                Debug.Log(req.downloadHandler.text);
+                if (questionText != null)
+                {
+                    questionText.text =
+                        "Không có câu hỏi phù hợp";
+                }
+
+                Debug.LogError(
+                    "Không có câu hỏi phù hợp.\n"
+                    + req.downloadHandler.text
+                );
+
                 yield break;
             }
 
-            questions = BuildQuestionSet(list.questions);
-            if (questions.Count == 0)
+
+            // =================================================
+            // BUILD QUESTION SET
+            // =================================================
+
+            questions =
+                BuildQuestionSet(
+                    list.questions
+                );
+
+
+            if (
+                questions == null
+                ||
+                questions.Count == 0
+            )
             {
-                questionText.text = "Không có câu hỏi cho chương này";
+                if (questionText != null)
+                {
+                    questionText.text =
+                        "Không có câu hỏi phù hợp với môn/chương/độ khó đã chọn.";
+                }
+
+                Debug.LogError(
+                    "BuildQuestionSet trả về 0 câu."
+                );
+
                 yield break;
             }
 
-            maxScore = 0;
-            foreach (var q in questions) maxScore += GetPoints(q);
+
+            // =================================================
+            // TOTAL SCORE
+            // =================================================
+
+            maxRawScore = 0;
+
+            foreach (
+                QuestionData q in questions
+            )
+            {
+                maxRawScore +=
+                    GetPoints(q);
+            }
+
+
+            // =================================================
+            // RESET GAME
+            // =================================================
 
             index = 0;
-            score = 0;
+            rawScore = 0;
             correctCount = 0;
+            locked = false;
+
+
+            Debug.Log(
+                "Football lấy được "
+                + questions.Count
+                + " câu."
+            );
+
+
+            foreach (
+                QuestionData q in questions
+            )
+            {
+                Debug.Log(
+                    "POOL => "
+                    + q.id
+                    + " | "
+                    + q.monId
+                    + " | "
+                    + q.topic
+                    + " | "
+                    + q.difficulty
+                    + " | "
+                    + q.question
+                );
+            }
+
+
             ShowQuestion();
         }
     }
 
-    // Chọn câu hỏi: lọc theo chương, lấy đúng số câu Dễ/TB/Khó, bù theo điểm nếu thiếu
-    List<QuestionData> BuildQuestionSet(QuestionData[] all)
+
+    // =========================================================
+    // BUILD QUESTION SET
+    // =========================================================
+
+    List<QuestionData> BuildQuestionSet(
+        QuestionData[] all
+    )
     {
-        // Chương ưu tiên lấy từ màn lý thuyết; nếu trống thì dùng ô Chapter (test riêng game)
-        string ch = string.IsNullOrEmpty(GameSession.Chapter) ? chapter : GameSession.Chapter;
+        List<QuestionData> pool =
+            new List<QuestionData>();
 
-        // 1) Lọc theo chương
-        var pool = new List<QuestionData>();
-        foreach (var q in all)
+
+        // =====================================================
+        // CHAPTER
+        // =====================================================
+
+        string ch =
+            GameSession.Chapter;
+
+
+        Debug.Log(
+            "Football filter chapter = ["
+            + ch
+            + "]"
+        );
+
+
+        // =====================================================
+        // FILTER
+        // =====================================================
+
+        foreach (
+            QuestionData q in all
+        )
         {
-            if (string.IsNullOrEmpty(ch) ||
-                (q.topic != null && q.topic.Trim().StartsWith(ch.Trim(), System.StringComparison.OrdinalIgnoreCase)))
-                pool.Add(q);
-        }
+            if (q == null)
+                continue;
 
-        // 2) Chia theo độ khó
-        var easy = new List<QuestionData>();
-        var medium = new List<QuestionData>();
-        var hard = new List<QuestionData>();
-        foreach (var q in pool)
-        {
-            string d = (q.difficulty ?? "").Trim().ToLower();
-            if (d == "dễ") easy.Add(q);
-            else if (d == "trung bình") medium.Add(q);
-            else if (d == "khó") hard.Add(q);
-        }
 
-        Shuffle(easy); Shuffle(medium); Shuffle(hard);
+            // =================================================
+            // SUBJECT CHECK
+            // =================================================
 
-        // 3) Lấy đúng số lượng từng loại
-        var result = new List<QuestionData>();
-        Take(easy, easyCount, result);
-        Take(medium, mediumCount, result);
-        Take(hard, hardCount, result);
+            bool subjectOK =
+                string.Equals(
+                    q.monId?.Trim(),
+                    GameSession.Subject?.Trim(),
+                    System.StringComparison
+                        .OrdinalIgnoreCase
+                );
 
-        // 4) Thiếu câu (chương thiếu một độ khó) thì bù theo điểm, không vượt targetPoints
-        int total = 0;
-        foreach (var q in result) total += GetPoints(q);
 
-        if (total < targetPoints)
-        {
-            var rest = new List<QuestionData>();
-            foreach (var q in pool) if (!result.Contains(q)) rest.Add(q);
-            Shuffle(rest);
-            foreach (var q in rest)
+            if (!subjectOK)
             {
-                int p = GetPoints(q);
-                if (total + p <= targetPoints)
+                continue;
+            }
+
+
+            // =================================================
+            // CHAPTER CHECK
+            // =================================================
+
+            bool chapterOK = true;
+
+
+            if (
+                !string.IsNullOrWhiteSpace(ch)
+            )
+            {
+                chapterOK =
+                    !string.IsNullOrWhiteSpace(
+                        q.topic
+                    )
+                    &&
+                    q.topic
+                        .Trim()
+                        .StartsWith(
+                            ch.Trim(),
+                            System.StringComparison
+                                .OrdinalIgnoreCase
+                        );
+            }
+
+
+            if (!chapterOK)
+            {
+                continue;
+            }
+
+
+            // =================================================
+            // DIFFICULTY CHECK
+            // =================================================
+
+            bool difficultyOK = false;
+
+
+            foreach (
+                string selected
+                in GameSession.Difficulties
+            )
+            {
+                if (
+                    string.Equals(
+                        q.difficulty?.Trim(),
+                        selected?.Trim(),
+                        System.StringComparison
+                            .OrdinalIgnoreCase
+                    )
+                )
                 {
-                    result.Add(q);
-                    total += p;
-                    if (total == targetPoints) break;
+                    difficultyOK = true;
+                    break;
+                }
+            }
+
+
+            if (!difficultyOK)
+            {
+                continue;
+            }
+
+
+            pool.Add(q);
+        }
+
+
+        // =====================================================
+        // RANDOM
+        // =====================================================
+
+        Shuffle(pool);
+
+
+        // =====================================================
+        // GIỚI HẠN SỐ CÂU
+        // =====================================================
+
+        if (
+            maxQuestions > 0
+            &&
+            pool.Count > maxQuestions
+        )
+        {
+            pool =
+                pool.GetRange(
+                    0,
+                    maxQuestions
+                );
+        }
+
+
+        return pool;
+    }
+
+
+    // =========================================================
+    // SHOW QUESTION
+    // =========================================================
+
+    void ShowQuestion()
+    {
+        if (
+            questions == null
+            ||
+            questions.Count == 0
+        )
+        {
+            return;
+        }
+
+
+        if (
+            index >= questions.Count
+        )
+        {
+            Finish();
+            return;
+        }
+
+
+        QuestionData q =
+            questions[index];
+
+
+        locked = false;
+
+
+        // =====================================================
+        // DEBUG CHÍNH XÁC CÂU ĐANG HIỂN THỊ
+        // =====================================================
+
+        Debug.Log(
+            "FOOTBALL ĐANG HIỂN THỊ => "
+            + q.id
+            + " | môn: "
+            + q.monId
+            + " | chương: "
+            + q.topic
+            + " | độ khó: "
+            + q.difficulty
+            + " | câu: "
+            + q.question
+        );
+
+
+        // =====================================================
+        // QUESTION
+        // =====================================================
+
+        if (questionText != null)
+        {
+            questionText.text =
+                q.question;
+        }
+
+
+        // =====================================================
+        // ANSWER TEXTS
+        // =====================================================
+
+        string[] opts =
+        {
+            q.optionA,
+            q.optionB,
+            q.optionC,
+            q.optionD
+        };
+
+
+        for (
+            int i = 0;
+            i < answerButtons.Length;
+            i++
+        )
+        {
+            if (
+                i < answerTexts.Length
+                &&
+                answerTexts[i] != null
+            )
+            {
+                answerTexts[i].text =
+                    i < opts.Length
+                        ? opts[i]
+                        : "";
+            }
+
+
+            if (
+                answerButtons[i] != null
+            )
+            {
+                Image img =
+                    answerButtons[i]
+                        .GetComponent<Image>();
+
+
+                if (img != null)
+                {
+                    img.color =
+                        originalColors[i];
                 }
             }
         }
 
-        // 5) Xáo thứ tự để dễ/khó không xếp theo cục
-        Shuffle(result);
-        return result;
-    }
 
-    void Take(List<QuestionData> source, int n, List<QuestionData> dest)
-    {
-        for (int i = 0; i < n && i < source.Count; i++) dest.Add(source[i]);
-    }
-
-    int GetPoints(QuestionData q)
-    {
-        return q.points > 0 ? q.points : 10;   // điểm theo sheet, thiếu thì mặc định 10
-    }
-
-    void ShowQuestion()
-    {
-        var q = questions[index];
-        locked = false;
-
-        questionText.text = q.question;
-        string[] opts = { q.optionA, q.optionB, q.optionC, q.optionD };
-        for (int i = 0; i < answerButtons.Length; i++)
+        if (
+            explanationText != null
+        )
         {
-            if (i < answerTexts.Length && answerTexts[i]) answerTexts[i].text = opts[i];
-            var img = answerButtons[i].GetComponent<Image>();
-            if (img) img.color = originalColors[i];
+            explanationText.text = "";
         }
 
-        if (explanationText) explanationText.text = "";
+
         UpdateScore();
+
         SetAnswersVisible(true);
     }
 
-    void OnAnswer(int chosen)
+
+    // =========================================================
+    // ANSWER
+    // =========================================================
+
+    void OnAnswer(
+        int chosen
+    )
     {
-        if (locked) return;
+        if (locked)
+            return;
+
+
+        if (
+            index < 0
+            ||
+            index >= questions.Count
+        )
+        {
+            return;
+        }
+
+
         locked = true;
 
-        var q = questions[index];
-        int correctIndex = ParseLetter(q.correct);
-        bool isCorrect = chosen == correctIndex;
 
-        SetButtonColor(correctIndex, correctColor);
-        if (!isCorrect) SetButtonColor(chosen, wrongColor);
+        QuestionData q =
+            questions[index];
+
+
+        int correctIndex =
+            ParseLetter(
+                q.correct
+            );
+
+
+        bool isCorrect =
+            chosen == correctIndex;
+
+
+        // =====================================================
+        // COLOR
+        // =====================================================
+
+        SetButtonColor(
+            correctIndex,
+            correctColor
+        );
+
+
+        if (!isCorrect)
+        {
+            SetButtonColor(
+                chosen,
+                wrongColor
+            );
+        }
+
+
+        // =====================================================
+        // CORRECT
+        // =====================================================
 
         if (isCorrect)
         {
-            score += GetPoints(q);
+            rawScore +=
+                GetPoints(q);
+
             correctCount++;
+
             onCorrect?.Invoke();
-        }
-        else onWrong?.Invoke();
-
-        if (kickBall)
-        {
-            if (isCorrect) kickBall.Goal();   // đúng: bóng vào gôn
-            else kickBall.Miss();             // sai: bóng bay trượt
-        }
-
-        if (explanationText) explanationText.text = q.explanation;
-        UpdateScore();
-        StartCoroutine(NextAfterDelay());
-    }
-
-    IEnumerator NextAfterDelay()
-    {
-        if (kickBall)
-        {
-            yield return null;                          // cho KickBall kịp bắt đầu
-            while (kickBall.IsBusy) yield return null;  // đợi bóng sút xong
-            yield return new WaitForSeconds(0.5f);      // thêm chút để đọc giải thích
         }
         else
         {
-            yield return new WaitForSeconds(delayNext);
+            onWrong?.Invoke();
         }
-        index++;
-        if (index >= questions.Count) Finish();
-        else ShowQuestion();
+
+
+        // =====================================================
+        // KICK BALL
+        // =====================================================
+
+        if (
+            kickBall != null
+        )
+        {
+            if (isCorrect)
+            {
+                kickBall.Goal();
+            }
+            else
+            {
+                kickBall.Miss();
+            }
+        }
+
+
+        // =====================================================
+        // EXPLANATION
+        // =====================================================
+
+        if (
+            explanationText != null
+        )
+        {
+            explanationText.text =
+                q.explanation;
+        }
+
+
+        UpdateScore();
+
+
+        StartCoroutine(
+            NextAfterDelay(
+                isCorrect
+            )
+        );
     }
 
-    void Finish()
+
+    // =========================================================
+    // NEXT
+    // =========================================================
+
+    IEnumerator NextAfterDelay(
+        bool wasCorrect
+    )
     {
+        if (
+            kickBall != null
+        )
+        {
+            yield return null;
+
+
+            while (
+                kickBall.IsBusy
+            )
+            {
+                yield return null;
+            }
+
+
+            yield return
+                new WaitForSeconds(
+                    0.5f
+                );
+        }
+        else
+        {
+            yield return
+                new WaitForSeconds(
+                    delayNext
+                );
+        }
+
+
+        // =====================================================
+        // WRONG = GAME OVER
+        // =====================================================
+
+        if (
+            !wasCorrect
+            &&
+            wrongAnswerEndsGame
+        )
+        {
+            GameOver();
+
+            yield break;
+        }
+
+
+        // =====================================================
+        // NEXT
+        // =====================================================
+
+        index++;
+
+
+        if (
+            index >= questions.Count
+        )
+        {
+            Finish();
+        }
+        else
+        {
+            ShowQuestion();
+        }
+    }
+
+
+    // =========================================================
+    // GAME OVER
+    // =========================================================
+
+    void GameOver()
+    {
+        locked = true;
+
+
         SetAnswersVisible(false);
-        questionText.text = "Hoàn thành! Bạn được " + score + "/" + maxScore + " điểm (đúng " + correctCount + "/" + questions.Count + " câu)";
-        if (explanationText) explanationText.text = "";
+
+
+        if (
+            questionText != null
+        )
+        {
+            questionText.text =
+                "Bạn đã trả lời sai!\n"
+                + "Điểm: "
+                + GetScoreOutOf100()
+                + "/100";
+        }
+
+
+        Debug.Log(
+            "FOOTBALL GAME OVER"
+        );
+
+
         onFinished?.Invoke();
     }
 
-    // ---------- tiện ích ----------
-    int ParseLetter(string s)
+
+    // =========================================================
+    // FINISH
+    // =========================================================
+
+    void Finish()
     {
-        if (string.IsNullOrEmpty(s)) return -1;
-        char c = char.ToUpper(s.Trim()[0]);
+        locked = true;
+
+
+        SetAnswersVisible(false);
+
+
+        int score100 =
+            GetScoreOutOf100();
+
+
+        if (
+            questionText != null
+        )
+        {
+            questionText.text =
+                "Hoàn thành!\n"
+                + "Bạn được "
+                + score100
+                + "/100 điểm"
+                + "\nĐúng "
+                + correctCount
+                + "/"
+                + questions.Count
+                + " câu";
+        }
+
+
+        if (
+            explanationText != null
+        )
+        {
+            explanationText.text = "";
+        }
+
+
+        UpdateScore();
+
+
+        onFinished?.Invoke();
+    }
+
+
+    // =========================================================
+    // SCORE 0 - 100
+    // =========================================================
+
+    int GetScoreOutOf100()
+    {
+        if (
+            maxRawScore <= 0
+        )
+        {
+            return 0;
+        }
+
+
+        float percent =
+            (float)rawScore
+            /
+            maxRawScore;
+
+
+        return Mathf.RoundToInt(
+            percent * 100f
+        );
+    }
+
+
+    // =========================================================
+    // POINT
+    // =========================================================
+
+    int GetPoints(
+        QuestionData q
+    )
+    {
+        return q.points > 0
+            ? q.points
+            : 10;
+    }
+
+
+    // =========================================================
+    // A=0 B=1 C=2 D=3
+    // =========================================================
+
+    int ParseLetter(
+        string s
+    )
+    {
+        if (
+            string.IsNullOrWhiteSpace(s)
+        )
+        {
+            return -1;
+        }
+
+
+        char c =
+            char.ToUpper(
+                s.Trim()[0]
+            );
+
+
         return c - 'A';
     }
 
-    void SetButtonColor(int i, Color c)
+
+    // =========================================================
+    // BUTTON COLOR
+    // =========================================================
+
+    void SetButtonColor(
+        int i,
+        Color color
+    )
     {
-        if (i < 0 || i >= answerButtons.Length) return;
-        var img = answerButtons[i].GetComponent<Image>();
-        if (img) img.color = c;
+        if (
+            i < 0
+            ||
+            i >= answerButtons.Length
+        )
+        {
+            return;
+        }
+
+
+        if (
+            answerButtons[i] == null
+        )
+        {
+            return;
+        }
+
+
+        Image img =
+            answerButtons[i]
+                .GetComponent<Image>();
+
+
+        if (
+            img != null
+        )
+        {
+            img.color =
+                color;
+        }
     }
 
-    void SetAnswersVisible(bool show)
+
+    // =========================================================
+    // SHOW/HIDE ANSWERS
+    // =========================================================
+
+    void SetAnswersVisible(
+        bool show
+    )
     {
-        foreach (var b in answerButtons) b.gameObject.SetActive(show);
+        foreach (
+            Button button
+            in answerButtons
+        )
+        {
+            if (
+                button != null
+            )
+            {
+                button
+                    .gameObject
+                    .SetActive(show);
+            }
+        }
     }
+
+
+    // =========================================================
+    // SCORE
+    // =========================================================
 
     void UpdateScore()
     {
-        if (scoreText) scoreText.text = "" + score;
+        if (
+            scoreText != null
+        )
+        {
+            scoreText.text =
+                GetScoreOutOf100()
+                .ToString();
+        }
     }
 
-    void Shuffle(List<QuestionData> list)
+
+    // =========================================================
+    // SHUFFLE
+    // =========================================================
+
+    void Shuffle(
+        List<QuestionData> list
+    )
     {
-        for (int i = list.Count - 1; i > 0; i--)
+        for (
+            int i =
+                list.Count - 1;
+            i > 0;
+            i--
+        )
         {
-            int j = Random.Range(0, i + 1);
-            var tmp = list[i]; list[i] = list[j]; list[j] = tmp;
+            int j =
+                Random.Range(
+                    0,
+                    i + 1
+                );
+
+
+            QuestionData temp =
+                list[i];
+
+
+            list[i] =
+                list[j];
+
+
+            list[j] =
+                temp;
         }
     }
 }
