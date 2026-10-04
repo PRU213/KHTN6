@@ -46,11 +46,11 @@ public class QuestionController : MonoBehaviour
     {
         testQuestions = new QuestionData[]
         {
-            new QuestionData { question = "Thành phần nào sau đây không có ở tế bào động vật?", option_a = "Màng sinh chất", option_b = "Thành tế bào", option_c = "Nhân", option_d = "Ti thể", correct_option = "b" },
-            new QuestionData { question = "Bào quan nào được ví như 'nhà máy điện' của tế bào?", option_a = "Lục lạp", option_b = "Bộ máy Golgi", option_c = "Ti thể", option_d = "Ribosome", correct_option = "c" },
-            new QuestionData { question = "Đơn phân cấu tạo nên phân tử ADN là gì?", option_a = "Axit amin", option_b = "Nucleotide", option_c = "Monosaccharide", option_d = "Axit béo", correct_option = "b" },
-            new QuestionData { question = "Loại bào quan nào có chức năng quang hợp ở thực vật?", option_a = "Lục lạp", option_b = "Không bào", option_c = "Trung thể", option_d = "Lysosome", correct_option = "a" },
-            new QuestionData { question = "Trong quá trình phân bào, thoi phân bào được hình thành từ?", option_a = "Nhân con", option_b = "Trung thể", option_c = "Màng nhân", option_d = "Lưới nội chất", correct_option = "b" }
+            new QuestionData { question = "Thành phần nào sau đây không có ở tế bào động vật?", optionA = "Màng sinh chất", optionB = "Thành tế bào", optionC = "Nhân", optionD = "Ti thể", correct = "B" },
+            new QuestionData { question = "Bào quan nào được ví như 'nhà máy điện' của tế bào?", optionA = "Lục lạp", optionB = "Bộ máy Golgi", optionC = "Ti thể", optionD = "Ribosome", correct = "C" },
+            new QuestionData { question = "Đơn phân cấu tạo nên phân tử ADN là gì?", optionA = "Axit amin", optionB = "Nucleotide", optionC = "Monosaccharide", optionD = "Axit béo", correct = "B" },
+            new QuestionData { question = "Loại bào quan nào có chức năng quang hợp ở thực vật?", optionA = "Lục lạp", optionB = "Không bào", optionC = "Trung thể", optionD = "Lysosome", correct = "A" },
+            new QuestionData { question = "Trong quá trình phân bào, thoi phân bào được hình thành từ?", optionA = "Nhân con", optionB = "Trung thể", optionC = "Màng nhân", optionD = "Lưới nội chất", correct = "B" }
         };
     }
 
@@ -60,10 +60,10 @@ public class QuestionController : MonoBehaviour
         currentQuestion = testQuestions[index];
 
         questionText.text = currentQuestion.question;
-        answerTexts[0].text = currentQuestion.option_a;
-        answerTexts[1].text = currentQuestion.option_b;
-        answerTexts[2].text = currentQuestion.option_c;
-        answerTexts[3].text = currentQuestion.option_d;
+        answerTexts[0].text = currentQuestion.optionA;
+        answerTexts[1].text = currentQuestion.optionB;
+        answerTexts[2].text = currentQuestion.optionC;
+        answerTexts[3].text = currentQuestion.optionD;
     }
 
     private void OnAnswerClicked(int buttonIndex)
@@ -71,7 +71,7 @@ public class QuestionController : MonoBehaviour
         string[] options = { "a", "b", "c", "d" };
         string selectedOption = options[buttonIndex];
 
-        if (selectedOption == currentQuestion.correct_option)
+        if (selectedOption.Equals(currentQuestion.correct, System.StringComparison.OrdinalIgnoreCase))
         {
             // Trả lời đúng
             GameSession.OnAnswerCorrect();

@@ -27,9 +27,12 @@ public class Enemy : MonoBehaviour
 
     void Update()
     {
-        // Tìm Player
-        GameObject player = GameObject.Find("Player");
-        if (player == null) return;
+        // Tìm Player theo component để tránh lỗi phân biệt hoa thường
+#pragma warning disable CS0618
+        PlayerController pc = FindObjectOfType<PlayerController>();
+#pragma warning restore CS0618
+        if (pc == null) return;
+        GameObject player = pc.gameObject;
 
         RectTransform playerRT = player.GetComponent<RectTransform>();
         if (playerRT == null) return;
@@ -54,10 +57,12 @@ public class Enemy : MonoBehaviour
         GameData.Instance.currentEnemyName = gameObject.name;
 
         // Lưu vị trí nhân vật
-        GameObject player = GameObject.Find("Player");
-        if (player != null)
+#pragma warning disable CS0618
+        PlayerController pc = FindObjectOfType<PlayerController>();
+#pragma warning restore CS0618
+        if (pc != null)
         {
-            RectTransform playerRT = player.GetComponent<RectTransform>();
+            RectTransform playerRT = pc.GetComponent<RectTransform>();
             if (playerRT != null)
             {
                 GameData.Instance.lastPlayerPosition = playerRT.anchoredPosition;
@@ -67,12 +72,15 @@ public class Enemy : MonoBehaviour
 
         // Chuyển sang scene câu hỏi tương ứng
         string currentScene = SceneManager.GetActiveScene().name;
+        if (GameData.Instance != null)
+            GameData.Instance.lastSceneName = currentScene;
+
         if (currentScene == "bean_1")
             SceneManager.LoadScene("bean_1_question");
         else if (currentScene == "Bean_2_Biology")
             SceneManager.LoadScene("Bean_2_Biology_Question");
         else if (currentScene == "Bean_3_Biology")
-            SceneManager.LoadScene("Bean_3_Biology_Question");
+            SceneManager.LoadScene("bean_1_question"); // Màn 3 tạm dùng chung câu hỏi màn 1
         else
             SceneManager.LoadScene("bean_1_question"); // Default
     }

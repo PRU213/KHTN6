@@ -22,13 +22,4 @@ public class VideoEndTransition : MonoBehaviour
     {
         SceneManager.LoadScene(nextSceneName);
     }
-
-    void Update()
-    {
-        // Cho phép click để skip video
-        if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space))
-        {
-            SceneManager.LoadScene(nextSceneName);
-        }
-    }
 }

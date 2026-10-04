@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 [RequireComponent(typeof(RectTransform))]
 public class PlayerController : MonoBehaviour
@@ -139,7 +140,7 @@ public class PlayerController : MonoBehaviour
         // =========================
         
         float deathY = -2000f;
-        CameraFollow camFollow = Object.FindFirstObjectByType<CameraFollow>();
+        CameraFollow camFollow = Object.FindAnyObjectByType<CameraFollow>();
         if (camFollow != null)
         {
             // Điểm chết là dưới mép dưới của camera ảo 200px
@@ -331,6 +332,12 @@ public class PlayerController : MonoBehaviour
         ResolveCollisions(previousFeetWorldY);
 
         // =========================
+        // VA CHẠM TƯỜNG (TRANG TRÍ)
+        // =========================
+
+        ResolveWallCollisions();
+
+        // =========================
         // MOVING PLATFORM
         // =========================
 
@@ -410,7 +417,7 @@ public class PlayerController : MonoBehaviour
         currentLadder = null;
         currentMovingPlatform = null;
 
-        CameraFollow camFollow = Object.FindFirstObjectByType<CameraFollow>();
+        CameraFollow camFollow = Object.FindAnyObjectByType<CameraFollow>();
         if (camFollow != null)
         {
             camFollow.ResetCamera();
@@ -768,6 +775,59 @@ public class PlayerController : MonoBehaviour
         if (cloud != null)
         {
             currentCloud = cloud;
+        }
+    }
+
+
+    // =========================================================
+    // WALL COLLISION (chặn bởi vật trang trí)
+    // =========================================================
+
+    private void ResolveWallCollisions()
+    {
+        if (WallBlock.AllWalls.Count == 0) return;
+
+        Rect playerRect = GetWorldRect(rectTransform);
+        float shrink = sideShrink * GetPlayerScaleY();
+        playerRect.xMin += shrink;
+        playerRect.xMax -= shrink;
+
+        // Thu nhỏ chiều dọc để tránh chặn khi nhảy qua đầu tường
+        float vShrink = playerRect.height * 0.3f;
+        playerRect.yMin += vShrink;
+
+        foreach (WallBlock wall in WallBlock.AllWalls)
+        {
+            if (wall == null || wall.RectTransform == null) continue;
+
+            Rect wallRect = GetWorldRect(wall.RectTransform);
+
+            // Kiểm tra chồng chéo
+            bool overlap = playerRect.xMin < wallRect.xMax && playerRect.xMax > wallRect.xMin &&
+                           playerRect.yMin < wallRect.yMax && playerRect.yMax > wallRect.yMin;
+
+            if (!overlap) continue;
+
+            // Tính hướng đẩy ra: đẩy sang bên gần nhất
+            float overlapLeft = playerRect.xMax - wallRect.xMin;
+            float overlapRight = wallRect.xMax - playerRect.xMin;
+
+            Vector2 pos = rectTransform.anchoredPosition;
+
+            if (overlapLeft < overlapRight)
+            {
+                // Đẩy player sang TRÁI
+                pos.x -= overlapLeft;
+                if (velocity.x > 0) velocity.x = 0;
+            }
+            else
+            {
+                // Đẩy player sang PHẢI
+                pos.x += overlapRight;
+                if (velocity.x < 0) velocity.x = 0;
+            }
+
+            rectTransform.anchoredPosition = pos;
         }
     }
 

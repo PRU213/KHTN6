@@ -21,6 +21,9 @@ public class ChonBaiManager : MonoBehaviour
     public string monHocFilter = "Sinh học"; // Changed to Sinh học as per explicit mentions
     public string sheetCSVUrl = "https://docs.google.com/spreadsheets/d/1DcJwlN_fUDdcaQ6IfnlkMJApgWuEUqMhyZv9Kn8vfWo/export?format=csv&gid=1463734910";
     
+    [Header("Item Styling")]
+    public Sprite itemSprite; // Ảnh gắn vào các nút/chương
+    
     private List<QuestionData> allQuestions = new List<QuestionData>();
     private List<string> chapters = new List<string>();
 
@@ -119,7 +122,7 @@ public class ChonBaiManager : MonoBehaviour
                     rt.anchorMin = new Vector2(0, 1);
                     rt.anchorMax = new Vector2(1, 1);
                     rt.pivot = new Vector2(0.5f, 1);
-                    rt.sizeDelta = new Vector2(0, 0); 
+                    rt.sizeDelta = new Vector2(0, 0);
                     rt.anchoredPosition = Vector2.zero;
 
                     scrollRect.content = rt;
@@ -136,13 +139,13 @@ public class ChonBaiManager : MonoBehaviour
                 vlg.spacing = 10;
                 vlg.padding = new RectOffset(10, 10, 10, 10);
             }
-            
+
             if (contentContainer.GetComponent<ContentSizeFitter>() == null)
             {
                 ContentSizeFitter csf = contentContainer.gameObject.AddComponent<ContentSizeFitter>();
                 csf.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
             }
-            
+
             // Dọn dẹp component dư thừa nếu có trên khung ngoài cùng (listContainer)
             VerticalLayoutGroup oldVlg = listContainer.GetComponent<VerticalLayoutGroup>();
             if (oldVlg != null && listContainer != contentContainer) Destroy(oldVlg);
@@ -190,21 +193,21 @@ public class ChonBaiManager : MonoBehaviour
                 QuestionData q = new QuestionData
                 {
                     id = cols[0],
-                    monID = cols[1],
+                    monId = cols[1],
                     topic = cols[2],
                     difficulty = cols[3],
                     question = cols[4],
-                    option_a = cols[5],
-                    option_b = cols[6],
-                    option_c = cols[7],
-                    option_d = cols[8],
-                    correct_option = cols[9],
+                    optionA = cols[5],
+                    optionB = cols[6],
+                    optionC = cols[7],
+                    optionD = cols[8],
+                    correct = cols[9],
                     explanation = cols[10],
                     points = int.TryParse(cols[11], out int p) ? p : 10
                 };
 
                 // Chỉ lấy môn Sinh học theo yêu cầu
-                if (q.monID.Trim().Equals("Sinh học", StringComparison.OrdinalIgnoreCase))
+                if (q.monId.Trim().Equals("Sinh học", StringComparison.OrdinalIgnoreCase))
                 {
                     allQuestions.Add(q);
                     string chapterName = q.topic.Trim();
@@ -252,14 +255,14 @@ public class ChonBaiManager : MonoBehaviour
                 {
                     i++;
                 }
-                
+
                 // Tránh add dòng trắng thừa
                 if (currentCols.Count > 0 || !string.IsNullOrEmpty(currentField))
                 {
                     currentCols.Add(currentField);
                     rows.Add(currentCols.ToArray());
                 }
-                
+
                 currentCols.Clear();
                 currentField = "";
             }
@@ -311,6 +314,11 @@ public class ChonBaiManager : MonoBehaviour
         rt.sizeDelta = new Vector2(0, 60);
 
         Image img = btnObj.AddComponent<Image>();
+        if (itemSprite != null)
+        {
+            img.sprite = itemSprite;
+            img.type = Image.Type.Sliced; // Hỗ trợ co giãn nếu ảnh có viền
+        }
         img.color = normalColor;
 
         Button btn = btnObj.AddComponent<Button>();
@@ -343,7 +351,7 @@ public class ChonBaiManager : MonoBehaviour
         {
             Text txt = chapterButtons[i].GetComponentInChildren<Text>();
             Image img = chapterButtons[i].GetComponent<Image>();
-            
+
             if (txt.text == chapterName)
             {
                 img.color = selectedColor;
@@ -388,8 +396,9 @@ public class ChonBaiManager : MonoBehaviour
         GameData.Instance.startTime = Time.time;
         GameData.Instance.isTimerRunning = true;
 
-        // Load next scene - user wants to go to "game 1" which is bean_1
-        SceneManager.LoadScene("bean_1");
+        // Load next scene - user wants to go to rules screen before playing
+        SceneManager.LoadScene("luatchoisinhhoc");
     }
 
 }
+
