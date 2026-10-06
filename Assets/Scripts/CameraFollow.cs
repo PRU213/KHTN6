@@ -12,7 +12,12 @@ public class CameraFollow : MonoBehaviour
     void Awake()
     {
         instance = this;
-        canvas = Object.FindAnyObjectByType<Canvas>();
+        GameObject canvasGo = GameObject.Find("Canvas");
+        if (canvasGo != null)
+        {
+            canvas = canvasGo.GetComponent<Canvas>();
+        }
+
         if (canvas != null && canvas.renderMode == RenderMode.ScreenSpaceOverlay)
         {
             // Lấy danh sách tất cả các child hiện tại của Canvas
@@ -49,6 +54,7 @@ public class CameraFollow : MonoBehaviour
         if (target == null)
         {
             GameObject p = GameObject.Find("Player");
+            if (p == null) p = GameObject.Find("player");
             if (p != null) target = p.transform;
         }
     }

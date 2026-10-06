@@ -1,0 +1,704 @@
+fileFormatVersion: 2
+guid: 66a0ed13f7eea9848af257bf3e71dfe8
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -1420207350830573249
+    second: Confirm_0
+  - first:
+      213: 4745596000304330331
+    second: Confirm_1
+  - first:
+      213: 3869308229452599142
+    second: Confirm_2
+  - first:
+      213: 4499668485628817101
+    second: Confirm_3
+  - first:
+      213: 1409943553015656136
+    second: Confirm_4
+  - first:
+      213: -1899952372075267157
+    second: Confirm_5
+  - first:
+      213: -7749118985714607572
+    second: Confirm_6
+  - first:
+      213: 3281559706814177843
+    second: Confirm_7
+  - first:
+      213: -7048873641119837428
+    second: Confirm_8
+  - first:
+      213: 4526166816400300097
+    second: Confirm_9
+  - first:
+      213: -4077143809988624010
+    second: Confirm_10
+  - first:
+      213: -8914149330885168898
+    second: Confirm_11
+  - first:
+      213: -8283274562068549202
+    second: Confirm_12
+  - first:
+      213: 259163689009179563
+    second: Confirm_13
+  - first:
+      213: -2745237843660871985
+    second: Confirm_14
+  - first:
+      213: 1979046284263067447
+    second: Confirm_15
+  - first:
+      213: 9156208310601467000
+    second: Confirm_16
+  - first:
+      213: 4015760413567221068
+    second: Confirm_17
+  - first:
+      213: 8434424857622339425
+    second: Confirm_18
+  - first:
+      213: -6247172159474569360
+    second: Confirm_19
+  - first:
+      213: -1621040950520972572
+    second: Confirm_20
+  - first:
+      213: -5234877089403610151
+    second: Confirm_21
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationMethod: 0
+  spriteTessellationDetail: -1
+  spriteGeometrySubdivision: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Confirm_0
+      rect:
+        serializedVersion: 2
+        x: 557
+        y: 1075
+        width: 15
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f39585260f86a4ce0800000000000000
+      internalID: -1420207350830573249
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Confirm_1
+      rect:
+        serializedVersion: 2
+        x: 13
+        y: 0
+        width: 1435
+        height: 1066
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b5677a54b6ebbd140800000000000000
+      internalID: 4745596000304330331
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Confirm_2
+      rect:
+        serializedVersion: 2
+        x: 602
+        y: 1061
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 66f840f855b82b530800000000000000
+      internalID: 3869308229452599142
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Confirm_3
+      rect:
+        serializedVersion: 2
+        x: 744
+        y: 1055
+        width: 11
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dceececb5a8027e30800000000000000
+      internalID: 4499668485628817101
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Confirm_4
+      rect:
+        serializedVersion: 2
+        x: 754
+        y: 1059
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8cea9d6f030219310800000000000000
+      internalID: 1409943553015656136
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Confirm_5
+      rect:
+        serializedVersion: 2
+        x: 732
+        y: 1036
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: babfa4c426302a5e0800000000000000
+      internalID: -1899952372075267157
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Confirm_6
+      rect:
+        serializedVersion: 2
+        x: 362
+        y: 1020
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c2ade3ec659957490800000000000000
+      internalID: -7749118985714607572
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Confirm_7
+      rect:
+        serializedVersion: 2
+        x: 1301
+        y: 1012
+        width: 17
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 332e4e9ba217a8d20800000000000000
+      internalID: 3281559706814177843
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Confirm_8
+      rect:
+        serializedVersion: 2
+        x: 1373
+        y: 1007
+        width: 13
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c03107a15ce5d2e90800000000000000
+      internalID: -7048873641119837428
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Confirm_9
+      rect:
+        serializedVersion: 2
+        x: 587
+        y: 996
+        width: 11
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 14853b52dbc20de30800000000000000
+      internalID: 4526166816400300097
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Confirm_10
+      rect:
+        serializedVersion: 2
+        x: 611
+        y: 1004
+        width: 16
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 67102737e431b67c0800000000000000
+      internalID: -4077143809988624010
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Confirm_11
+      rect:
+        serializedVersion: 2
+        x: 726
+        y: 988
+        width: 13
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ef0bdc9a9649a4480800000000000000
+      internalID: -8914149330885168898
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Confirm_12
+      rect:
+        serializedVersion: 2
+        x: 1390
+        y: 998
+        width: 11
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ea1ffd62ca5eb0d80800000000000000
+      internalID: -8283274562068549202
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Confirm_13
+      rect:
+        serializedVersion: 2
+        x: 640
+        y: 980
+        width: 25
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bab6216800cb89300800000000000000
+      internalID: 259163689009179563
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Confirm_14
+      rect:
+        serializedVersion: 2
+        x: 692
+        y: 990
+        width: 11
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fc662a0e9b4f6e9d0800000000000000
+      internalID: -2745237843660871985
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Confirm_15
+      rect:
+        serializedVersion: 2
+        x: 1376
+        y: 980
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 73f8e8f2c1cf67b10800000000000000
+      internalID: 1979046284263067447
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Confirm_16
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 33
+        width: 13
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 87441e262f2611f70800000000000000
+      internalID: 9156208310601467000
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Confirm_17
+      rect:
+        serializedVersion: 2
+        x: 78
+        y: 54
+        width: 14
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c4dffb9d1d8dab730800000000000000
+      internalID: 4015760413567221068
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Confirm_18
+      rect:
+        serializedVersion: 2
+        x: 483
+        y: 56
+        width: 15
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 16fdd4378b81d0570800000000000000
+      internalID: 8434424857622339425
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Confirm_19
+      rect:
+        serializedVersion: 2
+        x: 734
+        y: 52
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 07feec715069d49a0800000000000000
+      internalID: -6247172159474569360
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Confirm_20
+      rect:
+        serializedVersion: 2
+        x: 131
+        y: 23
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4eaf5d918d7e089e0800000000000000
+      internalID: -1621040950520972572
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Confirm_21
+      rect:
+        serializedVersion: 2
+        x: 1317
+        y: 19
+        width: 19
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9db5443d50bf957b0800000000000000
+      internalID: -5234877089403610151
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Confirm_0: -1420207350830573249
+      Confirm_1: 4745596000304330331
+      Confirm_10: -4077143809988624010
+      Confirm_11: -8914149330885168898
+      Confirm_12: -8283274562068549202
+      Confirm_13: 259163689009179563
+      Confirm_14: -2745237843660871985
+      Confirm_15: 1979046284263067447
+      Confirm_16: 9156208310601467000
+      Confirm_17: 4015760413567221068
+      Confirm_18: 8434424857622339425
+      Confirm_19: -6247172159474569360
+      Confirm_2: 3869308229452599142
+      Confirm_20: -1621040950520972572
+      Confirm_21: -5234877089403610151
+      Confirm_3: 4499668485628817101
+      Confirm_4: 1409943553015656136
+      Confirm_5: -1899952372075267157
+      Confirm_6: -7749118985714607572
+      Confirm_7: 3281559706814177843
+      Confirm_8: -7048873641119837428
+      Confirm_9: 4526166816400300097
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

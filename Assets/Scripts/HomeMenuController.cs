@@ -3,20 +3,20 @@ using UnityEngine.UI;
 
 public class HomeMenuController : MonoBehaviour
 {
-    [Header("Màn trang chủ")]
+    [Header("MA'n trang chu")]
     public GameObject homeCanvas;
 
-    [Header("Bản đồ từng môn")]
+    [Header("Ban do tung man")]
     public GameObject physicsMap;
     public GameObject chemistryMap;
     public GameObject biologyMap;
 
-    [Header("Các nút môn học")]
+    [Header("Cac nut man hoc")]
     public Button btnPhysics;
     public Button btnChemistry;
     public Button btnBiology;
 
-    [Header("Nút quay lại")]
+    [Header("Nut quay lai")]
     public Button backPhysics;
     public Button backChemistry;
     public Button backBiology;
@@ -49,9 +49,6 @@ public class HomeMenuController : MonoBehaviour
             backBiology.onClick.AddListener(BackToHome);
     }
 
-    /// <summary>
-    /// Tự động tìm và gán các GameObject theo tên nếu chưa được gán trong Inspector.
-    /// </summary>
     void AutoFindReferences()
     {
         Transform root = transform.root;
@@ -81,14 +78,38 @@ public class HomeMenuController : MonoBehaviour
         }
 
         if (homeCanvas == null)
-            Debug.LogWarning("HomeMenuController: Không tìm thấy 'HomePage' trong scene!");
+            Debug.LogWarning("HomeMenuController: Khong tim thay 'HomePage' trong scene!");
+
+        if (btnPhysics == null)
+        {
+            GameObject obj = GameObject.Find("Physic");
+            if (obj != null) btnPhysics = obj.GetComponent<Button>();
+        }
+
+        if (btnChemistry == null)
+        {
+            GameObject obj = GameObject.Find("Chemistry");
+            if (obj != null) btnChemistry = obj.GetComponent<Button>();
+        }
+
+        if (btnBiology == null)
+        {
+            GameObject obj = GameObject.Find("Biology");
+            if (obj != null) btnBiology = obj.GetComponent<Button>();
+        }
+
+        if (backPhysics == null)
+        {
+            GameObject obj = GameObject.Find("btn_back"); // Might find the wrong one, but usually multiple
+            // Safer: don't auto assign back buttons if they have same names, let the user assign them in inspector, or search within maps
+        }
     }
 
     void OpenMap(GameObject map)
     {
         if (map == null)
         {
-            Debug.LogWarning("Chưa gán map cho môn này!");
+            Debug.LogWarning("Chua gan map cho man nay!");
             return;
         }
 

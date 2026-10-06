@@ -14,6 +14,18 @@ public class VictoryDisplay : MonoBehaviour
     {
         if (scene.name.Equals("victory", System.StringComparison.OrdinalIgnoreCase))
         {
+            // --- NEW LOGIC: Hook up XepHang Button regardless of GameData ---
+            GameObject btnXepHang = GameObject.Find("XepHang");
+            if (btnXepHang != null)
+            {
+                Button btn = btnXepHang.GetComponent<Button>();
+                if (btn == null) btn = btnXepHang.AddComponent<Button>();
+                btn.onClick.RemoveAllListeners();
+                btn.onClick.AddListener(() => {
+                    SceneManager.LoadScene("XepHang");
+                });
+            }
+
             Canvas canvas = Object.FindAnyObjectByType<Canvas>();
             if (canvas != null && GameData.Instance != null && GameData.Instance.startTime > 0)
             {
@@ -27,7 +39,6 @@ public class VictoryDisplay : MonoBehaviour
                 txt.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
                 txt.fontSize = 60;
                 
-                // You can add a slight shadow for better visibility
                 Shadow shadow = textObj.AddComponent<Shadow>();
                 shadow.effectColor = Color.black;
                 shadow.effectDistance = new Vector2(2, -2);
@@ -38,13 +49,25 @@ public class VictoryDisplay : MonoBehaviour
                 
                 int minutes = Mathf.FloorToInt(timeTaken / 60F);
                 int seconds = Mathf.FloorToInt(timeTaken - minutes * 60);
-                txt.text = string.Format("Thời gian vượt ải: {0:00}:{1:00}", minutes, seconds);
+                string timeStr = string.Format("{0:00}:{1:00}", minutes, seconds);
+                txt.text = "Thời gian: " + timeStr;
 
                 RectTransform rt = textObj.GetComponent<RectTransform>();
                 rt.anchorMin = new Vector2(0.5f, 0.5f);
                 rt.anchorMax = new Vector2(0.5f, 0.5f);
-                rt.anchoredPosition = new Vector2(0, -250); // Đặt ở vị trí nửa dưới màn hình
+                rt.anchoredPosition = new Vector2(0, -250); 
                 rt.sizeDelta = new Vector2(800, 150);
+
+                // --- NEW LOGIC: Save Score to API ---
+                string user = PlayerPrefs.GetString("Username", "Unknown");
+                string full = PlayerPrefs.GetString("Fullname", "Unknown");
+                string chapter = PlayerPrefs.GetString("SelectedChapter", "Tất cả");
+                string diff = PlayerPrefs.GetString("SelectedDifficulty", "Tổng hợp");
+                
+                if (LeaderboardAPI.Instance != null)
+                {
+                    LeaderboardAPI.Instance.SaveScore(user, full, "Sinh học", chapter, diff, timeStr, null);
+                }
             }
         }
     }

@@ -34,6 +34,9 @@ public class GoogleSheetAPI : MonoBehaviour
 
                     if (dbUser == username && dbPass == password && dbRole.Equals(role, StringComparison.OrdinalIgnoreCase))
                     {
+                        PlayerPrefs.SetString("Username", dbUser);
+                        if (cols.Length > 3) PlayerPrefs.SetString("Fullname", cols[3].Trim());
+                        PlayerPrefs.Save();
                         isSuccess = true;
                         break;
                     }

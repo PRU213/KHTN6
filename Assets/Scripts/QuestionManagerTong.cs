@@ -373,7 +373,7 @@ public class QuestionManagerTong : MonoBehaviour
             GameData.Instance.defeatedEnemies.Clear();
             GameData.Instance.currentEnemyName = "";
             GameData.Instance.hasSavedPosition = false;
-            GameData.Instance.startTime = Time.time;
+            // GameData.Instance.startTime = Time.time; // Removed to prevent timer reset
         }
         SceneManager.LoadScene("bean_tong");
     }

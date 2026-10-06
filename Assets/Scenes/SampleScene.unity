@@ -148,7 +148,6 @@ GameObject:
   - component: {fileID: 519420029}
   - component: {fileID: 519420030}
   - component: {fileID: 519420033}
-  - component: {fileID: 519420034}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -812,7 +811,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6384119000581506120, guid: 2094cda7b57e5bd449119e1f6470abd6, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1025,12 +1024,3 @@ SceneRoots:
   - {fileID: 3943158182797805715}
   - {fileID: 3113386095646370412}
   - {fileID: 552620688}
-  - {fileID: 352546090}
-  - {fileID: 2146036628}
-  - {fileID: 2069827395}
-  - {fileID: 162326661}
-  - {fileID: 2127793634}
-  - {fileID: 287818591}
-  - {fileID: 350468502}
-  - {fileID: 454786075}
-  - {fileID: 1123927631}

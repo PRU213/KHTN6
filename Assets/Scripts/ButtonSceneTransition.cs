@@ -11,6 +11,11 @@ public class ButtonSceneTransition : MonoBehaviour
     {
         Button btn = GetComponent<Button>();
         btn.onClick.AddListener(() => {
+            if (SceneManager.GetActiveScene().name == "luatchoisinhhoc" && GameData.Instance != null)
+            {
+                GameData.Instance.startTime = Time.time;
+                GameData.Instance.isTimerRunning = true;
+            }
             SceneManager.LoadScene(targetScene);
         });
     }
