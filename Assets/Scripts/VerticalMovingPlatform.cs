@@ -20,6 +20,13 @@ public class VerticalMovingPlatform : MonoBehaviour
     [Tooltip("Khoảng cách mặc định nếu không tìm thấy bến đỗ (pixel)")]
     public float defaultTravelDistance = 250f;
 
+    [Header("=== CUSTOM BOUNDS ===")]
+    public bool useCustomBounds = false;
+    public float customMinY = 0f;
+    public float customMaxY = 0f;
+    [Tooltip("1 = Đi Lên trước, -1 = Đi Xuống trước")]
+    public float startDirection = 1f;
+
     // --- Data ---
     public RectTransform RectTransform { get; private set; }
 
@@ -47,7 +54,17 @@ public class VerticalMovingPlatform : MonoBehaviour
     void Start()
     {
         previousPosition = RectTransform.anchoredPosition;
-        CalculateBounds();
+        if (useCustomBounds)
+        {
+            pointBottom_Y = customMinY;
+            pointTop_Y = customMaxY;
+            boundsCalculated = true;
+            direction = startDirection;
+        }
+        else
+        {
+            CalculateBounds();
+        }
     }
 
     void OnEnable()
@@ -83,8 +100,8 @@ public class VerticalMovingPlatform : MonoBehaviour
             float py = prt.anchoredPosition.y;
             float pHalfH = prt.sizeDelta.y * 0.5f;
 
-            // Chỉ xét platform ở cùng trục X (chênh lệch X nhỏ)
-            if (Mathf.Abs(px - myX) > 150f) continue;
+            // Chỉ xét platform ở cùng trục X (chênh lệch X < 500 để bắt được các bục lệch)
+            if (Mathf.Abs(px - myX) > 500f) continue;
 
             float platTopEdge = py + pHalfH;
             float platBottomEdge = py - pHalfH;

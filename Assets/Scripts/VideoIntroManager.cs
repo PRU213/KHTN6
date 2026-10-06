@@ -17,14 +17,7 @@ public class VideoIntroManager : MonoBehaviour
         videoPlayer.loopPointReached += OnVideoEnd;
     }
 
-    void Update()
-    {
-        // Nhấn nút bất kỳ để bỏ qua video
-        if (Input.anyKeyDown)
-        {
-            LoadNextScene();
-        }
-    }
+    // Đã xóa hàm Update chứa Input.anyKeyDown để bắt buộc xem hết video
 
     private void OnVideoEnd(VideoPlayer vp)
     {

@@ -236,7 +236,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f948b063b2de00d4b8519984c9cc7f74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Platform
-  surfaceOffset: 20
+  surfaceOffset: 50
 --- !u!1 &102146355
 GameObject:
   m_ObjectHideFlags: 0
@@ -1585,7 +1585,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f948b063b2de00d4b8519984c9cc7f74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Platform
-  surfaceOffset: 20
+  surfaceOffset: 50
 --- !u!1 &1088967010
 GameObject:
   m_ObjectHideFlags: 0
@@ -2914,7 +2914,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
   moveSpeed: 300
-  jumpForce: 1200
+  jumpForce: 1100
   gravity: -2000
   maxFallSpeed: 1500
   climbSpeed: 300
@@ -2957,6 +2957,11 @@ MonoBehaviour:
   defeatedEnemies: []
   lastPlayerPosition: {x: 0, y: 0}
   hasSavedPosition: 0
+  lastSceneName: 
+  allQuestions: []
+  startTime: 0
+  endTime: 0
+  isTimerRunning: 0
 --- !u!4 &1517199780
 Transform:
   m_ObjectHideFlags: 0
@@ -3089,7 +3094,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f948b063b2de00d4b8519984c9cc7f74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Platform
-  surfaceOffset: 20
+  surfaceOffset: 60
 --- !u!1 &1583859218
 GameObject:
   m_ObjectHideFlags: 0
