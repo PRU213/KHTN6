@@ -111,6 +111,8 @@ public class FootballQuizController : MonoBehaviour
 
     void Awake()
     {
+        wrongAnswerEndsGame = false;
+
         originalColors =
             new Color[answerButtons.Length];
 
@@ -579,6 +581,31 @@ public class FootballQuizController : MonoBehaviour
 
 
         // =====================================================
+        // ĐẢM BẢO ĐỦ SỐ CÂU (VÍ DỤ 10 CÂU)
+        // =====================================================
+
+        if (maxQuestions > 0 && pool.Count < maxQuestions)
+        {
+            foreach (QuestionData q in all)
+            {
+                if (q == null) continue;
+
+                bool subjectOK = string.Equals(
+                    q.monId?.Trim(),
+                    GameSession.Subject?.Trim(),
+                    System.StringComparison.OrdinalIgnoreCase
+                );
+
+                if (subjectOK && !pool.Contains(q))
+                {
+                    pool.Add(q);
+                    if (pool.Count >= maxQuestions)
+                        break;
+                }
+            }
+        }
+
+        // =====================================================
         // RANDOM
         // =====================================================
 
@@ -890,9 +917,10 @@ public class FootballQuizController : MonoBehaviour
 
 
         // =====================================================
-        // WRONG = GAME OVER
+        // WRONG = GAME OVER (Đã tắt để người chơi làm đủ 10 câu)
         // =====================================================
 
+        /*
         if (
             !wasCorrect
             &&
@@ -903,6 +931,7 @@ public class FootballQuizController : MonoBehaviour
 
             yield break;
         }
+        */
 
 
         // =====================================================
@@ -944,8 +973,10 @@ public class FootballQuizController : MonoBehaviour
             questionText.text =
                 "Bạn đã trả lời sai!\n"
                 + "Điểm: "
-                + GetScoreOutOf100()
-                + "/100";
+                + rawScore
+                + "/"
+                + maxRawScore
+                + " điểm";
         }
 
 
@@ -980,14 +1011,8 @@ public class FootballQuizController : MonoBehaviour
         {
             questionText.text =
                 "Hoàn thành!\n"
-                + "Bạn được "
-                + score100
-                + "/100 điểm"
-                + "\nĐúng "
-                + correctCount
-                + "/"
-                + questions.Count
-                + " câu";
++ "Bạn được " + rawScore + "/" + maxRawScore + " điểm"
++ "\nĐúng " + correctCount + "/" + questions.Count + " câu";
         }
 
 
@@ -1150,7 +1175,7 @@ public class FootballQuizController : MonoBehaviour
         )
         {
             scoreText.text =
-                GetScoreOutOf100()
+                rawScore
                 .ToString();
         }
     }

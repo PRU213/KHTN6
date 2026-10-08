@@ -21,6 +21,9 @@ public class HomeMenuController : MonoBehaviour
     public Button backChemistry;
     public Button backBiology;
 
+    [Header("Nut Thoat")]
+    public Button btnQuit;
+
     void Start()
     {
         AutoFindReferences();
@@ -29,6 +32,9 @@ public class HomeMenuController : MonoBehaviour
         {
             GameData.Instance.isTimerRunning = false;
         }
+
+        if (btnQuit != null)
+            btnQuit.onClick.AddListener(QuitGame);
 
         if (btnPhysics != null)
             btnPhysics.onClick.AddListener(() => OpenMap(physicsMap));
@@ -103,6 +109,20 @@ public class HomeMenuController : MonoBehaviour
             GameObject obj = GameObject.Find("btn_back"); // Might find the wrong one, but usually multiple
             // Safer: don't auto assign back buttons if they have same names, let the user assign them in inspector, or search within maps
         }
+
+        if (btnQuit == null)
+        {
+            GameObject obj = GameObject.Find("btn_Thoat");
+            
+            if (obj != null) btnQuit = obj.GetComponent<Button>();
+        }
+    }
+
+    public void QuitGame()
+    {
+        Debug.Log("Thoat Game!");
+        Application.Quit();
+
     }
 
     void OpenMap(GameObject map)
@@ -132,3 +152,4 @@ public class HomeMenuController : MonoBehaviour
             homeCanvas.SetActive(true);
     }
 }
+
