@@ -54,6 +54,7 @@ public class PauseMenuController : MonoBehaviour
 
     private void AttachAllButtons()
     {
+        FixPauseButtonUI();
         AttachButtonListener("btnTamDung", OnTamDungClicked);
         AttachButtonListener("TiepTuc", OnTiepTucClicked);
         AttachButtonListener("VeTrangChu", OnVeTrangChuClicked);
@@ -64,6 +65,78 @@ public class PauseMenuController : MonoBehaviour
         AttachButtonListener("Biology", () => {
             SceneManager.LoadScene("ChonBai");
         });
+    }
+
+    private void FixPauseButtonUI()
+    {
+        for (int i = 0; i < SceneManager.sceneCount; i++)
+        {
+            Scene s = SceneManager.GetSceneAt(i);
+            if (s.isLoaded)
+            {
+                foreach (GameObject rootGo in s.GetRootGameObjects())
+                {
+                    Transform[] transforms = rootGo.GetComponentsInChildren<Transform>(true);
+                    foreach (Transform t in transforms)
+                    {
+                        if (t.name == "btnTamDung")
+                        {
+                            // Thay vì sửa cấu trúc Canvas phức tạp dễ sinh lỗi,
+                            // ta gắn luôn 1 script ép nó đi theo Camera.
+                            if (t.GetComponent<ForcePauseButtonAnchor>() == null)
+                            {
+                                t.gameObject.AddComponent<ForcePauseButtonAnchor>();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public class ForcePauseButtonAnchor : MonoBehaviour
+    {
+        private Canvas parentCanvas;
+        private RectTransform rt;
+
+        void Start()
+        {
+            parentCanvas = GetComponentInParent<Canvas>();
+            rt = GetComponent<RectTransform>();
+        }
+
+        void LateUpdate()
+        {
+            Camera cam = Camera.main;
+            if (cam == null && Camera.allCamerasCount > 0)
+            {
+                cam = Camera.allCameras[0];
+            }
+            if (cam == null) return;
+
+            // Nếu nó nằm trong Overlay Canvas, nó đã tự dính vào màn hình, ta chỉ ép vị trí mỏ neo.
+            if (parentCanvas != null && parentCanvas.renderMode == RenderMode.ScreenSpaceOverlay)
+            {
+                if (rt != null)
+                {
+                    rt.anchorMin = new Vector2(1, 1);
+                    rt.anchorMax = new Vector2(1, 1);
+                    rt.pivot = new Vector2(1, 1);
+                    rt.anchoredPosition = new Vector2(-50, -50);
+                }
+            }
+            else
+            {
+                // Ép vị trí đi theo đúng góc trên phải của Camera
+                float aspect = cam.aspect;
+                float orthoSize = cam.orthographicSize;
+                
+                float targetX = cam.transform.position.x + (orthoSize * aspect) - 1.5f;
+                float targetY = cam.transform.position.y + orthoSize - 1.5f;
+                
+                transform.position = new Vector3(targetX, targetY, transform.position.z);
+            }
+        }
     }
 
     private void AttachButtonListener(string buttonName, UnityEngine.Events.UnityAction action)

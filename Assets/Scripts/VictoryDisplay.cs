@@ -4,9 +4,12 @@ using UnityEngine.SceneManagement;
 
 public class VictoryDisplay : MonoBehaviour
 {
+    static bool hasSavedThisSession = false;
+
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     static void OnLoad()
     {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
@@ -14,6 +17,7 @@ public class VictoryDisplay : MonoBehaviour
     {
         if (scene.name.Equals("victory", System.StringComparison.OrdinalIgnoreCase))
         {
+            if (!hasSavedThisSession) hasSavedThisSession = false; // reset logic if needed, but it's better to reset when starting a game.
             // --- NEW LOGIC: Hook up XepHang Button regardless of GameData ---
             GameObject btnXepHang = GameObject.Find("XepHang");
             if (btnXepHang != null)
@@ -26,7 +30,10 @@ public class VictoryDisplay : MonoBehaviour
                 });
             }
 
-            Canvas canvas = Object.FindAnyObjectByType<Canvas>();
+            Canvas canvas = null;
+            if (btnXepHang != null) canvas = btnXepHang.GetComponentInParent<Canvas>();
+            if (canvas == null) canvas = Object.FindAnyObjectByType<Canvas>();
+
             if (canvas != null && GameData.Instance != null && GameData.Instance.startTime > 0)
             {
                 float timeTaken = GameData.Instance.endTime - GameData.Instance.startTime;
@@ -68,6 +75,9 @@ public class VictoryDisplay : MonoBehaviour
                 {
                     LeaderboardAPI.Instance.SaveScore(user, full, "Sinh học", chapter, diff, timeStr, null);
                 }
+
+                // Xóa startTime để không bị lưu/hiển thị lặp lại khi load lại scene
+                GameData.Instance.startTime = 0;
             }
         }
     }

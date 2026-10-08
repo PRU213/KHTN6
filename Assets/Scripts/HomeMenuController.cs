@@ -1,8 +1,13 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class HomeMenuController : MonoBehaviour
 {
+    [Header("Thong tin Nguoi dung")]
+    public TextMeshProUGUI txtName;
+    public TextMeshProUGUI txtRole;
+
     [Header("MA'n trang chu")]
     public GameObject homeCanvas;
 
@@ -27,6 +32,32 @@ public class HomeMenuController : MonoBehaviour
     void Start()
     {
         AutoFindReferences();
+
+        if (txtName != null)
+        {
+            string fullName = PlayerPrefs.GetString("Fullname", "Người chơi");
+            txtName.text = fullName;
+            txtName.fontSize = 24; // Chỉnh text nhỏ lại
+            txtName.color = Color.black; // Chỉnh màu chữ thành đen
+        }
+
+        if (txtRole != null)
+        {
+            string role = PlayerPrefs.GetString("Role", "Student"); // Lấy chức vụ từ bộ nhớ
+            txtRole.text = role;
+            
+            if (txtName != null) 
+                txtRole.fontSize = txtName.fontSize;
+            else 
+                txtRole.fontSize = 24;
+                
+            txtRole.color = Color.white;
+            txtRole.outlineWidth = 0f; // Chữ không viền
+            
+            // Ép chữ nằm chính giữa theo cả chiều ngang và chiều dọc
+            txtRole.horizontalAlignment = HorizontalAlignmentOptions.Center;
+            txtRole.verticalAlignment = VerticalAlignmentOptions.Middle;
+        }
 
         if (GameData.Instance != null)
         {
@@ -85,6 +116,18 @@ public class HomeMenuController : MonoBehaviour
 
         if (homeCanvas == null)
             Debug.LogWarning("HomeMenuController: Khong tim thay 'HomePage' trong scene!");
+
+        if (txtName == null)
+        {
+            GameObject obj = GameObject.Find("txtName");
+            if (obj != null) txtName = obj.GetComponent<TextMeshProUGUI>();
+        }
+
+        if (txtRole == null)
+        {
+            GameObject obj = GameObject.Find("txtRole");
+            if (obj != null) txtRole = obj.GetComponent<TextMeshProUGUI>();
+        }
 
         if (btnPhysics == null)
         {

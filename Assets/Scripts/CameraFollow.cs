@@ -39,12 +39,23 @@ public class CameraFollow : MonoBehaviour
             worldContainer.offsetMax = Vector2.zero;
 
             // Đưa toàn bộ object hiện tại vào trong Container
+            Transform pauseBtn = null;
             foreach (Transform child in children)
             {
-                if (child != worldContainer)
+                if (child != worldContainer && child.name != "btnTamDung" && !child.name.Contains("TamDung"))
                 {
                     child.SetParent(worldContainer, true);
                 }
+                else if (child.name.Contains("TamDung"))
+                {
+                    pauseBtn = child;
+                }
+            }
+
+            // Đưa nút Tạm Dừng xuống cuối danh sách để nó đè lên trên tất cả cảnh vật
+            if (pauseBtn != null)
+            {
+                pauseBtn.SetAsLastSibling();
             }
         }
     }
