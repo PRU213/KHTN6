@@ -33,6 +33,14 @@ public class HomeMenuController : MonoBehaviour
     {
         AutoFindReferences();
 
+        // Ép các màn hình phụ phải tắt, chỉ giữ lại màn hình chính khi vừa mới vào
+        GameObject rankObj = GameObject.Find("Rank");
+        if (rankObj != null) rankObj.SetActive(false);
+        GameObject historyObj = GameObject.Find("History");
+        if (historyObj != null) historyObj.SetActive(false);
+        
+        if (homeCanvas != null) homeCanvas.SetActive(true);
+
         if (txtName != null)
         {
             string fullName = PlayerPrefs.GetString("Fullname", "Người chơi");
@@ -193,6 +201,13 @@ public class HomeMenuController : MonoBehaviour
 
         if (biologyMap != null)
             biologyMap.SetActive(false);
+
+        // Đảm bảo ẩn cả Rank và History khi quay lại Home
+        GameObject rankObj = GameObject.Find("Rank");
+        if (rankObj != null) rankObj.SetActive(false);
+
+        GameObject historyObj = GameObject.Find("History");
+        if (historyObj != null) historyObj.SetActive(false);
 
         if (homeCanvas != null)
             homeCanvas.SetActive(true);

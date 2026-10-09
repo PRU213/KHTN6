@@ -9,6 +9,12 @@ public class HistoryManager : MonoBehaviour
     public string baseUrl =
         "DÁN_LINK_WEB_APP_CỦA_BẠN_Ở_ĐÂY";
 
+    [Header("Thông tin người chơi hiện tại (Gắn Text hoặc TMP_Text)")]
+    [SerializeField] private UnityEngine.UI.Text txtFullname;
+    [SerializeField] private UnityEngine.UI.Text txtRole;
+    [SerializeField] private TMP_Text txtFullnameTMP;
+    [SerializeField] private TMP_Text txtRoleTMP;
+
     [Header("Thông tin học sinh")]
     public TMP_Text studentNameText;
 
@@ -25,7 +31,46 @@ public class HistoryManager : MonoBehaviour
 
     private void OnEnable()
     {
+        LoadUserInfo();
         LoadHistory();
+    }
+
+    private void LoadUserInfo()
+    {
+        // Tự động tìm nốt nếu chưa gắn trong Inspector
+        if (txtFullnameTMP == null && txtFullname == null)
+        {
+            GameObject obj = GameObject.Find("txtFullname");
+            if (obj == null) obj = GameObject.Find("txtName");
+
+            if (obj != null)
+            {
+                txtFullnameTMP = obj.GetComponent<TMP_Text>();
+                txtFullname = obj.GetComponent<UnityEngine.UI.Text>();
+            }
+        }
+
+        if (txtRoleTMP == null && txtRole == null)
+        {
+            GameObject obj = GameObject.Find("txtRole");
+            if (obj == null) obj = GameObject.Find("role");
+
+            if (obj != null)
+            {
+                txtRoleTMP = obj.GetComponent<TMP_Text>();
+                txtRole = obj.GetComponent<UnityEngine.UI.Text>();
+            }
+        }
+
+        // Lấy thông tin đã được lưu từ sheet lúc đăng nhập
+        string fullName = PlayerPrefs.GetString("Fullname", "Người chơi");
+        string role = PlayerPrefs.GetString("Role", "Student");
+
+        if (txtFullname != null) txtFullname.text = fullName;
+        if (txtRole != null) txtRole.text = role;
+
+        if (txtFullnameTMP != null) txtFullnameTMP.text = fullName;
+        if (txtRoleTMP != null) txtRoleTMP.text = role;
     }
 
 
@@ -37,8 +82,8 @@ public class HistoryManager : MonoBehaviour
 
     IEnumerator GetHistory()
     {
-        // Tạm thời test student01
-        string username = "student01";
+        // Lấy username thực tế đã lưu khi đăng nhập (nếu không có thì mặc định student01)
+        string username = PlayerPrefs.GetString("Username", "student01");
 
         string url =
             baseUrl +

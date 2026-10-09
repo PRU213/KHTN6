@@ -81,9 +81,29 @@ public class XepHangManager : MonoBehaviour
         }
     }
 
+    private void OnDestroy()
+    {
+        // Đảm bảo dọn dẹp listContainer khi rời scene XepHang
+        if (listContainer != null && listContainer.name == "List")
+        {
+            Destroy(listContainer.gameObject);
+        }
+    }
+
     private void AutoFindUIElements()
     {
-        Canvas canvas = FindObjectOfType<Canvas>();
+        // Lấy đúng Canvas thuộc về Scene hiện tại (XepHang) để tránh gán nhầm vào PersistentTimerCanvas
+        Canvas[] canvases = FindObjectsOfType<Canvas>();
+        Canvas canvas = null;
+        foreach (var c in canvases)
+        {
+            if (c.gameObject.scene == this.gameObject.scene && c.name != "PersistentTimerCanvas" && c.name != "PersistentPauseCanvas")
+            {
+                canvas = c;
+                break;
+            }
+        }
+        if (canvas == null) canvas = FindObjectOfType<Canvas>(); // Fallback
         if (canvas == null) return;
 
         Transform[] allTransforms = canvas.GetComponentsInChildren<Transform>(true);

@@ -9,6 +9,10 @@ public class HomeHistoryController : MonoBehaviour
 
     private void Start()
     {
+        if (homePage == null) homePage = GameObject.Find("HomePage");
+        if (historyPage == null) historyPage = GameObject.Find("History");
+        if (rankPage == null) rankPage = GameObject.Find("Rank");
+
         ShowHome();
     }
 
@@ -20,11 +24,14 @@ public class HomeHistoryController : MonoBehaviour
         if (homePage != null)
             homePage.SetActive(true);
 
-        if (historyPage != null)
-            historyPage.SetActive(false);
+        // Tự động tìm object đang active nếu chưa gán
+        GameObject activeHistory = historyPage != null ? historyPage : GameObject.Find("History");
+        if (activeHistory != null)
+            activeHistory.SetActive(false);
 
-        if (rankPage != null)
-            rankPage.SetActive(false);
+        GameObject activeRank = rankPage != null ? rankPage : GameObject.Find("Rank");
+        if (activeRank != null)
+            activeRank.SetActive(false);
     }
 
     // =========================
