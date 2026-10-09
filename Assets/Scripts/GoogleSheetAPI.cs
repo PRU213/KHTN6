@@ -36,7 +36,7 @@ public class GoogleSheetAPI : MonoBehaviour
                     {
                         PlayerPrefs.SetString("Username", dbUser);
                         if (cols.Length > 3) PlayerPrefs.SetString("Fullname", cols[3].Trim());
-                        PlayerPrefs.SetString("Role", dbRole);
+                        if (cols.Length > 4) PlayerPrefs.SetString("Role", cols[4].Trim());
                         PlayerPrefs.Save();
                         isSuccess = true;
                         break;

@@ -92,18 +92,31 @@ public class LoginController : MonoBehaviour
         Debug.Log($"Đăng nhập với: {username} / vai trò: {selectedRole}");
         api.Login(username, password, selectedRole.ToString(), OnLoginResponse);
     }
-    
+
     private void OnLoginResponse(bool isSuccess, string message)
     {
         if (isSuccess)
         {
             Debug.Log(message);
+
+            // LƯU USERNAME NGƯỜI ĐANG ĐĂNG NHẬP
+            PlayerPrefs.SetString(
+                "Username",
+                usernameInput.text.Trim()
+            );
+
+            PlayerPrefs.Save();
+
             SceneManager.LoadScene("HomePage");
         }
         else
         {
             Debug.LogError(message);
-            if (errorText != null) errorText.text = message;
+
+            if (errorText != null)
+            {
+                errorText.text = message;
+            }
         }
     }
 }

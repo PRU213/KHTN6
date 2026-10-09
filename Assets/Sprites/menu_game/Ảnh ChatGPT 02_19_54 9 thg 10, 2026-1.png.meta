@@ -1,16 +1,19 @@
 fileFormatVersion: 2
-guid: 54de6f9e853469944924e88ed3f373fc
+guid: ba9090937d33161488b87620297e526c
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -4717707328629160047
-    second: TiepTuc_0
+      213: -550684832541725508
+    second: "\u1EA2nh ChatGPT 02_19_54 9 thg 10, 2026-1_0"
   - first:
-      213: 8039767522100590902
-    second: TiepTuc_1
+      213: -1639087216400538777
+    second: "\u1EA2nh ChatGPT 02_19_54 9 thg 10, 2026-1_1"
   - first:
-      213: 1288493394764129582
-    second: TiepTuc_2
+      213: 3723831004437469791
+    second: "\u1EA2nh ChatGPT 02_19_54 9 thg 10, 2026-1_2"
+  - first:
+      213: 8810105858051293235
+    second: "\u1EA2nh ChatGPT 02_19_54 9 thg 10, 2026-1_3"
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -121,13 +124,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: TiepTuc_0
+      name: "\u1EA2nh ChatGPT 02_19_54 9 thg 10, 2026-1_0"
       rect:
         serializedVersion: 2
-        x: 269
-        y: 0
-        width: 1785
-        height: 692
+        x: 0
+        y: 57
+        width: 1356
+        height: 1029
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -136,20 +139,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 1974dca1e26578eb0800000000000000
-      internalID: -4717707328629160047
+      spriteID: cbca72dff039b58f0800000000000000
+      internalID: -550684832541725508
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: TiepTuc_1
+      name: "\u1EA2nh ChatGPT 02_19_54 9 thg 10, 2026-1_1"
       rect:
         serializedVersion: 2
-        x: 1301
-        y: 130
-        width: 15
-        height: 15
+        x: 676
+        y: 915
+        width: 7
+        height: 9
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -158,20 +161,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 639378ff6fdf29f60800000000000000
-      internalID: 8039767522100590902
+      spriteID: 763ef866cdac049e0800000000000000
+      internalID: -1639087216400538777
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: TiepTuc_2
+      name: "\u1EA2nh ChatGPT 02_19_54 9 thg 10, 2026-1_2"
       rect:
         serializedVersion: 2
-        x: 1625
-        y: 103
-        width: 19
-        height: 14
+        x: 1319
+        y: 163
+        width: 9
+        height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -180,8 +183,30 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: e256a527ae5a1e110800000000000000
-      internalID: 1288493394764129582
+      spriteID: f5ad41f9194bda330800000000000000
+      internalID: 3723831004437469791
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u1EA2nh ChatGPT 02_19_54 9 thg 10, 2026-1_3"
+      rect:
+        serializedVersion: 2
+        x: 464
+        y: 98
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3304cb69998c34a70800000000000000
+      internalID: 8810105858051293235
       vertices: []
       indices: 
       edges: []
@@ -200,9 +225,10 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      TiepTuc_0: -4717707328629160047
-      TiepTuc_1: 8039767522100590902
-      TiepTuc_2: 1288493394764129582
+      "\u1EA2nh ChatGPT 02_19_54 9 thg 10, 2026-1_0": -550684832541725508
+      "\u1EA2nh ChatGPT 02_19_54 9 thg 10, 2026-1_1": -1639087216400538777
+      "\u1EA2nh ChatGPT 02_19_54 9 thg 10, 2026-1_2": 3723831004437469791
+      "\u1EA2nh ChatGPT 02_19_54 9 thg 10, 2026-1_3": 8810105858051293235
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

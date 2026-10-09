@@ -2,12 +2,19 @@
 
 //public class BackButton : MonoBehaviour
 //{
-//    public GameObject menuScreen; // menu_game (1)
+//    public GameObject menuScreen;
 
 //    public void GoBack()
 //    {
-//        menuScreen.SetActive(false);
-//        if (RememberScreen.previous != null)
-//            RememberScreen.previous.SetActive(true);
+//        if (UIManager.Instance != null)
+//        {
+//            UIManager.Instance.GoBack();
+//            return;
+//        }
+
+//        if (menuScreen != null)
+//        {
+//            menuScreen.SetActive(false);
+//        }
 //    }
 //}

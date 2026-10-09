@@ -37,24 +37,17 @@ public class HomeMenuController : MonoBehaviour
         {
             string fullName = PlayerPrefs.GetString("Fullname", "Người chơi");
             txtName.text = fullName;
-            txtName.fontSize = 24; // Chỉnh text nhỏ lại
-            txtName.color = Color.black; // Chỉnh màu chữ thành đen
+            txtName.fontSize = 24;
+            txtName.color = Color.black;
         }
 
         if (txtRole != null)
         {
-            string role = PlayerPrefs.GetString("Role", "Student"); // Lấy chức vụ từ bộ nhớ
+            string role = PlayerPrefs.GetString("Role", "Student");
             txtRole.text = role;
-            
-            if (txtName != null) 
-                txtRole.fontSize = txtName.fontSize;
-            else 
-                txtRole.fontSize = 24;
-                
+            txtRole.fontSize = txtName != null ? txtName.fontSize : 24;
             txtRole.color = Color.white;
-            txtRole.outlineWidth = 0f; // Chữ không viền
-            
-            // Ép chữ nằm chính giữa theo cả chiều ngang và chiều dọc
+            txtRole.outlineWidth = 0f;
             txtRole.horizontalAlignment = HorizontalAlignmentOptions.Center;
             txtRole.verticalAlignment = VerticalAlignmentOptions.Middle;
         }
@@ -116,18 +109,6 @@ public class HomeMenuController : MonoBehaviour
 
         if (homeCanvas == null)
             Debug.LogWarning("HomeMenuController: Khong tim thay 'HomePage' trong scene!");
-
-        if (txtName == null)
-        {
-            GameObject obj = GameObject.Find("txtName");
-            if (obj != null) txtName = obj.GetComponent<TextMeshProUGUI>();
-        }
-
-        if (txtRole == null)
-        {
-            GameObject obj = GameObject.Find("txtRole");
-            if (obj != null) txtRole = obj.GetComponent<TextMeshProUGUI>();
-        }
 
         if (btnPhysics == null)
         {

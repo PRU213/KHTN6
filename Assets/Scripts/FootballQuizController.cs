@@ -103,6 +103,7 @@ public class FootballQuizController : MonoBehaviour
     private int correctCount;
 
     private bool locked;
+    private bool historySaved = false;
 
 
     // =========================================================
@@ -112,6 +113,7 @@ public class FootballQuizController : MonoBehaviour
     void Awake()
     {
         wrongAnswerEndsGame = false;
+        maxQuestions = 10;
 
         originalColors =
             new Color[answerButtons.Length];
@@ -163,6 +165,8 @@ public class FootballQuizController : MonoBehaviour
 
     IEnumerator LoadQuestions()
     {
+        historySaved = false;
+
         locked = true;
 
         SetAnswersVisible(false);
@@ -997,34 +1001,40 @@ public class FootballQuizController : MonoBehaviour
     {
         locked = true;
 
-
         SetAnswersVisible(false);
 
 
-        int score100 =
-            GetScoreOutOf100();
-
-
-        if (
-            questionText != null
-        )
+        if (questionText != null)
         {
             questionText.text =
                 "Hoàn thành!\n"
-+ "Bạn được " + rawScore + "/" + maxRawScore + " điểm"
-+ "\nĐúng " + correctCount + "/" + questions.Count + " câu";
+                + "Bạn được "
+                + rawScore
+                + "/"
+                + maxRawScore
+                + " điểm"
+                + "\nĐúng "
+                + correctCount
+                + "/"
+                + questions.Count
+                + " câu";
         }
 
 
-        if (
-            explanationText != null
-        )
+        if (explanationText != null)
         {
             explanationText.text = "";
         }
 
 
         UpdateScore();
+
+
+        // =========================================
+        // LƯU HISTORY
+        // =========================================
+
+        SaveHistory();
 
 
         onFinished?.Invoke();
@@ -1062,12 +1072,13 @@ public class FootballQuizController : MonoBehaviour
     // =========================================================
 
     int GetPoints(
-        QuestionData q
-    )
+    QuestionData q
+)
     {
-        return q.points > 0
-            ? q.points
-            : 10;
+        if (q == null)
+            return 0;
+
+        return Mathf.Max(0, q.points);
     }
 
 
@@ -1184,7 +1195,90 @@ public class FootballQuizController : MonoBehaviour
     // =========================================================
     // SHUFFLE
     // =========================================================
+    // =========================================================
+    // SAVE HISTORY
+    // =========================================================
 
+    void SaveHistory()
+    {
+        // Không cho lưu trùng
+        if (historySaved)
+            return;
+
+        historySaved = true;
+
+
+        // Lấy username của người đang đăng nhập
+        string username =
+            PlayerPrefs.GetString(
+                "Username",
+                ""
+            );
+
+
+        if (string.IsNullOrWhiteSpace(username))
+        {
+            Debug.LogError(
+                "FOOTBALL: Không tìm thấy Username trong PlayerPrefs!"
+            );
+
+            return;
+        }
+
+
+        // =============================================
+        // TÍNH PHẦN TRĂM ĐIỂM
+        // =============================================
+
+        float percent = 0f;
+
+        if (maxRawScore > 0)
+        {
+            percent =
+                (float)rawScore
+                /
+                maxRawScore
+                *
+                100f;
+        }
+
+
+        // =============================================
+        // >= 50% = THẮNG
+        // < 50% = THUA
+        // =============================================
+
+        string result =
+            percent >= 50f
+                ? "THẮNG"
+                : "THUA";
+
+
+        Debug.Log(
+            "FOOTBALL SAVE HISTORY"
+            + " | Username = " + username
+            + " | Score = " + rawScore
+            + "/" + maxRawScore
+            + " | Percent = " + percent
+            + " | Result = " + result
+        );
+
+
+        // =============================================
+        // GỬI LÊN GOOGLE SHEET
+        // =============================================
+
+        StartCoroutine(
+            HistoryAPI.SaveHistory(
+                baseUrl,
+                username,
+                "Máy AI",
+                "Luyện tập",
+                result,
+                rawScore
+            )
+        );
+    }
     void Shuffle(
         List<QuestionData> list
     )

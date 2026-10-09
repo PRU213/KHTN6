@@ -81,8 +81,6 @@ public class PauseMenuController : MonoBehaviour
                     {
                         if (t.name == "btnTamDung")
                         {
-                            // Thay vì sửa cấu trúc Canvas phức tạp dễ sinh lỗi,
-                            // ta gắn luôn 1 script ép nó đi theo Camera.
                             if (t.GetComponent<ForcePauseButtonAnchor>() == null)
                             {
                                 t.gameObject.AddComponent<ForcePauseButtonAnchor>();
@@ -114,7 +112,6 @@ public class PauseMenuController : MonoBehaviour
             }
             if (cam == null) return;
 
-            // Nếu nó nằm trong Overlay Canvas, nó đã tự dính vào màn hình, ta chỉ ép vị trí mỏ neo.
             if (parentCanvas != null && parentCanvas.renderMode == RenderMode.ScreenSpaceOverlay)
             {
                 if (rt != null)
@@ -127,13 +124,10 @@ public class PauseMenuController : MonoBehaviour
             }
             else
             {
-                // Ép vị trí đi theo đúng góc trên phải của Camera
                 float aspect = cam.aspect;
                 float orthoSize = cam.orthographicSize;
-                
                 float targetX = cam.transform.position.x + (orthoSize * aspect) - 1.5f;
                 float targetY = cam.transform.position.y + orthoSize - 1.5f;
-                
                 transform.position = new Vector3(targetX, targetY, transform.position.z);
             }
         }

@@ -39,6 +39,12 @@ public class SheepQuizController : MonoBehaviour
     public string baseUrl = "DÁN_LINK_EXEC_VÀO_ĐÂY";
 
 
+    [Header("Lịch sử chơi")]
+    [Range(0, 100)]
+    public int winPercent = 50;
+
+    private bool historySaved = false;
+
     // =========================================================
     // THIẾT LẬP GAME
     // =========================================================
@@ -50,6 +56,8 @@ public class SheepQuizController : MonoBehaviour
 
     [Tooltip("Sai một câu thì kết thúc game")]
     public bool wrongAnswerEndsGame = false;
+    [Header("Animation nhân vật")]
+    [SerializeField] private Animator sheepAnimator;
 
 
     // =========================================================
@@ -157,6 +165,7 @@ public class SheepQuizController : MonoBehaviour
 
     IEnumerator Begin()
     {
+        historySaved = false;
         locked = true;
 
         SetAnswersVisible(false);
@@ -748,15 +757,22 @@ public class SheepQuizController : MonoBehaviour
 
             correctCount++;
 
+            if (sheepAnimator != null)
+            {
+                sheepAnimator.ResetTrigger("Sad");
+                sheepAnimator.SetTrigger("Happy");
+            }
+
             onCorrect?.Invoke();
         }
-
-        // =====================================================
-        // SAI
-        // =====================================================
-
         else
         {
+            if (sheepAnimator != null)
+            {
+                sheepAnimator.ResetTrigger("Happy");
+                sheepAnimator.SetTrigger("Sad");
+            }
+
             onWrong?.Invoke();
         }
 
@@ -833,21 +849,23 @@ public class SheepQuizController : MonoBehaviour
         SetAnswersVisible(false);
 
 
-        if (
-            questionText != null
-        )
+        if (questionText != null)
         {
             questionText.text =
                 "Bạn đã trả lời sai!\n"
                 + "Điểm: "
-                + GetScoreOutOf100()
-                + "/100";
+                + rawScore
+                + "/"
+                + maxRawScore;
         }
 
 
         Debug.Log(
             "SHEEP GAME OVER"
         );
+
+
+        SaveHistory();
 
 
         onFinished?.Invoke();
@@ -865,19 +883,15 @@ public class SheepQuizController : MonoBehaviour
         SetAnswersVisible(false);
 
 
-        int score100 =
-            GetScoreOutOf100();
-
-
-        if (
-            questionText != null
-        )
+        if (questionText != null)
         {
             questionText.text =
                 "Hoàn thành!\n"
                 + "Bạn được "
-                + score100
-                + "/100 điểm"
+                + rawScore
+                + "/"
+                + maxRawScore
+                + " điểm"
                 + "\nĐúng "
                 + correctCount
                 + "/"
@@ -886,15 +900,21 @@ public class SheepQuizController : MonoBehaviour
         }
 
 
-        if (
-            explanationText != null
-        )
+        if (explanationText != null)
         {
             explanationText.text = "";
         }
 
 
         UpdateScore();
+
+
+        // ==============================
+        // LƯU LỊCH SỬ LÊN GOOGLE SHEET
+        // ==============================
+
+        SaveHistory();
+
 
         onFinished?.Invoke();
     }
@@ -930,13 +950,12 @@ public class SheepQuizController : MonoBehaviour
     // POINTS
     // =========================================================
 
-    int GetPoints(
-        QuestionData q
-    )
+    int GetPoints(QuestionData q)
     {
-        return q.points > 0
-            ? q.points
-            : 10;
+        if (q == null)
+            return 0;
+
+        return Mathf.Max(0, q.points);
     }
 
 
@@ -1034,27 +1053,10 @@ public class SheepQuizController : MonoBehaviour
         if (scoreText == null)
             return;
 
-
-        int targetScore =
-            GetScoreOutOf100();
-
-
-        if (
-            countRoutine != null
-        )
-        {
-            StopCoroutine(
-                countRoutine
-            );
-        }
-
-
-        countRoutine =
-            StartCoroutine(
-                CountTo(
-                    targetScore
-                )
-            );
+        scoreText.text =
+            rawScore
+            + "/"
+            + maxRawScore;
     }
 
 
@@ -1104,6 +1106,81 @@ public class SheepQuizController : MonoBehaviour
     // =========================================================
     // SHUFFLE
     // =========================================================
+
+    // =========================================================
+    // LƯU LỊCH SỬ
+    // =========================================================
+
+    void SaveHistory()
+    {
+        // Tránh lưu 2 lần
+        if (historySaved)
+            return;
+
+        historySaved = true;
+
+
+        // Lấy username đã lưu lúc Login
+        string username =
+            PlayerPrefs.GetString(
+                "Username",
+                ""
+            );
+
+
+        if (string.IsNullOrWhiteSpace(username))
+        {
+            Debug.LogError(
+                "SHEEP: Không tìm thấy Username trong PlayerPrefs!"
+            );
+
+            return;
+        }
+
+
+        // Tính phần trăm điểm
+        float percent = 0f;
+
+        if (maxRawScore > 0)
+        {
+            percent =
+                (float)rawScore
+                /
+                maxRawScore
+                *
+                100f;
+        }
+
+
+        // Xác định thắng / thua
+        string result =
+            percent >= winPercent
+                ? "THẮNG"
+                : "THUA";
+
+
+        Debug.Log(
+            "SHEEP SAVE HISTORY"
+            + " | Username = " + username
+            + " | Score = " + rawScore
+            + " | Max = " + maxRawScore
+            + " | Percent = " + percent
+            + " | Result = " + result
+        );
+
+
+        StartCoroutine(
+            HistoryAPI.SaveHistory(
+                baseUrl,
+                username,
+                "Máy AI",
+                "Luyện tập",
+                result,
+                rawScore
+            )
+        );
+    }
+
 
     void Shuffle(
         List<QuestionData> list

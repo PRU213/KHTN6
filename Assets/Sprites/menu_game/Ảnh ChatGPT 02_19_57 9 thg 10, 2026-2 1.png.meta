@@ -1,16 +1,13 @@
 fileFormatVersion: 2
-guid: 54de6f9e853469944924e88ed3f373fc
+guid: db6bee0aa96cd39408637344a8a74778
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -4717707328629160047
-    second: TiepTuc_0
+      213: -4114129935942422829
+    second: "\u1EA2nh ChatGPT 02_19_57 9 thg 10, 2026-2 1_0"
   - first:
-      213: 8039767522100590902
-    second: TiepTuc_1
-  - first:
-      213: 1288493394764129582
-    second: TiepTuc_2
+      213: 3500535720062207172
+    second: "\u1EA2nh ChatGPT 02_19_57 9 thg 10, 2026-2 1_1"
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -121,13 +118,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: TiepTuc_0
+      name: "\u1EA2nh ChatGPT 02_19_57 9 thg 10, 2026-2 1_0"
       rect:
         serializedVersion: 2
-        x: 269
-        y: 0
-        width: 1785
-        height: 692
+        x: 18
+        y: 48
+        width: 1416
+        height: 1018
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -136,20 +133,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 1974dca1e26578eb0800000000000000
-      internalID: -4717707328629160047
+      spriteID: 3dee950fe9ca7e6c0800000000000000
+      internalID: -4114129935942422829
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: TiepTuc_1
+      name: "\u1EA2nh ChatGPT 02_19_57 9 thg 10, 2026-2 1_1"
       rect:
         serializedVersion: 2
-        x: 1301
-        y: 130
-        width: 15
-        height: 15
+        x: 613
+        y: 161
+        width: 10
+        height: 9
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -158,30 +155,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 639378ff6fdf29f60800000000000000
-      internalID: 8039767522100590902
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: TiepTuc_2
-      rect:
-        serializedVersion: 2
-        x: 1625
-        y: 103
-        width: 19
-        height: 14
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: e256a527ae5a1e110800000000000000
-      internalID: 1288493394764129582
+      spriteID: 4c4cfd5d0b6649030800000000000000
+      internalID: 3500535720062207172
       vertices: []
       indices: 
       edges: []
@@ -200,9 +175,8 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      TiepTuc_0: -4717707328629160047
-      TiepTuc_1: 8039767522100590902
-      TiepTuc_2: 1288493394764129582
+      "\u1EA2nh ChatGPT 02_19_57 9 thg 10, 2026-2 1_0": -4114129935942422829
+      "\u1EA2nh ChatGPT 02_19_57 9 thg 10, 2026-2 1_1": 3500535720062207172
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

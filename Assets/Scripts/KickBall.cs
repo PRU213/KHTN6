@@ -4,84 +4,424 @@ using UnityEngine.UI;
 
 public class KickBall : MonoBehaviour
 {
-    [SerializeField] RectTransform ball;             // quả bóng (UI Image)
-    [SerializeField] RectTransform[] goalTargets;    // các điểm trong khung thành (Empty UI object)
-    [SerializeField] Button[] answerButtons;         // 4 nút A, B, C, D
-    [SerializeField] GameObject goalText;            // chữ "VÀO!" (tắt sẵn)
+    [Header("Bóng")]
+    [SerializeField] RectTransform ball;
+    [SerializeField] RectTransform[] goalTargets;
+    [SerializeField] Button[] answerButtons;
+    [SerializeField] GameObject goalText;
+
     [SerializeField] float flyTime = 0.85f;
     [SerializeField] float arcHeight = 120f;
     [SerializeField] float endScale = 0.5f;
 
     [Header("Khi sút trượt")]
-    [SerializeField] GameObject missText;            // chữ "TRƯỢT!" (tùy chọn, tắt sẵn)
-    [SerializeField] Vector2 missOffset = new Vector2(450f, 150f); // lệch khỏi gôn bao nhiêu
+    [SerializeField] GameObject missText;
+
+    [Header("Thủ môn")]
+    [SerializeField] Animator goalkeeperAnimator;
 
     Vector2 startPos;
     Vector3 startScale;
+
     bool busy;
 
     public bool IsBusy => busy;
+
 
     void Start()
     {
         startPos = ball.anchoredPosition;
         startScale = ball.localScale;
-        // Không còn tự sút khi bấm nút. FootballQuizController sẽ gọi Goal() hoặc Miss().
     }
 
-    // Trả lời đúng: bóng vào gôn
+
+    // =========================================================
+    // TRẢ LỜI ĐÚNG
+    // =========================================================
+
     public void Goal()
     {
-        if (!busy) StartCoroutine(KickRoutine(true));
+        if (!busy)
+        {
+            StartCoroutine(
+                KickRoutine(true)
+            );
+        }
     }
 
-    // Trả lời sai: bóng bay trượt ra ngoài gôn
+
+    // =========================================================
+    // TRẢ LỜI SAI
+    // =========================================================
+
     public void Miss()
     {
-        if (!busy) StartCoroutine(KickRoutine(false));
+        if (!busy)
+        {
+            StartCoroutine(
+                KickRoutine(false)
+            );
+        }
     }
+
+
+    // =========================================================
+    // SÚT BÓNG
+    // =========================================================
 
     IEnumerator KickRoutine(bool scored)
     {
         busy = true;
+
         SetButtons(false);
 
-        Vector2 end = goalTargets[Random.Range(0, goalTargets.Length)].anchoredPosition;
-        if (!scored)
-        {
-            float side = Random.value < 0.5f ? -1f : 1f;
-            end += new Vector2(side * missOffset.x, missOffset.y);
-        }
-        float dir = end.x >= startPos.x ? 1f : -1f;
 
-        for (float t = 0; t < 1f; t += Time.deltaTime / flyTime)
+        // =====================================================
+        // KIỂM TRA TARGET
+        // =====================================================
+
+        if (
+            goalTargets == null
+            ||
+            goalTargets.Length < 2
+        )
         {
-            float e = 1f - (1f - t) * (1f - t);                  // ease-out
-            Vector2 pos = Vector2.Lerp(startPos, end, e);
-            pos.y += Mathf.Sin(t * Mathf.PI) * arcHeight;         // đường cong bay lên
-            ball.anchoredPosition = pos;
-            ball.localScale = Vector3.Lerp(startScale, startScale * endScale, e);
-            ball.localRotation = Quaternion.Euler(0, 0, -dir * 720f * t);
+            Debug.LogError(
+                "KickBall: Cần ít nhất 2 Goal Target!"
+            );
+
+            SetButtons(true);
+
+            busy = false;
+
+            yield break;
+        }
+
+
+        // =====================================================
+        // THỦ MÔN CHỌN HƯỚNG NGẪU NHIÊN
+        // =====================================================
+
+        bool keeperDiveRight =
+            Random.value < 0.5f;
+
+
+        // =====================================================
+        // CHẠY ANIMATION THỦ MÔN
+        // =====================================================
+
+        PlayKeeperAnimation(
+            keeperDiveRight
+        );
+
+
+        // =====================================================
+        // XÁC ĐỊNH TARGET TRÁI / PHẢI
+        // =====================================================
+
+        RectTransform leftTarget =
+            goalTargets[0];
+
+        RectTransform rightTarget =
+            goalTargets[
+                goalTargets.Length - 1
+            ];
+
+
+        Vector2 end;
+
+
+        // =====================================================
+        // TRẢ LỜI ĐÚNG
+        // BÓNG BAY NGƯỢC HƯỚNG THỦ MÔN
+        // =====================================================
+
+        if (scored)
+        {
+            if (keeperDiveRight)
+            {
+                // Thủ môn sang phải
+                // bóng sang trái
+
+                end =
+                    leftTarget
+                        .anchoredPosition;
+
+                Debug.Log(
+                    "ĐÚNG: Keeper Right -> Ball Left"
+                );
+            }
+            else
+            {
+                // Thủ môn sang trái
+                // bóng sang phải
+
+                end =
+                    rightTarget
+                        .anchoredPosition;
+
+                Debug.Log(
+                    "ĐÚNG: Keeper Left -> Ball Right"
+                );
+            }
+        }
+
+        // =====================================================
+        // TRẢ LỜI SAI
+        // BÓNG BAY CÙNG HƯỚNG THỦ MÔN
+        // =====================================================
+
+        else
+        {
+            if (keeperDiveRight)
+            {
+                // Thủ môn sang phải
+                // bóng bay ra ngoài bên phải
+                end = rightTarget.anchoredPosition;
+                end.x += 250f;
+
+                Debug.Log("SAI: bóng bay ra ngoài bên phải");
+            }
+            else
+            {
+                // Thủ môn sang trái
+                // bóng bay ra ngoài bên trái
+                end = leftTarget.anchoredPosition;
+                end.x -= 250f;
+
+                Debug.Log("SAI: bóng bay ra ngoài bên trái");
+            }
+        }
+
+
+        // =====================================================
+        // HƯỚNG XOAY BÓNG
+        // =====================================================
+
+        float dir =
+            end.x >= startPos.x
+                ? 1f
+                : -1f;
+
+
+        // =====================================================
+        // BÓNG BAY
+        // =====================================================
+
+        for (
+            float t = 0;
+            t < 1f;
+            t += Time.deltaTime / flyTime
+        )
+        {
+            float e =
+                1f
+                -
+                (1f - t)
+                *
+                (1f - t);
+
+
+            Vector2 pos =
+                Vector2.Lerp(
+                    startPos,
+                    end,
+                    e
+                );
+
+
+            // đường cong bay
+            pos.y +=
+                Mathf.Sin(
+                    t * Mathf.PI
+                )
+                *
+                arcHeight;
+
+
+            ball.anchoredPosition =
+                pos;
+
+
+            // bóng nhỏ dần
+            ball.localScale =
+                Vector3.Lerp(
+                    startScale,
+                    startScale * endScale,
+                    e
+                );
+
+
+            // bóng xoay
+            ball.localRotation =
+                Quaternion.Euler(
+                    0f,
+                    0f,
+                    -dir * 720f * t
+                );
+
+
             yield return null;
         }
 
-        ball.anchoredPosition = end;
-        if (scored) { if (goalText) goalText.SetActive(true); }
-        else { if (missText) missText.SetActive(true); }
-        yield return new WaitForSeconds(1f);
 
-        // reset về chấm phạt đền
-        if (goalText) goalText.SetActive(false);
-        if (missText) missText.SetActive(false);
-        ball.anchoredPosition = startPos;
-        ball.localScale = startScale;
-        ball.localRotation = Quaternion.identity;
+        // =====================================================
+        // BÓNG ĐẾN ĐÍCH
+        // =====================================================
+
+        ball.anchoredPosition =
+            end;
+
+
+        // =====================================================
+        // HIỆN KẾT QUẢ
+        // =====================================================
+
+        if (scored)
+        {
+            if (goalText != null)
+            {
+                goalText.SetActive(true);
+            }
+        }
+        else
+        {
+            if (missText != null)
+            {
+                missText.SetActive(true);
+            }
+        }
+
+
+        yield return
+            new WaitForSeconds(1f);
+
+
+        // =====================================================
+        // TẮT TEXT
+        // =====================================================
+
+        if (goalText != null)
+        {
+            goalText.SetActive(false);
+        }
+
+
+        if (missText != null)
+        {
+            missText.SetActive(false);
+        }
+
+
+        // =====================================================
+        // RESET BÓNG
+        // =====================================================
+
+        ball.anchoredPosition =
+            startPos;
+
+
+        ball.localScale =
+            startScale;
+
+
+        ball.localRotation =
+            Quaternion.identity;
+
+
+        // =====================================================
+        // MỞ LẠI BUTTON
+        // =====================================================
+
         SetButtons(true);
+
+
         busy = false;
     }
 
+
+    // =========================================================
+    // ANIMATION THỦ MÔN
+    // =========================================================
+
+    void PlayKeeperAnimation(
+        bool keeperDiveRight
+    )
+    {
+        if (goalkeeperAnimator == null)
+        {
+            Debug.LogWarning(
+                "KickBall: Chưa gán Goalkeeper Animator!"
+            );
+
+            return;
+        }
+
+
+        // Reset trigger cũ
+        goalkeeperAnimator.ResetTrigger(
+            "DiveLeft"
+        );
+
+        goalkeeperAnimator.ResetTrigger(
+            "DiveRight"
+        );
+
+
+        // =====================================================
+        // ĐỔ PHẢI
+        // =====================================================
+
+        if (keeperDiveRight)
+        {
+            goalkeeperAnimator.SetTrigger(
+                "DiveRight"
+            );
+
+            Debug.Log(
+                "KEEPER -> DiveRight"
+            );
+        }
+
+        // =====================================================
+        // ĐỔ TRÁI
+        // =====================================================
+
+        else
+        {
+            goalkeeperAnimator.SetTrigger(
+                "DiveLeft"
+            );
+
+            Debug.Log(
+                "KEEPER -> DiveLeft"
+            );
+        }
+    }
+
+
+    // =========================================================
+    // KHÓA / MỞ BUTTON ĐÁP ÁN
+    // =========================================================
+
     void SetButtons(bool on)
     {
-        foreach (var b in answerButtons) b.interactable = on;
+        if (answerButtons == null)
+        {
+            return;
+        }
+
+
+        foreach (
+            Button b
+            in answerButtons
+        )
+        {
+            if (b != null)
+            {
+                b.interactable =
+                    on;
+            }
+        }
     }
 }

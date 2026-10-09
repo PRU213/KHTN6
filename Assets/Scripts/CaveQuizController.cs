@@ -123,6 +123,7 @@ public class CaveQuizController : MonoBehaviour
     private bool locked;
     private bool canMove;
 
+    private bool historySaved = false;
 
     // =========================================================
     // GRID RUNTIME
@@ -234,6 +235,7 @@ public class CaveQuizController : MonoBehaviour
 
     IEnumerator Begin()
     {
+        historySaved = false;
         CleanUp();
 
         canMove = false;
@@ -2170,50 +2172,39 @@ public class CaveQuizController : MonoBehaviour
     // FINISH
     // =========================================================
 
-    void Finish(
-        string head
-    )
+    void Finish(string head)
     {
         canMove = false;
         locked = true;
 
-
         SetAnswersVisible(false);
-
-
-        int score100 =
-            GetScoreOutOf100();
-
 
         questionText.text =
             head
             + "Bạn được "
-            + score100
-            + "/100 điểm"
+            + score
+            + "/"
+            + maxScore
+            + " điểm"
             + " (đúng "
             + correctCount
             + "/"
             + answeredCount
             + " câu đã gặp)";
 
-
-        if (
-            explanationText
-        )
+        if (explanationText)
         {
             explanationText.text = "";
         }
 
-
-        if (
-            cellsRoot
-        )
+        if (cellsRoot)
         {
             cellsRoot
                 .gameObject
                 .SetActive(false);
         }
 
+        SaveHistory();
 
         onFinished?.Invoke();
     }
@@ -2260,13 +2251,12 @@ public class CaveQuizController : MonoBehaviour
     // POINT
     // =========================================================
 
-    int GetPoints(
-        QuestionData q
-    )
+    int GetPoints(QuestionData q)
     {
-        return q.points > 0
-            ? q.points
-            : 10;
+        if (q == null)
+            return 0;
+
+        return Mathf.Max(0, q.points);
     }
 
 
@@ -2478,7 +2468,69 @@ public class CaveQuizController : MonoBehaviour
     // =========================================================
     // SHUFFLE
     // =========================================================
+    // =========================================================
+    // SAVE HISTORY
+    // =========================================================
 
+    void SaveHistory()
+    {
+        if (historySaved)
+            return;
+
+        historySaved = true;
+
+        string username =
+            PlayerPrefs.GetString(
+                "Username",
+                ""
+            );
+
+        if (string.IsNullOrWhiteSpace(username))
+        {
+            Debug.LogError(
+                "CAVE: Không tìm thấy Username trong PlayerPrefs!"
+            );
+
+            return;
+        }
+
+        float percent = 0f;
+
+        if (maxScore > 0)
+        {
+            percent =
+                (float)score
+                /
+                maxScore
+                *
+                100f;
+        }
+
+        string result =
+            percent >= 50f
+                ? "THẮNG"
+                : "THUA";
+
+        Debug.Log(
+            "CAVE SAVE HISTORY"
+            + " | Username = " + username
+            + " | Score = " + score
+            + "/" + maxScore
+            + " | Percent = " + percent
+            + " | Result = " + result
+        );
+
+        StartCoroutine(
+            HistoryAPI.SaveHistory(
+                baseUrl,
+                username,
+                "Máy AI",
+                "Luyện tập",
+                result,
+                score
+            )
+        );
+    }
     void Shuffle<T>(
         List<T> list
     )
@@ -2608,6 +2660,8 @@ public class CaveQuizController : MonoBehaviour
     // =========================================================
     // GIZMOS
     // =========================================================
+
+
 
     void OnDrawGizmosSelected()
     {

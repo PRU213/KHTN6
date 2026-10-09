@@ -17,7 +17,7 @@ public class VictoryDisplay : MonoBehaviour
     {
         if (scene.name.Equals("victory", System.StringComparison.OrdinalIgnoreCase))
         {
-            if (!hasSavedThisSession) hasSavedThisSession = false; // reset logic if needed, but it's better to reset when starting a game.
+            if (!hasSavedThisSession) hasSavedThisSession = false;
             // --- NEW LOGIC: Hook up XepHang Button regardless of GameData ---
             GameObject btnXepHang = GameObject.Find("XepHang");
             if (btnXepHang != null)
@@ -76,7 +76,6 @@ public class VictoryDisplay : MonoBehaviour
                     LeaderboardAPI.Instance.SaveScore(user, full, "Sinh học", chapter, diff, timeStr, null);
                 }
 
-                // Xóa startTime để không bị lưu/hiển thị lặp lại khi load lại scene
                 GameData.Instance.startTime = 0;
             }
         }
