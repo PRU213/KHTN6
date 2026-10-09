@@ -5,8 +5,8 @@ using TMPro;
 public class HomeMenuController : MonoBehaviour
 {
     [Header("Thong tin Nguoi dung")]
-    public TextMeshProUGUI txtName;
-    public TextMeshProUGUI txtRole;
+    public Text txtName;
+    public Text txtRole;
 
     [Header("MA'n trang chu")]
     public GameObject homeCanvas;
@@ -47,9 +47,7 @@ public class HomeMenuController : MonoBehaviour
             txtRole.text = role;
             txtRole.fontSize = txtName != null ? txtName.fontSize : 24;
             txtRole.color = Color.white;
-            txtRole.outlineWidth = 0f;
-            txtRole.horizontalAlignment = HorizontalAlignmentOptions.Center;
-            txtRole.verticalAlignment = VerticalAlignmentOptions.Middle;
+            txtRole.alignment = TextAnchor.MiddleCenter;
         }
 
         if (GameData.Instance != null)
@@ -90,7 +88,8 @@ public class HomeMenuController : MonoBehaviour
             
             if (obj != null) 
             {
-                txtName = obj.GetComponent<TextMeshProUGUI>();
+                txtName = obj.GetComponent<Text>();
+                if (txtName == null) txtName = obj.GetComponentInChildren<Text>();
             }
         }
 
@@ -101,7 +100,8 @@ public class HomeMenuController : MonoBehaviour
             
             if (obj != null) 
             {
-                txtRole = obj.GetComponent<TextMeshProUGUI>();
+                txtRole = obj.GetComponent<Text>();
+                if (txtRole == null) txtRole = obj.GetComponentInChildren<Text>();
             }
         }
 
