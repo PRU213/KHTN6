@@ -83,6 +83,28 @@ public class HomeMenuController : MonoBehaviour
     {
         Transform root = transform.root;
 
+        if (txtName == null)
+        {
+            GameObject obj = GameObject.Find("txtFullname");
+            if (obj == null) obj = GameObject.Find("txtName");
+            
+            if (obj != null) 
+            {
+                txtName = obj.GetComponent<TextMeshProUGUI>();
+            }
+        }
+
+        if (txtRole == null)
+        {
+            GameObject obj = GameObject.Find("txtRole");
+            if (obj == null) obj = GameObject.Find("role");
+            
+            if (obj != null) 
+            {
+                txtRole = obj.GetComponent<TextMeshProUGUI>();
+            }
+        }
+
         if (homeCanvas == null)
         {
             Transform found = root.Find("HomePage");
