@@ -22,7 +22,7 @@ public class SwapToLegacyText
         GameObject[] allObjects = Resources.FindObjectsOfTypeAll<GameObject>();
         foreach (var go in allObjects)
         {
-            if (go.scene.isLoaded && (go.name.Contains("Fullname") || go.name.Contains("Role") || go.name.Contains("txtName") || go.name.Contains("txtRole") || go.name.Contains("profile")))
+            if (go.scene.isLoaded && (go.name.Contains("Fullname") || go.name.Contains("Role") || go.name.Contains("txtName") || go.name.Contains("txtRole") || go.name.Contains("profile") || go.name.ToLower().Contains("giaithich")))
             {
                 TextMeshProUGUI tmp = go.GetComponent<TextMeshProUGUI>();
                 if (tmp != null)
