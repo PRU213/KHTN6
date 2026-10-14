@@ -80,7 +80,7 @@ public class Enemy : MonoBehaviour
         else if (currentScene == "Bean_2_Biology")
             SceneManager.LoadScene("Bean_2_Biology_Question");
         else if (currentScene == "Bean_3_Biology")
-            SceneManager.LoadScene("bean_1_question"); // Màn 3 tạm dùng chung câu hỏi màn 1
+            SceneManager.LoadScene("Bean_3_Biology_Question");
         else
             SceneManager.LoadScene("bean_1_question"); // Default
     }
