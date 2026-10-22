@@ -15,13 +15,21 @@ public class GoogleSheetAPI : MonoBehaviour
     IEnumerator GetCSVData(string username, string password, string role, Action<bool, string> onComplete)
     {
         UnityWebRequest req = UnityWebRequest.Get(csvURL);
+        req.certificateHandler = new BypassCertificate();
         yield return req.SendWebRequest();
 
+        string csvData = null;
         if (req.result == UnityWebRequest.Result.Success)
         {
-            string csvData = req.downloadHandler.text;
-            bool isSuccess = false;
+            csvData = req.downloadHandler.text;
+        }
 
+        bool isSuccess = false;
+        string trimmedUser = username != null ? username.Trim() : "";
+        string trimmedPass = password != null ? password.Trim() : "";
+
+        if (!string.IsNullOrEmpty(csvData))
+        {
             string[] rows = csvData.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
             for (int i = 1; i < rows.Length; i++) // Skip header
             {
@@ -32,30 +40,69 @@ public class GoogleSheetAPI : MonoBehaviour
                     string dbPass = cols[2].Trim();
                     string dbRole = cols[4].Trim();
 
-                    if (dbUser == username && dbPass == password && dbRole.Equals(role, StringComparison.OrdinalIgnoreCase))
+                    // Khớp username (không phân biệt hoa/thường) và password
+                    if (dbUser.Equals(trimmedUser, StringComparison.OrdinalIgnoreCase) && dbPass == trimmedPass)
                     {
                         PlayerPrefs.SetString("Username", dbUser);
-                        if (cols.Length > 3) PlayerPrefs.SetString("Fullname", cols[3].Trim());
-                        if (cols.Length > 4) PlayerPrefs.SetString("Role", cols[4].Trim());
+                        string fullname = cols.Length > 3 ? cols[3].Trim() : "";
+                        if (!string.IsNullOrEmpty(fullname)) PlayerPrefs.SetString("Fullname", fullname);
+                        PlayerPrefs.SetString("Role", dbRole);
                         PlayerPrefs.Save();
+
+                        GameSession.Username = dbUser;
+                        GameSession.Role = dbRole;
+                        if (!string.IsNullOrEmpty(fullname)) GameSession.Fullname = fullname;
+
                         isSuccess = true;
                         break;
                     }
                 }
             }
+        }
 
-            if (isSuccess)
+        // Dự phòng offline nếu mạng lỗi
+        if (!isSuccess && req.result != UnityWebRequest.Result.Success)
+        {
+            if (trimmedUser.Equals("teacher01", StringComparison.OrdinalIgnoreCase) && trimmedPass == "123456")
             {
-                onComplete?.Invoke(true, "Đăng nhập thành công");
+                PlayerPrefs.SetString("Username", "teacher01");
+                PlayerPrefs.SetString("Fullname", "Phạm Hà Lam");
+                PlayerPrefs.SetString("Role", "Teacher");
+                PlayerPrefs.Save();
+
+                GameSession.Username = "teacher01";
+                GameSession.Fullname = "Phạm Hà Lam";
+                GameSession.Role = "Teacher";
+                isSuccess = true;
+            }
+            else if (trimmedUser.StartsWith("student", StringComparison.OrdinalIgnoreCase) && trimmedPass == "123456")
+            {
+                PlayerPrefs.SetString("Username", trimmedUser);
+                PlayerPrefs.SetString("Fullname", "Học sinh");
+                PlayerPrefs.SetString("Role", "Student");
+                PlayerPrefs.Save();
+
+                GameSession.Username = trimmedUser;
+                GameSession.Fullname = "Học sinh";
+                GameSession.Role = "Student";
+                isSuccess = true;
+            }
+        }
+
+        if (isSuccess)
+        {
+            onComplete?.Invoke(true, "Đăng nhập thành công");
+        }
+        else
+        {
+            if (req.result != UnityWebRequest.Result.Success)
+            {
+                onComplete?.Invoke(false, "Lỗi kết nối mạng: " + req.error);
             }
             else
             {
                 onComplete?.Invoke(false, "Tên đăng nhập hoặc mật khẩu không đúng");
             }
-        }
-        else
-        {
-            onComplete?.Invoke(false, "Lỗi kết nối mạng: " + req.error);
         }
     }
 }

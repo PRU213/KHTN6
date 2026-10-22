@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -164,6 +164,7 @@ public class ChonBaiManager : MonoBehaviour
     {
         using (UnityWebRequest req = UnityWebRequest.Get(sheetCSVUrl))
         {
+            req.certificateHandler = new BypassCertificate();
             yield return req.SendWebRequest();
 
             if (req.result == UnityWebRequest.Result.Success)

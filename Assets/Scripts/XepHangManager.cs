@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Networking;
 using System.Collections;
@@ -263,6 +263,7 @@ public class XepHangManager : MonoBehaviour
     {
         using (UnityWebRequest req = UnityWebRequest.Get(sheetCSVUrl))
         {
+            req.certificateHandler = new BypassCertificate();
             yield return req.SendWebRequest();
             if (req.result == UnityWebRequest.Result.Success)
             {

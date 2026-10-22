@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -122,6 +122,7 @@ public class QuestionManager : MonoBehaviour
     {
         using (UnityWebRequest req = UnityWebRequest.Get(SHEET_CSV_URL))
         {
+            req.certificateHandler = new BypassCertificate();
             yield return req.SendWebRequest();
             if (req.result == UnityWebRequest.Result.Success)
             {

@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class HomeMenuController : MonoBehaviour
 {
@@ -8,7 +9,7 @@ public class HomeMenuController : MonoBehaviour
     public Text txtName;
     public Text txtRole;
 
-    [Header("MA'n trang chu")]
+    [Header("Man trang chu")]
     public GameObject homeCanvas;
 
     [Header("Ban do tung man")]
@@ -29,21 +30,31 @@ public class HomeMenuController : MonoBehaviour
     [Header("Nut Thoat")]
     public Button btnQuit;
 
+    void Awake()
+    {
+        // Tránh xung đột nếu có GameObject rỗng "HomeMenuController" trong scene
+        HomeMenuController[] controllers = FindObjectsByType<HomeMenuController>(FindObjectsInactive.Exclude);
+        if (controllers.Length > 1 && gameObject.name == "HomeMenuController" && homeCanvas == null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+    }
+
     void Start()
     {
         AutoFindReferences();
 
-        // Ép các màn hình phụ phải tắt, chỉ giữ lại màn hình chính khi vừa mới vào
-        GameObject rankObj = GameObject.Find("Rank");
-        if (rankObj != null) rankObj.SetActive(false);
-        GameObject historyObj = GameObject.Find("History");
-        if (historyObj != null) historyObj.SetActive(false);
+        // Tắt tất cả các màn hình phụ, bản đồ và minigame, chỉ mở duy nhất HomePage
+        DeactivateAllSubScreens();
         
         if (homeCanvas != null) homeCanvas.SetActive(true);
 
         if (txtName != null)
         {
-            string fullName = PlayerPrefs.GetString("Fullname", "Người chơi");
+            string fullName = !string.IsNullOrEmpty(GameSession.Fullname) 
+                ? GameSession.Fullname 
+                : PlayerPrefs.GetString("Fullname", "Người chơi");
             txtName.text = fullName;
             txtName.fontSize = 24;
             txtName.color = Color.black;
@@ -51,7 +62,9 @@ public class HomeMenuController : MonoBehaviour
 
         if (txtRole != null)
         {
-            string role = PlayerPrefs.GetString("Role", "Student");
+            string role = !string.IsNullOrEmpty(GameSession.Role) 
+                ? GameSession.Role 
+                : PlayerPrefs.GetString("Role", "Student");
             txtRole.text = role;
             txtRole.fontSize = txtName != null ? txtName.fontSize : 24;
             txtRole.color = Color.white;
@@ -73,7 +86,7 @@ public class HomeMenuController : MonoBehaviour
             btnChemistry.onClick.AddListener(() => OpenMap(chemistryMap));
 
         if (btnBiology != null)
-            btnBiology.onClick.AddListener(() => UnityEngine.SceneManagement.SceneManager.LoadScene("ChonBai"));
+            btnBiology.onClick.AddListener(() => SceneManager.LoadScene("ChonBai"));
 
         if (backPhysics != null)
             backPhysics.onClick.AddListener(BackToHome);
@@ -115,8 +128,13 @@ public class HomeMenuController : MonoBehaviour
 
         if (homeCanvas == null)
         {
-            Transform found = root.Find("HomePage");
-            if (found != null) homeCanvas = found.gameObject;
+            GameObject obj = GameObject.Find("HomePage");
+            if (obj != null) homeCanvas = obj;
+            else
+            {
+                Transform found = root.Find("HomePage");
+                if (found != null) homeCanvas = found.gameObject;
+            }
         }
 
         if (physicsMap == null)
@@ -160,8 +178,7 @@ public class HomeMenuController : MonoBehaviour
 
         if (backPhysics == null)
         {
-            GameObject obj = GameObject.Find("btn_back"); // Might find the wrong one, but usually multiple
-            // Safer: don't auto assign back buttons if they have same names, let the user assign them in inspector, or search within maps
+            GameObject obj = GameObject.Find("btn_back");
         }
 
         if (btnQuit == null)
@@ -176,7 +193,6 @@ public class HomeMenuController : MonoBehaviour
     {
         Debug.Log("Thoat Game!");
         Application.Quit();
-
     }
 
     void OpenMap(GameObject map)
@@ -191,26 +207,47 @@ public class HomeMenuController : MonoBehaviour
         map.SetActive(true);
     }
 
+    void DeactivateAllSubScreens()
+    {
+        string[] screens = new string[]
+        {
+            "Cave_dao_2",
+            "Planet_Game_3_blast",
+            "Sheep_Game_1",
+            "Fly_Game5",
+            "Football_Game",
+            "Noborimasu",
+            "theory_physic",
+            "theory_chemistry",
+            "Physical_map_game",
+            "Chemistry_map_game",
+            "Biology_map_game",
+            "choosegame",
+            "menu_game",
+            "Rank",
+            "History",
+            "ExitPopup"
+        };
+
+        foreach (string sName in screens)
+        {
+            GameObject obj = GameObject.Find(sName);
+            if (obj != null && obj != homeCanvas)
+            {
+                obj.SetActive(false);
+            }
+        }
+    }
+
     public void BackToHome()
     {
-        if (physicsMap != null)
-            physicsMap.SetActive(false);
+        if (physicsMap != null) physicsMap.SetActive(false);
+        if (chemistryMap != null) chemistryMap.SetActive(false);
+        if (biologyMap != null) biologyMap.SetActive(false);
 
-        if (chemistryMap != null)
-            chemistryMap.SetActive(false);
-
-        if (biologyMap != null)
-            biologyMap.SetActive(false);
-
-        // Đảm bảo ẩn cả Rank và History khi quay lại Home
-        GameObject rankObj = GameObject.Find("Rank");
-        if (rankObj != null) rankObj.SetActive(false);
-
-        GameObject historyObj = GameObject.Find("History");
-        if (historyObj != null) historyObj.SetActive(false);
+        DeactivateAllSubScreens();
 
         if (homeCanvas != null)
             homeCanvas.SetActive(true);
     }
 }
-

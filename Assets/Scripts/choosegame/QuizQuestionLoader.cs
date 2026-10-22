@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -37,6 +37,7 @@ public class QuizQuestionLoader : MonoBehaviour
         using (UnityWebRequest request =
                UnityWebRequest.Get(url))
         {
+            request.certificateHandler = new BypassCertificate();
             yield return request.SendWebRequest();
 
             if (request.result !=

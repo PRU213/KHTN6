@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -94,7 +94,8 @@ public class HistoryManager : MonoBehaviour
         UnityWebRequest request =
             UnityWebRequest.Get(url);
 
-        yield return request.SendWebRequest();
+        request.certificateHandler = new BypassCertificate();
+            yield return request.SendWebRequest();
 
 
         if (request.result != UnityWebRequest.Result.Success)

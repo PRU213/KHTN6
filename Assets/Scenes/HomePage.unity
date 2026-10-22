@@ -10184,7 +10184,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1725893608
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12363,7 +12363,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 783919508049711086, guid: 8e6e8ffebf05d43469c6b7b110254b92, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2084925797456934133, guid: 8e6e8ffebf05d43469c6b7b110254b92, type: 3}
       propertyPath: obstacleCount

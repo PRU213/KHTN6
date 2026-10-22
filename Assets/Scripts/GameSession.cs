@@ -4,6 +4,43 @@ using UnityEngine;
 public static class GameSession
 {
     // =========================
+    // THÔNG TIN TÀI KHOẢN & VAI TRÒ (SESSION)
+    // =========================
+
+    public static string Role = "";
+    public static string Username = "";
+    public static string Fullname = "";
+
+    /// <summary>
+    /// Kiểm tra người dùng hiện tại có phải là Giáo viên không.
+    /// </summary>
+    public static bool IsTeacher()
+    {
+        return !string.IsNullOrEmpty(Role) &&
+               (Role.Equals("Teacher", System.StringComparison.OrdinalIgnoreCase) ||
+                Role.Equals("GiaoVien", System.StringComparison.OrdinalIgnoreCase));
+    }
+
+    /// <summary>
+    /// Kiểm tra người dùng hiện tại có phải là Học sinh không.
+    /// </summary>
+    public static bool IsStudent()
+    {
+        return !IsTeacher();
+    }
+
+    /// <summary>
+    /// Xóa thông tin phiên người dùng khi đăng xuất.
+    /// </summary>
+    public static void ClearUserSession()
+    {
+        Role = "";
+        Username = "";
+        Fullname = "";
+    }
+
+
+    // =========================
     // MÔN HỌC & CHƯƠNG
     // =========================
 
@@ -213,7 +250,7 @@ public static class GameSession
     // =========================
 
     /// <summary>
-    /// Reset toàn bộ session.
+    /// Reset toàn bộ session gameplay.
     /// Dùng khi quay về Home hoặc bắt đầu
     /// một phiên chơi hoàn toàn mới.
     /// </summary>

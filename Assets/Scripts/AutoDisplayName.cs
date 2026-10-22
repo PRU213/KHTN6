@@ -22,8 +22,12 @@ public class AutoDisplayName : MonoBehaviour
     {
         if (!scene.isLoaded) return;
         
-        string fullName = PlayerPrefs.GetString("Fullname", "Người chơi");
-        string role = PlayerPrefs.GetString("Role", "Student");
+        string fullName = !string.IsNullOrEmpty(GameSession.Fullname)
+            ? GameSession.Fullname
+            : PlayerPrefs.GetString("Fullname", "Người chơi");
+        string role = !string.IsNullOrEmpty(GameSession.Role)
+            ? GameSession.Role
+            : PlayerPrefs.GetString("Role", "Student");
 
         foreach (GameObject rootGo in scene.GetRootGameObjects())
         {

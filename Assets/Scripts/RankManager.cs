@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using TMPro;                 // Nếu dùng Text thường: đổi thành "using UnityEngine.UI;" và TMP_Text -> Text
 using UnityEngine;
@@ -57,6 +57,7 @@ public class RankManager : MonoBehaviour
 
         using (UnityWebRequest request = UnityWebRequest.Get(url))
         {
+            request.certificateHandler = new BypassCertificate();
             yield return request.SendWebRequest();
 
             if (request.result != UnityWebRequest.Result.Success)

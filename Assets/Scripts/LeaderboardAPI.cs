@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Networking;
 using System.Collections;
 using System.Collections.Generic;
@@ -74,6 +74,7 @@ public class LeaderboardAPI : MonoBehaviour
 
         using (UnityWebRequest www = UnityWebRequest.Post(webAppUrl, form))
         {
+            www.certificateHandler = new BypassCertificate();
             yield return www.SendWebRequest();
 
             if (www.result != UnityWebRequest.Result.Success)
@@ -104,6 +105,7 @@ public class LeaderboardAPI : MonoBehaviour
         string url = webAppUrl + "?action=getLeaderboard";
         using (UnityWebRequest www = UnityWebRequest.Get(url))
         {
+            www.certificateHandler = new BypassCertificate();
             yield return www.SendWebRequest();
 
             if (www.result != UnityWebRequest.Result.Success)
