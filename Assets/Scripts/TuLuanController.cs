@@ -44,6 +44,11 @@ public class TuLuanController : MonoBehaviour
     [Tooltip("Bật chế độ thử nghiệm Mock Result khi nộp bài")]
     public bool useMockResult = true;
 
+    [Header("=== CẤU HÌNH BACKEND UPLOAD ===")]
+    [Tooltip("Google Apps Script Web App Exec URL")]
+    public string backendApiUrl =
+        "https://script.google.com/macros/s/AKfycbxxE2R2ZoitgM647aQqnebUcG90lhIlodU0DcyiaZuKkLaVWl6oopI-TkeNM8_KKDWhUw/exec";
+
     [Header("=== MÁU / TIM ===")]
     public Image[] healthIcons = new Image[3];
 
@@ -51,10 +56,19 @@ public class TuLuanController : MonoBehaviour
     [SerializeField] private TuLuanQuestionData currentQuestion;
     [SerializeField] private string selectedImagePath = "";
     [SerializeField] private Texture2D selectedTexture = null;
+    [SerializeField] private byte[] selectedImageBytes = null;
+    [SerializeField] private string selectedImageMimeType = "";
+    [SerializeField] private string currentSubmissionId = "";
+    [SerializeField] private bool isSubmitting = false;
 
     private Sprite initialAnhSprite = null;
     private Color initialAnhColor = Color.white;
     private TuLuanGradingResult lastGradingResult = null;
+    private TuLuanSubmissionData lastSubmission = null;
+
+    public TuLuanSubmissionData LastSubmission => lastSubmission;
+    public string CurrentSubmissionId => currentSubmissionId;
+    public bool IsSubmitting => isSubmitting;
 
     // Danh sách câu hỏi tự luận đã tải
     private List<TuLuanQuestionData> allLoadedQuestions = new List<TuLuanQuestionData>();
@@ -839,6 +853,11 @@ public class TuLuanController : MonoBehaviour
         // 2. Reset ảnh đã chọn nếu có
         ClearSelectedImage();
 
+        // Reset tráº¡ng thÃ¡i ná»™p bÃ i
+        currentSubmissionId = "";
+        isSubmitting = false;
+        if (btnNopBai != null) btnNopBai.interactable = true;
+
         // 3. Chọn và hiển thị câu hỏi khác
         TuLuanQuestionData nextQ = PickDifferentQuestion();
         if (nextQ != null)
@@ -869,6 +888,8 @@ public class TuLuanController : MonoBehaviour
             selectedTexture = null;
         }
         selectedImagePath = "";
+        selectedImageBytes = null;
+        selectedImageMimeType = "";
 
         if (imgAnh != null)
         {
@@ -991,9 +1012,9 @@ public class TuLuanController : MonoBehaviour
     }
     #endregion
 
-    #region Image Selection Logic
+#region Image Selection Logic
     /// <summary>
-    /// Xử lý chọn ảnh từ thiết bị (hỗ trợ PNG, JPG, JPEG).
+    /// Xử lý chọn ảnh từ thiết bị (hỗ trợ PNG, JPG, JPEG, tối đa 5 MB).
     /// </summary>
     public void OnSelectImageClicked()
     {
@@ -1018,6 +1039,24 @@ public class TuLuanController : MonoBehaviour
             return;
         }
 
+        // Giới hạn dung lượng tối đa 5 MB
+        try
+        {
+            FileInfo fi = new FileInfo(path);
+            const long maxSizeBytes = 5 * 1024 * 1024; // 5 MB
+            if (fi.Length > maxSizeBytes)
+            {
+                float sizeMB = fi.Length / (1024f * 1024f);
+                ShowNotification($"Ảnh quá lớn ({sizeMB:0.1} MB)! Vui lòng chọn ảnh tối đa 5 MB.");
+                Debug.LogWarning($"[TuLuan] Ảnh vượt quá 5 MB: {path} ({sizeMB:0.2} MB)");
+                return;
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.LogWarning("[TuLuan] Không thể kiểm tra dung lượng file: " + ex.Message);
+        }
+
         try
         {
             byte[] fileBytes = File.ReadAllBytes(path);
@@ -1032,6 +1071,8 @@ public class TuLuanController : MonoBehaviour
 
                 selectedTexture = tex;
                 selectedImagePath = path;
+                selectedImageBytes = fileBytes;
+                selectedImageMimeType = (ext == ".png") ? "image/png" : "image/jpeg";
 
                 Sprite newSprite = Sprite.Create(
                     tex,
@@ -1046,8 +1087,8 @@ public class TuLuanController : MonoBehaviour
                     imgAnh.color = Color.white;
                 }
 
-                Debug.Log($"[TuLuan] Đã tải ảnh thành công: {path} ({tex.width}x{tex.height})");
-                ShowNotification("Đã tải ảnh bài làm thành công!");
+                Debug.Log($"[TuLuan] Đã nạp ảnh thành công: {path} ({tex.width}x{tex.height}, {fileBytes.Length / 1024f:0.0} KB)");
+                ShowNotification("Đã chọn ảnh bài làm thành công!");
             }
             else
             {
@@ -1089,19 +1130,41 @@ public class TuLuanController : MonoBehaviour
 
     #region Submission Logic
     /// <summary>
-    /// Kiểm tra hợp lệ và thu thập dữ liệu bài nộp.
+    /// Xử lý sự kiện nhấn nút Nộp bài.
+    /// Cho phép nộp văn bản, ảnh hoặc cả hai.
+    /// Chống nộp trùng, gửi ảnh bất đồng bộ lên Drive qua backend, giữ nguyên dữ liệu và ID nếu retry.
     /// </summary>
     public void OnSubmitClicked()
     {
+        if (isSubmitting)
+        {
+            Debug.LogWarning("[TuLuan] Đang trong quá trình nộp bài, vui lòng chờ...");
+            return;
+        }
+
         string answerText = inputCauTraLoi != null ? inputCauTraLoi.text.Trim() : "";
         bool hasText = !string.IsNullOrEmpty(answerText);
-        bool hasImage = selectedTexture != null;
+        bool hasImage = selectedImageBytes != null && selectedImageBytes.Length > 0;
 
         if (!hasText && !hasImage)
         {
             ShowNotification("Vui lòng nhập văn bản trả lời HOẶC tải ảnh bài làm trước khi nộp!");
             return;
         }
+
+        // Tạo SubmissionID duy nhất nếu chưa có (khi retry giữ nguyên ID này)
+        if (string.IsNullOrEmpty(currentSubmissionId))
+        {
+            currentSubmissionId = Guid.NewGuid().ToString();
+        }
+
+        StartCoroutine(SubmitRoutine(answerText, hasImage));
+    }
+
+    private IEnumerator SubmitRoutine(string answerText, bool hasImage)
+    {
+        isSubmitting = true;
+        if (btnNopBai != null) btnNopBai.interactable = false;
 
         string username = !string.IsNullOrEmpty(GameSession.Username) 
             ? GameSession.Username 
@@ -1110,18 +1173,71 @@ public class TuLuanController : MonoBehaviour
         // 1. Thu thập dữ liệu bài nộp
         TuLuanSubmissionData submission = new TuLuanSubmissionData
         {
-            submissionId = Guid.NewGuid().ToString(),
+            submissionId = currentSubmissionId,
             userId = username,
             cauHoiId = currentQuestion != null ? currentQuestion.id : "TL_DEFAULT",
             cauTraLoi = answerText,
             anhBaiLamPath = selectedImagePath,
-            anhBaiLamBytes = selectedTexture != null ? selectedTexture.EncodeToPNG() : null,
+            anhBaiLamBytes = selectedImageBytes,
             thoiGianNop = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
         };
 
-        Debug.Log($"[TuLuan] Bài nộp được tạo: ID={submission.submissionId} | User={submission.userId} | Câu={submission.cauHoiId} | Chữ={answerText.Length} ký tự | Có ảnh={hasImage}");
+        Debug.Log($"[TuLuan] Bắt đầu nộp bài: ID={submission.submissionId} | User={submission.userId} | Câu={submission.cauHoiId} | Chữ={answerText.Length} ký tự | Có ảnh={hasImage}");
 
-        // 2. Chấm điểm (Mock Result để kiểm thử - Chưa kết nối AI API)
+        // 2. Nếu có ảnh, upload bất đồng bộ lên Google Drive qua Backend
+        if (hasImage)
+        {
+            ShowNotification("Đang tải ảnh bài làm lên Google Drive...");
+
+            bool uploadSuccess = false;
+            EssayImageUploadResponse uploadResp = null;
+            string uploadError = "";
+
+            yield return UploadEssayImageRoutine(
+                submission.submissionId,
+                selectedImageBytes,
+                selectedImageMimeType,
+                (success, resp, err) =>
+                {
+                    uploadSuccess = success;
+                    uploadResp = resp;
+                    uploadError = err;
+                }
+            );
+
+            if (!uploadSuccess)
+            {
+                // Thất bại: Giữ nguyên văn bản & ảnh đã chọn, giữ currentSubmissionId để retry
+                isSubmitting = false;
+                if (btnNopBai != null) btnNopBai.interactable = true;
+                submission.uploadStatus = "Thất bại";
+                lastSubmission = submission;
+
+                string displayErr = !string.IsNullOrEmpty(uploadError) ? uploadError : "Lỗi server";
+                ShowNotification($"Tải ảnh thất bại: {displayErr}. Nhấn Nộp bài để thử lại!");
+                Debug.LogError($"[TuLuan] Upload ảnh thất bại: {uploadError} (Submission ID: {currentSubmissionId})");
+                yield break;
+            }
+
+            // Upload thành công -> Lưu fileId, fileUrl, fileName vào model bài nộp
+            submission.driveFileId = (uploadResp != null) ? uploadResp.fileId : "";
+            submission.driveFileUrl = (uploadResp != null) ? uploadResp.fileUrl : "";
+            submission.driveFileName = (uploadResp != null) ? uploadResp.fileName : "";
+            submission.uploadStatus = "Đã tải lên";
+            Debug.Log($"[TuLuan] Upload ảnh thành công! FileId={submission.driveFileId} | Url={submission.driveFileUrl}");
+        }
+        else
+        {
+            submission.uploadStatus = "Không có ảnh";
+        }
+
+        // Lưu dữ liệu bài nộp hoàn chỉnh
+        lastSubmission = submission;
+        isSubmitting = false;
+        if (btnNopBai != null) btnNopBai.interactable = true;
+        currentSubmissionId = ""; // Hoàn tất nộp bài thành công, giải phóng ID cho lượt mới
+
+        // 3. Chấm điểm (Mock Result để kiểm thử - Chưa kết nối AI API)
         if (useMockResult)
         {
             TuLuanGradingResult mockResult = GenerateMockResult(answerText, hasImage);
@@ -1129,7 +1245,77 @@ public class TuLuanController : MonoBehaviour
         }
         else
         {
-            ShowNotification("Bài nộp đã được ghi nhận. Đang chờ kết nối AI chấm bài.");
+            ShowNotification("Bài nộp đã được ghi nhận thành công!");
+        }
+    }
+
+    /// <summary>
+    /// Gửi request upload ảnh bất đồng bộ lên backend Google Apps Script bằng UnityWebRequest.
+    /// Backend lưu ảnh lên Google Drive (Folder ID: 1dNjjX0EqY88oqu7BdCoO4rDYFe1tPamC) và trả về metadata.
+    /// </summary>
+    private IEnumerator UploadEssayImageRoutine(
+        string submissionId,
+        byte[] imageBytes,
+        string mimeType,
+        Action<bool, EssayImageUploadResponse, string> callback)
+    {
+        if (string.IsNullOrEmpty(backendApiUrl))
+        {
+            callback?.Invoke(false, null, "Chưa cấu hình URL backend.");
+            yield break;
+        }
+
+        if (imageBytes == null || imageBytes.Length == 0)
+        {
+            callback?.Invoke(false, null, "Dữ liệu ảnh trống.");
+            yield break;
+        }
+
+        string base64Data = Convert.ToBase64String(imageBytes);
+
+        WWWForm form = new WWWForm();
+        form.AddField("action", "saveEssayImage");
+        form.AddField("submissionId", submissionId);
+        form.AddField("mimeType", mimeType);
+        form.AddField("base64", base64Data);
+
+        using (UnityWebRequest req = UnityWebRequest.Post(backendApiUrl, form))
+        {
+            req.certificateHandler = new BypassCertificate();
+            req.timeout = 45; // Timeout 45s cho file upload
+            yield return req.SendWebRequest();
+
+            if (req.result != UnityWebRequest.Result.Success)
+            {
+                callback?.Invoke(false, null, $"Lỗi kết nối ({req.error})");
+                yield break;
+            }
+
+            string responseText = req.downloadHandler.text;
+            Debug.Log($"[TuLuan] Backend upload response: {responseText}");
+
+            EssayImageUploadResponse resp = null;
+            try
+            {
+                resp = JsonUtility.FromJson<EssayImageUploadResponse>(responseText);
+            }
+            catch (Exception ex)
+            {
+                callback?.Invoke(false, null, "Không đọc được phản hồi từ server: " + ex.Message);
+                yield break;
+            }
+
+            if (resp != null && resp.success)
+            {
+                callback?.Invoke(true, resp, null);
+            }
+            else
+            {
+                string msg = (resp != null && !string.IsNullOrEmpty(resp.message))
+                    ? resp.message
+                    : "Lỗi lưu ảnh trên server.";
+                callback?.Invoke(false, resp, msg);
+            }
         }
     }
 
@@ -1164,7 +1350,7 @@ public class TuLuanController : MonoBehaviour
     }
     #endregion
 
-    #region Popup Result & UI Management
+#region Popup Result & UI Management
     /// <summary>
     /// Hiển thị popup kết quả chấm thi.
     /// Nếu điểm < 5: Tương đương trả lời sai (trừ 1 tim, phải làm tiếp câu khác hoặc chơi lại nếu hết tim).

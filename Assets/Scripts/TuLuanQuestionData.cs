@@ -33,6 +33,10 @@ public class TuLuanSubmissionData
     public string cauTraLoi = "";        // Nội dung văn bản câu trả lời
     public string anhBaiLamPath = "";    // Đường dẫn ảnh đã chọn trên máy
     public byte[] anhBaiLamBytes = null; // Dữ liệu nhị phân ảnh (dùng upload)
+    public string driveFileId = "";      // ID file ảnh trên Google Drive
+    public string driveFileUrl = "";     // URL xem ảnh trên Google Drive
+    public string driveFileName = "";    // Tên file ảnh đã lưu trên Drive
+    public string uploadStatus = "Chưa tải"; // Trạng thái: "Chưa tải", "Đã tải lên", "Không có ảnh", "Thất bại"
     public float diemAI = -1f;           // Điểm số AI chấm (-1 nếu chưa chấm)
     public string nhanXetAI = "";        // Nhận xét chi tiết từ AI
     public string goiYCaiThien = "";     // Gợi ý cải thiện
@@ -40,6 +44,19 @@ public class TuLuanSubmissionData
     public string ketQua = "";           // "ĐẠT" (>= 5) hoặc "CHƯA ĐẠT" (< 5)
     public string trangThaiCham = "Chờ chấm"; // "Chờ chấm", "Đang chấm", "Đã chấm"
     public string thoiGianNop = "";      // Thời gian nộp bài
+}
+
+/// <summary>
+/// Model phản hồi từ Backend Google Apps Script khi upload ảnh lên Google Drive.
+/// </summary>
+[Serializable]
+public class EssayImageUploadResponse
+{
+    public bool success;
+    public string message = "";
+    public string fileId = "";
+    public string fileUrl = "";
+    public string fileName = "";
 }
 
 /// <summary>
