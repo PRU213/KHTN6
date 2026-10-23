@@ -47,7 +47,7 @@ public class TuLuanController : MonoBehaviour
     [Header("=== CẤU HÌNH BACKEND UPLOAD ===")]
     [Tooltip("Google Apps Script Web App Exec URL")]
     public string backendApiUrl =
-        "https://script.google.com/macros/s/AKfycbxxE2R2ZoitgM647aQqnebUcG90lhIlodU0DcyiaZuKkLaVWl6oopI-TkeNM8_KKDWhUw/exec";
+        "https://script.google.com/macros/s/AKfycbxw888KvfqRobmZfYOSH3tOO1PuFRz_yWOFTy_nsMZitdisyMSQGa8aBra_Q_oAxTifMQ/exec";
 
     [Header("=== MÁU / TIM ===")]
     public Image[] healthIcons = new Image[3];

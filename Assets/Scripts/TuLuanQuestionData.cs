@@ -22,7 +22,7 @@ public class TuLuanQuestionData
 
 /// <summary>
 /// Cấu trúc dữ liệu bài nộp tự luận để chuẩn bị gửi AI chấm bài sau này.
-/// Phù hợp với schema lưu trữ trên Google Sheets gid=865925192.
+/// Phù hợp với schema lưu trữ trên Google Sheets gid=865925192 (sheet: BaiNopTuLuan).
 /// </summary>
 [Serializable]
 public class TuLuanSubmissionData
@@ -36,18 +36,19 @@ public class TuLuanSubmissionData
     public string driveFileId = "";      // ID file ảnh trên Google Drive
     public string driveFileUrl = "";     // URL xem ảnh trên Google Drive
     public string driveFileName = "";    // Tên file ảnh đã lưu trên Drive
-    public string uploadStatus = "Chưa tải"; // Trạng thái: "Chưa tải", "Đã tải lên", "Không có ảnh", "Thất bại"
+    public string uploadStatus = "Chưa tải"; // Trạng thái: "Chưa tải", "Đã tải lên Drive", "Đã lưu Sheet", "Không có ảnh", "Thất bại"
+    public bool isSavedToSheet = false;  // Đã lưu thành công vào sheet BaiNopTuLuan
     public float diemAI = -1f;           // Điểm số AI chấm (-1 nếu chưa chấm)
     public string nhanXetAI = "";        // Nhận xét chi tiết từ AI
     public string goiYCaiThien = "";     // Gợi ý cải thiện
     public string chiTietCham = "";      // Chi tiết điểm từng ý theo rubric
     public string ketQua = "";           // "ĐẠT" (>= 5) hoặc "CHƯA ĐẠT" (< 5)
-    public string trangThaiCham = "Chờ chấm"; // "Chờ chấm", "Đang chấm", "Đã chấm"
+    public string trangThaiCham = "Pending"; // "Pending" (chờ chấm), "Đang chấm", "Đã chấm"
     public string thoiGianNop = "";      // Thời gian nộp bài
 }
 
 /// <summary>
-/// Model phản hồi từ Backend Google Apps Script khi upload ảnh lên Google Drive.
+/// Model phản hồi từ Backend Google Apps Script khi upload ảnh lên Google Drive (action: saveEssayImage).
 /// </summary>
 [Serializable]
 public class EssayImageUploadResponse
@@ -57,6 +58,18 @@ public class EssayImageUploadResponse
     public string fileId = "";
     public string fileUrl = "";
     public string fileName = "";
+}
+
+/// <summary>
+/// Model phản hồi từ Backend Google Apps Script khi lưu bài nộp vào sheet BaiNopTuLuan (action: saveEssaySubmission).
+/// </summary>
+[Serializable]
+public class EssaySubmissionSaveResponse
+{
+    public bool success;
+    public bool alreadyExists;
+    public string submissionId = "";
+    public string message = "";
 }
 
 /// <summary>

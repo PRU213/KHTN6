@@ -10,6 +10,7 @@ public static class GameSession
     public static string Role = "";
     public static string Username = "";
     public static string Fullname = "";
+    public static string UserId = "";
 
     /// <summary>
     /// Kiểm tra người dùng hiện tại có phải là Giáo viên không.
@@ -37,6 +38,7 @@ public static class GameSession
         Role = "";
         Username = "";
         Fullname = "";
+        UserId = "";
     }
 
 

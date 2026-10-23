@@ -1,4 +1,4 @@
-#if UNITY_EDITOR
+﻿#if UNITY_EDITOR
 using System;
 using System.Collections;
 using System.IO;
@@ -13,7 +13,7 @@ using UnityEngine.Networking;
 public static class TuLuanUploadTest
 {
     private const string BACKEND_URL =
-        "https://script.google.com/macros/s/AKfycbxxE2R2ZoitgM647aQqnebUcG90lhIlodU0DcyiaZuKkLaVWl6oopI-TkeNM8_KKDWhUw/exec";
+        "https://script.google.com/macros/s/AKfycbxw888KvfqRobmZfYOSH3tOO1PuFRz_yWOFTy_nsMZitdisyMSQGa8aBra_Q_oAxTifMQ/exec";
 
     [MenuItem("Tools/Sinh Hoc/Run TuLuan Upload Tests")]
     public static void RunAllTests()
