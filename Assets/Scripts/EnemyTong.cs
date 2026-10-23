@@ -60,7 +60,16 @@ public class EnemyTong : MonoBehaviour
             }
         }
 
+        GameData.Instance.lastSceneName = SceneManager.GetActiveScene().name;
+
         // Chuyển sang scene câu hỏi dành cho bean_tong
+        bool isTuLuan = GameSession.questionSceneName == "TuLuan" || (GameSession.QuestionType != null && (GameSession.QuestionType.IndexOf("Tá»±", System.StringComparison.OrdinalIgnoreCase) >= 0 || GameSession.QuestionType.IndexOf("Luáº­n", System.StringComparison.OrdinalIgnoreCase) >= 0 || GameSession.QuestionType.IndexOf("TuLuan", System.StringComparison.OrdinalIgnoreCase) >= 0));
+        if (isTuLuan)
+        {
+            SceneManager.LoadScene("TuLuan");
+            return;
+        }
+
         SceneManager.LoadScene("beantong_question");
     }
 
