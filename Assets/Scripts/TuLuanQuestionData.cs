@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 /// <summary>
@@ -70,17 +70,28 @@ public class EssaySubmissionSaveResponse
     public bool alreadyExists;
     public string submissionId = "";
     public string message = "";
+    public string status = "";
+    public string gradingStatus = "";
+    public bool completed;
+    public float score;
+    public string feedback = "";
+    public string improvements = "";
+    public string criteria = "";
+    public string result = "";
+    public bool passed;
 }
 
 /// <summary>
-/// Kết quả chấm thi (dùng cho Mock Result hiện tại & AI thật sau này).
+/// Kết quả chấm thi từ AI (hoặc mock kiểm thử).
 /// </summary>
 [Serializable]
 public class TuLuanGradingResult
 {
-    public float score;              // Điểm số (0 - 10)
-    public float maxScore = 10f;     // Thang điểm (thường là 10)
-    public string reviewText = "";   // Nhận xét chi tiết
-    public string status = "";       // "ĐẠT" hoặc "CHƯA ĐẠT"
-    public bool isMock = false;      // Đánh dấu kết quả mock kiểm thử
+    public float score;                       // Điểm số (0 - 10)
+    public float maxScore = 10f;              // Thang điểm (thường là 10)
+    public string reviewText = "";            // Nhận xét chi tiết từ AI (cột NhanXetAI)
+    public string improvementSuggestion = ""; // Gợi ý cải thiện từ AI (cột GoiYCaiThien)
+    public string detailJson = "";            // Chi tiết điểm từng tiêu chí rubric (cột ChiTietCham)
+    public string status = "";                // "ĐẠT" hoặc "CHƯA ĐẠT" (cột KetQua)
+    public bool isMock = false;               // Đánh dấu kết quả mock kiểm thử
 }

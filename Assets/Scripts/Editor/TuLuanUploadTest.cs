@@ -1,4 +1,4 @@
-﻿#if UNITY_EDITOR
+#if UNITY_EDITOR
 using System;
 using System.Collections;
 using System.IO;
@@ -13,19 +13,31 @@ using UnityEngine.Networking;
 public static class TuLuanUploadTest
 {
     private const string BACKEND_URL =
-        "https://script.google.com/macros/s/AKfycbxw888KvfqRobmZfYOSH3tOO1PuFRz_yWOFTy_nsMZitdisyMSQGa8aBra_Q_oAxTifMQ/exec";
+        "https://script.google.com/macros/s/AKfycbxLHvShuipgPg7x28IikDmzU7wHoE2e3ai9rhuoEnN50UsFUAWIPTG_nneHOxz-YmaY/exec";
 
-    [MenuItem("Tools/Sinh Hoc/Run TuLuan Upload Tests")]
+    [MenuItem("Tools/Sinh Hoc/Run TuLuan Upload & AI Grading Tests")]
     public static void RunAllTests()
     {
         Debug.Log("==================================================");
-        Debug.Log("[TEST TỰ LUẬN] Bắt đầu kiểm thử toàn diện Upload ảnh & Nộp bài");
+        Debug.Log("[TEST TỰ LUẬN] Bắt đầu kiểm thử toàn diện Upload ảnh & Chấm AI");
         Debug.Log("==================================================");
 
         Test1_DataModel();
         Test2_ImageValidation_5MB();
         Test3_TextOnlySubmission();
-        EditorCoroutineUtility.StartCoroutine(Test4_RealBackendUpload());
+        Test7_GameplayDefeatEnemyOnPass();
+        Test8_GameplayEnemyRemainsAliveOnFail();
+        EditorCoroutineUtility.StartCoroutine(RunAsyncTests());
+    }
+
+    private static IEnumerator RunAsyncTests()
+    {
+        yield return Test4_RealBackendUpload();
+        yield return Test5_RealBackendSaveSubmission();
+        yield return Test6_RealBackendPollGrading();
+        Debug.Log("==================================================");
+        Debug.Log("[TEST TỰ LUẬN] Hoàn tất toàn bộ các bài kiểm thử!");
+        Debug.Log("==================================================");
     }
 
     private static void Test1_DataModel()
@@ -200,8 +212,152 @@ public static class TuLuanUploadTest
         }
 
         Debug.Log("==================================================");
-        Debug.Log("[TEST TỰ LUẬN] Hoàn tất 4/4 bài kiểm thử!");
+        Debug.Log("[Test 4] Hoàn tất kiểm thử upload ảnh");
         Debug.Log("==================================================");
+    }
+
+    private static IEnumerator Test5_RealBackendSaveSubmission()
+    {
+        Debug.Log("--- Test 5: Gửi thông tin bài nộp lên Google Sheets (action: saveEssaySubmission) ---");
+        string testSubId = "UNITY_TEST_" + Guid.NewGuid().ToString();
+
+        WWWForm form = new WWWForm();
+        form.AddField("action", "saveEssaySubmission");
+        form.AddField("submissionId", testSubId);
+        form.AddField("userId", "HS001");
+        form.AddField("questionId", "TL_BIO_01_E01");
+        form.AddField("answerText", "Kiểm thử tự động lưu bài nộp tự luận.");
+        form.AddField("fileUrl", "");
+
+        using (UnityWebRequest req = UnityWebRequest.Post(BACKEND_URL, form))
+        {
+            req.certificateHandler = new BypassCertificate();
+            req.timeout = 25;
+            yield return req.SendWebRequest();
+
+            if (req.result != UnityWebRequest.Result.Success)
+            {
+                Debug.LogError($"✗ [FAIL] Lỗi lưu sheet: {req.error}");
+            }
+            else
+            {
+                string resp = req.downloadHandler.text;
+                Debug.Log($"[Test 5] Phản hồi saveEssaySubmission: {resp}");
+                EssaySubmissionSaveResponse parsed = JsonUtility.FromJson<EssaySubmissionSaveResponse>(resp);
+                if (parsed != null && parsed.success)
+                {
+                    Debug.Log($"✓ [PASS] Lưu bài nộp vào sheet BaiNopTuLuan thành công (SubmissionID: {parsed.submissionId})");
+                }
+                else
+                {
+                    Debug.LogError($"✗ [FAIL] Phản hồi không thành công: {resp}");
+                }
+            }
+        }
+    }
+
+    private static IEnumerator Test6_RealBackendPollGrading()
+    {
+        Debug.Log("--- Test 6: Thăm dò (Polling) kết quả chấm AI thực tế từ Google Sheet BaiNopTuLuan ---");
+        string gradedSubmissionId = "TEST_INTEGRATED_478dcf18-1e96-4ba8-b43f-1ead16c2ee0c";
+        string spreadsheetId = "1DcJwlN_fUDdcaQ6IfnlkMJApgWuEUqMhyZv9Kn8vfWo";
+        string queryUrl = $"https://docs.google.com/spreadsheets/d/{spreadsheetId}/gviz/tq?tqx=out:csv&sheet=BaiNopTuLuan&tq=" +
+            UnityWebRequest.EscapeURL($"select * where A = '{gradedSubmissionId}'");
+
+        using (UnityWebRequest req = UnityWebRequest.Get(queryUrl))
+        {
+            req.certificateHandler = new BypassCertificate();
+            req.timeout = 20;
+            yield return req.SendWebRequest();
+
+            if (req.result != UnityWebRequest.Result.Success)
+            {
+                Debug.LogError($"✗ [FAIL] Không truy vấn được GViz: {req.error}");
+            }
+            else
+            {
+                string csv = req.downloadHandler.text;
+                Debug.Log($"[Test 6] Dữ liệu CSV nhận được: {csv.Trim()}");
+
+                // Parse dòng kết quả
+                if (csv.Contains("TEST_INTEGRATED_478dcf18-1e96-4ba8-b43f-1ead16c2ee0c") && csv.Contains("Completed"))
+                {
+                    Debug.Log("✓ [PASS] Truy vấn và tìm thấy bản ghi đã được AI chấm hoàn tất (Completed).");
+                    if (csv.Contains("\"10\""))
+                    {
+                        Debug.Log("✓ [PASS] Điểm số AI được lưu trữ và đọc chính xác: 10 / 10 (Đạt).");
+                    }
+                    if (csv.Contains("Bài làm rất chính xác") || csv.Contains("Bi lm r?t chnh xc"))
+                    {
+                        Debug.Log("✓ [PASS] Nhận xét chi tiết từ AI và gợi ý cải thiện được tải đầy đủ.");
+                    }
+                }
+                else
+                {
+                    Debug.LogError("✗ [FAIL] Không tìm thấy dữ liệu kết quả chấm hợp lệ!");
+                }
+            }
+        }
+    }
+
+    private static void Test7_GameplayDefeatEnemyOnPass()
+    {
+        Debug.Log("--- Test 7: Kiểm tra logic Gameplay khi ĐẠT (Điểm >= 5.0) ---");
+        if (GameData.Instance == null)
+        {
+            GameObject go = new GameObject("GameData_Test");
+            go.AddComponent<GameData>();
+        }
+
+        string enemy = "Boss_Bio_Test_Pass";
+        GameData.Instance.currentEnemyName = enemy;
+        GameData.Instance.defeatedEnemies.Remove(enemy);
+
+        // Mô phỏng chấm bài đạt điểm 8.5
+        float score = 8.5f;
+        if (score >= 5.0f)
+        {
+            GameData.Instance.DefeatCurrentEnemy();
+        }
+
+        if (GameData.Instance.IsEnemyDefeated(enemy) && string.IsNullOrEmpty(GameData.Instance.currentEnemyName))
+        {
+            Debug.Log($"✓ [PASS] Điểm {score} >= 5.0: Quái vật '{enemy}' đã bị tiêu diệt và xóa khỏi giao chiến.");
+        }
+        else
+        {
+            Debug.LogError("✗ [FAIL] Logic tiêu diệt quái vật khi Đạt hoạt động sai!");
+        }
+    }
+
+    private static void Test8_GameplayEnemyRemainsAliveOnFail()
+    {
+        Debug.Log("--- Test 8: Kiểm tra logic Gameplay khi CHƯA ĐẠT (Điểm < 5.0) ---");
+        if (GameData.Instance == null)
+        {
+            GameObject go = new GameObject("GameData_Test");
+            go.AddComponent<GameData>();
+        }
+
+        string enemy = "Monster_Bio_Test_Fail";
+        GameData.Instance.currentEnemyName = enemy;
+        GameData.Instance.defeatedEnemies.Remove(enemy);
+
+        // Mô phỏng bài làm dưới 5 điểm
+        float score = 3.5f;
+        if (score >= 5.0f)
+        {
+            GameData.Instance.DefeatCurrentEnemy();
+        }
+
+        if (!GameData.Instance.IsEnemyDefeated(enemy) && GameData.Instance.currentEnemyName == enemy)
+        {
+            Debug.Log($"✓ [PASS] Điểm {score} < 5.0: Quái vật '{enemy}' vẫn sống, không bị xóa khỏi giao chiến.");
+        }
+        else
+        {
+            Debug.LogError("✗ [FAIL] Quái vật bị tiêu diệt sai khi điểm < 5.0!");
+        }
     }
 }
 

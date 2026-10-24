@@ -1,4 +1,4 @@
-#if UNITY_EDITOR
+﻿#if UNITY_EDITOR
 using System.IO;
 using TMPro;
 using UnityEditor;
@@ -127,7 +127,7 @@ public static class PopupKetQuaSceneCreator
         tmpKq.fontSize = 36;
         tmpKq.fontStyle = FontStyles.Bold;
         tmpKq.alignment = TextAlignmentOptions.Center;
-        tmpKq.color = new Color(0.12f, 0.75f, 0.2f);
+        tmpKq.color = Color.black;
         controller.txtKetQua = tmpKq;
 
         // 9. txtDiem
@@ -148,23 +148,116 @@ public static class PopupKetQuaSceneCreator
         tmpDiem.color = Color.black;
         controller.txtDiem = tmpDiem;
 
-        // 10. txtNhanXet
+        // 10. ScrollView Nhận xét chi tiết kèm Scrollbar dọc
+        GameObject scrollObj = new GameObject("ScrollView_NhanXet", typeof(RectTransform), typeof(ScrollRect));
+        scrollObj.transform.SetParent(frameObj.transform, false);
+        RectTransform rtScroll = scrollObj.GetComponent<RectTransform>();
+        rtScroll.anchorMin = new Vector2(0.5f, 0.5f);
+        rtScroll.anchorMax = new Vector2(0.5f, 0.5f);
+        rtScroll.pivot = new Vector2(0.5f, 0.5f);
+        rtScroll.anchoredPosition = new Vector2(0, -45);
+        rtScroll.sizeDelta = new Vector2(740, 240);
+
+        ScrollRect sRect = scrollObj.GetComponent<ScrollRect>();
+        sRect.horizontal = false;
+        sRect.vertical = true;
+        sRect.movementType = ScrollRect.MovementType.Clamped;
+        sRect.scrollSensitivity = 25f;
+
+        // Viewport
+        GameObject viewportObj = new GameObject("Viewport", typeof(RectTransform), typeof(RectMask2D), typeof(Image));
+        viewportObj.transform.SetParent(scrollObj.transform, false);
+        RectTransform rtVp = viewportObj.GetComponent<RectTransform>();
+        rtVp.anchorMin = Vector2.zero;
+        rtVp.anchorMax = Vector2.one;
+        rtVp.pivot = new Vector2(0f, 1f);
+        rtVp.offsetMin = Vector2.zero;
+        rtVp.offsetMax = new Vector2(-22, 0);
+
+        Image imgVp = viewportObj.GetComponent<Image>();
+        imgVp.color = Color.clear;
+
+        // Content
+        GameObject contentObj = new GameObject("Content", typeof(RectTransform), typeof(ContentSizeFitter), typeof(VerticalLayoutGroup));
+        contentObj.transform.SetParent(viewportObj.transform, false);
+        RectTransform rtContent = contentObj.GetComponent<RectTransform>();
+        rtContent.anchorMin = new Vector2(0, 1);
+        rtContent.anchorMax = new Vector2(1, 1);
+        rtContent.pivot = new Vector2(0.5f, 1);
+        rtContent.offsetMin = Vector2.zero;
+        rtContent.offsetMax = Vector2.zero;
+
+        ContentSizeFitter csf = contentObj.GetComponent<ContentSizeFitter>();
+        csf.horizontalFit = ContentSizeFitter.FitMode.Unconstrained;
+        csf.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+
+        VerticalLayoutGroup vlg = contentObj.GetComponent<VerticalLayoutGroup>();
+        vlg.padding = new RectOffset(6, 6, 6, 6);
+        vlg.childControlWidth = true;
+        vlg.childControlHeight = true;
+        vlg.childForceExpandWidth = true;
+        vlg.childForceExpandHeight = false;
+
+        // txtNhanXet bên trong Content
         GameObject nxObj = new GameObject("txtNhanXet", typeof(RectTransform), typeof(TextMeshProUGUI));
-        nxObj.transform.SetParent(frameObj.transform, false);
+        nxObj.transform.SetParent(contentObj.transform, false);
         RectTransform rtNx = nxObj.GetComponent<RectTransform>();
-        rtNx.anchorMin = new Vector2(0.5f, 0.5f);
-        rtNx.anchorMax = new Vector2(0.5f, 0.5f);
-        rtNx.pivot = new Vector2(0.5f, 0.5f);
-        rtNx.anchoredPosition = new Vector2(0, -35);
-        rtNx.sizeDelta = new Vector2(720, 110);
+        rtNx.anchorMin = new Vector2(0, 1);
+        rtNx.anchorMax = new Vector2(1, 1);
+        rtNx.pivot = new Vector2(0.5f, 1);
 
         TextMeshProUGUI tmpNx = nxObj.GetComponent<TextMeshProUGUI>();
         tmpNx.text = "Bài làm phân tích đúng trọng tâm, trình bày rõ ràng các nội dung chính của câu hỏi.";
-        tmpNx.fontSize = 26;
-        tmpNx.alignment = TextAlignmentOptions.Center;
+        tmpNx.fontSize = 22;
+        tmpNx.alignment = TextAlignmentOptions.TopLeft;
         tmpNx.color = Color.black;
         tmpNx.textWrappingMode = TextWrappingModes.Normal;
+        tmpNx.overflowMode = TextOverflowModes.Overflow;
         controller.txtNhanXet = tmpNx;
+
+        // Scrollbar Vertical
+        GameObject sbObj = new GameObject("Scrollbar Vertical", typeof(RectTransform), typeof(Image), typeof(Scrollbar));
+        sbObj.transform.SetParent(scrollObj.transform, false);
+        RectTransform rtSb = sbObj.GetComponent<RectTransform>();
+        rtSb.anchorMin = new Vector2(1, 0);
+        rtSb.anchorMax = new Vector2(1, 1);
+        rtSb.pivot = new Vector2(1, 1);
+        rtSb.anchoredPosition = Vector2.zero;
+        rtSb.sizeDelta = new Vector2(16, 0);
+
+        Image imgTrack = sbObj.GetComponent<Image>();
+        imgTrack.color = new Color(0.85f, 0.85f, 0.85f, 0.6f);
+
+        Scrollbar sb = sbObj.GetComponent<Scrollbar>();
+        sb.direction = Scrollbar.Direction.BottomToTop;
+
+        GameObject slideArea = new GameObject("Sliding Area", typeof(RectTransform));
+        slideArea.transform.SetParent(sbObj.transform, false);
+        RectTransform rtSlide = slideArea.GetComponent<RectTransform>();
+        rtSlide.anchorMin = Vector2.zero;
+        rtSlide.anchorMax = Vector2.one;
+        rtSlide.sizeDelta = Vector2.zero;
+
+        GameObject handleObj = new GameObject("Handle", typeof(RectTransform), typeof(Image));
+        handleObj.transform.SetParent(slideArea.transform, false);
+        RectTransform rtHandle = handleObj.GetComponent<RectTransform>();
+        rtHandle.anchorMin = Vector2.zero;
+        rtHandle.anchorMax = Vector2.one;
+        rtHandle.sizeDelta = Vector2.zero;
+
+        Image imgHandle = handleObj.GetComponent<Image>();
+        imgHandle.color = new Color(0.35f, 0.35f, 0.35f, 0.85f);
+
+        sb.targetGraphic = imgHandle;
+        sb.handleRect = rtHandle;
+
+        sRect.content = rtContent;
+        sRect.viewport = rtVp;
+        sRect.verticalScrollbar = sb;
+        sRect.verticalScrollbarVisibility = ScrollRect.ScrollbarVisibility.AutoHide;
+
+        controller.scrollNhanXet = sRect;
+        controller.scrollbarNhanXet = sb;
 
         // 11. txtMockNotice
         GameObject mockObj = new GameObject("txtMockNotice", typeof(RectTransform), typeof(TextMeshProUGUI));
@@ -191,7 +284,7 @@ public static class PopupKetQuaSceneCreator
         rtBtn.anchorMin = new Vector2(0.5f, 0.5f);
         rtBtn.anchorMax = new Vector2(0.5f, 0.5f);
         rtBtn.pivot = new Vector2(0.5f, 0.5f);
-        rtBtn.anchoredPosition = new Vector2(0, -195);
+        rtBtn.anchoredPosition = new Vector2(0, -215);
         rtBtn.sizeDelta = new Vector2(240, 70);
 
         Image imgBtn = btnObj.GetComponent<Image>();
@@ -211,7 +304,7 @@ public static class PopupKetQuaSceneCreator
         rtBtnText.offsetMax = Vector2.zero;
 
         TextMeshProUGUI tmpBtnText = btnTextObj.GetComponent<TextMeshProUGUI>();
-        tmpBtnText.text = "Đóng";
+        tmpBtnText.text = "Tiếp tục";
         tmpBtnText.fontSize = 32;
         tmpBtnText.fontStyle = FontStyles.Bold;
         tmpBtnText.alignment = TextAlignmentOptions.Center;
