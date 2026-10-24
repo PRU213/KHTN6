@@ -17,13 +17,13 @@ public class SetupLoginAuto
 
     static void DoSetup()
     {
-        if (EditorPrefs.GetBool("SetupLoginAutoDone6", false)) return;
+        if (EditorPrefs.GetBool("SetupLoginAutoDone7", false)) return;
 
         bool isModified = false;
 
         // 1. Setup Build Settings
         var scenes = EditorBuildSettings.scenes.ToList();
-        string[] requiredScenes = { "Assets/Scenes/SampleScene.unity", "Assets/Scenes/HomePage.unity" };
+        string[] requiredScenes = { "Assets/Scenes/SampleScene.unity", "Assets/Scenes/HomePage.unity", "Assets/Scenes/Biology/GiaoVien.unity" };
         bool buildSettingsChanged = false;
         
         foreach (string sc in requiredScenes)
@@ -170,6 +170,6 @@ public class SetupLoginAuto
             }
         }
 
-        EditorPrefs.SetBool("SetupLoginAutoDone5", true);
+        EditorPrefs.SetBool("SetupLoginAutoDone7", true);
     }
 }

@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class TimerDisplay : MonoBehaviour
@@ -22,7 +22,7 @@ public class TimerDisplay : MonoBehaviour
         // Setup Canvas
         Canvas canvas = gameObject.AddComponent<Canvas>();
         canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-        canvas.sortingOrder = 100; // Đảm bảo luôn nằm trên cùng
+        canvas.sortingOrder = 100; // Dam bao luon nam tren cung
 
         CanvasScaler scaler = gameObject.AddComponent<CanvasScaler>();
         scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
@@ -37,10 +37,10 @@ public class TimerDisplay : MonoBehaviour
         timerText.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
         timerText.fontSize = 50;
         timerText.color = Color.white;
-        timerText.alignment = TextAnchor.UpperRight;
+        timerText.alignment = TextAnchor.UpperLeft;
         timerText.fontStyle = FontStyle.Bold;
 
-        // Shadow cho dễ nhìn trên mọi nền
+        // Shadow
         Shadow shadow = textObj.AddComponent<Shadow>();
         shadow.effectColor = Color.black;
         shadow.effectDistance = new Vector2(2, -2);
@@ -50,11 +50,11 @@ public class TimerDisplay : MonoBehaviour
         outline.effectDistance = new Vector2(1, -1);
 
         RectTransform rt = textObj.GetComponent<RectTransform>();
-        rt.anchorMin = new Vector2(1, 1);
-        rt.anchorMax = new Vector2(1, 1);
-        rt.pivot = new Vector2(1, 1);
-        rt.anchoredPosition = new Vector2(-50, -50); // Góc trên phải, cách lề 50px
-        rt.sizeDelta = new Vector2(400, 100);
+        rt.anchorMin = new Vector2(0.5f, 1);
+        rt.anchorMax = new Vector2(0.5f, 1);
+        rt.pivot = new Vector2(0.5f, 1);
+        rt.anchoredPosition = new Vector2(0, -50); // O giua tren cung, cach le 50px
+        rt.sizeDelta = new Vector2(130, 100);
     }
 
     void Update()
@@ -80,3 +80,4 @@ public class TimerDisplay : MonoBehaviour
         }
     }
 }
+

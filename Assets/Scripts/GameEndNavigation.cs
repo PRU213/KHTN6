@@ -35,14 +35,18 @@ public class GameEndNavigation : MonoBehaviour
     void OnThoatGame()
     {
         HideButtons();
-        gameRoot.SetActive(false);
-        mapMonHoc.SetActive(true);   // về map môn học
+        Time.timeScale = 1f;
+        if (GameData.Instance != null) GameData.Instance.isTimerRunning = false;
+        if (gameRoot != null) gameRoot.SetActive(false);
+        if (mapMonHoc != null) mapMonHoc.SetActive(true);
     }
 
     void OnTrangChu()
     {
         HideButtons();
-        gameRoot.SetActive(false);
-        menuGame.SetActive(true);    // về màn chọn game
+        Time.timeScale = 1f;
+        if (GameData.Instance != null) GameData.Instance.isTimerRunning = false;
+        if (gameRoot != null) gameRoot.SetActive(false);
+        if (menuGame != null) menuGame.SetActive(true);
     }
 }

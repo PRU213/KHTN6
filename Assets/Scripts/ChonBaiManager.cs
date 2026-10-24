@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -18,7 +18,7 @@ public class ChonBaiManager : MonoBehaviour
     public Button btnTongHop;
 
     [Header("Settings")]
-    public string monHocFilter = "Sinh học"; // Changed to Sinh học as per explicit mentions
+    public string monHocFilter = "Sinh"; // Changed to Sinh học as per explicit mentions
     public string sheetCSVUrl = "https://docs.google.com/spreadsheets/d/1DcJwlN_fUDdcaQ6IfnlkMJApgWuEUqMhyZv9Kn8vfWo/export?format=csv&gid=1463734910";
     
     [Header("Item Styling")]
@@ -80,6 +80,12 @@ public class ChonBaiManager : MonoBehaviour
             else if (t.name == "TrungBinh") btnTrungBinh = t.GetComponent<Button>() ?? t.gameObject.AddComponent<Button>();
             else if (t.name == "Kho") btnKho = t.GetComponent<Button>() ?? t.gameObject.AddComponent<Button>();
             else if (t.name == "TongHop") btnTongHop = t.GetComponent<Button>() ?? t.gameObject.AddComponent<Button>();
+            else if (t.name == "HomePage")
+            {
+                Button homeBtn = t.GetComponent<Button>() ?? t.gameObject.AddComponent<Button>();
+                homeBtn.onClick.RemoveAllListeners();
+                homeBtn.onClick.AddListener(() => SceneManager.LoadScene("HomePage"));
+            }
         }
 
         if (listContainer != null)
@@ -158,6 +164,7 @@ public class ChonBaiManager : MonoBehaviour
     {
         using (UnityWebRequest req = UnityWebRequest.Get(sheetCSVUrl))
         {
+            req.certificateHandler = new BypassCertificate();
             yield return req.SendWebRequest();
 
             if (req.result == UnityWebRequest.Result.Success)
@@ -207,7 +214,7 @@ public class ChonBaiManager : MonoBehaviour
                 };
 
                 // Chỉ lấy môn Sinh học theo yêu cầu
-                if (q.monId.Trim().Equals("Sinh học", StringComparison.OrdinalIgnoreCase))
+                if (q.monId.Trim().Contains("Sinh"))
                 {
                     allQuestions.Add(q);
                     string chapterName = q.topic.Trim();
@@ -393,12 +400,11 @@ public class ChonBaiManager : MonoBehaviour
             go.AddComponent<GameData>();
         }
         GameData.Instance.allQuestions = new List<QuestionData>(allQuestions);
-        GameData.Instance.startTime = Time.time;
-        GameData.Instance.isTimerRunning = true;
 
-        // Load next scene - user wants to go to "game 1" which is bean_1
-        SceneManager.LoadScene("bean_1");
+        // Load next scene - user wants to go to rules screen before playing
+        SceneManager.LoadScene("luatchoisinhhoc");
     }
 
 }
+
 

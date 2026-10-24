@@ -1,0 +1,2810 @@
+fileFormatVersion: 2
+guid: f59d6bc2e810a0d4fb1edff46ec2f039
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 996521236815288295
+    second: okok_0
+  - first:
+      213: 7231643767658863031
+    second: okok_1
+  - first:
+      213: -6528527573493781783
+    second: okok_2
+  - first:
+      213: -4945971260131137266
+    second: okok_3
+  - first:
+      213: -6748232278217880971
+    second: okok_4
+  - first:
+      213: -2165783243092321492
+    second: okok_5
+  - first:
+      213: 7713740468075309216
+    second: okok_6
+  - first:
+      213: 6557740400501183741
+    second: okok_7
+  - first:
+      213: 2035910268538689319
+    second: okok_8
+  - first:
+      213: -1696733664025353796
+    second: okok_9
+  - first:
+      213: -1840394563172607932
+    second: okok_10
+  - first:
+      213: 4208826965365134931
+    second: okok_11
+  - first:
+      213: 8718600336589102842
+    second: okok_12
+  - first:
+      213: 7927302318658907186
+    second: okok_13
+  - first:
+      213: 7361881169330181460
+    second: okok_14
+  - first:
+      213: 7456936084139645752
+    second: okok_15
+  - first:
+      213: -549946065747318327
+    second: okok_16
+  - first:
+      213: 5150411383651160683
+    second: okok_17
+  - first:
+      213: 8503189609181822637
+    second: okok_18
+  - first:
+      213: -218720704764805456
+    second: okok_19
+  - first:
+      213: -7907627050928879612
+    second: okok_20
+  - first:
+      213: 3189261125593693003
+    second: okok_21
+  - first:
+      213: -8452500214334123059
+    second: okok_22
+  - first:
+      213: 888612639388536330
+    second: okok_23
+  - first:
+      213: 985442767620820035
+    second: okok_24
+  - first:
+      213: -3702703067056505092
+    second: okok_25
+  - first:
+      213: -2668769411250900048
+    second: okok_26
+  - first:
+      213: 4206128457819480254
+    second: okok_27
+  - first:
+      213: -9218384970094965403
+    second: okok_28
+  - first:
+      213: 3676579929669074069
+    second: okok_29
+  - first:
+      213: -4247546212460261157
+    second: okok_30
+  - first:
+      213: 1503709631623783190
+    second: okok_31
+  - first:
+      213: -1619725099598686949
+    second: okok_32
+  - first:
+      213: -9133745171870358616
+    second: okok_33
+  - first:
+      213: -5979238957230459922
+    second: okok_34
+  - first:
+      213: -375970763385439458
+    second: okok_35
+  - first:
+      213: -1704537667283532441
+    second: okok_36
+  - first:
+      213: 6063074035158210296
+    second: okok_37
+  - first:
+      213: 1238199769282194305
+    second: okok_38
+  - first:
+      213: 1199722018267612663
+    second: okok_39
+  - first:
+      213: -9103830598807020391
+    second: okok_40
+  - first:
+      213: -974977337609749436
+    second: okok_41
+  - first:
+      213: -3295843569389401317
+    second: okok_42
+  - first:
+      213: -4829707591976860581
+    second: okok_43
+  - first:
+      213: 6653348827996008833
+    second: okok_44
+  - first:
+      213: 5292622766464512676
+    second: okok_45
+  - first:
+      213: 3065614386590453499
+    second: okok_46
+  - first:
+      213: -6242291421504052
+    second: okok_47
+  - first:
+      213: 7303550226347022925
+    second: okok_48
+  - first:
+      213: -6221420971617667205
+    second: okok_49
+  - first:
+      213: 5457397799570372106
+    second: okok_50
+  - first:
+      213: -8754963124425189795
+    second: okok_51
+  - first:
+      213: -1618908713152686992
+    second: okok_52
+  - first:
+      213: 1966956016187268347
+    second: okok_53
+  - first:
+      213: 8541031565497053580
+    second: okok_54
+  - first:
+      213: 218290400979598947
+    second: okok_55
+  - first:
+      213: -8494149299767051507
+    second: okok_56
+  - first:
+      213: 775946826901880230
+    second: okok_57
+  - first:
+      213: -480785973735094142
+    second: okok_58
+  - first:
+      213: -3242500801806257576
+    second: okok_59
+  - first:
+      213: 6134549338493813347
+    second: okok_60
+  - first:
+      213: 7015067398131626902
+    second: okok_61
+  - first:
+      213: 9169509764262115035
+    second: okok_62
+  - first:
+      213: 9049786491378136969
+    second: okok_63
+  - first:
+      213: -2933319428893605835
+    second: okok_64
+  - first:
+      213: 5327922269402622446
+    second: okok_65
+  - first:
+      213: 1830815580234711339
+    second: okok_66
+  - first:
+      213: 1596090230558846163
+    second: okok_67
+  - first:
+      213: 5107726992948049212
+    second: okok_68
+  - first:
+      213: -7783710170701381460
+    second: okok_69
+  - first:
+      213: 6339338785945346090
+    second: okok_70
+  - first:
+      213: -6437154143215240112
+    second: okok_71
+  - first:
+      213: -2189282162647114886
+    second: okok_72
+  - first:
+      213: 4626444619737962408
+    second: okok_73
+  - first:
+      213: 7850922167494555514
+    second: okok_74
+  - first:
+      213: 3732802161417731898
+    second: okok_75
+  - first:
+      213: 2229315181540190706
+    second: okok_76
+  - first:
+      213: 8725348175996243969
+    second: okok_77
+  - first:
+      213: 3420704214429428184
+    second: okok_78
+  - first:
+      213: -2248456097844612516
+    second: okok_79
+  - first:
+      213: -5257905017423951482
+    second: okok_80
+  - first:
+      213: -6152799010152390007
+    second: okok_81
+  - first:
+      213: 6289278180624449030
+    second: okok_82
+  - first:
+      213: 1121554939080025062
+    second: okok_83
+  - first:
+      213: -2826126847151251724
+    second: okok_84
+  - first:
+      213: 8672162540895624674
+    second: okok_85
+  - first:
+      213: -7875443139572494788
+    second: okok_86
+  - first:
+      213: 4044679729148472456
+    second: okok_87
+  - first:
+      213: -553080715708431945
+    second: okok_88
+  - first:
+      213: -5197108900423923387
+    second: okok_89
+  - first:
+      213: -5200801814725729492
+    second: okok_90
+  - first:
+      213: -4772041323247059235
+    second: okok_91
+  - first:
+      213: 1652864979521454809
+    second: okok_92
+  - first:
+      213: 8001902897931326190
+    second: okok_93
+  - first:
+      213: 39194879043874178
+    second: okok_94
+  - first:
+      213: 6489086113535202371
+    second: okok_95
+  - first:
+      213: -1826332986288969026
+    second: okok_96
+  - first:
+      213: 8854773423660113225
+    second: okok_97
+  - first:
+      213: 4521164733785349662
+    second: okok_98
+  - first:
+      213: -7585663056096118814
+    second: okok_99
+  - first:
+      213: 2882172039888948700
+    second: okok_100
+  - first:
+      213: 2305204452760833646
+    second: okok_101
+  - first:
+      213: 1786350215110980339
+    second: okok_102
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationMethod: 0
+  spriteTessellationDetail: -1
+  spriteGeometrySubdivision: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: okok_0
+      rect:
+        serializedVersion: 2
+        x: 125
+        y: 785
+        width: 49
+        height: 78
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7e7128bf8ca54dd00800000000000000
+      internalID: 996521236815288295
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_1
+      rect:
+        serializedVersion: 2
+        x: 232
+        y: 765
+        width: 190
+        height: 116
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7b9597911b5fb5460800000000000000
+      internalID: 7231643767658863031
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_2
+      rect:
+        serializedVersion: 2
+        x: 519
+        y: 858
+        width: 57
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9ea6f83f2c20665a0800000000000000
+      internalID: -6528527573493781783
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_3
+      rect:
+        serializedVersion: 2
+        x: 611
+        y: 828
+        width: 37
+        height: 51
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e09a79208516c5bb0800000000000000
+      internalID: -4945971260131137266
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_4
+      rect:
+        serializedVersion: 2
+        x: 798
+        y: 801
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 57a8ff22f767952a0800000000000000
+      internalID: -6748232278217880971
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_5
+      rect:
+        serializedVersion: 2
+        x: 1046
+        y: 846
+        width: 48
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c2b1dfe7d9791f1e0800000000000000
+      internalID: -2165783243092321492
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_6
+      rect:
+        serializedVersion: 2
+        x: 1109
+        y: 785
+        width: 102
+        height: 102
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0a82f292616bc0b60800000000000000
+      internalID: 7713740468075309216
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_7
+      rect:
+        serializedVersion: 2
+        x: 1214
+        y: 852
+        width: 17
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: df4d91d5626c10b50800000000000000
+      internalID: 6557740400501183741
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_8
+      rect:
+        serializedVersion: 2
+        x: 1232
+        y: 797
+        width: 65
+        height: 83
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 72791de3a91014c10800000000000000
+      internalID: 2035910268538689319
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_9
+      rect:
+        serializedVersion: 2
+        x: 1256
+        y: 862
+        width: 13
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cb16255e8bdf378e0800000000000000
+      internalID: -1696733664025353796
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_10
+      rect:
+        serializedVersion: 2
+        x: 1343
+        y: 773
+        width: 43
+        height: 96
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 448598745ea9576e0800000000000000
+      internalID: -1840394563172607932
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_11
+      rect:
+        serializedVersion: 2
+        x: 1381
+        y: 763
+        width: 162
+        height: 116
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3569caf53d1c86a30800000000000000
+      internalID: 4208826965365134931
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_12
+      rect:
+        serializedVersion: 2
+        x: 462
+        y: 789
+        width: 87
+        height: 54
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: afe9ef020d0bef870800000000000000
+      internalID: 8718600336589102842
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_13
+      rect:
+        serializedVersion: 2
+        x: 568
+        y: 841
+        width: 28
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 23c6bca457f630e60800000000000000
+      internalID: 7927302318658907186
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_14
+      rect:
+        serializedVersion: 2
+        x: 661
+        y: 801
+        width: 48
+        height: 50
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 45510982be7aa2660800000000000000
+      internalID: 7361881169330181460
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_15
+      rect:
+        serializedVersion: 2
+        x: 722
+        y: 759
+        width: 69
+        height: 88
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 83b9fe72cdb5c7760800000000000000
+      internalID: 7456936084139645752
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_16
+      rect:
+        serializedVersion: 2
+        x: 887
+        y: 763
+        width: 176
+        height: 92
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9c9e18987f23e58f0800000000000000
+      internalID: -549946065747318327
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_17
+      rect:
+        serializedVersion: 2
+        x: 1439
+        y: 836
+        width: 15
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b62d7a98ddfe97740800000000000000
+      internalID: 5150411383651160683
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_18
+      rect:
+        serializedVersion: 2
+        x: 554
+        y: 813
+        width: 8
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dae3311d5e5610670800000000000000
+      internalID: 8503189609181822637
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_19
+      rect:
+        serializedVersion: 2
+        x: 637
+        y: 821
+        width: 13
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0be78778da2f6fcf0800000000000000
+      internalID: -218720704764805456
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_20
+      rect:
+        serializedVersion: 2
+        x: 651
+        y: 821
+        width: 11
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4084d15f717724290800000000000000
+      internalID: -7907627050928879612
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_21
+      rect:
+        serializedVersion: 2
+        x: 1002
+        y: 805
+        width: 17
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b4b79f6a818824c20800000000000000
+      internalID: 3189261125593693003
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_22
+      rect:
+        serializedVersion: 2
+        x: 1312
+        y: 793
+        width: 28
+        height: 40
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dc393bc96dfa2ba80800000000000000
+      internalID: -8452500214334123059
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_23
+      rect:
+        serializedVersion: 2
+        x: 1621
+        y: 821
+        width: 9
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a0e0da9cc7cf45c00800000000000000
+      internalID: 888612639388536330
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_24
+      rect:
+        serializedVersion: 2
+        x: 1629
+        y: 757
+        width: 92
+        height: 78
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 34c448ed9fefcad00800000000000000
+      internalID: 985442767620820035
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_25
+      rect:
+        serializedVersion: 2
+        x: 175
+        y: 773
+        width: 36
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cfef853ad2b5d9cc0800000000000000
+      internalID: -3702703067056505092
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_26
+      rect:
+        serializedVersion: 2
+        x: 835
+        y: 757
+        width: 23
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0b336f63c50a6fad0800000000000000
+      internalID: -2668769411250900048
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_27
+      rect:
+        serializedVersion: 2
+        x: 885
+        y: 788
+        width: 33
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eb0edff1c8b2f5a30800000000000000
+      internalID: 4206128457819480254
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_28
+      rect:
+        serializedVersion: 2
+        x: 917
+        y: 787
+        width: 86
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 56d80b6f5b7b11080800000000000000
+      internalID: -9218384970094965403
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_29
+      rect:
+        serializedVersion: 2
+        x: 1320
+        y: 773
+        width: 12
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 59c714877f5d50330800000000000000
+      internalID: 3676579929669074069
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_30
+      rect:
+        serializedVersion: 2
+        x: 1328
+        y: 779
+        width: 10
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bd01047693fad05c0800000000000000
+      internalID: -4247546212460261157
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_31
+      rect:
+        serializedVersion: 2
+        x: 1631
+        y: 783
+        width: 9
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 613e44661ff3ed410800000000000000
+      internalID: 1503709631623783190
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_32
+      rect:
+        serializedVersion: 2
+        x: 1635
+        y: 779
+        width: 9
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b15d2a48a949589e0800000000000000
+      internalID: -1619725099598686949
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_33
+      rect:
+        serializedVersion: 2
+        x: 796
+        y: 743
+        width: 32
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8a36ab9a82b6e3180800000000000000
+      internalID: -9133745171870358616
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_34
+      rect:
+        serializedVersion: 2
+        x: 867
+        y: 743
+        width: 80
+        height: 39
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ee3f91709d9750da0800000000000000
+      internalID: -5979238957230459922
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_35
+      rect:
+        serializedVersion: 2
+        x: 1326
+        y: 753
+        width: 14
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e1b7a7a259848caf0800000000000000
+      internalID: -375970763385439458
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_36
+      rect:
+        serializedVersion: 2
+        x: 1702
+        y: 759
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 765ca4bc5044858e0800000000000000
+      internalID: -1704537667283532441
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_37
+      rect:
+        serializedVersion: 2
+        x: 1717
+        y: 763
+        width: 26
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8f6df7026bd542450800000000000000
+      internalID: 6063074035158210296
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_38
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 1761
+        height: 756
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 18b29014128fe2110800000000000000
+      internalID: 1238199769282194305
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_39
+      rect:
+        serializedVersion: 2
+        x: 788
+        y: 740
+        width: 15
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7f54e08b1d446a010800000000000000
+      internalID: 1199722018267612663
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_40
+      rect:
+        serializedVersion: 2
+        x: 837
+        y: 741
+        width: 25
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 99c96c6fd42b8a180800000000000000
+      internalID: -9103830598807020391
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_41
+      rect:
+        serializedVersion: 2
+        x: 933
+        y: 749
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 44cf6bfe64f2872f0800000000000000
+      internalID: -974977337609749436
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_42
+      rect:
+        serializedVersion: 2
+        x: 941
+        y: 747
+        width: 8
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b1b0a4b5cbfc242d0800000000000000
+      internalID: -3295843569389401317
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_43
+      rect:
+        serializedVersion: 2
+        x: 1699
+        y: 743
+        width: 13
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b544633b88e69fcb0800000000000000
+      internalID: -4829707591976860581
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_44
+      rect:
+        serializedVersion: 2
+        x: 1711
+        y: 733
+        width: 20
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 181b6731281755c50800000000000000
+      internalID: 6653348827996008833
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_45
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 528
+        width: 51
+        height: 160
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4a233455d5c237940800000000000000
+      internalID: 5292622766464512676
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_46
+      rect:
+        serializedVersion: 2
+        x: 36
+        y: 672
+        width: 30
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bfe0d03da004b8a20800000000000000
+      internalID: 3065614386590453499
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_47
+      rect:
+        serializedVersion: 2
+        x: 52
+        y: 652
+        width: 18
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ccd9c354ba2d9eff0800000000000000
+      internalID: -6242291421504052
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_48
+      rect:
+        serializedVersion: 2
+        x: 56
+        y: 700
+        width: 22
+        height: 39
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d4a53a82c3c6b5560800000000000000
+      internalID: 7303550226347022925
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_49
+      rect:
+        serializedVersion: 2
+        x: 70
+        y: 694
+        width: 16
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b77309cb69219a9a0800000000000000
+      internalID: -6221420971617667205
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_50
+      rect:
+        serializedVersion: 2
+        x: 1691
+        y: 604
+        width: 68
+        height: 124
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a06f36952629cbb40800000000000000
+      internalID: 5457397799570372106
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_51
+      rect:
+        serializedVersion: 2
+        x: 38
+        y: 450
+        width: 26
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d561ef29c6f108680800000000000000
+      internalID: -8754963124425189795
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_52
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 344
+        width: 15
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 074dfbc4a1b7889e0800000000000000
+      internalID: -1618908713152686992
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_53
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 312
+        width: 5
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bfcd8a943180c4b10800000000000000
+      internalID: 1966956016187268347
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_54
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 324
+        width: 19
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c81b9dcd4f6d78670800000000000000
+      internalID: 8541031565497053580
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_55
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 224
+        width: 31
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 36e344096f5870300800000000000000
+      internalID: 218290400979598947
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_56
+      rect:
+        serializedVersion: 2
+        x: 62
+        y: 255
+        width: 10
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d0b704e3738be1a80800000000000000
+      internalID: -8494149299767051507
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_57
+      rect:
+        serializedVersion: 2
+        x: 56
+        y: 241
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6adf3162787b4ca00800000000000000
+      internalID: 775946826901880230
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_58
+      rect:
+        serializedVersion: 2
+        x: 41
+        y: 185
+        width: 27
+        height: 40
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 288878644b7e359f0800000000000000
+      internalID: -480785973735094142
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_59
+      rect:
+        serializedVersion: 2
+        x: 54
+        y: 162
+        width: 26
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8523b6443b25003d0800000000000000
+      internalID: -3242500801806257576
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_60
+      rect:
+        serializedVersion: 2
+        x: 70
+        y: 154
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 36208020f1c422550800000000000000
+      internalID: 6134549338493813347
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_61
+      rect:
+        serializedVersion: 2
+        x: 87
+        y: 159
+        width: 13
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6933f0591a68a5160800000000000000
+      internalID: 7015067398131626902
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_62
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 130
+        width: 14
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bd6b1576c84a04f70800000000000000
+      internalID: 9169509764262115035
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_63
+      rect:
+        serializedVersion: 2
+        x: 135
+        y: 66
+        width: 60
+        height: 65
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 987f8b7bddc479d70800000000000000
+      internalID: 9049786491378136969
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_64
+      rect:
+        serializedVersion: 2
+        x: 288
+        y: 78
+        width: 20
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5308b045581ca47d0800000000000000
+      internalID: -2933319428893605835
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_65
+      rect:
+        serializedVersion: 2
+        x: 314
+        y: 77
+        width: 18
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ee9e2a2531590f940800000000000000
+      internalID: 5327922269402622446
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_66
+      rect:
+        serializedVersion: 2
+        x: 379
+        y: 80
+        width: 7
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b210425f11d586910800000000000000
+      internalID: 1830815580234711339
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_67
+      rect:
+        serializedVersion: 2
+        x: 395
+        y: 74
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3dc6ee5bb93762610800000000000000
+      internalID: 1596090230558846163
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_68
+      rect:
+        serializedVersion: 2
+        x: 411
+        y: 61
+        width: 28
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c35b75063aa42e640800000000000000
+      internalID: 5107726992948049212
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_69
+      rect:
+        serializedVersion: 2
+        x: 643
+        y: 49
+        width: 49
+        height: 54
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ca0cfb0f6d4baf390800000000000000
+      internalID: -7783710170701381460
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_70
+      rect:
+        serializedVersion: 2
+        x: 691
+        y: 70
+        width: 8
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a20e02fd90bd9f750800000000000000
+      internalID: 6339338785945346090
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_71
+      rect:
+        serializedVersion: 2
+        x: 1191
+        y: 49
+        width: 34
+        height: 54
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 05cb8398962aaa6a0800000000000000
+      internalID: -6437154143215240112
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_72
+      rect:
+        serializedVersion: 2
+        x: 1312
+        y: 69
+        width: 16
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a7bd15ee87b1e91e0800000000000000
+      internalID: -2189282162647114886
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_73
+      rect:
+        serializedVersion: 2
+        x: 1544
+        y: 58
+        width: 30
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8a79f74aede643040800000000000000
+      internalID: 4626444619737962408
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_74
+      rect:
+        serializedVersion: 2
+        x: 1683
+        y: 71
+        width: 15
+        height: 39
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a77b0c88d1414fc60800000000000000
+      internalID: 7850922167494555514
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_75
+      rect:
+        serializedVersion: 2
+        x: 129
+        y: 47
+        width: 23
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a3f3d10e9c39dc330800000000000000
+      internalID: 3732802161417731898
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_76
+      rect:
+        serializedVersion: 2
+        x: 185
+        y: 47
+        width: 26
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2f9a610a85e10fe10800000000000000
+      internalID: 2229315181540190706
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_77
+      rect:
+        serializedVersion: 2
+        x: 1320
+        y: 64
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 100dbdbefe9a61970800000000000000
+      internalID: 8725348175996243969
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_78
+      rect:
+        serializedVersion: 2
+        x: 1328
+        y: 63
+        width: 18
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8d96fbefb58c87f20800000000000000
+      internalID: 3420704214429428184
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_79
+      rect:
+        serializedVersion: 2
+        x: 1345
+        y: 61
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c5239e28711ebc0e0800000000000000
+      internalID: -2248456097844612516
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_80
+      rect:
+        serializedVersion: 2
+        x: 1359
+        y: 39
+        width: 13
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 68983b58e3b2807b0800000000000000
+      internalID: -5257905017423951482
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_81
+      rect:
+        serializedVersion: 2
+        x: 1588
+        y: 68
+        width: 10
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 982ed7136eddc9aa0800000000000000
+      internalID: -6152799010152390007
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_82
+      rect:
+        serializedVersion: 2
+        x: 393
+        y: 37
+        width: 9
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 60e3cb9ee21084750800000000000000
+      internalID: 6289278180624449030
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_83
+      rect:
+        serializedVersion: 2
+        x: 635
+        y: 55
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6e323fb5640909f00800000000000000
+      internalID: 1121554939080025062
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_84
+      rect:
+        serializedVersion: 2
+        x: 640
+        y: 61
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4feda512b9497c8d0800000000000000
+      internalID: -2826126847151251724
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_85
+      rect:
+        serializedVersion: 2
+        x: 726
+        y: 30
+        width: 19
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2ed588442e5b95870800000000000000
+      internalID: 8672162540895624674
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_86
+      rect:
+        serializedVersion: 2
+        x: 750
+        y: 55
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c3e8ef0c03ec4b290800000000000000
+      internalID: -7875443139572494788
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_87
+      rect:
+        serializedVersion: 2
+        x: 1316
+        y: 59
+        width: 8
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 88c2e16b8c6912830800000000000000
+      internalID: 4044679729148472456
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_88
+      rect:
+        serializedVersion: 2
+        x: 1449
+        y: 55
+        width: 8
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7b18418f4001358f0800000000000000
+      internalID: -553080715708431945
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_89
+      rect:
+        serializedVersion: 2
+        x: 153
+        y: 33
+        width: 17
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 54906339df820e7b0800000000000000
+      internalID: -5197108900423923387
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_90
+      rect:
+        serializedVersion: 2
+        x: 401
+        y: 36
+        width: 7
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c23e016fd4a03d7b0800000000000000
+      internalID: -5200801814725729492
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_91
+      rect:
+        serializedVersion: 2
+        x: 431
+        y: 51
+        width: 6
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ddebf5a23bd46cdb0800000000000000
+      internalID: -4772041323247059235
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_92
+      rect:
+        serializedVersion: 2
+        x: 1318
+        y: 51
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9d24f0e01f720f610800000000000000
+      internalID: 1652864979521454809
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_93
+      rect:
+        serializedVersion: 2
+        x: 1320
+        y: 46
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ee29d5e2a487c0f60800000000000000
+      internalID: 8001902897931326190
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_94
+      rect:
+        serializedVersion: 2
+        x: 1590
+        y: 51
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 28dac6ae88f3b8000800000000000000
+      internalID: 39194879043874178
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_95
+      rect:
+        serializedVersion: 2
+        x: 232
+        y: 31
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3449f2a807ddd0a50800000000000000
+      internalID: 6489086113535202371
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_96
+      rect:
+        serializedVersion: 2
+        x: 407
+        y: 29
+        width: 19
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ebaeaa643df87a6e0800000000000000
+      internalID: -1826332986288969026
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_97
+      rect:
+        serializedVersion: 2
+        x: 613
+        y: 39
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 94d94d3a38972ea70800000000000000
+      internalID: 8854773423660113225
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_98
+      rect:
+        serializedVersion: 2
+        x: 645
+        y: 27
+        width: 15
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e1e9c480f576ebe30800000000000000
+      internalID: 4521164733785349662
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_99
+      rect:
+        serializedVersion: 2
+        x: 689
+        y: 33
+        width: 14
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2e7369b14af4ab690800000000000000
+      internalID: -7585663056096118814
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_100
+      rect:
+        serializedVersion: 2
+        x: 558
+        y: 27
+        width: 8
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cddc42b23388ff720800000000000000
+      internalID: 2882172039888948700
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_101
+      rect:
+        serializedVersion: 2
+        x: 853
+        y: 15
+        width: 13
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e6e457d7c3bbdff10800000000000000
+      internalID: 2305204452760833646
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: okok_102
+      rect:
+        serializedVersion: 2
+        x: 1492
+        y: 15
+        width: 21
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3f2f1206e046ac810800000000000000
+      internalID: 1786350215110980339
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      okok_0: 996521236815288295
+      okok_1: 7231643767658863031
+      okok_10: -1840394563172607932
+      okok_100: 2882172039888948700
+      okok_101: 2305204452760833646
+      okok_102: 1786350215110980339
+      okok_11: 4208826965365134931
+      okok_12: 8718600336589102842
+      okok_13: 7927302318658907186
+      okok_14: 7361881169330181460
+      okok_15: 7456936084139645752
+      okok_16: -549946065747318327
+      okok_17: 5150411383651160683
+      okok_18: 8503189609181822637
+      okok_19: -218720704764805456
+      okok_2: -6528527573493781783
+      okok_20: -7907627050928879612
+      okok_21: 3189261125593693003
+      okok_22: -8452500214334123059
+      okok_23: 888612639388536330
+      okok_24: 985442767620820035
+      okok_25: -3702703067056505092
+      okok_26: -2668769411250900048
+      okok_27: 4206128457819480254
+      okok_28: -9218384970094965403
+      okok_29: 3676579929669074069
+      okok_3: -4945971260131137266
+      okok_30: -4247546212460261157
+      okok_31: 1503709631623783190
+      okok_32: -1619725099598686949
+      okok_33: -9133745171870358616
+      okok_34: -5979238957230459922
+      okok_35: -375970763385439458
+      okok_36: -1704537667283532441
+      okok_37: 6063074035158210296
+      okok_38: 1238199769282194305
+      okok_39: 1199722018267612663
+      okok_4: -6748232278217880971
+      okok_40: -9103830598807020391
+      okok_41: -974977337609749436
+      okok_42: -3295843569389401317
+      okok_43: -4829707591976860581
+      okok_44: 6653348827996008833
+      okok_45: 5292622766464512676
+      okok_46: 3065614386590453499
+      okok_47: -6242291421504052
+      okok_48: 7303550226347022925
+      okok_49: -6221420971617667205
+      okok_5: -2165783243092321492
+      okok_50: 5457397799570372106
+      okok_51: -8754963124425189795
+      okok_52: -1618908713152686992
+      okok_53: 1966956016187268347
+      okok_54: 8541031565497053580
+      okok_55: 218290400979598947
+      okok_56: -8494149299767051507
+      okok_57: 775946826901880230
+      okok_58: -480785973735094142
+      okok_59: -3242500801806257576
+      okok_6: 7713740468075309216
+      okok_60: 6134549338493813347
+      okok_61: 7015067398131626902
+      okok_62: 9169509764262115035
+      okok_63: 9049786491378136969
+      okok_64: -2933319428893605835
+      okok_65: 5327922269402622446
+      okok_66: 1830815580234711339
+      okok_67: 1596090230558846163
+      okok_68: 5107726992948049212
+      okok_69: -7783710170701381460
+      okok_7: 6557740400501183741
+      okok_70: 6339338785945346090
+      okok_71: -6437154143215240112
+      okok_72: -2189282162647114886
+      okok_73: 4626444619737962408
+      okok_74: 7850922167494555514
+      okok_75: 3732802161417731898
+      okok_76: 2229315181540190706
+      okok_77: 8725348175996243969
+      okok_78: 3420704214429428184
+      okok_79: -2248456097844612516
+      okok_8: 2035910268538689319
+      okok_80: -5257905017423951482
+      okok_81: -6152799010152390007
+      okok_82: 6289278180624449030
+      okok_83: 1121554939080025062
+      okok_84: -2826126847151251724
+      okok_85: 8672162540895624674
+      okok_86: -7875443139572494788
+      okok_87: 4044679729148472456
+      okok_88: -553080715708431945
+      okok_89: -5197108900423923387
+      okok_9: -1696733664025353796
+      okok_90: -5200801814725729492
+      okok_91: -4772041323247059235
+      okok_92: 1652864979521454809
+      okok_93: 8001902897931326190
+      okok_94: 39194879043874178
+      okok_95: 6489086113535202371
+      okok_96: -1826332986288969026
+      okok_97: 8854773423660113225
+      okok_98: 4521164733785349662
+      okok_99: -7585663056096118814
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

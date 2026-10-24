@@ -1,0 +1,1614 @@
+fileFormatVersion: 2
+guid: f0edc2913bfb4be4bab0c313d2d55636
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 2683970621527841869
+    second: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_0"
+  - first:
+      213: 5351639561812186999
+    second: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_1"
+  - first:
+      213: -2594567479712848609
+    second: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_2"
+  - first:
+      213: 7542230408993697742
+    second: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_3"
+  - first:
+      213: -5731176580023633286
+    second: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_4"
+  - first:
+      213: 1815447931824168933
+    second: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_5"
+  - first:
+      213: -8138404552773884736
+    second: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_6"
+  - first:
+      213: 3346808510375766953
+    second: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_7"
+  - first:
+      213: 8386349704198884627
+    second: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_8"
+  - first:
+      213: -448214664267608004
+    second: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_9"
+  - first:
+      213: -3345498166836132640
+    second: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_10"
+  - first:
+      213: -3707447345603431187
+    second: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_11"
+  - first:
+      213: 8990031451424599896
+    second: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_12"
+  - first:
+      213: 3153736656855088282
+    second: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_13"
+  - first:
+      213: 2155460610359018121
+    second: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_14"
+  - first:
+      213: 2821227067639969607
+    second: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_15"
+  - first:
+      213: 2556715506405023157
+    second: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_16"
+  - first:
+      213: 2288028888462237889
+    second: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_17"
+  - first:
+      213: -6917728861138124507
+    second: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_18"
+  - first:
+      213: -6634491303896370168
+    second: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_19"
+  - first:
+      213: -8139617469226751246
+    second: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_20"
+  - first:
+      213: 1003443789984070586
+    second: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_21"
+  - first:
+      213: -5395700741587923010
+    second: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_22"
+  - first:
+      213: 9047305570919143403
+    second: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_23"
+  - first:
+      213: -7879080498165273685
+    second: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_24"
+  - first:
+      213: -7736492564594733732
+    second: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_25"
+  - first:
+      213: -2562965261981357018
+    second: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_26"
+  - first:
+      213: 3876857774753277274
+    second: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_27"
+  - first:
+      213: -6067562922368058946
+    second: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_28"
+  - first:
+      213: -7539244902450842228
+    second: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_29"
+  - first:
+      213: -5083778227591602418
+    second: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_30"
+  - first:
+      213: 3211185907832788375
+    second: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_31"
+  - first:
+      213: -6510850604699389042
+    second: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_32"
+  - first:
+      213: 5835637590304789664
+    second: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_33"
+  - first:
+      213: -2877313496848785417
+    second: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_34"
+  - first:
+      213: -1690974845840978441
+    second: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_35"
+  - first:
+      213: -3809005444437822930
+    second: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_36"
+  - first:
+      213: -3496783128720072265
+    second: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_37"
+  - first:
+      213: -7246889298516884665
+    second: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_38"
+  - first:
+      213: 2262143605641390703
+    second: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_39"
+  - first:
+      213: 9171508070486531387
+    second: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_40"
+  - first:
+      213: 3275141463463738753
+    second: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_41"
+  - first:
+      213: 312561047573728358
+    second: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_42"
+  - first:
+      213: -6383861775097648722
+    second: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_43"
+  - first:
+      213: 7044504836676660473
+    second: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_44"
+  - first:
+      213: -2826303552261795438
+    second: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_45"
+  - first:
+      213: -156040991063910756
+    second: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_46"
+  - first:
+      213: 8567836259482030515
+    second: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_47"
+  - first:
+      213: -4397081999295487936
+    second: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_48"
+  - first:
+      213: 1616049448987477955
+    second: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_49"
+  - first:
+      213: -8181953912316160776
+    second: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_50"
+  - first:
+      213: -3790916602448981506
+    second: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_51"
+  - first:
+      213: -6575782291211223054
+    second: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_52"
+  - first:
+      213: -2140447126484724845
+    second: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_53"
+  - first:
+      213: 8998785907500255547
+    second: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_54"
+  - first:
+      213: 3670908225722099760
+    second: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_55"
+  - first:
+      213: 7446219532882462249
+    second: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_56"
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationMethod: 0
+  spriteTessellationDetail: -1
+  spriteGeometrySubdivision: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_0"
+      rect:
+        serializedVersion: 2
+        x: 22
+        y: 23
+        width: 1635
+        height: 899
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d4c50cb5f016f3520800000000000000
+      internalID: 2683970621527841869
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_1"
+      rect:
+        serializedVersion: 2
+        x: 1342
+        y: 773
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7771eb7c3d7d44a40800000000000000
+      internalID: 5351639561812186999
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_2"
+      rect:
+        serializedVersion: 2
+        x: 1348
+        y: 768
+        width: 10
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f156fe1bf9e3efbd0800000000000000
+      internalID: -2594567479712848609
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_3"
+      rect:
+        serializedVersion: 2
+        x: 38
+        y: 242
+        width: 9
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ecfe736b8926ba860800000000000000
+      internalID: 7542230408993697742
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_4"
+      rect:
+        serializedVersion: 2
+        x: 207
+        y: 169
+        width: 55
+        height: 108
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a7a37aaf345c670b0800000000000000
+      internalID: -5731176580023633286
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_5"
+      rect:
+        serializedVersion: 2
+        x: 54
+        y: 158
+        width: 29
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5efd89c7644c13910800000000000000
+      internalID: 1815447931824168933
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_6"
+      rect:
+        serializedVersion: 2
+        x: 115
+        y: 115
+        width: 85
+        height: 109
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0c4ad79ad249e0f80800000000000000
+      internalID: -8138404552773884736
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_7"
+      rect:
+        serializedVersion: 2
+        x: 295
+        y: 155
+        width: 12
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9aba338ab90427e20800000000000000
+      internalID: 3346808510375766953
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_8"
+      rect:
+        serializedVersion: 2
+        x: 424
+        y: 175
+        width: 9
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 31d0af88f9c426470800000000000000
+      internalID: 8386349704198884627
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_9"
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 175
+        width: 17
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c305539332f97c9f0800000000000000
+      internalID: -448214664267608004
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_10"
+      rect:
+        serializedVersion: 2
+        x: 1141
+        y: 172
+        width: 10
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0e4030974276291d0800000000000000
+      internalID: -3345498166836132640
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_11"
+      rect:
+        serializedVersion: 2
+        x: 1276
+        y: 161
+        width: 17
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: de4b7d538408c8cc0800000000000000
+      internalID: -3707447345603431187
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_12"
+      rect:
+        serializedVersion: 2
+        x: 1292
+        y: 165
+        width: 9
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 85fa0cd49f103cc70800000000000000
+      internalID: 8990031451424599896
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_13"
+      rect:
+        serializedVersion: 2
+        x: 1372
+        y: 163
+        width: 10
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a9cb9fab7c254cb20800000000000000
+      internalID: 3153736656855088282
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_14"
+      rect:
+        serializedVersion: 2
+        x: 412
+        y: 135
+        width: 13
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 982cbc7410cb9ed10800000000000000
+      internalID: 2155460610359018121
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_15"
+      rect:
+        serializedVersion: 2
+        x: 538
+        y: 161
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 747b56d0213072720800000000000000
+      internalID: 2821227067639969607
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_16"
+      rect:
+        serializedVersion: 2
+        x: 995
+        y: 160
+        width: 9
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5bd110ff4374b7320800000000000000
+      internalID: 2556715506405023157
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_17"
+      rect:
+        serializedVersion: 2
+        x: 1059
+        y: 145
+        width: 7
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1c0af9cc626b0cf10800000000000000
+      internalID: 2288028888462237889
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_18"
+      rect:
+        serializedVersion: 2
+        x: 1147
+        y: 163
+        width: 16
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5210563a04a4fff90800000000000000
+      internalID: -6917728861138124507
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_19"
+      rect:
+        serializedVersion: 2
+        x: 1155
+        y: 159
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 804b6d56f4d8de3a0800000000000000
+      internalID: -6634491303896370168
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_20"
+      rect:
+        serializedVersion: 2
+        x: 1469
+        y: 143
+        width: 25
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2faec2b89054a0f80800000000000000
+      internalID: -8139617469226751246
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_21"
+      rect:
+        serializedVersion: 2
+        x: 1596
+        y: 137
+        width: 17
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: abb721e7fc2fced00800000000000000
+      internalID: 1003443789984070586
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_22"
+      rect:
+        serializedVersion: 2
+        x: 199
+        y: 145
+        width: 11
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ebf075f53ce9e15b0800000000000000
+      internalID: -5395700741587923010
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_23"
+      rect:
+        serializedVersion: 2
+        x: 207
+        y: 145
+        width: 25
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: be75c096b7c7e8d70800000000000000
+      internalID: 9047305570919143403
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_24"
+      rect:
+        serializedVersion: 2
+        x: 431
+        y: 153
+        width: 10
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: baba6263802e7a290800000000000000
+      internalID: -7879080498165273685
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_25"
+      rect:
+        serializedVersion: 2
+        x: 506
+        y: 139
+        width: 16
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c5d41ef800572a490800000000000000
+      internalID: -7736492564594733732
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_26"
+      rect:
+        serializedVersion: 2
+        x: 1035
+        y: 149
+        width: 11
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 62c6fe36ca48e6cd0800000000000000
+      internalID: -2562965261981357018
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_27"
+      rect:
+        serializedVersion: 2
+        x: 1051
+        y: 147
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a5561ec0b9d5dc530800000000000000
+      internalID: 3876857774753277274
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_28"
+      rect:
+        serializedVersion: 2
+        x: 1334
+        y: 107
+        width: 56
+        height: 47
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eb9bbef5bafabcba0800000000000000
+      internalID: -6067562922368058946
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_29"
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 95
+        width: 37
+        height: 56
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c853eb2b4b83f5790800000000000000
+      internalID: -7539244902450842228
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_30"
+      rect:
+        serializedVersion: 2
+        x: 424
+        y: 129
+        width: 27
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e0f998313aac279b0800000000000000
+      internalID: -5083778227591602418
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_31"
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 134
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7951d10d19c609c20800000000000000
+      internalID: 3211185907832788375
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_32"
+      rect:
+        serializedVersion: 2
+        x: 520
+        y: 133
+        width: 12
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e837149fedfc4a5a0800000000000000
+      internalID: -6510850604699389042
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_33"
+      rect:
+        serializedVersion: 2
+        x: 1328
+        y: 141
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0a4980848795cf050800000000000000
+      internalID: 5835637590304789664
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_34"
+      rect:
+        serializedVersion: 2
+        x: 1541
+        y: 102
+        width: 24
+        height: 50
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7ff14e88e9ab118d0800000000000000
+      internalID: -2877313496848785417
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_35"
+      rect:
+        serializedVersion: 2
+        x: 1590
+        y: 135
+        width: 9
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7fd078d36537888e0800000000000000
+      internalID: -1690974845840978441
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_36"
+      rect:
+        serializedVersion: 2
+        x: 1622
+        y: 136
+        width: 11
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e2231c0bab1b32bc0800000000000000
+      internalID: -3809005444437822930
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_37"
+      rect:
+        serializedVersion: 2
+        x: 892
+        y: 96
+        width: 19
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7b1af0c654ee87fc0800000000000000
+      internalID: -3496783128720072265
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_38"
+      rect:
+        serializedVersion: 2
+        x: 995
+        y: 115
+        width: 11
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 74342532490ed6b90800000000000000
+      internalID: -7246889298516884665
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_39"
+      rect:
+        serializedVersion: 2
+        x: 1005
+        y: 115
+        width: 7
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f6a2d2dbf9fb46f10800000000000000
+      internalID: 2262143605641390703
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_40"
+      rect:
+        serializedVersion: 2
+        x: 1019
+        y: 104
+        width: 9
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b3d5af35ffdb74f70800000000000000
+      internalID: 9171508070486531387
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_41"
+      rect:
+        serializedVersion: 2
+        x: 1093
+        y: 112
+        width: 7
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 18db8eefec3a37d20800000000000000
+      internalID: 3275141463463738753
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_42"
+      rect:
+        serializedVersion: 2
+        x: 1099
+        y: 117
+        width: 9
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 66c8143ed90765400800000000000000
+      internalID: 312561047573728358
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_43"
+      rect:
+        serializedVersion: 2
+        x: 315
+        y: 100
+        width: 6
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ea92c18e987f767a0800000000000000
+      internalID: -6383861775097648722
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_44"
+      rect:
+        serializedVersion: 2
+        x: 336
+        y: 82
+        width: 35
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9fc22a853db13c160800000000000000
+      internalID: 7044504836676660473
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_45"
+      rect:
+        serializedVersion: 2
+        x: 930
+        y: 102
+        width: 9
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 291d204c4e3f6c8d0800000000000000
+      internalID: -2826303552261795438
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_46"
+      rect:
+        serializedVersion: 2
+        x: 936
+        y: 104
+        width: 8
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c965c3d9b81a5ddf0800000000000000
+      internalID: -156040991063910756
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_47"
+      rect:
+        serializedVersion: 2
+        x: 946
+        y: 104
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3b153240fa117e670800000000000000
+      internalID: 8567836259482030515
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_48"
+      rect:
+        serializedVersion: 2
+        x: 1559
+        y: 107
+        width: 8
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0406ab7e73d6af2c0800000000000000
+      internalID: -4397081999295487936
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_49"
+      rect:
+        serializedVersion: 2
+        x: 324
+        y: 96
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3c74d52696c5d6610800000000000000
+      internalID: 1616049448987477955
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_50"
+      rect:
+        serializedVersion: 2
+        x: 1533
+        y: 87
+        width: 11
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8f417cf344cd37e80800000000000000
+      internalID: -8181953912316160776
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_51"
+      rect:
+        serializedVersion: 2
+        x: 378
+        y: 82
+        width: 7
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ef1d5e96f65f36bc0800000000000000
+      internalID: -3790916602448981506
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_52"
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 79
+        width: 9
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2fffc0c98d02eb4a0800000000000000
+      internalID: -6575782291211223054
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_53"
+      rect:
+        serializedVersion: 2
+        x: 1338
+        y: 86
+        width: 10
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3935f55ddaa9b42e0800000000000000
+      internalID: -2140447126484724845
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_54"
+      rect:
+        serializedVersion: 2
+        x: 834
+        y: 66
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b390852fa1c12ec70800000000000000
+      internalID: 8998785907500255547
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_55"
+      rect:
+        serializedVersion: 2
+        x: 906
+        y: 62
+        width: 9
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 038a93df49fa1f230800000000000000
+      internalID: 3670908225722099760
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_56"
+      rect:
+        serializedVersion: 2
+        x: 944
+        y: 51
+        width: 16
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 926c801a639465760800000000000000
+      internalID: 7446219532882462249
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_0": 2683970621527841869
+      "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_1": 5351639561812186999
+      "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_10": -3345498166836132640
+      "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_11": -3707447345603431187
+      "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_12": 8990031451424599896
+      "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_13": 3153736656855088282
+      "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_14": 2155460610359018121
+      "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_15": 2821227067639969607
+      "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_16": 2556715506405023157
+      "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_17": 2288028888462237889
+      "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_18": -6917728861138124507
+      "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_19": -6634491303896370168
+      "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_2": -2594567479712848609
+      "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_20": -8139617469226751246
+      "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_21": 1003443789984070586
+      "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_22": -5395700741587923010
+      "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_23": 9047305570919143403
+      "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_24": -7879080498165273685
+      "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_25": -7736492564594733732
+      "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_26": -2562965261981357018
+      "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_27": 3876857774753277274
+      "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_28": -6067562922368058946
+      "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_29": -7539244902450842228
+      "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_3": 7542230408993697742
+      "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_30": -5083778227591602418
+      "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_31": 3211185907832788375
+      "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_32": -6510850604699389042
+      "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_33": 5835637590304789664
+      "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_34": -2877313496848785417
+      "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_35": -1690974845840978441
+      "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_36": -3809005444437822930
+      "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_37": -3496783128720072265
+      "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_38": -7246889298516884665
+      "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_39": 2262143605641390703
+      "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_4": -5731176580023633286
+      "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_40": 9171508070486531387
+      "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_41": 3275141463463738753
+      "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_42": 312561047573728358
+      "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_43": -6383861775097648722
+      "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_44": 7044504836676660473
+      "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_45": -2826303552261795438
+      "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_46": -156040991063910756
+      "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_47": 8567836259482030515
+      "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_48": -4397081999295487936
+      "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_49": 1616049448987477955
+      "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_5": 1815447931824168933
+      "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_50": -8181953912316160776
+      "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_51": -3790916602448981506
+      "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_52": -6575782291211223054
+      "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_53": -2140447126484724845
+      "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_54": 8998785907500255547
+      "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_55": 3670908225722099760
+      "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_56": 7446219532882462249
+      "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_6": -8138404552773884736
+      "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_7": 3346808510375766953
+      "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_8": 8386349704198884627
+      "C\u1EA7u treo g\u1ED7 ph\u1EE7 d\xE2y leo_9": -448214664267608004
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

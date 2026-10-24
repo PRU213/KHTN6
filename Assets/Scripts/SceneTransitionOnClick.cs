@@ -7,7 +7,7 @@ public class SceneTransitionOnClick : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0) || Input.anyKeyDown)
+        if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Space))
         {
             SceneManager.LoadScene(nextSceneName);
         }

@@ -27,6 +27,13 @@ public class MovingPlatform : MonoBehaviour
     [Tooltip("Khoảng cách mặc định di chuyển (nếu không tìm thấy nền cạnh bên)")]
     public float defaultTravelDistance = 300f;
 
+    [Header("=== CUSTOM BOUNDS ===")]
+    public bool useCustomBounds = false;
+    public float customMinX = 0f;
+    public float customMaxX = 0f;
+    [Tooltip("1 = Đi sang Phải trước, -1 = Đi sang Trái trước")]
+    public float startDirection = 1f;
+
     // --- Platform data ---
     public RectTransform RectTransform { get; private set; }
 
@@ -59,7 +66,18 @@ public class MovingPlatform : MonoBehaviour
     void Start()
     {
         previousPosition = RectTransform.anchoredPosition;
-        CalculateBounds();
+        
+        if (useCustomBounds)
+        {
+            pointA_X = customMinX;
+            pointB_X = customMaxX;
+            boundsCalculated = true;
+            direction = startDirection;
+        }
+        else
+        {
+            CalculateBounds();
+        }
     }
 
     void OnEnable()
@@ -99,8 +117,8 @@ public class MovingPlatform : MonoBehaviour
             float py = prt.anchoredPosition.y;
             float pHalfW = prt.sizeDelta.x * 0.5f;
 
-            // Chỉ xét platform ở gần cùng tầng (chênh lệch Y < 150)
-            if (Mathf.Abs(py - myY) > 150f) continue;
+            // Chỉ xét platform ở gần cùng tầng (chênh lệch Y < 500 để bắt được các bục cao/thấp hơn)
+            if (Mathf.Abs(py - myY) > 500f) continue;
 
             float platLeftEdge = px - pHalfW;
             float platRightEdge = px + pHalfW;

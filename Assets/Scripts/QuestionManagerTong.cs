@@ -1,27 +1,31 @@
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using UnityEngine.Networking;
 
 /// <summary>
 /// Quản lý câu hỏi dành riêng cho beantong_question.
 /// Trả lời đúng → quay về bean_tong.
 /// Hết máu → chơi lại bean_tong từ đầu.
-/// Nhận diện kích thước UI từ scene thực tế:
-///   - Đáp án: ~525 x 192
-///   - Tim: ~67 x 72
-///   - Bảng câu hỏi: ~1237 x 914
+/// Hiển thị GiaiThich kèm txtGiaiThich khi chọn sai đáp án.
+/// Đáp án đúng hiện xanh, đáp án sai hiện đỏ.
 /// </summary>
 public class QuestionManagerTong : MonoBehaviour
 {
+    private const string SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/1DcJwlN_fUDdcaQ6IfnlkMJApgWuEUqMhyZv9Kn8vfWo/export?format=csv&gid=1463734910";
+
     [System.Serializable]
     public class Question
     {
         public string questionText;
         public string[] answers = new string[4];
         public int correctIndex;
+        public string explanation;
     }
 
-    // === CÂU HỎI SINH HỌC TỔNG HỢP ===
+    // === CÂU HỎI SINH HỌC TỔNG HỢP (KÈM GIẢI THÍCH) ===
     private Question[] questions = new Question[]
     {
         new Question {
@@ -31,7 +35,8 @@ public class QuestionManagerTong : MonoBehaviour
                 "B. Rễ cây",
                 "C. Thân cây",
                 "D. Hoa" },
-            correctIndex = 0
+            correctIndex = 0,
+            explanation = "Lá cây là cơ quan quang hợp chủ yếu nhờ chứa nhiều lục lạp."
         },
         new Question {
             questionText = "Cây xanh hấp thụ khí gì trong quá trình quang hợp?",
@@ -40,7 +45,8 @@ public class QuestionManagerTong : MonoBehaviour
                 "B. Khí CO2",
                 "C. Khí N2",
                 "D. Khí H2" },
-            correctIndex = 1
+            correctIndex = 1,
+            explanation = "Trong quá trình quang hợp, cây xanh hấp thụ khí CO2 và thải ra khí O2."
         },
         new Question {
             questionText = "Sản phẩm chính của quá trình quang hợp là gì?",
@@ -49,7 +55,8 @@ public class QuestionManagerTong : MonoBehaviour
                 "B. Khí CO2 và nước",
                 "C. Tinh bột và khí O2",
                 "D. Protein và chất béo" },
-            correctIndex = 2
+            correctIndex = 2,
+            explanation = "Sản phẩm chính của quang hợp là chất hữu cơ (tinh bột) và khí O2."
         },
         new Question {
             questionText = "Rễ cây có chức năng chính là gì?",
@@ -58,7 +65,8 @@ public class QuestionManagerTong : MonoBehaviour
                 "B. Hút nước và muối khoáng từ đất",
                 "C. Sinh sản cho cây",
                 "D. Tạo hoa và quả" },
-            correctIndex = 1
+            correctIndex = 1,
+            explanation = "Rễ có chức năng hút nước và các muối khoáng hòa tan từ đất nuôi cây."
         },
         new Question {
             questionText = "Thân cây có vai trò gì trong cơ thể thực vật?",
@@ -67,7 +75,8 @@ public class QuestionManagerTong : MonoBehaviour
                 "B. Quang hợp tạo năng lượng",
                 "C. Vận chuyển nước và chất dinh dưỡng",
                 "D. Hấp thụ ánh sáng mặt trời" },
-            correctIndex = 2
+            correctIndex = 2,
+            explanation = "Thân vận chuyển nước, muối khoáng từ rễ lên lá và chất hữu cơ từ lá đến các bộ phận."
         },
         new Question {
             questionText = "Tế bào thực vật khác tế bào động vật ở điểm nào?",
@@ -76,7 +85,8 @@ public class QuestionManagerTong : MonoBehaviour
                 "B. Có thành tế bào và lục lạp",
                 "C. Có màng tế bào",
                 "D. Có ti thể" },
-            correctIndex = 1
+            correctIndex = 1,
+            explanation = "Tế bào thực vật có thêm thành tế bào bảo vệ và lục lạp thực hiện quang hợp."
         },
         new Question {
             questionText = "Lục lạp chứa sắc tố gì giúp cây có màu xanh?",
@@ -85,7 +95,8 @@ public class QuestionManagerTong : MonoBehaviour
                 "B. Melanin",
                 "C. Diệp lục (Chlorophyll)",
                 "D. Carotene" },
-            correctIndex = 2
+            correctIndex = 2,
+            explanation = "Lục lạp chứa diệp lục (chlorophyll) có khả năng hấp thụ ánh sáng mặt trời."
         },
         new Question {
             questionText = "Quá trình hô hấp ở thực vật sử dụng chất gì?",
@@ -94,7 +105,8 @@ public class QuestionManagerTong : MonoBehaviour
                 "B. CO2 và nước",
                 "C. Ánh sáng mặt trời",
                 "D. Muối khoáng" },
-            correctIndex = 0
+            correctIndex = 0,
+            explanation = "Hô hấp ở thực vật sử dụng chất hữu cơ và khí O2 để tạo năng lượng cho tế bào."
         }
     };
 
@@ -107,8 +119,13 @@ public class QuestionManagerTong : MonoBehaviour
     private Text feedbackText;
     private Button[] answerButtons = new Button[4];
 
+    // === GIẢI THÍCH UI ===
+    private GameObject giaiThichObject;
+    private Text txtGiaiThichLegacy;
+    private TMPro.TMP_Text txtGiaiThichTMP;
+
     private int currentQuestion;
-    private Color originalAnswerColor;
+    private Color originalAnswerColor = Color.white;
 
     void Start()
     {
@@ -119,11 +136,143 @@ public class QuestionManagerTong : MonoBehaviour
         }
 
         LoadDynamicQuestions();
+
+        // Nếu GameData chưa có câu hỏi (ví dụ chạy trực tiếp scene này), tự động tải từ Google Sheet
+        if (GameData.Instance.allQuestions == null || GameData.Instance.allQuestions.Count == 0)
+        {
+            StartCoroutine(FetchQuestionsFromSheet());
+        }
+
         FindUIElements();
         SetupUIComponents();
         UpdateHealthIcons();
         currentQuestion = Random.Range(0, questions.Length);
         ShowQuestion();
+    }
+
+    private IEnumerator FetchQuestionsFromSheet()
+    {
+        using (UnityWebRequest req = UnityWebRequest.Get(SHEET_CSV_URL))
+        {
+            req.certificateHandler = new BypassCertificate();
+            yield return req.SendWebRequest();
+            if (req.result == UnityWebRequest.Result.Success)
+            {
+                ParseCSVAndPopulate(req.downloadHandler.text);
+            }
+            else
+            {
+                Debug.LogWarning("Không thể tải Google Sheet trực tiếp: " + req.error);
+            }
+        }
+    }
+
+    private void ParseCSVAndPopulate(string csvData)
+    {
+        List<string[]> rows = ParseCSVFully(csvData);
+        if (rows == null || rows.Count <= 1) return;
+
+        List<QuestionData> fetched = new List<QuestionData>();
+        for (int i = 1; i < rows.Count; i++)
+        {
+            string[] cols = rows[i];
+            if (cols.Length >= 11)
+            {
+                if (cols[1].Trim().Contains("Sinh"))
+                {
+                    QuestionData q = new QuestionData
+                    {
+                        id = cols[0],
+                        monId = cols[1],
+                        topic = cols[2],
+                        difficulty = cols[3],
+                        question = cols[4],
+                        optionA = cols[5],
+                        optionB = cols[6],
+                        optionC = cols[7],
+                        optionD = cols[8],
+                        correct = cols[9],
+                        explanation = cols[10],
+                        points = (cols.Length >= 12 && int.TryParse(cols[11], out int p)) ? p : 10
+                    };
+                    fetched.Add(q);
+                }
+            }
+        }
+
+        if (fetched.Count > 0)
+        {
+            if (GameData.Instance != null)
+                GameData.Instance.allQuestions = fetched;
+
+            LoadDynamicQuestions();
+
+            // Nếu người chơi chưa trả lời, làm mới câu hỏi ngẫu nhiên từ sheet
+            if (answerButtons != null && answerButtons.Length > 0 && answerButtons[0] != null && answerButtons[0].interactable)
+            {
+                currentQuestion = Random.Range(0, questions.Length);
+                ShowQuestion();
+            }
+        }
+    }
+
+    private List<string[]> ParseCSVFully(string csvData)
+    {
+        List<string[]> rows = new List<string[]>();
+        List<string> currentCols = new List<string>();
+        bool inQuotes = false;
+        string currentField = "";
+
+        for (int i = 0; i < csvData.Length; i++)
+        {
+            char c = csvData[i];
+
+            if (c == '\"')
+            {
+                if (inQuotes && i + 1 < csvData.Length && csvData[i + 1] == '\"')
+                {
+                    currentField += '\"';
+                    i++;
+                }
+                else
+                {
+                    inQuotes = !inQuotes;
+                }
+            }
+            else if (c == ',' && !inQuotes)
+            {
+                currentCols.Add(currentField);
+                currentField = "";
+            }
+            else if ((c == '\r' || c == '\n') && !inQuotes)
+            {
+                if (c == '\r' && i + 1 < csvData.Length && csvData[i + 1] == '\n')
+                {
+                    i++;
+                }
+
+                if (currentCols.Count > 0 || !string.IsNullOrEmpty(currentField))
+                {
+                    currentCols.Add(currentField);
+                    rows.Add(currentCols.ToArray());
+                }
+
+                currentCols.Clear();
+                currentField = "";
+            }
+            else
+            {
+                currentField += c;
+            }
+        }
+
+        if (currentCols.Count > 0 || !string.IsNullOrEmpty(currentField))
+        {
+            currentCols.Add(currentField);
+            rows.Add(currentCols.ToArray());
+        }
+
+        return rows;
     }
 
     private void LoadDynamicQuestions()
@@ -133,13 +282,10 @@ public class QuestionManagerTong : MonoBehaviour
             string selChapter = PlayerPrefs.GetString("SelectedChapter", "Tất cả");
             string selDiff = PlayerPrefs.GetString("SelectedDifficulty", "Tổng hợp");
 
-            System.Collections.Generic.List<Question> dynamicQs = new System.Collections.Generic.List<Question>();
+            List<Question> dynamicQs = new List<Question>();
 
             foreach (var q in GameData.Instance.allQuestions)
             {
-                // QuestionManagerTong handles Biology implicitly because ChonBaiManager filters it.
-                // But just in case, we can filter by monID if we want, or assume GameData only has what we need.
-                
                 bool matchChapter = (selChapter == "Tất cả" || q.topic.Trim() == selChapter);
                 bool matchDiff = (selDiff == "Tổng hợp" || q.difficulty.Trim().ToLower() == selDiff.ToLower());
 
@@ -147,7 +293,39 @@ public class QuestionManagerTong : MonoBehaviour
                 {
                     Question newQ = new Question();
                     newQ.questionText = q.question;
-                    newQ.answers = new string[] { q.optionA, q.optionB, q.optionC, q.optionD };
+                    newQ.answers = new string[] {
+                        FormatOption("A.", q.optionA),
+                        FormatOption("B.", q.optionB),
+                        FormatOption("C.", q.optionC),
+                        FormatOption("D.", q.optionD)
+                    };
+                    newQ.explanation = q.explanation;
+                    
+                    string co = q.correct.Trim().ToUpper();
+                    if (co == "A") newQ.correctIndex = 0;
+                    else if (co == "B") newQ.correctIndex = 1;
+                    else if (co == "C") newQ.correctIndex = 2;
+                    else if (co == "D") newQ.correctIndex = 3;
+                    else newQ.correctIndex = 0;
+
+                    dynamicQs.Add(newQ);
+                }
+            }
+
+            // Nếu không có câu nào khớp với bộ lọc, lấy tất cả câu hỏi Sinh học
+            if (dynamicQs.Count == 0)
+            {
+                foreach (var q in GameData.Instance.allQuestions)
+                {
+                    Question newQ = new Question();
+                    newQ.questionText = q.question;
+                    newQ.answers = new string[] {
+                        FormatOption("A.", q.optionA),
+                        FormatOption("B.", q.optionB),
+                        FormatOption("C.", q.optionC),
+                        FormatOption("D.", q.optionD)
+                    };
+                    newQ.explanation = q.explanation;
                     
                     string co = q.correct.Trim().ToUpper();
                     if (co == "A") newQ.correctIndex = 0;
@@ -166,9 +344,18 @@ public class QuestionManagerTong : MonoBehaviour
             }
             else
             {
-                Debug.LogWarning("Không có câu hỏi nào khớp với độ khó và chương đã chọn! Dùng mặc định.");
+                Debug.LogWarning("Không có câu hỏi nào trong GameData! Dùng mặc định.");
             }
         }
+    }
+
+    private string FormatOption(string prefix, string opt)
+    {
+        if (string.IsNullOrEmpty(opt)) return prefix;
+        opt = opt.Trim();
+        if (opt.StartsWith(prefix) || opt.StartsWith(prefix[0] + ")") || opt.StartsWith(prefix[0] + " -") || opt.StartsWith(prefix[0] + ":"))
+            return opt;
+        return prefix + " " + opt;
     }
 
     private void FindUIElements()
@@ -181,20 +368,27 @@ public class QuestionManagerTong : MonoBehaviour
         int hpIdx = 0;
         float maxBoardArea = 0f;
         
-        System.Collections.Generic.List<Image> foundAnswers = new System.Collections.Generic.List<Image>();
+        List<Image> foundAnswers = new List<Image>();
 
         foreach (Image img in allImages)
         {
             RectTransform rt = img.rectTransform;
             float w = rt.sizeDelta.x, h = rt.sizeDelta.y;
             float area = w * h;
-            string objName = img.gameObject.name.ToLower();
+            string objName = img.gameObject.name.ToLower().Trim();
 
             // Bỏ qua ảnh nền full màn hình
             if (rt.anchorMin == Vector2.zero && rt.anchorMax == Vector2.one) continue;
 
             // Bỏ qua player (trang trí)
             if (objName.Contains("player")) continue;
+
+            // Bảng Giải Thích
+            if (objName == "giaithich" || objName.Contains("giaithich"))
+            {
+                giaiThichObject = img.gameObject;
+                continue;
+            }
 
             // Nút đáp án (~525 x 192)
             bool isNamedAnswer = objName.Contains("dapan") || objName.Contains("đáp án") || objName.Contains("đápán");
@@ -229,7 +423,8 @@ public class QuestionManagerTong : MonoBehaviour
         // Sắp xếp các nút đáp án theo toạ độ Y (từ trên xuống) rồi đến X (từ trái qua)
         foundAnswers.Sort((a, b) => {
             int yCompare = b.rectTransform.position.y.CompareTo(a.rectTransform.position.y);
-            if (yCompare == 0) return a.rectTransform.position.x.CompareTo(b.rectTransform.position.x);
+            if (Mathf.Abs(b.rectTransform.position.y - a.rectTransform.position.y) < 10)
+                return a.rectTransform.position.x.CompareTo(b.rectTransform.position.x);
             return yCompare;
         });
 
@@ -237,11 +432,65 @@ public class QuestionManagerTong : MonoBehaviour
         {
             answerImages[i] = foundAnswers[i];
         }
+
+        // Tìm GiaiThich và txtGiaiThich
+        FindGiaiThichUI(canvas);
+    }
+
+    private void FindGiaiThichUI(Canvas canvas)
+    {
+        if (giaiThichObject == null)
+        {
+            Transform[] allTrans = canvas.GetComponentsInChildren<Transform>(true);
+            foreach (Transform t in allTrans)
+            {
+                if (t.name.ToLower().Trim() == "giaithich")
+                {
+                    giaiThichObject = t.gameObject;
+                    break;
+                }
+            }
+        }
+
+        if (giaiThichObject != null)
+        {
+            Transform[] children = giaiThichObject.GetComponentsInChildren<Transform>(true);
+            foreach (Transform ct in children)
+            {
+                if (ct != giaiThichObject.transform && ct.name.ToLower().Trim().Contains("giaithich"))
+                {
+                    txtGiaiThichLegacy = ct.GetComponent<Text>();
+                    txtGiaiThichTMP = ct.GetComponent<TMPro.TMP_Text>();
+                    break;
+                }
+            }
+
+            if (txtGiaiThichLegacy == null && txtGiaiThichTMP == null)
+            {
+                txtGiaiThichLegacy = giaiThichObject.GetComponentInChildren<Text>(true);
+                txtGiaiThichTMP = giaiThichObject.GetComponentInChildren<TMPro.TMP_Text>(true);
+            }
+        }
+
+        if (txtGiaiThichLegacy == null && txtGiaiThichTMP == null)
+        {
+            Transform[] allTrans = canvas.GetComponentsInChildren<Transform>(true);
+            foreach (Transform t in allTrans)
+            {
+                if (t.name.ToLower().Trim().Contains("txtgiaithich"))
+                {
+                    txtGiaiThichLegacy = t.GetComponent<Text>();
+                    txtGiaiThichTMP = t.GetComponent<TMPro.TMP_Text>();
+                    break;
+                }
+            }
+        }
     }
 
     private void SetupUIComponents()
     {
         Font font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+        if (font == null) font = Resources.GetBuiltinResource<Font>("Arial.ttf");
 
         if (questionBoard != null)
         {
@@ -273,6 +522,63 @@ public class QuestionManagerTong : MonoBehaviour
 
             int idx = i;
             btn.onClick.AddListener(() => OnAnswerClicked(idx));
+        }
+
+        // Cấu hình bảng GiaiThich
+        if (giaiThichObject != null)
+        {
+            giaiThichObject.SetActive(false); // Ẩn ban đầu
+
+            Button gtBtn = giaiThichObject.GetComponent<Button>();
+            if (gtBtn == null) gtBtn = giaiThichObject.AddComponent<Button>();
+            gtBtn.onClick.RemoveAllListeners();
+            gtBtn.onClick.AddListener(() =>
+            {
+                CancelInvoke(nameof(NextQuestion));
+                CancelInvoke(nameof(RestartGame));
+                if (GameData.Instance != null && GameData.Instance.currentHealth <= 0)
+                    RestartGame();
+                else
+                    NextQuestion();
+            });
+        }
+
+        // Cấu hình hiển thị cho txtGiaiThich
+        if (txtGiaiThichTMP != null)
+        {
+            txtGiaiThichTMP.color = Color.black;
+            txtGiaiThichTMP.alignment = TMPro.TextAlignmentOptions.Center;
+            txtGiaiThichTMP.enableAutoSizing = true;
+            txtGiaiThichTMP.fontSizeMin = 14;
+            txtGiaiThichTMP.fontSizeMax = 24;
+        }
+        else if (txtGiaiThichLegacy != null)
+        {
+            if (font != null) txtGiaiThichLegacy.font = font;
+            txtGiaiThichLegacy.fontSize = 20;
+            txtGiaiThichLegacy.color = Color.black;
+            txtGiaiThichLegacy.alignment = TextAnchor.MiddleCenter;
+            txtGiaiThichLegacy.horizontalOverflow = HorizontalWrapMode.Wrap;
+            txtGiaiThichLegacy.verticalOverflow = VerticalWrapMode.Overflow;
+        }
+        else if (giaiThichObject != null)
+        {
+            // Dự phòng nếu chưa có component Text nào trong GiaiThich
+            GameObject textChild = new GameObject("txtGiaiThich", typeof(RectTransform));
+            textChild.transform.SetParent(giaiThichObject.transform, false);
+            RectTransform textRt = textChild.GetComponent<RectTransform>();
+            textRt.anchorMin = Vector2.zero;
+            textRt.anchorMax = Vector2.one;
+            textRt.offsetMin = new Vector2(20, 20);
+            textRt.offsetMax = new Vector2(-20, -20);
+
+            txtGiaiThichLegacy = textChild.AddComponent<Text>();
+            if (font != null) txtGiaiThichLegacy.font = font;
+            txtGiaiThichLegacy.fontSize = 20;
+            txtGiaiThichLegacy.color = Color.black;
+            txtGiaiThichLegacy.alignment = TextAnchor.MiddleCenter;
+            txtGiaiThichLegacy.horizontalOverflow = HorizontalWrapMode.Wrap;
+            txtGiaiThichLegacy.verticalOverflow = VerticalWrapMode.Overflow;
         }
     }
 
@@ -306,6 +612,12 @@ public class QuestionManagerTong : MonoBehaviour
         if (questionText != null) questionText.text = q.questionText;
         if (feedbackText != null) feedbackText.text = "";
 
+        // Ẩn bảng giải thích khi chuyển câu hỏi
+        if (giaiThichObject != null)
+        {
+            giaiThichObject.SetActive(false);
+        }
+
         for (int i = 0; i < 4; i++)
         {
             if (answerTexts[i] != null) answerTexts[i].text = q.answers[i];
@@ -322,15 +634,22 @@ public class QuestionManagerTong : MonoBehaviour
 
         if (index == q.correctIndex)
         {
+            // Đáp án đúng hiện xanh
             if (answerImages[index] != null) answerImages[index].color = new Color(0.15f, 0.75f, 0.25f);
             if (feedbackText != null) { feedbackText.color = new Color(0.1f, 0.6f, 0.1f); feedbackText.text = "Chính xác! Đã tiêu diệt quái vật!"; }
+            if (giaiThichObject != null) giaiThichObject.SetActive(false);
             if (GameData.Instance != null) GameData.Instance.DefeatCurrentEnemy();
             Invoke(nameof(ReturnToGameScene), 2f);
         }
         else
         {
+            // Đáp án sai hiện đỏ
             if (answerImages[index] != null) answerImages[index].color = new Color(0.85f, 0.15f, 0.15f);
+            // Đáp án đúng hiện xanh
             if (answerImages[q.correctIndex] != null) answerImages[q.correctIndex].color = new Color(0.15f, 0.75f, 0.25f);
+
+            // HIỂN THỊ GIAITHICH VÀ GÁN NỘI DUNG TXTGIAITHICH TỪ CỘT EXPLANATION
+            ShowExplanation(q);
 
             if (GameData.Instance != null)
             {
@@ -340,14 +659,48 @@ public class QuestionManagerTong : MonoBehaviour
                 if (!alive)
                 {
                     if (feedbackText != null) { feedbackText.color = Color.red; feedbackText.text = "Sai rồi! Hết tim... CHƠI LẠI TỪ ĐẦU!"; }
-                    Invoke(nameof(RestartGame), 2.5f);
+                    Invoke(nameof(RestartGame), 3.5f);
                 }
                 else
                 {
                     if (feedbackText != null) { feedbackText.color = Color.red; feedbackText.text = "Sai rồi! Mất 1 tim. Còn " + GameData.Instance.currentHealth + " tim."; }
-                    Invoke(nameof(NextQuestion), 2f);
+                    Invoke(nameof(NextQuestion), 3.5f);
                 }
             }
+        }
+    }
+
+    private void ShowExplanation(Question q)
+    {
+        if (giaiThichObject != null)
+        {
+            giaiThichObject.SetActive(true);
+            giaiThichObject.transform.SetAsLastSibling();
+        }
+
+        string expl = !string.IsNullOrEmpty(q.explanation)
+            ? q.explanation
+            : ("Đáp án đúng là: " + q.answers[q.correctIndex]);
+
+        SetExplanationText(expl);
+    }
+
+    private void SetExplanationText(string expl)
+    {
+        if (txtGiaiThichLegacy != null)
+        {
+            if (expl.Length > 200) txtGiaiThichLegacy.fontSize = 16;
+            else if (expl.Length > 120) txtGiaiThichLegacy.fontSize = 18;
+            else txtGiaiThichLegacy.fontSize = 20;
+
+            txtGiaiThichLegacy.text = expl;
+        }
+        else if (txtGiaiThichTMP != null)
+        {
+            txtGiaiThichTMP.enableAutoSizing = true;
+            txtGiaiThichTMP.fontSizeMin = 14;
+            txtGiaiThichTMP.fontSizeMax = 24;
+            txtGiaiThichTMP.text = expl;
         }
     }
 
@@ -373,7 +726,6 @@ public class QuestionManagerTong : MonoBehaviour
             GameData.Instance.defeatedEnemies.Clear();
             GameData.Instance.currentEnemyName = "";
             GameData.Instance.hasSavedPosition = false;
-            GameData.Instance.startTime = Time.time;
         }
         SceneManager.LoadScene("bean_tong");
     }

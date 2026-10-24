@@ -180,17 +180,105 @@ public class Bean1Setup : MonoBehaviour
     {
         EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo();
 
+        // 0. HomePage -> luatchoisinhhoc (chỉ khi click nút Sinh học), và nối Lý/Hóa sang SampleScene
+        if (System.IO.File.Exists("Assets/Scenes/HomePage.unity"))
+        {
+            AddSceneToBuildSettings("Assets/Scenes/HomePage.unity");
+            var scene0 = EditorSceneManager.OpenScene("Assets/Scenes/HomePage.unity", OpenSceneMode.Single);
+            
+            // Nút Sinh
+            GameObject bioObj = GameObject.Find("Biology");
+            if (bioObj != null)
+            {
+                if (bioObj.GetComponent<UnityEngine.UI.Button>() == null) bioObj.AddComponent<UnityEngine.UI.Button>();
+                var bst = bioObj.GetComponent<ButtonSceneTransition>();
+                if (bst == null) bst = bioObj.AddComponent<ButtonSceneTransition>();
+                bst.targetScene = "luatchoisinhhoc";
+            }
+
+            // Nút Lý
+            GameObject phyObj = GameObject.Find("Physic");
+            if (phyObj != null)
+            {
+                if (phyObj.GetComponent<UnityEngine.UI.Button>() == null) phyObj.AddComponent<UnityEngine.UI.Button>();
+                var gto = phyObj.GetComponent<GoToSampleScenePanel>();
+                if (gto == null) gto = phyObj.AddComponent<GoToSampleScenePanel>();
+                gto.subjectName = "Physic";
+            }
+
+            // Nút Hóa
+            GameObject chemObj = GameObject.Find("Chemistry");
+            if (chemObj != null)
+            {
+                if (chemObj.GetComponent<UnityEngine.UI.Button>() == null) chemObj.AddComponent<UnityEngine.UI.Button>();
+                var gto = chemObj.GetComponent<GoToSampleScenePanel>();
+                if (gto == null) gto = chemObj.AddComponent<GoToSampleScenePanel>();
+                gto.subjectName = "Chemistry";
+            }
+            
+            EditorSceneManager.SaveScene(scene0);
+        }
+
+        // 0.5. Cấu hình SampleScene
+        if (System.IO.File.Exists("Assets/Scenes/SampleScene.unity"))
+        {
+            AddSceneToBuildSettings("Assets/Scenes/SampleScene.unity");
+            var sceneSample = EditorSceneManager.OpenScene("Assets/Scenes/SampleScene.unity", OpenSceneMode.Single);
+            
+            Camera cam = Object.FindAnyObjectByType<Camera>();
+            if (cam != null)
+            {
+                var mgr = cam.GetComponent<SampleScenePanelManager>();
+                if (mgr == null) mgr = cam.gameObject.AddComponent<SampleScenePanelManager>();
+                
+                GameObject pMap = GameObject.Find("Physical_map_game");
+                GameObject cMap = GameObject.Find("Chemistry_map_game");
+                GameObject pTheory = GameObject.Find("theory_physic");
+                GameObject cTheory = GameObject.Find("theory_chemistry");
+
+                if (pMap != null) mgr.physicsMap = pMap;
+                if (cMap != null) mgr.chemistryMap = cMap;
+                if (pTheory != null) mgr.theoryPhysics = pTheory;
+                if (cTheory != null) mgr.theoryChemistry = cTheory;
+            }
+            EditorSceneManager.SaveScene(sceneSample);
+        }
+
         // 1. Màn luật chơi sinh học -> bean_1
         if (System.IO.File.Exists("Assets/Scenes/Biology/luatchoisinhhoc.unity"))
         {
             AddSceneToBuildSettings("Assets/Scenes/Biology/luatchoisinhhoc.unity");
+            AddSceneToBuildSettings("Assets/Scenes/Biology/bean_1.unity"); // Phải thêm bean_1 vào Build Settings
             var scene1 = EditorSceneManager.OpenScene("Assets/Scenes/Biology/luatchoisinhhoc.unity", OpenSceneMode.Single);
+            
+            // Xóa script click màn hình cũ
             Camera cam = Object.FindAnyObjectByType<Camera>();
-            if (cam != null && cam.GetComponent<SceneTransitionOnClick>() == null)
+            if (cam != null)
             {
-                var st = cam.gameObject.AddComponent<SceneTransitionOnClick>();
-                st.nextSceneName = "bean_1";
+                var oldSt = cam.GetComponent<SceneTransitionOnClick>();
+                if (oldSt != null) Object.DestroyImmediate(oldSt);
             }
+
+            // Tìm nút start
+            GameObject startBtn = GameObject.Find("start");
+            if (startBtn != null)
+            {
+                if (startBtn.GetComponent<UnityEngine.UI.Button>() == null) startBtn.AddComponent<UnityEngine.UI.Button>();
+                var bst = startBtn.GetComponent<ButtonSceneTransition>();
+                if (bst == null) bst = startBtn.AddComponent<ButtonSceneTransition>();
+                bst.targetScene = "bean_1";
+            }
+
+            // Tìm nút backhome
+            GameObject homeBtn = GameObject.Find("backhome");
+            if (homeBtn != null)
+            {
+                if (homeBtn.GetComponent<UnityEngine.UI.Button>() == null) homeBtn.AddComponent<UnityEngine.UI.Button>();
+                var bst = homeBtn.GetComponent<ButtonSceneTransition>();
+                if (bst == null) bst = homeBtn.AddComponent<ButtonSceneTransition>();
+                bst.targetScene = "HomePage";
+            }
+
             EditorSceneManager.SaveScene(scene1);
         }
 
@@ -219,7 +307,44 @@ public class Bean1Setup : MonoBehaviour
             EditorSceneManager.SaveScene(scene2);
         }
 
-        EditorUtility.DisplayDialog("Liên kết", "Đã thiết lập xong luồng chuyển cảnh:\nLuật -> Bean 1 -> Bean 2 -> Video -> Bean Tổng", "OK");
+        // 3. Màn victory -> HomePage
+        if (System.IO.File.Exists("Assets/Scenes/Biology/victory.unity"))
+        {
+            AddSceneToBuildSettings("Assets/Scenes/Biology/victory.unity");
+            var sceneVic = EditorSceneManager.OpenScene("Assets/Scenes/Biology/victory.unity", OpenSceneMode.Single);
+            
+            // Xóa script click màn hình cũ
+            Camera cam = Object.FindAnyObjectByType<Camera>();
+            if (cam != null)
+            {
+                var oldSt = cam.GetComponent<SceneTransitionOnClick>();
+                if (oldSt != null) Object.DestroyImmediate(oldSt);
+            }
+
+            // Tìm nút backhome
+            GameObject homeBtn = GameObject.Find("backhome");
+            if (homeBtn != null)
+            {
+                if (homeBtn.GetComponent<UnityEngine.UI.Button>() == null) homeBtn.AddComponent<UnityEngine.UI.Button>();
+                var bst = homeBtn.GetComponent<ButtonSceneTransition>();
+                if (bst == null) bst = homeBtn.AddComponent<ButtonSceneTransition>();
+                bst.targetScene = "HomePage";
+            }
+
+            // Tìm nút start (nếu có)
+            GameObject startBtn = GameObject.Find("start");
+            if (startBtn != null)
+            {
+                if (startBtn.GetComponent<UnityEngine.UI.Button>() == null) startBtn.AddComponent<UnityEngine.UI.Button>();
+                var bst = startBtn.GetComponent<ButtonSceneTransition>();
+                if (bst == null) bst = startBtn.AddComponent<ButtonSceneTransition>();
+                bst.targetScene = "bean_1";
+            }
+
+            EditorSceneManager.SaveScene(sceneVic);
+        }
+
+        EditorUtility.DisplayDialog("Liên kết", "Đã thiết lập xong luồng chuyển cảnh với các nút start / backhome!", "OK");
     }
 
     [MenuItem("Tools/5. Sửa Lỗi Lún Chân (Cho Màn Hiện Tại)")]

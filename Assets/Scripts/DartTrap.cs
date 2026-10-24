@@ -67,7 +67,11 @@ public class DartTrap : MonoBehaviour
         // Nếu dart ở bên trái map (x < 0) → bắn sang phải
         // nếu dart ở bên phải map (x > 0) → bắn sang trái
         // Hoặc tự động nhắm về phía player nếu player đã có sẵn
-        GameObject player = GameObject.Find("Player");
+        #pragma warning disable CS0618
+        PlayerController pc = FindObjectOfType<PlayerController>();
+#pragma warning restore CS0618
+        if (pc == null) return;
+        GameObject player = pc.gameObject;
         if (player != null)
         {
             RectTransform pRT = player.GetComponent<RectTransform>();
@@ -87,7 +91,11 @@ public class DartTrap : MonoBehaviour
             return;
         }
 
-        GameObject player = GameObject.Find("Player");
+        #pragma warning disable CS0618
+        PlayerController pc = FindObjectOfType<PlayerController>();
+#pragma warning restore CS0618
+        if (pc == null) return;
+        GameObject player = pc.gameObject;
         if (player == null) return;
 
         RectTransform playerRT = player.GetComponent<RectTransform>();

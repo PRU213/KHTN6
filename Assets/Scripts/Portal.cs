@@ -33,6 +33,10 @@ public class Portal : MonoBehaviour
         }
         else if (currentScene.Contains("Bean_2"))
         {
+            nextSceneName = "Bean_3_Biology";
+        }
+        else if (currentScene.Contains("Bean_3"))
+        {
             nextSceneName = "video_gioithieu";
         }
         else if (currentScene.Contains("video"))
