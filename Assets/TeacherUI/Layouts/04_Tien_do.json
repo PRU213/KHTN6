@@ -1,0 +1,1580 @@
+{
+  "screen": "04_Tien_do",
+  "title": "Học sinh và tiến độ học tập",
+  "referenceResolution": [
+    1920,
+    1080
+  ],
+  "coordinateSystem": "Top-left origin; rect=[x,y,width,height]; pixels at reference resolution",
+  "unityCanvas": {
+    "renderMode": "ScreenSpaceOverlay",
+    "scaleMode": "ScaleWithScreenSize",
+    "matchWidthOrHeight": 0.5
+  },
+  "elements": [
+    {
+      "name": "Background",
+      "type": "Image",
+      "sprite": "Sprites/Backgrounds/background_forest_1920x1080.png",
+      "rect": [
+        0,
+        0,
+        1920,
+        1080
+      ],
+      "sliced": false
+    },
+    {
+      "name": "BackdropDim",
+      "type": "Image",
+      "sprite": "Sprites/Backgrounds/overlay_dim.png",
+      "rect": [
+        0,
+        0,
+        1920,
+        1080
+      ],
+      "sliced": false
+    },
+    {
+      "name": "BackButton",
+      "type": "Button",
+      "sprite": "Sprites/UI/button_dark.png",
+      "rect": [
+        54,
+        29,
+        78,
+        78
+      ],
+      "sliced": true
+    },
+    {
+      "name": "icon_back",
+      "type": "Image",
+      "sprite": "Sprites/Icons/icon_back.png",
+      "rect": [
+        70,
+        45,
+        46,
+        46
+      ],
+      "sliced": false
+    },
+    {
+      "name": "PHÒNG GIÁO VIÊN",
+      "type": "TextMeshProUGUI",
+      "text": "PHÒNG GIÁO VIÊN",
+      "rect": [
+        151,
+        31,
+        730,
+        44
+      ],
+      "fontSize": 32,
+      "fontWeight": "Bold",
+      "color": "#fff6dc",
+      "alignment": "left",
+      "wrap": true
+    },
+    {
+      "name": "Khoa học tự nhiên 6",
+      "type": "TextMeshProUGUI",
+      "text": "Khoa học tự nhiên 6",
+      "rect": [
+        153,
+        79,
+        690,
+        29
+      ],
+      "fontSize": 21,
+      "fontWeight": "Regular",
+      "color": "#b0d0cb",
+      "alignment": "left",
+      "wrap": true
+    },
+    {
+      "name": "AccountBar",
+      "type": "Image",
+      "sprite": "Sprites/UI/header_account.png",
+      "rect": [
+        1050,
+        18,
+        814,
+        138
+      ],
+      "sliced": true
+    },
+    {
+      "name": "AvatarFrame",
+      "type": "Image",
+      "sprite": "Sprites/UI/avatar_frame.png",
+      "rect": [
+        1070,
+        31,
+        110,
+        110
+      ],
+      "sliced": true
+    },
+    {
+      "name": "TeacherAvatar",
+      "type": "Image",
+      "sprite": "Sprites/Characters/teacher_avatar.png",
+      "rect": [
+        1082,
+        39,
+        86,
+        94
+      ],
+      "sliced": false
+    },
+    {
+      "name": "Xin chào!",
+      "type": "TextMeshProUGUI",
+      "text": "Xin chào!",
+      "rect": [
+        1201,
+        35,
+        334,
+        32
+      ],
+      "fontSize": 22,
+      "fontWeight": "Regular",
+      "color": "#786044",
+      "alignment": "left",
+      "wrap": false
+    },
+    {
+      "name": "Giáo viên",
+      "type": "TextMeshProUGUI",
+      "text": "Giáo viên",
+      "rect": [
+        1201,
+        72,
+        334,
+        54
+      ],
+      "fontSize": 32,
+      "fontWeight": "Bold",
+      "color": "#35473d",
+      "alignment": "left",
+      "wrap": false
+    },
+    {
+      "name": "Cài đặt",
+      "type": "Button",
+      "sprite": "Sprites/UI/button_gold.png",
+      "rect": [
+        1548,
+        30,
+        96,
+        110
+      ],
+      "sliced": true
+    },
+    {
+      "name": "icon_gear",
+      "type": "Image",
+      "sprite": "Sprites/Icons/icon_gear.png",
+      "rect": [
+        1570,
+        40,
+        52,
+        52
+      ],
+      "sliced": false
+    },
+    {
+      "name": "Cài đặt",
+      "type": "TextMeshProUGUI",
+      "text": "Cài đặt",
+      "rect": [
+        1556,
+        96,
+        80,
+        28
+      ],
+      "fontSize": 18,
+      "fontWeight": "Bold",
+      "color": "#fff6dc",
+      "alignment": "center",
+      "wrap": false
+    },
+    {
+      "name": "Xếp hạng",
+      "type": "Button",
+      "sprite": "Sprites/UI/button_gold.png",
+      "rect": [
+        1646,
+        30,
+        96,
+        110
+      ],
+      "sliced": true
+    },
+    {
+      "name": "icon_trophy",
+      "type": "Image",
+      "sprite": "Sprites/Icons/icon_trophy.png",
+      "rect": [
+        1668,
+        40,
+        52,
+        52
+      ],
+      "sliced": false
+    },
+    {
+      "name": "Xếp hạng",
+      "type": "TextMeshProUGUI",
+      "text": "Xếp hạng",
+      "rect": [
+        1654,
+        96,
+        80,
+        28
+      ],
+      "fontSize": 18,
+      "fontWeight": "Bold",
+      "color": "#fff6dc",
+      "alignment": "center",
+      "wrap": false
+    },
+    {
+      "name": "Thoát",
+      "type": "Button",
+      "sprite": "Sprites/UI/button_gold.png",
+      "rect": [
+        1744,
+        30,
+        96,
+        110
+      ],
+      "sliced": true
+    },
+    {
+      "name": "icon_exit",
+      "type": "Image",
+      "sprite": "Sprites/Icons/icon_exit.png",
+      "rect": [
+        1766,
+        40,
+        52,
+        52
+      ],
+      "sliced": false
+    },
+    {
+      "name": "Thoát",
+      "type": "TextMeshProUGUI",
+      "text": "Thoát",
+      "rect": [
+        1752,
+        96,
+        80,
+        28
+      ],
+      "fontSize": 18,
+      "fontWeight": "Bold",
+      "color": "#fff6dc",
+      "alignment": "center",
+      "wrap": false
+    },
+    {
+      "name": "Học sinh & tiến độ học tập",
+      "type": "TextMeshProUGUI",
+      "text": "Học sinh & tiến độ học tập",
+      "rect": [
+        66,
+        163,
+        1310,
+        61
+      ],
+      "fontSize": 40,
+      "fontWeight": "Bold",
+      "color": "#fff6dc",
+      "alignment": "left",
+      "wrap": true
+    },
+    {
+      "name": "Chọn học sinh để xem kết quả học tập the",
+      "type": "TextMeshProUGUI",
+      "text": "Chọn học sinh để xem kết quả học tập theo từng chương, chủ đề.",
+      "rect": [
+        69,
+        220,
+        1460,
+        28
+      ],
+      "fontSize": 19,
+      "fontWeight": "Regular",
+      "color": "#c0d8cf",
+      "alignment": "left",
+      "wrap": true
+    },
+    {
+      "name": "PageBadge",
+      "type": "Image",
+      "sprite": "Sprites/UI/tag_blue.png",
+      "rect": [
+        1600,
+        176,
+        248,
+        48
+      ],
+      "sliced": true
+    },
+    {
+      "name": "TIẾN ĐỘ HỌC TẬP",
+      "type": "TextMeshProUGUI",
+      "text": "TIẾN ĐỘ HỌC TẬP",
+      "rect": [
+        1610,
+        187,
+        228,
+        29
+      ],
+      "fontSize": 18,
+      "fontWeight": "Bold",
+      "color": "#fff6dc",
+      "alignment": "center",
+      "wrap": true
+    },
+    {
+      "name": "ProgressPanel",
+      "type": "Image",
+      "sprite": "Sprites/UI/panel_main.png",
+      "rect": [
+        58,
+        269,
+        1804,
+        691
+      ],
+      "sliced": true
+    },
+    {
+      "name": "DANH SÁCH HỌC SINH",
+      "type": "TextMeshProUGUI",
+      "text": "DANH SÁCH HỌC SINH",
+      "rect": [
+        94,
+        294,
+        385,
+        30
+      ],
+      "fontSize": 20,
+      "fontWeight": "Bold",
+      "color": "#edc36f",
+      "alignment": "left",
+      "wrap": true
+    },
+    {
+      "name": "StudentSearch",
+      "type": "TMP_InputField",
+      "sprite": "Sprites/UI/field_cream.png",
+      "rect": [
+        94,
+        340,
+        374,
+        57
+      ],
+      "sliced": true
+    },
+    {
+      "name": "icon_search_ink",
+      "type": "Image",
+      "sprite": "Sprites/Icons/icon_search_ink.png",
+      "rect": [
+        109,
+        351,
+        33,
+        33
+      ],
+      "sliced": false
+    },
+    {
+      "name": "Tìm tên hoặc mã học sinh",
+      "type": "TextMeshProUGUI",
+      "text": "Tìm tên hoặc mã học sinh",
+      "rect": [
+        154,
+        356,
+        290,
+        31
+      ],
+      "fontSize": 18,
+      "fontWeight": "Regular",
+      "color": "#758175",
+      "alignment": "left",
+      "wrap": true
+    },
+    {
+      "name": "ClassFilter",
+      "type": "TMP_Dropdown",
+      "sprite": "Sprites/UI/field_cream.png",
+      "rect": [
+        94,
+        415,
+        374,
+        54
+      ],
+      "sliced": true
+    },
+    {
+      "name": "Lớp 6",
+      "type": "TextMeshProUGUI",
+      "text": "Lớp 6",
+      "rect": [
+        111,
+        430,
+        285,
+        29
+      ],
+      "fontSize": 21,
+      "fontWeight": "Regular",
+      "color": "#263c3c",
+      "alignment": "left",
+      "wrap": true
+    },
+    {
+      "name": "icon_chevron_ink",
+      "type": "Image",
+      "sprite": "Sprites/Icons/icon_chevron_ink.png",
+      "rect": [
+        424,
+        427,
+        29,
+        29
+      ],
+      "sliced": false
+    },
+    {
+      "name": "Student_HS001",
+      "type": "Button",
+      "sprite": "Sprites/UI/row_selected.png",
+      "rect": [
+        94,
+        489,
+        374,
+        69
+      ],
+      "sliced": true
+    },
+    {
+      "name": "icon_person",
+      "type": "Image",
+      "sprite": "Sprites/Icons/icon_person.png",
+      "rect": [
+        108,
+        504,
+        38,
+        38
+      ],
+      "sliced": false
+    },
+    {
+      "name": "Nguyễn Văn An",
+      "type": "TextMeshProUGUI",
+      "text": "Nguyễn Văn An",
+      "rect": [
+        161,
+        499,
+        280,
+        29
+      ],
+      "fontSize": 20,
+      "fontWeight": "Bold",
+      "color": "#fff6dc",
+      "alignment": "left",
+      "wrap": true
+    },
+    {
+      "name": "HS001  ·  Lớp 6",
+      "type": "TextMeshProUGUI",
+      "text": "HS001  ·  Lớp 6",
+      "rect": [
+        161,
+        527,
+        280,
+        25
+      ],
+      "fontSize": 16,
+      "fontWeight": "Regular",
+      "color": "#afd0c2",
+      "alignment": "left",
+      "wrap": true
+    },
+    {
+      "name": "Student_HS002",
+      "type": "Button",
+      "sprite": "Sprites/UI/row_normal.png",
+      "rect": [
+        94,
+        569,
+        374,
+        69
+      ],
+      "sliced": true
+    },
+    {
+      "name": "icon_person",
+      "type": "Image",
+      "sprite": "Sprites/Icons/icon_person.png",
+      "rect": [
+        108,
+        584,
+        38,
+        38
+      ],
+      "sliced": false
+    },
+    {
+      "name": "Trần Minh Anh",
+      "type": "TextMeshProUGUI",
+      "text": "Trần Minh Anh",
+      "rect": [
+        161,
+        579,
+        280,
+        29
+      ],
+      "fontSize": 20,
+      "fontWeight": "Regular",
+      "color": "#fff6dc",
+      "alignment": "left",
+      "wrap": true
+    },
+    {
+      "name": "HS002  ·  Lớp 6",
+      "type": "TextMeshProUGUI",
+      "text": "HS002  ·  Lớp 6",
+      "rect": [
+        161,
+        607,
+        280,
+        25
+      ],
+      "fontSize": 16,
+      "fontWeight": "Regular",
+      "color": "#afd0c2",
+      "alignment": "left",
+      "wrap": true
+    },
+    {
+      "name": "Student_HS003",
+      "type": "Button",
+      "sprite": "Sprites/UI/row_normal.png",
+      "rect": [
+        94,
+        649,
+        374,
+        69
+      ],
+      "sliced": true
+    },
+    {
+      "name": "icon_person",
+      "type": "Image",
+      "sprite": "Sprites/Icons/icon_person.png",
+      "rect": [
+        108,
+        664,
+        38,
+        38
+      ],
+      "sliced": false
+    },
+    {
+      "name": "Lê Hoàng Nam",
+      "type": "TextMeshProUGUI",
+      "text": "Lê Hoàng Nam",
+      "rect": [
+        161,
+        659,
+        280,
+        29
+      ],
+      "fontSize": 20,
+      "fontWeight": "Regular",
+      "color": "#fff6dc",
+      "alignment": "left",
+      "wrap": true
+    },
+    {
+      "name": "HS003  ·  Lớp 6",
+      "type": "TextMeshProUGUI",
+      "text": "HS003  ·  Lớp 6",
+      "rect": [
+        161,
+        687,
+        280,
+        25
+      ],
+      "fontSize": 16,
+      "fontWeight": "Regular",
+      "color": "#afd0c2",
+      "alignment": "left",
+      "wrap": true
+    },
+    {
+      "name": "Student_HS004",
+      "type": "Button",
+      "sprite": "Sprites/UI/row_normal.png",
+      "rect": [
+        94,
+        729,
+        374,
+        69
+      ],
+      "sliced": true
+    },
+    {
+      "name": "icon_person",
+      "type": "Image",
+      "sprite": "Sprites/Icons/icon_person.png",
+      "rect": [
+        108,
+        744,
+        38,
+        38
+      ],
+      "sliced": false
+    },
+    {
+      "name": "Phạm Thu Hà",
+      "type": "TextMeshProUGUI",
+      "text": "Phạm Thu Hà",
+      "rect": [
+        161,
+        739,
+        280,
+        29
+      ],
+      "fontSize": 20,
+      "fontWeight": "Regular",
+      "color": "#fff6dc",
+      "alignment": "left",
+      "wrap": true
+    },
+    {
+      "name": "HS004  ·  Lớp 6",
+      "type": "TextMeshProUGUI",
+      "text": "HS004  ·  Lớp 6",
+      "rect": [
+        161,
+        767,
+        280,
+        25
+      ],
+      "fontSize": 16,
+      "fontWeight": "Regular",
+      "color": "#afd0c2",
+      "alignment": "left",
+      "wrap": true
+    },
+    {
+      "name": "Student_HS005",
+      "type": "Button",
+      "sprite": "Sprites/UI/row_normal.png",
+      "rect": [
+        94,
+        809,
+        374,
+        69
+      ],
+      "sliced": true
+    },
+    {
+      "name": "icon_person",
+      "type": "Image",
+      "sprite": "Sprites/Icons/icon_person.png",
+      "rect": [
+        108,
+        824,
+        38,
+        38
+      ],
+      "sliced": false
+    },
+    {
+      "name": "Hoàng Đức Huy",
+      "type": "TextMeshProUGUI",
+      "text": "Hoàng Đức Huy",
+      "rect": [
+        161,
+        819,
+        280,
+        29
+      ],
+      "fontSize": 20,
+      "fontWeight": "Regular",
+      "color": "#fff6dc",
+      "alignment": "left",
+      "wrap": true
+    },
+    {
+      "name": "HS005  ·  Lớp 6",
+      "type": "TextMeshProUGUI",
+      "text": "HS005  ·  Lớp 6",
+      "rect": [
+        161,
+        847,
+        280,
+        25
+      ],
+      "fontSize": 16,
+      "fontWeight": "Regular",
+      "color": "#afd0c2",
+      "alignment": "left",
+      "wrap": true
+    },
+    {
+      "name": "StudentListScrollTrack",
+      "type": "Image",
+      "sprite": "Sprites/UI/scroll_track.png",
+      "rect": [
+        477,
+        489,
+        14,
+        389
+      ],
+      "sliced": true
+    },
+    {
+      "name": "StudentListScrollThumb",
+      "type": "Image",
+      "sprite": "Sprites/UI/scroll_thumb.png",
+      "rect": [
+        477,
+        493,
+        14,
+        130
+      ],
+      "sliced": true
+    },
+    {
+      "name": "10 học sinh",
+      "type": "TextMeshProUGUI",
+      "text": "10 học sinh",
+      "rect": [
+        104,
+        899,
+        350,
+        28
+      ],
+      "fontSize": 18,
+      "fontWeight": "Regular",
+      "color": "#9db9b6",
+      "alignment": "left",
+      "wrap": true
+    },
+    {
+      "name": "Nguyễn Văn An",
+      "type": "TextMeshProUGUI",
+      "text": "Nguyễn Văn An",
+      "rect": [
+        530,
+        297,
+        800,
+        45
+      ],
+      "fontSize": 30,
+      "fontWeight": "Bold",
+      "color": "#fff6dc",
+      "alignment": "left",
+      "wrap": true
+    },
+    {
+      "name": "UserID",
+      "type": "TextMeshProUGUI",
+      "text": "Mã học sinh: HS001   ·   Lớp 6",
+      "rect": [
+        532,
+        341,
+        850,
+        29
+      ],
+      "fontSize": 20,
+      "fontWeight": "Regular",
+      "color": "#b3d1c3",
+      "alignment": "left",
+      "wrap": true
+    },
+    {
+      "name": "ReadonlyTag",
+      "type": "Image",
+      "sprite": "Sprites/UI/tag_green.png",
+      "rect": [
+        1575,
+        307,
+        245,
+        47
+      ],
+      "sliced": true
+    },
+    {
+      "name": "Chế độ xem",
+      "type": "TextMeshProUGUI",
+      "text": "Chế độ xem",
+      "rect": [
+        1584,
+        318,
+        227,
+        28
+      ],
+      "fontSize": 18,
+      "fontWeight": "Bold",
+      "color": "#c0ead7",
+      "alignment": "center",
+      "wrap": true
+    },
+    {
+      "name": "Chủ đề đã tham gia",
+      "type": "Image",
+      "sprite": "Sprites/UI/panel_inset.png",
+      "rect": [
+        530,
+        390,
+        410,
+        99
+      ],
+      "sliced": true
+    },
+    {
+      "name": "Chủ đề đã tham gia",
+      "type": "TextMeshProUGUI",
+      "text": "Chủ đề đã tham gia",
+      "rect": [
+        550,
+        409,
+        300,
+        25
+      ],
+      "fontSize": 18,
+      "fontWeight": "Regular",
+      "color": "#9db9b6",
+      "alignment": "left",
+      "wrap": true
+    },
+    {
+      "name": "2",
+      "type": "TextMeshProUGUI",
+      "text": "2",
+      "rect": [
+        841,
+        415,
+        77,
+        46
+      ],
+      "fontSize": 30,
+      "fontWeight": "Bold",
+      "color": "#57d9bd",
+      "alignment": "right",
+      "wrap": true
+    },
+    {
+      "name": "Chủ đề hoàn thành",
+      "type": "Image",
+      "sprite": "Sprites/UI/panel_inset.png",
+      "rect": [
+        960,
+        390,
+        410,
+        99
+      ],
+      "sliced": true
+    },
+    {
+      "name": "Chủ đề hoàn thành",
+      "type": "TextMeshProUGUI",
+      "text": "Chủ đề hoàn thành",
+      "rect": [
+        980,
+        409,
+        300,
+        25
+      ],
+      "fontSize": 18,
+      "fontWeight": "Regular",
+      "color": "#9db9b6",
+      "alignment": "left",
+      "wrap": true
+    },
+    {
+      "name": "1 / 2",
+      "type": "TextMeshProUGUI",
+      "text": "1 / 2",
+      "rect": [
+        1271,
+        415,
+        77,
+        46
+      ],
+      "fontSize": 30,
+      "fontWeight": "Bold",
+      "color": "#57d9bd",
+      "alignment": "right",
+      "wrap": true
+    },
+    {
+      "name": "Tổng lượt làm bài",
+      "type": "Image",
+      "sprite": "Sprites/UI/panel_inset.png",
+      "rect": [
+        1390,
+        390,
+        430,
+        99
+      ],
+      "sliced": true
+    },
+    {
+      "name": "Tổng lượt làm bài",
+      "type": "TextMeshProUGUI",
+      "text": "Tổng lượt làm bài",
+      "rect": [
+        1410,
+        409,
+        320,
+        25
+      ],
+      "fontSize": 18,
+      "fontWeight": "Regular",
+      "color": "#9db9b6",
+      "alignment": "left",
+      "wrap": true
+    },
+    {
+      "name": "7",
+      "type": "TextMeshProUGUI",
+      "text": "7",
+      "rect": [
+        1721,
+        415,
+        77,
+        46
+      ],
+      "fontSize": 30,
+      "fontWeight": "Bold",
+      "color": "#57d9bd",
+      "alignment": "right",
+      "wrap": true
+    },
+    {
+      "name": "ChapterFilter",
+      "type": "TMP_Dropdown",
+      "sprite": "Sprites/UI/field_cream.png",
+      "rect": [
+        530,
+        514,
+        890,
+        56
+      ],
+      "sliced": true
+    },
+    {
+      "name": "Tất cả chương / chủ đề",
+      "type": "TextMeshProUGUI",
+      "text": "Tất cả chương / chủ đề",
+      "rect": [
+        548,
+        530,
+        810,
+        29
+      ],
+      "fontSize": 21,
+      "fontWeight": "Regular",
+      "color": "#263c3c",
+      "alignment": "left",
+      "wrap": true
+    },
+    {
+      "name": "icon_chevron_ink",
+      "type": "Image",
+      "sprite": "Sprites/Icons/icon_chevron_ink.png",
+      "rect": [
+        1376,
+        527,
+        29,
+        29
+      ],
+      "sliced": false
+    },
+    {
+      "name": "StatusFilter",
+      "type": "TMP_Dropdown",
+      "sprite": "Sprites/UI/field_cream.png",
+      "rect": [
+        1440,
+        514,
+        380,
+        56
+      ],
+      "sliced": true
+    },
+    {
+      "name": "Tất cả trạng thái",
+      "type": "TextMeshProUGUI",
+      "text": "Tất cả trạng thái",
+      "rect": [
+        1458,
+        530,
+        310,
+        29
+      ],
+      "fontSize": 21,
+      "fontWeight": "Regular",
+      "color": "#263c3c",
+      "alignment": "left",
+      "wrap": true
+    },
+    {
+      "name": "icon_chevron_ink",
+      "type": "Image",
+      "sprite": "Sprites/Icons/icon_chevron_ink.png",
+      "rect": [
+        1778,
+        527,
+        29,
+        29
+      ],
+      "sliced": false
+    },
+    {
+      "name": "TableHeader",
+      "type": "Image",
+      "sprite": "Sprites/UI/panel_inset.png",
+      "rect": [
+        530,
+        594,
+        1290,
+        66
+      ],
+      "sliced": true
+    },
+    {
+      "name": "Mã tiến độ / Chủ đề",
+      "type": "TextMeshProUGUI",
+      "text": "Mã tiến độ / Chủ đề",
+      "rect": [
+        537,
+        607,
+        372,
+        49
+      ],
+      "fontSize": 17,
+      "fontWeight": "Bold",
+      "color": "#edc36f",
+      "alignment": "left",
+      "wrap": false
+    },
+    {
+      "name": "Lần\nlàm",
+      "type": "TextMeshProUGUI",
+      "text": "Lần\nlàm",
+      "rect": [
+        923,
+        607,
+        82,
+        49
+      ],
+      "fontSize": 17,
+      "fontWeight": "Bold",
+      "color": "#edc36f",
+      "alignment": "center",
+      "wrap": false
+    },
+    {
+      "name": "Điểm\ncao nhất",
+      "type": "TextMeshProUGUI",
+      "text": "Điểm\ncao nhất",
+      "rect": [
+        1019,
+        607,
+        94,
+        49
+      ],
+      "fontSize": 17,
+      "fontWeight": "Bold",
+      "color": "#edc36f",
+      "alignment": "center",
+      "wrap": false
+    },
+    {
+      "name": "Điểm\ngần nhất",
+      "type": "TextMeshProUGUI",
+      "text": "Điểm\ngần nhất",
+      "rect": [
+        1127,
+        607,
+        94,
+        49
+      ],
+      "fontSize": 17,
+      "fontWeight": "Bold",
+      "color": "#edc36f",
+      "alignment": "center",
+      "wrap": false
+    },
+    {
+      "name": "Tỷ lệ\nđúng",
+      "type": "TextMeshProUGUI",
+      "text": "Tỷ lệ\nđúng",
+      "rect": [
+        1235,
+        607,
+        130,
+        49
+      ],
+      "fontSize": 17,
+      "fontWeight": "Bold",
+      "color": "#edc36f",
+      "alignment": "center",
+      "wrap": false
+    },
+    {
+      "name": "Trạng thái",
+      "type": "TextMeshProUGUI",
+      "text": "Trạng thái",
+      "rect": [
+        1379,
+        607,
+        220,
+        49
+      ],
+      "fontSize": 17,
+      "fontWeight": "Bold",
+      "color": "#edc36f",
+      "alignment": "left",
+      "wrap": false
+    },
+    {
+      "name": "Lần học\ncuối",
+      "type": "TextMeshProUGUI",
+      "text": "Lần học\ncuối",
+      "rect": [
+        1613,
+        607,
+        200,
+        49
+      ],
+      "fontSize": 17,
+      "fontWeight": "Bold",
+      "color": "#edc36f",
+      "alignment": "center",
+      "wrap": false
+    },
+    {
+      "name": "Progress_TD002",
+      "type": "Image",
+      "sprite": "Sprites/UI/row_normal.png",
+      "rect": [
+        530,
+        674,
+        1290,
+        104
+      ],
+      "sliced": true
+    },
+    {
+      "name": "TienDoID_TD002",
+      "type": "TextMeshProUGUI",
+      "text": "TD002",
+      "rect": [
+        548,
+        684,
+        350,
+        24
+      ],
+      "fontSize": 16,
+      "fontWeight": "Bold",
+      "color": "#7edac1",
+      "alignment": "left",
+      "wrap": true
+    },
+    {
+      "name": "Chương 1: Mở đầu và Các phép đo",
+      "type": "TextMeshProUGUI",
+      "text": "Chương 1: Mở đầu và Các phép đo",
+      "rect": [
+        548,
+        713,
+        352,
+        59
+      ],
+      "fontSize": 18,
+      "fontWeight": "Regular",
+      "color": "#fff6dc",
+      "alignment": "left",
+      "wrap": true
+    },
+    {
+      "name": "3",
+      "type": "TextMeshProUGUI",
+      "text": "3",
+      "rect": [
+        926,
+        711,
+        76,
+        34
+      ],
+      "fontSize": 22,
+      "fontWeight": "Regular",
+      "color": "#fff6dc",
+      "alignment": "center",
+      "wrap": true
+    },
+    {
+      "name": "100",
+      "type": "TextMeshProUGUI",
+      "text": "100",
+      "rect": [
+        1022,
+        711,
+        88,
+        34
+      ],
+      "fontSize": 22,
+      "fontWeight": "Bold",
+      "color": "#fff6dc",
+      "alignment": "center",
+      "wrap": true
+    },
+    {
+      "name": "80",
+      "type": "TextMeshProUGUI",
+      "text": "80",
+      "rect": [
+        1130,
+        711,
+        88,
+        34
+      ],
+      "fontSize": 22,
+      "fontWeight": "Bold",
+      "color": "#fff6dc",
+      "alignment": "center",
+      "wrap": true
+    },
+    {
+      "name": "100%",
+      "type": "TextMeshProUGUI",
+      "text": "100%",
+      "rect": [
+        1238,
+        695,
+        122,
+        30
+      ],
+      "fontSize": 21,
+      "fontWeight": "Bold",
+      "color": "#a0ead2",
+      "alignment": "center",
+      "wrap": true
+    },
+    {
+      "name": "AccuracyTrack",
+      "type": "Image",
+      "sprite": "Sprites/Controls/progress_track.png",
+      "rect": [
+        1248,
+        734,
+        104,
+        13
+      ],
+      "sliced": true
+    },
+    {
+      "name": "AccuracyFill",
+      "type": "Image",
+      "sprite": "Sprites/Controls/progress_fill.png",
+      "rect": [
+        1248,
+        734,
+        104,
+        13
+      ],
+      "sliced": true
+    },
+    {
+      "name": "Status_TD002",
+      "type": "Image",
+      "sprite": "Sprites/UI/tag_amber.png",
+      "rect": [
+        1388,
+        706,
+        204,
+        42
+      ],
+      "sliced": true
+    },
+    {
+      "name": "Đang học",
+      "type": "TextMeshProUGUI",
+      "text": "Đang học",
+      "rect": [
+        1396,
+        717,
+        188,
+        27
+      ],
+      "fontSize": 16,
+      "fontWeight": "Bold",
+      "color": "#ffdc99",
+      "alignment": "center",
+      "wrap": true
+    },
+    {
+      "name": "30/06/2026",
+      "type": "TextMeshProUGUI",
+      "text": "30/06/2026",
+      "rect": [
+        1616,
+        711,
+        192,
+        34
+      ],
+      "fontSize": 18,
+      "fontWeight": "Regular",
+      "color": "#fff6dc",
+      "alignment": "center",
+      "wrap": true
+    },
+    {
+      "name": "Progress_TD003",
+      "type": "Image",
+      "sprite": "Sprites/UI/row_normal.png",
+      "rect": [
+        530,
+        786,
+        1290,
+        104
+      ],
+      "sliced": true
+    },
+    {
+      "name": "TienDoID_TD003",
+      "type": "TextMeshProUGUI",
+      "text": "TD003",
+      "rect": [
+        548,
+        796,
+        350,
+        24
+      ],
+      "fontSize": 16,
+      "fontWeight": "Bold",
+      "color": "#7edac1",
+      "alignment": "left",
+      "wrap": true
+    },
+    {
+      "name": "Chương 5: Hỗn hợp, dung dịch và Phương p",
+      "type": "TextMeshProUGUI",
+      "text": "Chương 5: Hỗn hợp, dung dịch và Phương pháp tách chất",
+      "rect": [
+        548,
+        825,
+        352,
+        59
+      ],
+      "fontSize": 18,
+      "fontWeight": "Regular",
+      "color": "#fff6dc",
+      "alignment": "left",
+      "wrap": true
+    },
+    {
+      "name": "4",
+      "type": "TextMeshProUGUI",
+      "text": "4",
+      "rect": [
+        926,
+        823,
+        76,
+        34
+      ],
+      "fontSize": 22,
+      "fontWeight": "Regular",
+      "color": "#fff6dc",
+      "alignment": "center",
+      "wrap": true
+    },
+    {
+      "name": "60",
+      "type": "TextMeshProUGUI",
+      "text": "60",
+      "rect": [
+        1022,
+        823,
+        88,
+        34
+      ],
+      "fontSize": 22,
+      "fontWeight": "Bold",
+      "color": "#fff6dc",
+      "alignment": "center",
+      "wrap": true
+    },
+    {
+      "name": "60",
+      "type": "TextMeshProUGUI",
+      "text": "60",
+      "rect": [
+        1130,
+        823,
+        88,
+        34
+      ],
+      "fontSize": 22,
+      "fontWeight": "Bold",
+      "color": "#fff6dc",
+      "alignment": "center",
+      "wrap": true
+    },
+    {
+      "name": "60%",
+      "type": "TextMeshProUGUI",
+      "text": "60%",
+      "rect": [
+        1238,
+        807,
+        122,
+        30
+      ],
+      "fontSize": 21,
+      "fontWeight": "Bold",
+      "color": "#a0ead2",
+      "alignment": "center",
+      "wrap": true
+    },
+    {
+      "name": "AccuracyTrack",
+      "type": "Image",
+      "sprite": "Sprites/Controls/progress_track.png",
+      "rect": [
+        1248,
+        846,
+        104,
+        13
+      ],
+      "sliced": true
+    },
+    {
+      "name": "AccuracyFill",
+      "type": "Image",
+      "sprite": "Sprites/Controls/progress_fill.png",
+      "rect": [
+        1248,
+        846,
+        62,
+        13
+      ],
+      "sliced": true
+    },
+    {
+      "name": "Status_TD003",
+      "type": "Image",
+      "sprite": "Sprites/UI/tag_green.png",
+      "rect": [
+        1388,
+        818,
+        204,
+        42
+      ],
+      "sliced": true
+    },
+    {
+      "name": "Đã hoàn thành",
+      "type": "TextMeshProUGUI",
+      "text": "Đã hoàn thành",
+      "rect": [
+        1396,
+        829,
+        188,
+        27
+      ],
+      "fontSize": 16,
+      "fontWeight": "Bold",
+      "color": "#cbecd7",
+      "alignment": "center",
+      "wrap": true
+    },
+    {
+      "name": "27/06/2026",
+      "type": "TextMeshProUGUI",
+      "text": "27/06/2026",
+      "rect": [
+        1616,
+        823,
+        192,
+        34
+      ],
+      "fontSize": 18,
+      "fontWeight": "Regular",
+      "color": "#fff6dc",
+      "alignment": "center",
+      "wrap": true
+    },
+    {
+      "name": "Hiển thị 2 chủ đề  ·  Tỷ lệ đúng thể hiệ",
+      "type": "TextMeshProUGUI",
+      "text": "Hiển thị 2 chủ đề  ·  Tỷ lệ đúng thể hiện độ chính xác khi làm bài.",
+      "rect": [
+        535,
+        912,
+        1280,
+        28
+      ],
+      "fontSize": 17,
+      "fontWeight": "Regular",
+      "color": "#a4c3b9",
+      "alignment": "left",
+      "wrap": true
+    },
+    {
+      "name": "Kết quả được cập nhật từ hoạt động học t",
+      "type": "TextMeshProUGUI",
+      "text": "Kết quả được cập nhật từ hoạt động học tập của học sinh.",
+      "rect": [
+        76,
+        994,
+        1000,
+        30
+      ],
+      "fontSize": 18,
+      "fontWeight": "Regular",
+      "color": "#c5ddd3",
+      "alignment": "left",
+      "wrap": true
+    },
+    {
+      "name": "Quay về tổng quan",
+      "type": "Button",
+      "sprite": "Sprites/UI/button_teal.png",
+      "rect": [
+        1552,
+        980,
+        298,
+        72
+      ],
+      "sliced": true
+    },
+    {
+      "name": "Quay về tổng quan",
+      "type": "TextMeshProUGUI",
+      "text": "Quay về tổng quan",
+      "rect": [
+        1572,
+        992,
+        258,
+        52
+      ],
+      "fontSize": 22,
+      "fontWeight": "Bold",
+      "color": "#fff6dc",
+      "alignment": "center",
+      "wrap": false
+    }
+  ]
+}

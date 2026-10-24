@@ -1,0 +1,600 @@
+{
+  "background_forest_1920x1080": {
+    "file": "Sprites/Backgrounds/background_forest_1920x1080.png",
+    "size": [
+      1920,
+      1080
+    ],
+    "border": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "overlay_dim": {
+    "file": "Sprites/Backgrounds/overlay_dim.png",
+    "size": [
+      32,
+      32
+    ],
+    "border": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "teacher_full": {
+    "file": "Sprites/Characters/teacher_full.png",
+    "size": [
+      703,
+      1110
+    ],
+    "border": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "teacher_avatar": {
+    "file": "Sprites/Characters/teacher_avatar.png",
+    "size": [
+      600,
+      550
+    ],
+    "border": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "panel_main": {
+    "file": "Sprites/UI/panel_main.png",
+    "size": [
+      160,
+      160
+    ],
+    "border": [
+      24,
+      24,
+      24,
+      24
+    ]
+  },
+  "panel_card": {
+    "file": "Sprites/UI/panel_card.png",
+    "size": [
+      160,
+      160
+    ],
+    "border": [
+      24,
+      24,
+      24,
+      24
+    ]
+  },
+  "header_account": {
+    "file": "Sprites/UI/header_account.png",
+    "size": [
+      160,
+      96
+    ],
+    "border": [
+      24,
+      24,
+      24,
+      24
+    ]
+  },
+  "button_gold": {
+    "file": "Sprites/UI/button_gold.png",
+    "size": [
+      128,
+      80
+    ],
+    "border": [
+      24,
+      24,
+      24,
+      24
+    ]
+  },
+  "button_teal": {
+    "file": "Sprites/UI/button_teal.png",
+    "size": [
+      128,
+      80
+    ],
+    "border": [
+      24,
+      24,
+      24,
+      24
+    ]
+  },
+  "button_dark": {
+    "file": "Sprites/UI/button_dark.png",
+    "size": [
+      128,
+      80
+    ],
+    "border": [
+      24,
+      24,
+      24,
+      24
+    ]
+  },
+  "avatar_frame": {
+    "file": "Sprites/UI/avatar_frame.png",
+    "size": [
+      120,
+      120
+    ],
+    "border": [
+      24,
+      24,
+      24,
+      24
+    ]
+  },
+  "field_cream": {
+    "file": "Sprites/UI/field_cream.png",
+    "size": [
+      80,
+      80
+    ],
+    "border": [
+      10,
+      10,
+      10,
+      10
+    ]
+  },
+  "field_readonly": {
+    "file": "Sprites/UI/field_readonly.png",
+    "size": [
+      80,
+      80
+    ],
+    "border": [
+      10,
+      10,
+      10,
+      10
+    ]
+  },
+  "panel_inset": {
+    "file": "Sprites/UI/panel_inset.png",
+    "size": [
+      80,
+      80
+    ],
+    "border": [
+      10,
+      10,
+      10,
+      10
+    ]
+  },
+  "row_normal": {
+    "file": "Sprites/UI/row_normal.png",
+    "size": [
+      80,
+      80
+    ],
+    "border": [
+      10,
+      10,
+      10,
+      10
+    ]
+  },
+  "row_selected": {
+    "file": "Sprites/UI/row_selected.png",
+    "size": [
+      80,
+      80
+    ],
+    "border": [
+      10,
+      10,
+      10,
+      10
+    ]
+  },
+  "tag_green": {
+    "file": "Sprites/UI/tag_green.png",
+    "size": [
+      80,
+      48
+    ],
+    "border": [
+      10,
+      10,
+      10,
+      10
+    ]
+  },
+  "tag_amber": {
+    "file": "Sprites/UI/tag_amber.png",
+    "size": [
+      80,
+      48
+    ],
+    "border": [
+      10,
+      10,
+      10,
+      10
+    ]
+  },
+  "tag_blue": {
+    "file": "Sprites/UI/tag_blue.png",
+    "size": [
+      80,
+      48
+    ],
+    "border": [
+      10,
+      10,
+      10,
+      10
+    ]
+  },
+  "scroll_track": {
+    "file": "Sprites/UI/scroll_track.png",
+    "size": [
+      32,
+      80
+    ],
+    "border": [
+      10,
+      10,
+      10,
+      10
+    ]
+  },
+  "scroll_thumb": {
+    "file": "Sprites/UI/scroll_thumb.png",
+    "size": [
+      32,
+      80
+    ],
+    "border": [
+      10,
+      10,
+      10,
+      10
+    ]
+  },
+  "icon_back": {
+    "file": "Sprites/Icons/icon_back.png",
+    "size": [
+      64,
+      64
+    ],
+    "border": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "icon_chevron": {
+    "file": "Sprites/Icons/icon_chevron.png",
+    "size": [
+      64,
+      64
+    ],
+    "border": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "icon_check": {
+    "file": "Sprites/Icons/icon_check.png",
+    "size": [
+      64,
+      64
+    ],
+    "border": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "icon_save": {
+    "file": "Sprites/Icons/icon_save.png",
+    "size": [
+      64,
+      64
+    ],
+    "border": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "icon_search": {
+    "file": "Sprites/Icons/icon_search.png",
+    "size": [
+      64,
+      64
+    ],
+    "border": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "icon_refresh": {
+    "file": "Sprites/Icons/icon_refresh.png",
+    "size": [
+      64,
+      64
+    ],
+    "border": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "icon_upload": {
+    "file": "Sprites/Icons/icon_upload.png",
+    "size": [
+      64,
+      64
+    ],
+    "border": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "icon_exit": {
+    "file": "Sprites/Icons/icon_exit.png",
+    "size": [
+      64,
+      64
+    ],
+    "border": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "icon_gear": {
+    "file": "Sprites/Icons/icon_gear.png",
+    "size": [
+      64,
+      64
+    ],
+    "border": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "icon_trophy": {
+    "file": "Sprites/Icons/icon_trophy.png",
+    "size": [
+      64,
+      64
+    ],
+    "border": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "icon_person": {
+    "file": "Sprites/Icons/icon_person.png",
+    "size": [
+      64,
+      64
+    ],
+    "border": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "icon_list": {
+    "file": "Sprites/Icons/icon_list.png",
+    "size": [
+      64,
+      64
+    ],
+    "border": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "icon_scroll": {
+    "file": "Sprites/Icons/icon_scroll.png",
+    "size": [
+      64,
+      64
+    ],
+    "border": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "icon_chart": {
+    "file": "Sprites/Icons/icon_chart.png",
+    "size": [
+      64,
+      64
+    ],
+    "border": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "icon_close": {
+    "file": "Sprites/Icons/icon_close.png",
+    "size": [
+      64,
+      64
+    ],
+    "border": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "icon_chevron_ink": {
+    "file": "Sprites/Icons/icon_chevron_ink.png",
+    "size": [
+      64,
+      64
+    ],
+    "border": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "icon_search_ink": {
+    "file": "Sprites/Icons/icon_search_ink.png",
+    "size": [
+      64,
+      64
+    ],
+    "border": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "radio_off": {
+    "file": "Sprites/Controls/radio_off.png",
+    "size": [
+      40,
+      40
+    ],
+    "border": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "radio_on": {
+    "file": "Sprites/Controls/radio_on.png",
+    "size": [
+      40,
+      40
+    ],
+    "border": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "orb_mint": {
+    "file": "Sprites/Menu/orb_mint.png",
+    "size": [
+      200,
+      200
+    ],
+    "border": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "orb_amber": {
+    "file": "Sprites/Menu/orb_amber.png",
+    "size": [
+      200,
+      200
+    ],
+    "border": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "orb_blue": {
+    "file": "Sprites/Menu/orb_blue.png",
+    "size": [
+      200,
+      200
+    ],
+    "border": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "progress_track": {
+    "file": "Sprites/Controls/progress_track.png",
+    "size": [
+      80,
+      20
+    ],
+    "border": [
+      6,
+      6,
+      6,
+      6
+    ]
+  },
+  "progress_fill": {
+    "file": "Sprites/Controls/progress_fill.png",
+    "size": [
+      80,
+      20
+    ],
+    "border": [
+      6,
+      6,
+      6,
+      6
+    ]
+  },
+  "sparkle": {
+    "file": "Sprites/Menu/sparkle.png",
+    "size": [
+      32,
+      32
+    ],
+    "border": [
+      0,
+      0,
+      0,
+      0
+    ]
+  }
+}

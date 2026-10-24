@@ -1,0 +1,433 @@
+[
+  {
+    "screen": "02_Trac_nghiem",
+    "key": "id",
+    "label": "Mã câu hỏi",
+    "kind": "text",
+    "readonly": true,
+    "required": true,
+    "rect": [
+      94,
+      374,
+      352,
+      56
+    ]
+  },
+  {
+    "screen": "02_Trac_nghiem",
+    "key": "monID",
+    "label": "Môn học",
+    "kind": "dropdown",
+    "readonly": false,
+    "required": true,
+    "rect": [
+      94,
+      478,
+      352,
+      56
+    ]
+  },
+  {
+    "screen": "02_Trac_nghiem",
+    "key": "Chương / Chủ đề",
+    "label": "Chương / Chủ đề",
+    "kind": "dropdown",
+    "readonly": false,
+    "required": true,
+    "rect": [
+      94,
+      582,
+      352,
+      80
+    ]
+  },
+  {
+    "screen": "02_Trac_nghiem",
+    "key": "difficulty",
+    "label": "Độ khó",
+    "kind": "dropdown",
+    "readonly": false,
+    "required": true,
+    "rect": [
+      94,
+      708,
+      352,
+      56
+    ]
+  },
+  {
+    "screen": "02_Trac_nghiem",
+    "key": "points",
+    "label": "Điểm câu hỏi",
+    "kind": "number",
+    "readonly": false,
+    "required": true,
+    "rect": [
+      94,
+      812,
+      352,
+      56
+    ]
+  },
+  {
+    "screen": "02_Trac_nghiem",
+    "key": "question",
+    "label": "Nội dung câu hỏi",
+    "kind": "multiline",
+    "readonly": false,
+    "required": true,
+    "rect": [
+      512,
+      374,
+      1308,
+      108
+    ]
+  },
+  {
+    "screen": "02_Trac_nghiem",
+    "key": "option_a",
+    "label": "Phương án A",
+    "kind": "text",
+    "readonly": false,
+    "required": true,
+    "rect": [
+      512,
+      536,
+      640,
+      62
+    ]
+  },
+  {
+    "screen": "02_Trac_nghiem",
+    "key": "option_b",
+    "label": "Phương án B",
+    "kind": "text",
+    "readonly": false,
+    "required": true,
+    "rect": [
+      1180,
+      536,
+      640,
+      62
+    ]
+  },
+  {
+    "screen": "02_Trac_nghiem",
+    "key": "option_c",
+    "label": "Phương án C",
+    "kind": "text",
+    "readonly": false,
+    "required": true,
+    "rect": [
+      512,
+      644,
+      640,
+      62
+    ]
+  },
+  {
+    "screen": "02_Trac_nghiem",
+    "key": "option_d",
+    "label": "Phương án D",
+    "kind": "text",
+    "readonly": false,
+    "required": true,
+    "rect": [
+      1180,
+      644,
+      640,
+      62
+    ]
+  },
+  {
+    "screen": "02_Trac_nghiem",
+    "key": "correct_option",
+    "label": "Đáp án đúng",
+    "kind": "ToggleGroup (A/B/C/D, exactly one)",
+    "readonly": false,
+    "required": true,
+    "rect": [
+      512,
+      536,
+      1308,
+      170
+    ]
+  },
+  {
+    "screen": "02_Trac_nghiem",
+    "key": "explanation",
+    "label": "Giải thích đáp án",
+    "kind": "multiline",
+    "readonly": false,
+    "required": false,
+    "rect": [
+      512,
+      792,
+      1308,
+      123
+    ]
+  },
+  {
+    "screen": "03_Tu_luan",
+    "key": "CauHoiID",
+    "label": "Mã câu hỏi",
+    "kind": "text",
+    "readonly": true,
+    "required": true,
+    "rect": [
+      94,
+      372,
+      418,
+      52
+    ]
+  },
+  {
+    "screen": "03_Tu_luan",
+    "key": "monID",
+    "label": "Môn học",
+    "kind": "dropdown",
+    "readonly": false,
+    "required": true,
+    "rect": [
+      94,
+      464,
+      418,
+      52
+    ]
+  },
+  {
+    "screen": "03_Tu_luan",
+    "key": "Chương/Chủ đề",
+    "label": "Chương / Chủ đề",
+    "kind": "dropdown",
+    "readonly": false,
+    "required": true,
+    "rect": [
+      94,
+      556,
+      418,
+      76
+    ]
+  },
+  {
+    "screen": "03_Tu_luan",
+    "key": "difficulty",
+    "label": "Độ khó",
+    "kind": "dropdown",
+    "readonly": false,
+    "required": true,
+    "rect": [
+      94,
+      674,
+      196,
+      52
+    ]
+  },
+  {
+    "screen": "03_Tu_luan",
+    "key": "DiemToiDa",
+    "label": "Điểm tối đa",
+    "kind": "number",
+    "readonly": false,
+    "required": true,
+    "rect": [
+      310,
+      674,
+      202,
+      52
+    ]
+  },
+  {
+    "screen": "03_Tu_luan",
+    "key": "TrangThai",
+    "label": "Trạng thái",
+    "kind": "dropdown",
+    "readonly": false,
+    "required": true,
+    "rect": [
+      94,
+      766,
+      418,
+      52
+    ]
+  },
+  {
+    "screen": "03_Tu_luan",
+    "key": "NguonTao",
+    "label": "Nguồn tạo",
+    "kind": "text",
+    "readonly": false,
+    "required": true,
+    "rect": [
+      94,
+      858,
+      418,
+      52
+    ]
+  },
+  {
+    "screen": "03_Tu_luan",
+    "key": "Question",
+    "label": "Nội dung câu hỏi",
+    "kind": "multiline",
+    "readonly": false,
+    "required": true,
+    "rect": [
+      548,
+      372,
+      1272,
+      104
+    ]
+  },
+  {
+    "screen": "03_Tu_luan",
+    "key": "DapAnThamKhao",
+    "label": "Đáp án tham khảo",
+    "kind": "multiline",
+    "readonly": false,
+    "required": true,
+    "rect": [
+      548,
+      530,
+      924,
+      108
+    ]
+  },
+  {
+    "screen": "03_Tu_luan",
+    "key": "HuongDanChamAI",
+    "label": "Hướng dẫn chấm AI",
+    "kind": "multiline",
+    "readonly": false,
+    "required": true,
+    "rect": [
+      548,
+      690,
+      924,
+      116
+    ]
+  },
+  {
+    "screen": "03_Tu_luan",
+    "key": "HinhAnh",
+    "label": "Hình ảnh minh họa",
+    "kind": "file picker + preview + remove",
+    "readonly": false,
+    "required": false,
+    "rect": [
+      1500,
+      530,
+      320,
+      276
+    ]
+  },
+  {
+    "screen": "03_Tu_luan",
+    "key": "GiaoVienID",
+    "label": "Mã giáo viên",
+    "kind": "text",
+    "readonly": true,
+    "required": true,
+    "rect": [
+      548,
+      868,
+      420,
+      48
+    ]
+  },
+  {
+    "screen": "03_Tu_luan",
+    "key": "NgayTao",
+    "label": "Ngày tạo",
+    "kind": "text",
+    "readonly": true,
+    "required": true,
+    "rect": [
+      996,
+      868,
+      824,
+      48
+    ]
+  },
+  {
+    "screen": "04_Tien_do",
+    "key": "TienDoID",
+    "label": "Mã tiến độ",
+    "kind": "display",
+    "readonly": true,
+    "required": true,
+    "rect": null
+  },
+  {
+    "screen": "04_Tien_do",
+    "key": "UserID",
+    "label": "Mã học sinh",
+    "kind": "display",
+    "readonly": true,
+    "required": true,
+    "rect": null
+  },
+  {
+    "screen": "04_Tien_do",
+    "key": "ChuongChuDe",
+    "label": "Chương / Chủ đề",
+    "kind": "display",
+    "readonly": true,
+    "required": true,
+    "rect": null
+  },
+  {
+    "screen": "04_Tien_do",
+    "key": "SoLanLam",
+    "label": "Số lần làm",
+    "kind": "display",
+    "readonly": true,
+    "required": true,
+    "rect": null
+  },
+  {
+    "screen": "04_Tien_do",
+    "key": "DiemCaoNhat",
+    "label": "Điểm cao nhất",
+    "kind": "display",
+    "readonly": true,
+    "required": true,
+    "rect": null
+  },
+  {
+    "screen": "04_Tien_do",
+    "key": "DiemGanNhat",
+    "label": "Điểm gần nhất",
+    "kind": "display",
+    "readonly": true,
+    "required": true,
+    "rect": null
+  },
+  {
+    "screen": "04_Tien_do",
+    "key": "TyLeDung",
+    "label": "Tỷ lệ đúng",
+    "kind": "display",
+    "readonly": true,
+    "required": true,
+    "rect": null
+  },
+  {
+    "screen": "04_Tien_do",
+    "key": "TrangThai",
+    "label": "Trạng thái",
+    "kind": "display",
+    "readonly": true,
+    "required": true,
+    "rect": null
+  },
+  {
+    "screen": "04_Tien_do",
+    "key": "LanHocCuoi",
+    "label": "Lần học cuối",
+    "kind": "display",
+    "readonly": true,
+    "required": true,
+    "rect": null
+  }
+]

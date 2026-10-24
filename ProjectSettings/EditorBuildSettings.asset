@@ -42,7 +42,7 @@ EditorBuildSettings:
     path: Assets/Scenes/HomePage.unity
     guid: 45788866c305da040971b248e2245198
   - enabled: 1
-    path: Assets/Scenes/Biology/GiaoVien.unity
+    path: Assets/Scenes/GiaoVien.unity
     guid: 7b59d151183059c438ed057bfa5d2de3
   - enabled: 1
     path: Assets/Scenes/Biology/ChonBai.unity
@@ -62,5 +62,14 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Biology/XepHang.unity
     guid: 70abc33e93595754dabffc794f85315e
+  - enabled: 1
+    path: Assets/Scenes/GiaoVienTracNghiem.unity
+    guid: f49c404f2a9ffb142bcbf9e98ecb0f92
+  - enabled: 1
+    path: Assets/Scenes/GiaoVienTuLuan.unity
+    guid: ebcedc456eccdec4dbc2d762b146db80
+  - enabled: 1
+    path: Assets/Scenes/GiaoVienTienDo.unity
+    guid: bd39e91f990c9eb40af007457d1cb566
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
