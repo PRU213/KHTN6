@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
 /// <summary>
@@ -74,6 +74,14 @@ public class Enemy : MonoBehaviour
         string currentScene = SceneManager.GetActiveScene().name;
         if (GameData.Instance != null)
             GameData.Instance.lastSceneName = currentScene;
+
+        // Nếu người chơi chọn hình thức Tự luận thì vào scene TuLuan
+        bool isTuLuan = GameSession.questionSceneName == "TuLuan" || (GameSession.QuestionType != null && (GameSession.QuestionType.IndexOf("Tá»±", System.StringComparison.OrdinalIgnoreCase) >= 0 || GameSession.QuestionType.IndexOf("Luáº­n", System.StringComparison.OrdinalIgnoreCase) >= 0 || GameSession.QuestionType.IndexOf("TuLuan", System.StringComparison.OrdinalIgnoreCase) >= 0));
+        if (isTuLuan)
+        {
+            SceneManager.LoadScene("TuLuan");
+            return;
+        }
 
         if (currentScene == "bean_1")
             SceneManager.LoadScene("bean_1_question");

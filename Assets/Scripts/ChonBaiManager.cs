@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,6 +16,11 @@ public class ChonBaiManager : MonoBehaviour
     public Button btnTrungBinh;
     public Button btnKho;
     public Button btnTongHop;
+
+    [Header("Hình thức làm bài")]
+    public Button btnTracNghiem;
+    public Button btnTuLuan;
+    private string selectedQuestionType = "Trắc nghiệm";
 
     [Header("Settings")]
     public string monHocFilter = "Sinh"; // Changed to Sinh học as per explicit mentions
@@ -63,6 +68,18 @@ public class ChonBaiManager : MonoBehaviour
 
         SelectDifficulty("Tổng hợp");
 
+        if (btnTracNghiem != null)
+        {
+            btnTracNghiem.onClick.RemoveAllListeners();
+            btnTracNghiem.onClick.AddListener(() => SelectQuestionType("Trắc nghiệm"));
+        }
+        if (btnTuLuan != null)
+        {
+            btnTuLuan.onClick.RemoveAllListeners();
+            btnTuLuan.onClick.AddListener(() => SelectQuestionType("Tự luận"));
+        }
+        SelectQuestionType("Trắc nghiệm");
+
         StartCoroutine(LoadDataFromSheet());
     }
 
@@ -80,6 +97,16 @@ public class ChonBaiManager : MonoBehaviour
             else if (t.name == "TrungBinh") btnTrungBinh = t.GetComponent<Button>() ?? t.gameObject.AddComponent<Button>();
             else if (t.name == "Kho") btnKho = t.GetComponent<Button>() ?? t.gameObject.AddComponent<Button>();
             else if (t.name == "TongHop") btnTongHop = t.GetComponent<Button>() ?? t.gameObject.AddComponent<Button>();
+            else if (t.name == "TracNghiem")
+            {
+                btnTracNghiem = t.GetComponent<Button>() ?? t.gameObject.AddComponent<Button>();
+                btnTracNghiem.targetGraphic = t.GetComponent<Image>();
+            }
+            else if (t.name == "TuLuan")
+            {
+                btnTuLuan = t.GetComponent<Button>() ?? t.gameObject.AddComponent<Button>();
+                btnTuLuan.targetGraphic = t.GetComponent<Image>();
+            }
             else if (t.name == "HomePage")
             {
                 Button homeBtn = t.GetComponent<Button>() ?? t.gameObject.AddComponent<Button>();
@@ -387,11 +414,67 @@ public class ChonBaiManager : MonoBehaviour
         }
     }
 
+    private void ApplyQuestionTypeHighlight(Button btn, bool isSelected)
+    {
+        if (btn == null) return;
+
+        // Dọn dẹp nếu trước đó có tạo GreenBorderBox hoặc Outline
+        Transform borderT = btn.transform.Find("GreenBorderBox");
+        if (borderT != null)
+        {
+            if (Application.isPlaying) Destroy(borderT.gameObject);
+            else DestroyImmediate(borderT.gameObject);
+        }
+
+        Outline outline = btn.GetComponent<Outline>();
+        if (outline != null)
+        {
+            if (Application.isPlaying) Destroy(outline);
+            else DestroyImmediate(outline);
+        }
+
+        btn.transform.localScale = Vector3.one;
+
+        // Hiệu ứng giống hệt chọn độ khó: đổi màu Image sang selectedColor / normalColor
+        Image img = btn.GetComponent<Image>();
+        if (img != null)
+        {
+            img.color = isSelected ? selectedColor : normalColor;
+        }
+    }
+
+    private void SelectQuestionType(string type)
+    {
+        bool isTuLuan = type != null && (
+            type.IndexOf("Tự", System.StringComparison.OrdinalIgnoreCase) >= 0 ||
+            type.IndexOf("Luận", System.StringComparison.OrdinalIgnoreCase) >= 0 ||
+            type.Equals("TuLuan", System.StringComparison.OrdinalIgnoreCase));
+
+        selectedQuestionType = isTuLuan ? "Tự luận" : "Trắc nghiệm";
+        GameSession.QuestionType = selectedQuestionType;
+
+        ApplyQuestionTypeHighlight(btnTracNghiem, !isTuLuan);
+        ApplyQuestionTypeHighlight(btnTuLuan, isTuLuan);
+
+        Debug.Log($"[ChonBaiManager] Đã chọn dạng bài: {selectedQuestionType}");
+    }
+
     private void StartGame()
     {
         // Store selected options
         PlayerPrefs.SetString("SelectedChapter", selectedChapter);
         PlayerPrefs.SetString("SelectedDifficulty", selectedDifficulty);
+
+        bool isTuLuan = selectedQuestionType != null && (
+            selectedQuestionType.IndexOf("Tự", System.StringComparison.OrdinalIgnoreCase) >= 0 ||
+            selectedQuestionType.IndexOf("Luận", System.StringComparison.OrdinalIgnoreCase) >= 0 ||
+            selectedQuestionType.Equals("TuLuan", System.StringComparison.OrdinalIgnoreCase));
+
+        GameSession.QuestionType = isTuLuan ? "Tự luận" : "Trắc nghiệm";
+        GameSession.Subject = "Sinh học";
+        GameSession.questionSceneName = isTuLuan ? "TuLuan" : "bean_1_question";
+
+        PlayerPrefs.SetString("SelectedQuestionType", GameSession.QuestionType);
         PlayerPrefs.Save();
 
         if (GameData.Instance == null)
@@ -406,5 +489,3 @@ public class ChonBaiManager : MonoBehaviour
     }
 
 }
-
-

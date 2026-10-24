@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -31,6 +31,30 @@ public class ChooseGameSettings : MonoBehaviour
         if (backButton != null)
         {
             backButton.onClick.AddListener(BackToGameSelect);
+        }
+
+        if (multipleChoiceToggle != null)
+        {
+            multipleChoiceToggle.onValueChanged.AddListener((isOn) =>
+            {
+                if (isOn)
+                {
+                    GameSession.QuestionType = "Trắc nghiệm";
+                    GameSession.questionSceneName = "bean_1_question";
+                }
+            });
+        }
+
+        if (essayToggle != null)
+        {
+            essayToggle.onValueChanged.AddListener((isOn) =>
+            {
+                if (isOn)
+                {
+                    GameSession.QuestionType = "Tự luận";
+                    GameSession.questionSceneName = "TuLuan";
+                }
+            });
         }
     }
 
@@ -66,10 +90,19 @@ public class ChooseGameSettings : MonoBehaviour
 
 
         // ============================
-        // 2. HIỆN TẠI CHỈ LÀM TRẮC NGHIỆM
+        // 2. HÌNH THỨC LÀM BÀI
         // ============================
 
-        GameSession.QuestionType = "Trắc nghiệm";
+        if (essayToggle != null && essayToggle.isOn)
+        {
+            GameSession.QuestionType = "Tự luận";
+            GameSession.questionSceneName = "TuLuan";
+        }
+        else
+        {
+            GameSession.QuestionType = "Trắc nghiệm";
+            GameSession.questionSceneName = "bean_1_question";
+        }
 
 
         // ============================

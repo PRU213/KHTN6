@@ -1,13 +1,25 @@
 fileFormatVersion: 2
-guid: f9e51df1af5641a40a42039d0d667def
+guid: 7c9fa2e1bceb0d6409022d9478a5a3b1
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -2982373203027873618
-    second: 06_Nut_NopBai_0
+      213: -85789995652857300
+    second: cauhoi_0
   - first:
-      213: 2810469755658132497
-    second: 06_Nut_NopBai_1
+      213: -5832659487966511984
+    second: cauhoi_1
+  - first:
+      213: 3998872774034627328
+    second: cauhoi_2
+  - first:
+      213: 5437557285356203842
+    second: cauhoi_3
+  - first:
+      213: 7701067772261258980
+    second: cauhoi_4
+  - first:
+      213: 2161068865251896869
+    second: cauhoi_5
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -49,7 +61,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -118,12 +130,34 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: 06_Nut_NopBai_0
+      name: cauhoi_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 99
-        width: 33
+        x: 15
+        y: 0
+        width: 2157
+        height: 700
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c2244d714763fcef0800000000000000
+      internalID: -85789995652857300
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cauhoi_1
+      rect:
+        serializedVersion: 2
+        x: 809
+        y: 659
+        width: 13
         height: 14
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -133,20 +167,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: ea031e58f5b7c96d0800000000000000
-      internalID: -2982373203027873618
+      spriteID: 09cb1f3391b3e0fa0800000000000000
+      internalID: -5832659487966511984
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 06_Nut_NopBai_1
+      name: cauhoi_2
       rect:
         serializedVersion: 2
-        x: 10
-        y: 0
-        width: 659
-        height: 157
+        x: 322
+        y: 23
+        width: 7
+        height: 11
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -155,8 +189,74 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 11c5bfd2a5bc00720800000000000000
-      internalID: 2810469755658132497
+      spriteID: 00b905ed999de7730800000000000000
+      internalID: 3998872774034627328
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cauhoi_3
+      rect:
+        serializedVersion: 2
+        x: 538
+        y: 15
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 24f6e77aa85167b40800000000000000
+      internalID: 5437557285356203842
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cauhoi_4
+      rect:
+        serializedVersion: 2
+        x: 1247
+        y: 15
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4e657dc3650bfda60800000000000000
+      internalID: 7701067772261258980
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cauhoi_5
+      rect:
+        serializedVersion: 2
+        x: 1349
+        y: 17
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 52eee70eea8adfd10800000000000000
+      internalID: 2161068865251896869
       vertices: []
       indices: 
       edges: []
@@ -165,7 +265,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
@@ -175,8 +275,12 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      06_Nut_NopBai_0: -2982373203027873618
-      06_Nut_NopBai_1: 2810469755658132497
+      cauhoi_0: -85789995652857300
+      cauhoi_1: -5832659487966511984
+      cauhoi_2: 3998872774034627328
+      cauhoi_3: 5437557285356203842
+      cauhoi_4: 7701067772261258980
+      cauhoi_5: 2161068865251896869
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
