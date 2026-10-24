@@ -1,8 +1,9 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Text;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -21,12 +22,17 @@ public class TuLuanController : MonoBehaviour
     private const string TULUAN_SHEET_CSV_URL =
         "https://docs.google.com/spreadsheets/d/1DcJwlN_fUDdcaQ6IfnlkMJApgWuEUqMhyZv9Kn8vfWo/export?format=csv&gid=610736773";
 
+    [Header("=== CHẨN ĐOÁN TREO SCENE ===")]
+    [Tooltip("Tắt tạm để kiểm tra treo có phải do tải Google Sheets hay không.")]
+    public bool loadQuestionsFromGoogleSheets = true;
+
     [Header("=== GIAO DIỆN CHÍNH (TỰ ĐỘNG TÌM NẾU TRỐNG) ===")]
     public TMP_Text txtCauHoi;
     public TMP_InputField inputCauTraLoi;
     public Button btnTaiAnh;
     public Image imgAnh;
     public Button btnNopBai;
+    public Button btnTamDung;
 
     [Header("=== POPUP KẾT QUẢ ===")]
     public GameObject popupKetQua;
@@ -161,24 +167,37 @@ public class TuLuanController : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+        Time.timeScale = 1f; // Khôi phục thời gian bình thường, chống lỗi đứng/dừng màn hình
         AutoBindUI();
     }
 
     private void Start()
     {
+        Time.timeScale = 1f; // Đảm bảo thời gian chạy bình thường khi bắt đầu
         Canvas canvas = GetComponentInParent<Canvas>();
         if (canvas == null) canvas = FindAnyObjectByType<Canvas>();
 
+        Debug.Log("[TuLuan DIAG] Start: Bắt đầu liên kết nút và nạp câu hỏi.");
         SetupHealthBar(canvas);
+        // Bản cũ không gắn nút Tạm Dừng ở runtime nếu chưa chạy Setup Tool.
+        SetupPauseButton(canvas);
         SetupEvents();
-        StartCoroutine(LoadQuestionRoutine());
 
-        // Tự động kích hoạt con trỏ nhấp nháy đen trong ô nhập câu trả lời
-        if (inputCauTraLoi != null)
+        // Tránh một PanelLoading còn active trong Scene che toàn bộ nút.
+        if (panelLoading == null && canvas != null)
         {
-            inputCauTraLoi.Select();
-            inputCauTraLoi.ActivateInputField();
+            Transform loadingTransform = canvas.transform.Find("PanelLoading");
+            if (loadingTransform != null) panelLoading = loadingTransform.gameObject;
         }
+        if (panelLoading != null && !isSubmitting) panelLoading.SetActive(false);
+        if (popupKetQua == null && canvas != null)
+        {
+            Transform popupTransform = canvas.transform.Find("PopupKetQua");
+            if (popupTransform != null) popupKetQua = popupTransform.gameObject;
+        }
+        if (popupKetQua != null && !isSubmitting) popupKetQua.SetActive(false);
+
+        StartCoroutine(LoadQuestionRoutine());
     }
 
     /// <summary>
@@ -269,6 +288,74 @@ public class TuLuanController : MonoBehaviour
     /// <summary>
     /// Cập nhật hiển thị số tim còn lại theo GameData.Instance.currentHealth.
     /// </summary>
+
+    /// <summary>
+    /// Tìm hoặc tự động khởi tạo nút Tạm Dừng (btnTamDung) ở góc trên bên phải Canvas.
+    /// Đồng bộ với hệ thống PauseMenuController của trò chơi.
+    /// </summary>
+    public void SetupPauseButton(Canvas canvas)
+    {
+        if (canvas == null) return;
+
+        // Ưu tiên reference đã được gán trong Inspector, không sinh nút trùng.
+        if (btnTamDung != null)
+        {
+            btnTamDung.onClick.RemoveListener(OnTamDungClicked);
+            btnTamDung.onClick.AddListener(OnTamDungClicked);
+            return;
+        }
+
+        Transform tPause = canvas.transform.Find("btnTamDung");
+        if (tPause == null)
+        {
+            GameObject pauseObj = new GameObject("btnTamDung", typeof(RectTransform));
+            pauseObj.transform.SetParent(canvas.transform, false);
+            tPause = pauseObj.transform;
+
+            RectTransform rt = pauseObj.GetComponent<RectTransform>();
+            rt.anchorMin = new Vector2(1, 1);
+            rt.anchorMax = new Vector2(1, 1);
+            rt.pivot = new Vector2(1, 1);
+            rt.anchoredPosition = new Vector2(-50, -50);
+            rt.sizeDelta = new Vector2(90, 90);
+
+            Image img = pauseObj.AddComponent<Image>();
+            Sprite pauseSprite = null;
+#if UNITY_EDITOR
+            pauseSprite = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/ChonBai/btnTamDung.png");
+            if (pauseSprite == null)
+                pauseSprite = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/SinhTuLuan/Pause.png");
+#endif
+            if (pauseSprite != null)
+            {
+                img.sprite = pauseSprite;
+                img.preserveAspect = true;
+            }
+            img.color = Color.white;
+            img.raycastTarget = true;
+        }
+
+        btnTamDung = tPause.GetComponent<Button>();
+        if (btnTamDung == null)
+        {
+            btnTamDung = tPause.gameObject.AddComponent<Button>();
+        }
+
+        btnTamDung.onClick.RemoveAllListeners();
+        btnTamDung.onClick.AddListener(OnTamDungClicked);
+    }
+
+    /// <summary>
+    /// Xử lý sự kiện nhấn nút Tạm Dừng trong màn Tự Luận.
+    /// Mở Scene TamDung cộng gộp và tạm dừng thời gian (timeScale = 0).
+    /// </summary>
+    public void OnTamDungClicked()
+    {
+        if (SceneManager.GetSceneByName("TamDung").isLoaded) return;
+        Time.timeScale = 0f;
+        SceneManager.LoadScene("TamDung", LoadSceneMode.Additive);
+    }
+
     public void UpdateHealthIcons()
     {
         int currentHp = (GameData.Instance != null) ? GameData.Instance.currentHealth : 3;
@@ -290,11 +377,9 @@ public class TuLuanController : MonoBehaviour
         if (canvas == null) canvas = FindAnyObjectByType<Canvas>();
         if (canvas == null) return;
 
-        // 1. txtCauHoi có Scrollbar trong KhungDe (chống tràn chữ)
-        ConfigureQuestionScroll(canvas);
-
-        // 2. txtCauTraLoi & TMP_InputField (Canvas -> KhungBaiLam -> txtCauTraLoi)
-        ConfigureInputField(canvas);
+        // Chỉ liên kết reference, tuyệt đối không cấu hình lại TMP/ScrollRect
+        // trong Awake hoặc khi chạy Setup Tool (tránh vòng lặp layout rebuild).
+        BindRuntimeTextFields(canvas);
 
         // 3. btnTaiAnh & Anh (Canvas -> KhungAnh -> btnTaiAnh, btnTai / Anh)
         Transform khAnh = canvas.transform.Find("KhungAnh");
@@ -339,300 +424,134 @@ public class TuLuanController : MonoBehaviour
         }
 
         // 5. Popup Kết quả: Ưu tiên Scene riêng PopupKetQua.unity, chỉ tự tạo trong Hierarchy nếu Scene chưa thêm vào Build Settings
-        if (!Application.CanStreamedLevelBeLoaded("PopupKetQua"))
+        if (Application.isPlaying &&
+            !Application.CanStreamedLevelBeLoaded("PopupKetQua") &&
+            canvas.transform.Find("PopupKetQua") != null)
         {
+            // Chỉ lấy reference của popup có sẵn, KHÔNG tạo UI mới lúc Awake.
             EnsureResultPopup(canvas);
         }
     }
 
     /// <summary>
-    /// Cấu hình khung cuộn câu hỏi (ScrollCauHoi) với Scrollbar, Viewport và RectMask2D.
-    /// Giúp câu hỏi dài cuộn được mượt mà và không bao giờ bị tràn ra ngoài KhungDe.
+    /// Chỉ liên kết UI, không Destroy component TMP, không thay đổi ScrollRect.
+    /// Chỉ tạo input overlay khi Play và chưa có TMP_InputField hợp lệ.
     /// </summary>
-    private void ConfigureQuestionScroll(Canvas canvas)
+    private void BindRuntimeTextFields(Canvas canvas)
     {
         Transform khDe = canvas.transform.Find("KhungDe");
-        if (khDe == null) return;
-
-        // 1. Tiêu đề DeBai màu đen
-        Transform tDeBai = khDe.Find("DeBai");
-        if (tDeBai != null)
+        if (txtCauHoi == null && khDe != null)
         {
-            TMP_Text tmpDeBai = tDeBai.GetComponent<TMP_Text>();
-            if (tmpDeBai != null) tmpDeBai.color = Color.black;
-        }
-
-        // 2. Khung cuộn ScrollCauHoi
-        Transform scrollObj = khDe.Find("ScrollCauHoi");
-        ScrollRect scrollRect = null;
-        Transform viewportT = null;
-
-        if (scrollObj == null)
-        {
-            GameObject newScroll = new GameObject("ScrollCauHoi", typeof(RectTransform), typeof(ScrollRect));
-            newScroll.transform.SetParent(khDe, false);
-            RectTransform rtScroll = newScroll.GetComponent<RectTransform>();
-            rtScroll.anchorMin = new Vector2(0.5f, 0.5f);
-            rtScroll.anchorMax = new Vector2(0.5f, 0.5f);
-            rtScroll.pivot = new Vector2(0.5f, 0.5f);
-            rtScroll.anchoredPosition = new Vector2(0, -15f);
-            rtScroll.sizeDelta = new Vector2(980f, 210f);
-
-            scrollRect = newScroll.GetComponent<ScrollRect>();
-            scrollRect.horizontal = false;
-            scrollRect.vertical = true;
-            scrollRect.movementType = ScrollRect.MovementType.Clamped;
-            scrollRect.scrollSensitivity = 30f;
-
-            // Viewport có RectMask2D để chống tràn chữ
-            GameObject vpObj = new GameObject("Viewport", typeof(RectTransform), typeof(RectMask2D));
-            vpObj.transform.SetParent(newScroll.transform, false);
-            RectTransform rtViewport = vpObj.GetComponent<RectTransform>();
-            rtViewport.anchorMin = Vector2.zero;
-            rtViewport.anchorMax = Vector2.one;
-            rtViewport.offsetMin = Vector2.zero;
-            rtViewport.offsetMax = new Vector2(-22f, 0f); // chừa chỗ cho thanh cuộn
-            viewportT = vpObj.transform;
-
-            // Scrollbar Vertical
-            Scrollbar scrollbar = CreateScrollbar(newScroll.transform, "Scrollbar Vertical", new Vector2(14, 0),
-                new Color(0f, 0f, 0f, 0.12f), new Color(0.6f, 0.45f, 0.3f, 0.85f));
-            RectTransform sbRt = scrollbar.GetComponent<RectTransform>();
-            sbRt.anchorMin = new Vector2(1, 0);
-            sbRt.anchorMax = new Vector2(1, 1);
-            sbRt.pivot = new Vector2(1, 0.5f);
-            sbRt.offsetMin = new Vector2(-16, 0);
-            sbRt.offsetMax = new Vector2(-2, 0);
-
-            scrollRect.viewport = rtViewport;
-            scrollRect.verticalScrollbar = scrollbar;
-            scrollRect.verticalScrollbarVisibility = ScrollRect.ScrollbarVisibility.AutoHide;
-
-            // Đưa txtCauHoi vào trong Viewport nếu đang nằm trực tiếp ở KhungDe
-            Transform existingHoi = khDe.Find("txtCauHoi");
-            if (existingHoi != null && existingHoi != newScroll.transform)
-            {
-                existingHoi.SetParent(viewportT, false);
-                RectTransform rtHoi = existingHoi.GetComponent<RectTransform>();
-                rtHoi.anchorMin = new Vector2(0, 1);
-                rtHoi.anchorMax = new Vector2(1, 1);
-                rtHoi.pivot = new Vector2(0.5f, 1f);
-                rtHoi.anchoredPosition = Vector2.zero;
-                rtHoi.sizeDelta = new Vector2(0, 0);
-
-                txtCauHoi = existingHoi.GetComponent<TMP_Text>();
-            }
-        }
-        else
-        {
-            scrollRect = scrollObj.GetComponent<ScrollRect>();
-            viewportT = scrollObj.Find("Viewport");
-            if (viewportT != null && viewportT.GetComponent<RectMask2D>() == null)
-            {
-                viewportT.gameObject.AddComponent<RectMask2D>();
-            }
-        }
-
-        // Lấy txtCauHoi trong Viewport
-        if (txtCauHoi == null)
-        {
-            if (viewportT != null)
-            {
-                txtCauHoi = viewportT.GetComponentInChildren<TMP_Text>();
-            }
+            Transform scroll = khDe.Find("ScrollCauHoi/Viewport");
+            if (scroll != null) txtCauHoi = scroll.GetComponentInChildren<TMP_Text>(true);
             if (txtCauHoi == null)
             {
-                Transform tHoi = khDe.Find("txtCauHoi");
-                if (tHoi != null) txtCauHoi = tHoi.GetComponent<TMP_Text>();
+                Transform text = khDe.Find("txtCauHoi");
+                if (text != null) txtCauHoi = text.GetComponent<TMP_Text>();
             }
         }
 
-        if (txtCauHoi != null)
+        Transform khBaiLam = canvas.transform.Find("KhungBaiLam");
+        Transform answerRoot = khBaiLam != null ? khBaiLam.Find("txtCauTraLoi") : null;
+        if (inputCauTraLoi == null && answerRoot != null)
         {
-            txtCauHoi.color = Color.black;
-            txtCauHoi.textWrappingMode = TextWrappingModes.Normal;
-            txtCauHoi.overflowMode = TextOverflowModes.Overflow;
-
-            ContentSizeFitter csf = txtCauHoi.GetComponent<ContentSizeFitter>();
-            if (csf == null) csf = txtCauHoi.gameObject.AddComponent<ContentSizeFitter>();
-            csf.horizontalFit = ContentSizeFitter.FitMode.Unconstrained;
-            csf.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
-
-            if (scrollRect != null)
-            {
-                scrollRect.content = txtCauHoi.rectTransform;
-            }
+            // Ưu tiên TMP_InputField đã được chuẩn bị sẵn trong Scene.
+            inputCauTraLoi = answerRoot.GetComponent<TMP_InputField>();
+            if (inputCauTraLoi == null)
+                inputCauTraLoi = answerRoot.GetComponentInChildren<TMP_InputField>(true);
         }
+
+        if (Application.isPlaying && answerRoot != null)
+        {
+            // Nếu bản cũ đã lưu một TMP_InputField bị hỏng vào Scene,
+            // vô hiệu hóa nó để không chạy Update(), rồi tạo input độc lập.
+            if (inputCauTraLoi != null &&
+                (inputCauTraLoi.textComponent == null || inputCauTraLoi.textViewport == null))
+            {
+                Debug.LogWarning("[TuLuan] TMP_InputField cũ thiếu Text/Viewport. Chuyển sang RuntimeInput an toàn.");
+                inputCauTraLoi.enabled = false;
+                inputCauTraLoi = null;
+            }
+            if (inputCauTraLoi == null)
+                inputCauTraLoi = CreateSafeRuntimeInput(answerRoot);
+        }
+        if (inputCauTraLoi == null && Application.isPlaying)
+            Debug.LogError("[TuLuan] Không tìm thấy ô nhập câu trả lời. Kiểm tra Canvas/KhungBaiLam/txtCauTraLoi.");
     }
 
     /// <summary>
-    /// Cấu hình TMP_InputField trên txtCauTraLoi với Viewport, RectMask2D và Scrollbar dọc.
-    /// Giúp câu trả lời dài tự động cuộn được, không bị tràn ra ngoài KhungBaiLam.
+    /// Tạo input overlay an toàn trong Play mode, không Destroy TextMeshProUGUI gốc.
     /// </summary>
-    private void ConfigureInputField(Canvas canvas)
+    private TMP_InputField CreateSafeRuntimeInput(Transform answerRoot)
     {
-        Transform khBaiLam = canvas.transform.Find("KhungBaiLam");
-        if (khBaiLam == null) return;
-
-        // 1. Tiêu đề BaiLam giữ màu đen
-        Transform tBaiLam = khBaiLam.Find("BaiLam");
-        if (tBaiLam != null)
+        TMP_Text original = answerRoot.GetComponent<TMP_Text>();
+        if (original != null)
         {
-            TMP_Text tmpBaiLam = tBaiLam.GetComponent<TMP_Text>();
-            if (tmpBaiLam != null) tmpBaiLam.color = Color.black;
+            original.text = "";
+            original.raycastTarget = false;
         }
 
-        Transform tTraLoi = khBaiLam.Find("txtCauTraLoi");
-        if (tTraLoi == null) return;
+        GameObject inputObj = new GameObject("RuntimeInput", typeof(RectTransform), typeof(Image));
+        inputObj.transform.SetParent(answerRoot, false);
+        RectTransform inputRect = inputObj.GetComponent<RectTransform>();
+        inputRect.anchorMin = Vector2.zero;
+        inputRect.anchorMax = Vector2.one;
+        inputRect.offsetMin = Vector2.zero;
+        inputRect.offsetMax = Vector2.zero;
+        Image inputImage = inputObj.GetComponent<Image>();
+        inputImage.color = new Color(1f, 1f, 1f, 0.001f);
+        inputImage.raycastTarget = true;
 
-        // Định vị lại khung txtCauTraLoi cho vừa vặn trong KhungBaiLam
-        RectTransform rtTraLoi = tTraLoi.GetComponent<RectTransform>();
-        rtTraLoi.anchorMin = new Vector2(0.5f, 0.5f);
-        rtTraLoi.anchorMax = new Vector2(0.5f, 0.5f);
-        rtTraLoi.pivot = new Vector2(0.5f, 0.5f);
-        rtTraLoi.anchoredPosition = new Vector2(0, -35f);
-        rtTraLoi.sizeDelta = new Vector2(980f, 310f);
+        GameObject viewportObj = new GameObject("TextArea", typeof(RectTransform), typeof(RectMask2D));
+        viewportObj.transform.SetParent(inputObj.transform, false);
+        RectTransform viewport = viewportObj.GetComponent<RectTransform>();
+        viewport.anchorMin = Vector2.zero;
+        viewport.anchorMax = Vector2.one;
+        viewport.offsetMin = new Vector2(12, 12);
+        viewport.offsetMax = new Vector2(-12, -12);
 
-        // 1. Lưu font và xóa component TextMeshPro cũ trên root tTraLoi nếu có (để tránh xung đột 2 Graphic trên cùng 1 GameObject)
-        TMP_FontAsset defaultFont = null;
-        TextMeshProUGUI existingTextOnRoot = tTraLoi.GetComponent<TextMeshProUGUI>();
-        if (existingTextOnRoot != null)
-        {
-            defaultFont = existingTextOnRoot.font;
-            DestroyImmediate(existingTextOnRoot);
-        }
+        GameObject textObj = new GameObject("Text", typeof(RectTransform), typeof(TextMeshProUGUI));
+        textObj.transform.SetParent(viewportObj.transform, false);
+        TextMeshProUGUI text = textObj.GetComponent<TextMeshProUGUI>();
+        StretchRuntimeRect(text.rectTransform);
+        if (original != null && original.font != null) text.font = original.font;
+        text.fontSize = 30;
+        text.color = Color.black;
+        text.textWrappingMode = TextWrappingModes.Normal;
+        text.raycastTarget = false;
 
-        // 2. Đảm bảo root có Image trong suốt để nhận sự kiện click focus cho ô nhập
-        Image imgInput = tTraLoi.GetComponent<Image>();
-        if (imgInput == null)
-        {
-            imgInput = tTraLoi.gameObject.AddComponent<Image>();
-        }
-        if (imgInput != null)
-        {
-            imgInput.color = Color.clear;
-            imgInput.raycastTarget = true;
-        }
+        GameObject placeholderObj = new GameObject("Placeholder", typeof(RectTransform), typeof(TextMeshProUGUI));
+        placeholderObj.transform.SetParent(viewportObj.transform, false);
+        TextMeshProUGUI placeholder = placeholderObj.GetComponent<TextMeshProUGUI>();
+        StretchRuntimeRect(placeholder.rectTransform);
+        if (original != null && original.font != null) placeholder.font = original.font;
+        placeholder.text = "Nhập câu trả lời...";
+        placeholder.fontSize = 30;
+        placeholder.color = new Color(0.35f, 0.35f, 0.35f, 0.7f);
+        placeholder.raycastTarget = false;
 
-        // 3. Lấy hoặc thêm TMP_InputField trên root tTraLoi
-        inputCauTraLoi = tTraLoi.GetComponent<TMP_InputField>();
-        if (inputCauTraLoi == null)
-        {
-            inputCauTraLoi = tTraLoi.gameObject.AddComponent<TMP_InputField>();
-        }
-
-        // 4. TextArea (Viewport có RectMask2D để clip text không tràn ra ngoài)
-        Transform textAreaT = tTraLoi.Find("TextArea");
-        RectTransform rtTextArea;
-        if (textAreaT == null)
-        {
-            GameObject textAreaObj = new GameObject("TextArea", typeof(RectTransform), typeof(RectMask2D));
-            textAreaObj.transform.SetParent(tTraLoi, false);
-            rtTextArea = textAreaObj.GetComponent<RectTransform>();
-            rtTextArea.anchorMin = Vector2.zero;
-            rtTextArea.anchorMax = Vector2.one;
-            rtTextArea.offsetMin = new Vector2(10, 10);
-            rtTextArea.offsetMax = new Vector2(-10, -10);
-        }
-        else
-        {
-            rtTextArea = textAreaT.GetComponent<RectTransform>();
-            if (textAreaT.GetComponent<RectMask2D>() == null)
-            {
-                textAreaT.gameObject.AddComponent<RectMask2D>();
-            }
-        }
-
-        // 5. TextComponent (Con của TextArea)
-        Transform textT = rtTextArea.transform.Find("Text");
-        TextMeshProUGUI tmpText;
-        if (textT == null)
-        {
-            GameObject textObj = new GameObject("Text", typeof(RectTransform), typeof(TextMeshProUGUI));
-            textObj.transform.SetParent(rtTextArea.transform, false);
-            RectTransform rtText = textObj.GetComponent<RectTransform>();
-            rtText.anchorMin = Vector2.zero;
-            rtText.anchorMax = Vector2.one;
-            rtText.offsetMin = Vector2.zero;
-            rtText.offsetMax = Vector2.zero;
-            tmpText = textObj.GetComponent<TextMeshProUGUI>();
-        }
-        else
-        {
-            tmpText = textT.GetComponent<TextMeshProUGUI>();
-        }
-        if (defaultFont != null) tmpText.font = defaultFont;
-        tmpText.color = Color.black;
-        tmpText.fontSize = 32;
-        tmpText.textWrappingMode = TextWrappingModes.Normal;
-        tmpText.overflowMode = TextOverflowModes.Overflow;
-        tmpText.raycastTarget = false;
-
-        // 6. Placeholder (Con của TextArea)
-        Transform phT = rtTextArea.transform.Find("Placeholder");
-        TextMeshProUGUI tmpPh;
-        if (phT == null)
-        {
-            GameObject phObj = new GameObject("Placeholder", typeof(RectTransform), typeof(TextMeshProUGUI));
-            phObj.transform.SetParent(rtTextArea.transform, false);
-            RectTransform rtPh = phObj.GetComponent<RectTransform>();
-            rtPh.anchorMin = Vector2.zero;
-            rtPh.anchorMax = Vector2.one;
-            rtPh.offsetMin = Vector2.zero;
-            rtPh.offsetMax = Vector2.zero;
-            tmpPh = phObj.GetComponent<TextMeshProUGUI>();
-        }
-        else
-        {
-            tmpPh = phT.GetComponent<TextMeshProUGUI>();
-        }
-        if (defaultFont != null) tmpPh.font = defaultFont;
-        tmpPh.text = "Nhập câu trả lời...";
-        tmpPh.fontStyle = FontStyles.Italic;
-        tmpPh.fontSize = 32;
-        tmpPh.color = new Color(0.4f, 0.4f, 0.4f, 0.75f);
-        tmpPh.textWrappingMode = TextWrappingModes.Normal;
-        tmpPh.raycastTarget = false;
-
-        // Xóa scrollbar cũ trên tTraLoi nếu có để tránh lỗi đệ quy graphic rebuild loop
-        Transform oldSb = tTraLoi.Find("Scrollbar Vertical");
-        if (oldSb != null)
-        {
-            DestroyImmediate(oldSb.gameObject);
-        }
-
-        // 7. Cấu hình TMP_InputField tự cuộn đa dòng mượt mà
-        inputCauTraLoi.targetGraphic = imgInput;
-        inputCauTraLoi.transition = Selectable.Transition.None;
-        inputCauTraLoi.textViewport = rtTextArea;
-        inputCauTraLoi.textComponent = tmpText;
-        inputCauTraLoi.placeholder = tmpPh;
-        inputCauTraLoi.verticalScrollbar = null;
-        inputCauTraLoi.lineType = TMP_InputField.LineType.MultiLineNewline;
-        inputCauTraLoi.contentType = TMP_InputField.ContentType.Standard;
-        inputCauTraLoi.richText = true;
-        inputCauTraLoi.scrollSensitivity = 20f;
-
-        // Con trỏ nhấp nháy đen và màu chữ đen
-        inputCauTraLoi.customCaretColor = true;
-        inputCauTraLoi.caretColor = Color.black;
-        inputCauTraLoi.caretWidth = 4;
-        inputCauTraLoi.caretBlinkRate = 0.85f;
-        inputCauTraLoi.selectionColor = new Color(0.2f, 0.6f, 1f, 0.35f);
-
-        // Tắt toàn bộ callback C# trên On Value Changed, On End Edit và On Select
-        // để khắc phục triệt để lỗi đơ/treo Unity khi gõ phím vào ô Bài làm
-        inputCauTraLoi.onValueChanged.RemoveAllListeners();
-        inputCauTraLoi.onEndEdit.RemoveAllListeners();
-        inputCauTraLoi.onSelect.RemoveAllListeners();
-
-        // Xóa Button trên KhungBaiLam nếu có để tránh xung đột sự kiện click
-        Button btnKhung = khBaiLam.GetComponent<Button>();
-        if (btnKhung != null)
-        {
-            DestroyImmediate(btnKhung);
-        }
+        TMP_InputField field = inputObj.AddComponent<TMP_InputField>();
+        field.targetGraphic = inputImage;
+        field.textViewport = viewport;
+        field.textComponent = text;
+        field.placeholder = placeholder;
+        field.lineType = TMP_InputField.LineType.MultiLineNewline;
+        field.contentType = TMP_InputField.ContentType.Standard;
+        Debug.Log("[TuLuan] Đã tạo RuntimeInput an toàn (không thay đổi TextMeshPro gốc).");
+        return field;
     }
+
+    private static void StretchRuntimeRect(RectTransform rect)
+    {
+        rect.anchorMin = Vector2.zero;
+        rect.anchorMax = Vector2.one;
+        rect.offsetMin = Vector2.zero;
+        rect.offsetMax = Vector2.zero;
+    }
+
+    // Hai hàm cũ ConfigureQuestionScroll / ConfigureInputField đã được bỏ.
+    // Không còn Destroy TextMeshPro hay gán lại ContentSizeFitter/ScrollRect
+    // khi Scene được mở hoặc Setup Tool được chạy.
 
     /// <summary>
     /// Tạo thanh cuộn chuẩn Unity UI Scrollbar với nền track và Handle kéo/thả.
@@ -719,8 +638,8 @@ public class TuLuanController : MonoBehaviour
     /// </summary>
     private TuLuanQuestionData PickDefaultQuestion()
     {
-        string targetId = !string.IsNullOrEmpty(PassedQuestionId) 
-            ? PassedQuestionId 
+        string targetId = !string.IsNullOrEmpty(PassedQuestionId)
+            ? PassedQuestionId
             : PlayerPrefs.GetString("CurrentTuLuanQuestionID", "");
 
         string selDiff = PlayerPrefs.GetString("SelectedDifficulty", "Dễ");
@@ -759,11 +678,20 @@ public class TuLuanController : MonoBehaviour
         currentQuestion = PickDefaultQuestion();
         ApplyCurrentQuestion();
 
-        string targetId = !string.IsNullOrEmpty(PassedQuestionId) 
-            ? PassedQuestionId 
+        string targetId = !string.IsNullOrEmpty(PassedQuestionId)
+            ? PassedQuestionId
             : PlayerPrefs.GetString("CurrentTuLuanQuestionID", "");
 
-        // 3. Tải câu hỏi cập nhật mới từ Google Sheets (timeout 3 giây để không đứng app)
+        // 3. Có thể tắt request để khoanh vùng treo Unity ngay trong Inspector.
+        if (!loadQuestionsFromGoogleSheets)
+        {
+            Debug.Log("[TuLuan DIAG] Đã tắt Google Sheets. Chỉ dùng câu hỏi mặc định.");
+            yield break;
+        }
+
+        // Nhường 1 frame cho scene hoàn thành khởi tạo UI trước khi tải dữ liệu.
+        yield return null;
+        Debug.Log("[TuLuan DIAG] Bắt đầu tải CSV Google Sheets.");
         List<TuLuanQuestionData> sheetQuestions = new List<TuLuanQuestionData>();
         using (UnityWebRequest req = UnityWebRequest.Get(TULUAN_SHEET_CSV_URL))
         {
@@ -773,7 +701,29 @@ public class TuLuanController : MonoBehaviour
 
             if (req.result == UnityWebRequest.Result.Success && !string.IsNullOrEmpty(req.downloadHandler?.text))
             {
-                sheetQuestions = ParseTuLuanCSV(req.downloadHandler.text);
+                string csvText = req.downloadHandler.text;
+                string trimmedStart = csvText.TrimStart();
+
+                // Google có thể trả về trang login HTML dù HTTP 200; không parse như CSV.
+                if (csvText.Length > 2 * 1024 * 1024 ||
+                    trimmedStart.StartsWith("<!DOCTYPE", StringComparison.OrdinalIgnoreCase) ||
+                    trimmedStart.StartsWith("<html", StringComparison.OrdinalIgnoreCase))
+                {
+                    Debug.LogError("[TuLuan] Google Sheets không trả CSV hợp lệ hoặc dữ liệu vượt 2 MB. Giữ câu hỏi mặc định. Bytes/Chars=" + csvText.Length);
+                    yield break;
+                }
+
+                Debug.Log("[TuLuan DIAG] Tải CSV xong. Số ký tự=" + csvText.Length + ". Bắt đầu parse.");
+                try
+                {
+                    sheetQuestions = ParseTuLuanCSV(csvText);
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogError("[TuLuan] Lỗi đọc CSV: " + ex);
+                    yield break;
+                }
+                Debug.Log("[TuLuan DIAG] Parse CSV xong: " + sheetQuestions.Count + " câu hỏi.");
                 allLoadedQuestions = new List<TuLuanQuestionData>(sheetQuestions);
 
                 TuLuanQuestionData chosen = null;
@@ -884,11 +834,7 @@ public class TuLuanController : MonoBehaviour
         int remHealth = GameData.Instance != null ? GameData.Instance.currentHealth : 0;
         ShowNotification($"Chưa đạt! Bị trừ 1 tim (còn {remHealth} tim). Hãy hoàn thành câu hỏi mới này!");
 
-        if (inputCauTraLoi != null)
-        {
-            inputCauTraLoi.Select();
-            inputCauTraLoi.ActivateInputField();
-        }
+        // User focuses manually to avoid layout cycle
     }
 
     /// <summary>
@@ -984,62 +930,60 @@ public class TuLuanController : MonoBehaviour
 
     private List<string[]> ParseCSVRows(string csvData)
     {
+        // StringBuilder thay cho chuỗi += trong vòng lặp (O(n^2)) của bản gốc.
+        // Giữ hỗ trợ CSV có dấu phẩy, ngoặc kép, và xuống dòng trong ô.
         List<string[]> rows = new List<string[]>();
-        List<string> currentCols = new List<string>();
+        if (string.IsNullOrEmpty(csvData)) return rows;
+        if (csvData.Length > 2 * 1024 * 1024)
+            throw new InvalidOperationException("CSV quá lớn (> 2 MB), từ chối parse trên main thread.");
+
+        List<string> columns = new List<string>();
+        StringBuilder cell = new StringBuilder(256);
         bool inQuotes = false;
-        string currentField = "";
 
         for (int i = 0; i < csvData.Length; i++)
         {
             char c = csvData[i];
-            if (c == '\"')
+            if (c == '"')
             {
-                if (inQuotes && i + 1 < csvData.Length && csvData[i + 1] == '\"')
+                if (inQuotes && i + 1 < csvData.Length && csvData[i + 1] == '"')
                 {
-                    currentField += '\"';
+                    cell.Append('"');
                     i++;
                 }
-                else
-                {
-                    inQuotes = !inQuotes;
-                }
+                else inQuotes = !inQuotes;
             }
             else if (c == ',' && !inQuotes)
             {
-                currentCols.Add(currentField);
-                currentField = "";
+                columns.Add(cell.ToString());
+                cell.Clear();
             }
             else if ((c == '\r' || c == '\n') && !inQuotes)
             {
-                if (c == '\r' && i + 1 < csvData.Length && csvData[i + 1] == '\n')
+                if (c == '\r' && i + 1 < csvData.Length && csvData[i + 1] == '\n') i++;
+                if (columns.Count > 0 || cell.Length > 0)
                 {
-                    i++;
+                    columns.Add(cell.ToString());
+                    rows.Add(columns.ToArray());
                 }
-                if (currentCols.Count > 0 || !string.IsNullOrEmpty(currentField))
-                {
-                    currentCols.Add(currentField);
-                    rows.Add(currentCols.ToArray());
-                }
-                currentCols.Clear();
-                currentField = "";
+                columns.Clear();
+                cell.Clear();
             }
             else
             {
-                currentField += c;
+                cell.Append(c);
             }
         }
-
-        if (currentCols.Count > 0 || !string.IsNullOrEmpty(currentField))
+        if (columns.Count > 0 || cell.Length > 0)
         {
-            currentCols.Add(currentField);
-            rows.Add(currentCols.ToArray());
+            columns.Add(cell.ToString());
+            rows.Add(columns.ToArray());
         }
-
         return rows;
     }
     #endregion
 
-#region Image Selection Logic
+    #region Image Selection Logic
     /// <summary>
     /// Xử lý chọn ảnh từ thiết bị (hỗ trợ PNG, JPG, JPEG, tối đa 5 MB).
     /// </summary>
@@ -1405,8 +1349,8 @@ public class TuLuanController : MonoBehaviour
             isSubmitting = false;
             if (btnNopBai != null) btnNopBai.interactable = true;
 
-            string idShort = submission.submissionId.Length > 8 
-                ? submission.submissionId.Substring(0, 8) 
+            string idShort = submission.submissionId.Length > 8
+                ? submission.submissionId.Substring(0, 8)
                 : submission.submissionId;
 
             string notice = !string.IsNullOrEmpty(gradingErrorMessage)
@@ -1695,7 +1639,7 @@ public class TuLuanController : MonoBehaviour
     }
     #endregion
 
-#region Popup Result & UI Management
+    #region Popup Result & UI Management
     /// <summary>
     /// Hiển thị popup kết quả chấm thi.
     /// Nếu điểm < 5: Tương đương trả lời sai (trừ 1 tim, phải làm tiếp câu khác hoặc chơi lại nếu hết tim).
@@ -1748,6 +1692,13 @@ public class TuLuanController : MonoBehaviour
             Canvas canvas = GetComponentInParent<Canvas>();
             if (canvas == null) canvas = FindAnyObjectByType<Canvas>();
             EnsureResultPopup(canvas);
+        }
+
+        // Popup được tạo muộn nên phải gắn nút Đóng tại thời điểm hiển thị.
+        if (btnPopupDong != null)
+        {
+            btnPopupDong.onClick.RemoveListener(OnClosePopupClicked);
+            btnPopupDong.onClick.AddListener(OnClosePopupClicked);
         }
 
         if (popupKetQua != null)
@@ -1847,6 +1798,7 @@ public class TuLuanController : MonoBehaviour
     /// </summary>
     private void ReturnToMainGameplay()
     {
+        Time.timeScale = 1f; // Khôi phục thời gian khi trở lại gameplay
         string previousScene = GameData.Instance != null && !string.IsNullOrEmpty(GameData.Instance.lastSceneName)
             ? GameData.Instance.lastSceneName
             : "bean_1";
@@ -1871,6 +1823,7 @@ public class TuLuanController : MonoBehaviour
     /// </summary>
     private void RestartGame()
     {
+        Time.timeScale = 1f; // Khôi phục thời gian khi chơi lại
         if (GameData.Instance != null)
         {
             GameData.Instance.currentHealth = GameData.Instance.maxHealth;
@@ -2069,7 +2022,7 @@ public class TuLuanController : MonoBehaviour
         txtPopupNhanXet.fontSize = 22;
         txtPopupNhanXet.alignment = TextAlignmentOptions.TopLeft;
         txtPopupNhanXet.textWrappingMode = TextWrappingModes.Normal;
-        txtPopupNhanXet.overflowMode = TextOverflowModes.Overflow;
+        txtPopupNhanXet.overflowMode = TextOverflowModes.Masking;
         txtPopupNhanXet.color = Color.black;
 
         // Scrollbar Vertical
@@ -2261,8 +2214,8 @@ public class TuLuanController : MonoBehaviour
     /// </summary>
     private IEnumerator AnimateLoadingRoutine(string baseMessage)
     {
-        string baseText = string.IsNullOrEmpty(baseMessage) 
-            ? "AI đang chấm bài" 
+        string baseText = string.IsNullOrEmpty(baseMessage)
+            ? "AI đang chấm bài"
             : baseMessage.Replace("...", "").Replace("…", "").Trim();
 
         int dotCount = 0;

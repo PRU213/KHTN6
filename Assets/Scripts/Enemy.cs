@@ -10,6 +10,7 @@ using UnityEngine.SceneManagement;
 public class Enemy : MonoBehaviour
 {
     private RectTransform rectTransform;
+    private bool hasTriggered = false;
 
     void Awake()
     {
@@ -38,8 +39,9 @@ public class Enemy : MonoBehaviour
         if (playerRT == null) return;
 
         // Kiểm tra va chạm
-        if (RectsOverlap(GetWorldRect(rectTransform), GetWorldRect(playerRT)))
+        if (!hasTriggered && RectsOverlap(GetWorldRect(rectTransform), GetWorldRect(playerRT)))
         {
+            hasTriggered = true;
             OnPlayerTouch();
         }
     }
@@ -76,7 +78,12 @@ public class Enemy : MonoBehaviour
             GameData.Instance.lastSceneName = currentScene;
 
         // Nếu người chơi chọn hình thức Tự luận thì vào scene TuLuan
-        bool isTuLuan = GameSession.questionSceneName == "TuLuan" || (GameSession.QuestionType != null && (GameSession.QuestionType.IndexOf("Tá»±", System.StringComparison.OrdinalIgnoreCase) >= 0 || GameSession.QuestionType.IndexOf("Luáº­n", System.StringComparison.OrdinalIgnoreCase) >= 0 || GameSession.QuestionType.IndexOf("TuLuan", System.StringComparison.OrdinalIgnoreCase) >= 0));
+        bool isTuLuan = GameSession.questionSceneName == "TuLuan" || 
+            (!string.IsNullOrEmpty(GameSession.QuestionType) && 
+             (GameSession.QuestionType.IndexOf("Tự", System.StringComparison.OrdinalIgnoreCase) >= 0 || 
+              GameSession.QuestionType.IndexOf("Luận", System.StringComparison.OrdinalIgnoreCase) >= 0 || 
+              GameSession.QuestionType.IndexOf("TuLuan", System.StringComparison.OrdinalIgnoreCase) >= 0 ||
+              GameSession.QuestionType.IndexOf("Tu Luan", System.StringComparison.OrdinalIgnoreCase) >= 0));
         if (isTuLuan)
         {
             SceneManager.LoadScene("TuLuan");

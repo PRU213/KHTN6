@@ -1,4 +1,4 @@
-#if UNITY_EDITOR
+﻿#if UNITY_EDITOR
 using System.IO;
 using TMPro;
 using UnityEditor;
@@ -61,7 +61,8 @@ public static class TuLuanSetupTool
             Undo.RegisterCreatedObjectUndo(controller, "Add TuLuanController");
         }
 
-        // 5. Tự động cấu hình UI (Khung cuộn câu hỏi ScrollCauHoi, ô nhập câu trả lời với Scrollbar, popup...)
+        // 5. Chỉ liên kết component sẵn có, KHÔNG tự cấu hình lại TMP/ScrollRect.
+        // Ô nhập chưa có TMP_InputField sẽ được bổ sung RuntimeInput khi Play.
         controller.AutoBindUI();
 
         // 6. Cấu hình btnTaiAnh và Anh trong KhungAnh
@@ -106,8 +107,18 @@ public static class TuLuanSetupTool
             EditorUtility.SetDirty(btn);
         }
 
-        // 8. Tự động đồng bộ toàn bộ giao diện
-        controller.AutoBindUI();
+        // 7b. Cấu hình nút Tạm Dừng btnTamDung
+        controller.SetupPauseButton(canvas);
+        Transform tPause = canvas.transform.Find("btnTamDung");
+        if (tPause != null)
+        {
+            Button btnP = tPause.GetComponent<Button>();
+            controller.btnTamDung = btnP;
+            EditorUtility.SetDirty(tPause.gameObject);
+            if (btnP != null) EditorUtility.SetDirty(btnP);
+        }
+
+        // 8. Không gọi AutoBindUI lần hai và không tái cấu trúc TMP lúc Edit/Play.
 
         // 9. Lưu scene
         EditorUtility.SetDirty(controller);
@@ -122,12 +133,13 @@ public static class TuLuanSetupTool
                 "Setup hoàn tất",
                 "Đã cấu hình thành công các thành phần cho Scene TuLuan:\n\n" +
                 "✓ Đã thêm TuLuanController vào Canvas\n" +
-                "✓ Đã thêm Scrollbar & Viewport chống tràn cho câu hỏi (ScrollCauHoi)\n" +
-                "✓ Đã thêm Scrollbar & Viewport chống tràn cho câu trả lời (txtCauTraLoi)\n" +
+                "✓ Đã giữ nguyên cấu trúc TMP và ScrollRect hiện tại\n" +
+                "✓ Ô nhập được liên kết an toàn khi Play\n" +
                 "✓ Chữ đề bài, bài làm và câu trả lời màu đen\n" +
                 "✓ Con trỏ nhấp nháy màu đen sắc nét (4px)\n" +
                 "✓ Đã kết nối btnTaiAnh & Image Anh (giữ tỷ lệ preserveAspect)\n" +
                 "✓ Đã kết nối btnNopBai\n" +
+                "✓ Đã thêm nút Tạm Dừng (btnTamDung) góc trên bên phải\n" +
                 "✓ Đã thêm Popup kết quả (Mock Result kiểm thử)\n" +
                 "✓ Đã thêm TuLuan vào Build Settings",
                 "OK"
