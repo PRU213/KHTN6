@@ -40,14 +40,18 @@ public class TuLuanController : MonoBehaviour
     public GameObject panelThongBao;
     public TMP_Text txtThongBao;
 
+    [Header("=== LOADING KHI AI CHẤM BÀI ===")]
+    public GameObject panelLoading;
+    public TMP_Text txtLoading;
+
     [Header("=== CẤU HÌNH KIỂM THỬ MOCK ===")]
     [Tooltip("Bật chế độ thử nghiệm Mock Result khi nộp bài")]
-    public bool useMockResult = true;
+    public bool useMockResult = false;
 
     [Header("=== CẤU HÌNH BACKEND UPLOAD ===")]
     [Tooltip("Google Apps Script Web App Exec URL")]
     public string backendApiUrl =
-        "https://script.google.com/macros/s/AKfycbxxE2R2ZoitgM647aQqnebUcG90lhIlodU0DcyiaZuKkLaVWl6oopI-TkeNM8_KKDWhUw/exec";
+        "https://script.google.com/macros/s/AKfycbxLHvShuipgPg7x28IikDmzU7wHoE2e3ai9rhuoEnN50UsFUAWIPTG_nneHOxz-YmaY/exec";
 
     [Header("=== MÁU / TIM ===")]
     public Image[] healthIcons = new Image[3];
@@ -60,6 +64,11 @@ public class TuLuanController : MonoBehaviour
     [SerializeField] private string selectedImageMimeType = "";
     [SerializeField] private string currentSubmissionId = "";
     [SerializeField] private bool isSubmitting = false;
+
+    // Cache kết quả upload ảnh Drive để retry không upload lại nếu chỉ lỗi lưu Sheet hoặc đang chờ chấm
+    [SerializeField] private string uploadedDriveFileId = "";
+    [SerializeField] private string uploadedDriveFileUrl = "";
+    [SerializeField] private string uploadedDriveFileName = "";
 
     private Sprite initialAnhSprite = null;
     private Color initialAnhColor = Color.white;
@@ -397,7 +406,7 @@ public class TuLuanController : MonoBehaviour
 
             scrollRect.viewport = rtViewport;
             scrollRect.verticalScrollbar = scrollbar;
-            scrollRect.verticalScrollbarVisibility = ScrollRect.ScrollbarVisibility.AutoHideAndExpandViewport;
+            scrollRect.verticalScrollbarVisibility = ScrollRect.ScrollbarVisibility.AutoHide;
 
             // Đưa txtCauHoi vào trong Viewport nếu đang nằm trực tiếp ở KhungDe
             Transform existingHoi = khDe.Find("txtCauHoi");
@@ -484,20 +493,35 @@ public class TuLuanController : MonoBehaviour
         rtTraLoi.anchoredPosition = new Vector2(0, -35f);
         rtTraLoi.sizeDelta = new Vector2(980f, 310f);
 
+        // 1. Lưu font và xóa component TextMeshPro cũ trên root tTraLoi nếu có (để tránh xung đột 2 Graphic trên cùng 1 GameObject)
+        TMP_FontAsset defaultFont = null;
+        TextMeshProUGUI existingTextOnRoot = tTraLoi.GetComponent<TextMeshProUGUI>();
+        if (existingTextOnRoot != null)
+        {
+            defaultFont = existingTextOnRoot.font;
+            DestroyImmediate(existingTextOnRoot);
+        }
+
+        // 2. Đảm bảo root có Image trong suốt để nhận sự kiện click focus cho ô nhập
+        Image imgInput = tTraLoi.GetComponent<Image>();
+        if (imgInput == null)
+        {
+            imgInput = tTraLoi.gameObject.AddComponent<Image>();
+        }
+        if (imgInput != null)
+        {
+            imgInput.color = Color.clear;
+            imgInput.raycastTarget = true;
+        }
+
+        // 3. Lấy hoặc thêm TMP_InputField trên root tTraLoi
         inputCauTraLoi = tTraLoi.GetComponent<TMP_InputField>();
         if (inputCauTraLoi == null)
         {
             inputCauTraLoi = tTraLoi.gameObject.AddComponent<TMP_InputField>();
         }
 
-        // Tắt TextMeshPro cũ trên root tTraLoi nếu có để tránh vẽ đè 2 lớp chữ
-        TextMeshProUGUI existingTextOnRoot = tTraLoi.GetComponent<TextMeshProUGUI>();
-        if (existingTextOnRoot != null)
-        {
-            existingTextOnRoot.enabled = false;
-        }
-
-        // 2. TextArea (Viewport có RectMask2D để clip text không tràn ra ngoài)
+        // 4. TextArea (Viewport có RectMask2D để clip text không tràn ra ngoài)
         Transform textAreaT = tTraLoi.Find("TextArea");
         RectTransform rtTextArea;
         if (textAreaT == null)
@@ -508,7 +532,7 @@ public class TuLuanController : MonoBehaviour
             rtTextArea.anchorMin = Vector2.zero;
             rtTextArea.anchorMax = Vector2.one;
             rtTextArea.offsetMin = new Vector2(10, 10);
-            rtTextArea.offsetMax = new Vector2(-28, -10); // Chừa 28px bên phải cho thanh cuộn
+            rtTextArea.offsetMax = new Vector2(-10, -10);
         }
         else
         {
@@ -519,7 +543,7 @@ public class TuLuanController : MonoBehaviour
             }
         }
 
-        // 3. TextComponent (Con của TextArea)
+        // 5. TextComponent (Con của TextArea)
         Transform textT = rtTextArea.transform.Find("Text");
         TextMeshProUGUI tmpText;
         if (textT == null)
@@ -537,12 +561,14 @@ public class TuLuanController : MonoBehaviour
         {
             tmpText = textT.GetComponent<TextMeshProUGUI>();
         }
+        if (defaultFont != null) tmpText.font = defaultFont;
         tmpText.color = Color.black;
         tmpText.fontSize = 32;
         tmpText.textWrappingMode = TextWrappingModes.Normal;
         tmpText.overflowMode = TextOverflowModes.Overflow;
+        tmpText.raycastTarget = false;
 
-        // 4. Placeholder (Con của TextArea)
+        // 6. Placeholder (Con của TextArea)
         Transform phT = rtTextArea.transform.Find("Placeholder");
         TextMeshProUGUI tmpPh;
         if (phT == null)
@@ -560,40 +586,32 @@ public class TuLuanController : MonoBehaviour
         {
             tmpPh = phT.GetComponent<TextMeshProUGUI>();
         }
+        if (defaultFont != null) tmpPh.font = defaultFont;
         tmpPh.text = "Nhập câu trả lời...";
         tmpPh.fontStyle = FontStyles.Italic;
         tmpPh.fontSize = 32;
         tmpPh.color = new Color(0.4f, 0.4f, 0.4f, 0.75f);
         tmpPh.textWrappingMode = TextWrappingModes.Normal;
+        tmpPh.raycastTarget = false;
 
-        // 5. Scrollbar Vertical cho ô nhập liệu
-        Transform sbT = tTraLoi.Find("Scrollbar Vertical");
-        Scrollbar scrollbar;
-        if (sbT == null)
+        // Xóa scrollbar cũ trên tTraLoi nếu có để tránh lỗi đệ quy graphic rebuild loop
+        Transform oldSb = tTraLoi.Find("Scrollbar Vertical");
+        if (oldSb != null)
         {
-            scrollbar = CreateScrollbar(tTraLoi, "Scrollbar Vertical", new Vector2(14, 0),
-                new Color(0f, 0f, 0f, 0.12f), new Color(0.6f, 0.45f, 0.3f, 0.85f));
-            RectTransform sbRt = scrollbar.GetComponent<RectTransform>();
-            sbRt.anchorMin = new Vector2(1, 0);
-            sbRt.anchorMax = new Vector2(1, 1);
-            sbRt.pivot = new Vector2(1, 0.5f);
-            sbRt.offsetMin = new Vector2(-20, 10);
-            sbRt.offsetMax = new Vector2(-6, -10);
-        }
-        else
-        {
-            scrollbar = sbT.GetComponent<Scrollbar>();
+            DestroyImmediate(oldSb.gameObject);
         }
 
-        // 6. Cấu hình TMP_InputField
+        // 7. Cấu hình TMP_InputField tự cuộn đa dòng mượt mà
+        inputCauTraLoi.targetGraphic = imgInput;
+        inputCauTraLoi.transition = Selectable.Transition.None;
         inputCauTraLoi.textViewport = rtTextArea;
         inputCauTraLoi.textComponent = tmpText;
         inputCauTraLoi.placeholder = tmpPh;
-        inputCauTraLoi.verticalScrollbar = scrollbar;
+        inputCauTraLoi.verticalScrollbar = null;
         inputCauTraLoi.lineType = TMP_InputField.LineType.MultiLineNewline;
         inputCauTraLoi.contentType = TMP_InputField.ContentType.Standard;
         inputCauTraLoi.richText = true;
-        inputCauTraLoi.scrollSensitivity = 20f; // Hỗ trợ lăn chuột cuộn mượt mà
+        inputCauTraLoi.scrollSensitivity = 20f;
 
         // Con trỏ nhấp nháy đen và màu chữ đen
         inputCauTraLoi.customCaretColor = true;
@@ -602,39 +620,18 @@ public class TuLuanController : MonoBehaviour
         inputCauTraLoi.caretBlinkRate = 0.85f;
         inputCauTraLoi.selectionColor = new Color(0.2f, 0.6f, 1f, 0.35f);
 
+        // Tắt toàn bộ callback C# trên On Value Changed, On End Edit và On Select
+        // để khắc phục triệt để lỗi đơ/treo Unity khi gõ phím vào ô Bài làm
         inputCauTraLoi.onValueChanged.RemoveAllListeners();
-        inputCauTraLoi.onValueChanged.AddListener((val) =>
-        {
-            if (inputCauTraLoi.textComponent != null)
-            {
-                inputCauTraLoi.textComponent.color = Color.black;
-            }
-        });
+        inputCauTraLoi.onEndEdit.RemoveAllListeners();
         inputCauTraLoi.onSelect.RemoveAllListeners();
-        inputCauTraLoi.onSelect.AddListener((val) =>
-        {
-            if (inputCauTraLoi.textComponent != null)
-            {
-                inputCauTraLoi.textComponent.color = Color.black;
-            }
-        });
 
-        // Click bất cứ đâu trên KhungBaiLam cũng tự động focus vào ô nhập và bật con trỏ
+        // Xóa Button trên KhungBaiLam nếu có để tránh xung đột sự kiện click
         Button btnKhung = khBaiLam.GetComponent<Button>();
-        if (btnKhung == null)
+        if (btnKhung != null)
         {
-            btnKhung = khBaiLam.gameObject.AddComponent<Button>();
-            btnKhung.transition = Selectable.Transition.None;
+            DestroyImmediate(btnKhung);
         }
-        btnKhung.onClick.RemoveAllListeners();
-        btnKhung.onClick.AddListener(() =>
-        {
-            if (inputCauTraLoi != null)
-            {
-                inputCauTraLoi.Select();
-                inputCauTraLoi.ActivateInputField();
-            }
-        });
     }
 
     /// <summary>
@@ -718,15 +715,38 @@ public class TuLuanController : MonoBehaviour
 
     #region Question Loading Logic
     /// <summary>
+    /// Chọn ngay câu hỏi tự luận mặc định ban đầu theo độ khó và môn học.
+    /// </summary>
+    private TuLuanQuestionData PickDefaultQuestion()
+    {
+        string targetId = !string.IsNullOrEmpty(PassedQuestionId) 
+            ? PassedQuestionId 
+            : PlayerPrefs.GetString("CurrentTuLuanQuestionID", "");
+
+        string selDiff = PlayerPrefs.GetString("SelectedDifficulty", "Dễ");
+
+        if (fallbackQuestions != null && fallbackQuestions.Length > 0)
+        {
+            if (!string.IsNullOrEmpty(targetId))
+            {
+                var matchId = Array.Find(fallbackQuestions, q => q.id.Equals(targetId, StringComparison.OrdinalIgnoreCase));
+                if (matchId != null) return matchId;
+            }
+
+            var matchDiff = Array.Find(fallbackQuestions, q => q.difficulty.Equals(selDiff, StringComparison.OrdinalIgnoreCase));
+            if (matchDiff != null) return matchDiff;
+
+            return fallbackQuestions[0];
+        }
+        return null;
+    }
+
+    /// <summary>
     /// Tải câu hỏi từ Google Sheets hoặc dữ liệu truyền từ Gameplay.
+    /// Hiển thị ngay câu hỏi phù hợp mà không bao giờ bị đứng màn hình.
     /// </summary>
     private IEnumerator LoadQuestionRoutine()
     {
-        if (txtCauHoi != null)
-        {
-            txtCauHoi.text = "Đang tải câu hỏi tự luận...";
-        }
-
         // 1. Kiểm tra nếu có câu hỏi được truyền trực tiếp từ Gameplay
         if (PassedQuestion != null && !string.IsNullOrEmpty(PassedQuestion.question))
         {
@@ -735,73 +755,63 @@ public class TuLuanController : MonoBehaviour
             yield break;
         }
 
+        // 2. Nạp ngay câu hỏi mặc định phù hợp nhất để hiển thị NGAY LẬP TỨC
+        currentQuestion = PickDefaultQuestion();
+        ApplyCurrentQuestion();
+
         string targetId = !string.IsNullOrEmpty(PassedQuestionId) 
             ? PassedQuestionId 
             : PlayerPrefs.GetString("CurrentTuLuanQuestionID", "");
 
-        // 2. Tải từ Google Sheets
+        // 3. Tải câu hỏi cập nhật mới từ Google Sheets (timeout 3 giây để không đứng app)
         List<TuLuanQuestionData> sheetQuestions = new List<TuLuanQuestionData>();
         using (UnityWebRequest req = UnityWebRequest.Get(TULUAN_SHEET_CSV_URL))
         {
             req.certificateHandler = new BypassCertificate();
+            req.timeout = 3;
             yield return req.SendWebRequest();
 
-            if (req.result == UnityWebRequest.Result.Success && !string.IsNullOrEmpty(req.downloadHandler.text))
+            if (req.result == UnityWebRequest.Result.Success && !string.IsNullOrEmpty(req.downloadHandler?.text))
             {
                 sheetQuestions = ParseTuLuanCSV(req.downloadHandler.text);
                 allLoadedQuestions = new List<TuLuanQuestionData>(sheetQuestions);
+
+                TuLuanQuestionData chosen = null;
+                if (!string.IsNullOrEmpty(targetId))
+                {
+                    chosen = sheetQuestions.Find(q => q.id.Equals(targetId, StringComparison.OrdinalIgnoreCase));
+                }
+
+                if (chosen == null && sheetQuestions.Count > 0)
+                {
+                    string selDiff = PlayerPrefs.GetString("SelectedDifficulty", "Dễ");
+                    List<TuLuanQuestionData> filtered = sheetQuestions.FindAll(q =>
+                        q.monId.IndexOf("Sinh", StringComparison.OrdinalIgnoreCase) >= 0);
+
+                    if (filtered.Count == 0) filtered = sheetQuestions;
+
+                    List<TuLuanQuestionData> diffFiltered = filtered.FindAll(q =>
+                        q.difficulty.Equals(selDiff, StringComparison.OrdinalIgnoreCase));
+                    if (diffFiltered.Count > 0) filtered = diffFiltered;
+
+                    candidateQuestions = filtered;
+                    if (filtered.Count > 0)
+                    {
+                        chosen = filtered[UnityEngine.Random.Range(0, filtered.Count)];
+                    }
+                }
+
+                if (chosen != null)
+                {
+                    currentQuestion = chosen;
+                    ApplyCurrentQuestion();
+                }
             }
             else
             {
-                Debug.LogWarning("Không thể tải Google Sheet tự luận: " + req.error + ". Sử dụng dữ liệu dự phòng.");
+                Debug.LogWarning("[TuLuan] Google Sheets không phản hồi trong 3s, giữ câu hỏi hiện tại: " + req.error);
             }
         }
-
-        // 3. Chọn câu hỏi phù hợp
-        TuLuanQuestionData chosen = null;
-
-        // 3.1. Tìm theo ID cụ thể nếu có
-        if (!string.IsNullOrEmpty(targetId))
-        {
-            chosen = sheetQuestions.Find(q => q.id.Equals(targetId, StringComparison.OrdinalIgnoreCase));
-        }
-
-        // 3.2. Lọc theo môn Sinh học và độ khó từ GameSession nếu có
-        if (chosen == null && sheetQuestions.Count > 0)
-        {
-            List<TuLuanQuestionData> filtered = sheetQuestions.FindAll(q =>
-                q.monId.IndexOf("Sinh", StringComparison.OrdinalIgnoreCase) >= 0);
-
-            if (filtered.Count == 0) filtered = sheetQuestions;
-
-            // Nếu người chơi chọn độ khó ở menu_game
-            if (GameSession.Difficulties != null && GameSession.Difficulties.Count > 0)
-            {
-                List<TuLuanQuestionData> diffFiltered = filtered.FindAll(q =>
-                    GameSession.Difficulties.Contains(q.difficulty.Trim()));
-                if (diffFiltered.Count > 0)
-                {
-                    filtered = diffFiltered;
-                }
-            }
-
-            candidateQuestions = filtered;
-
-            if (filtered.Count > 0)
-            {
-                int rIndex = UnityEngine.Random.Range(0, filtered.Count);
-                chosen = filtered[rIndex];
-            }
-        }
-
-        // 3.3. Sử dụng câu hỏi dự phòng nếu không tìm thấy
-        if (chosen == null)
-        {
-            chosen = fallbackQuestions != null && fallbackQuestions.Length > 0 ? fallbackQuestions[0] : null;
-        }
-
-        currentQuestion = chosen;
-        ApplyCurrentQuestion();
     }
 
     /// <summary>
@@ -853,8 +863,12 @@ public class TuLuanController : MonoBehaviour
         // 2. Reset ảnh đã chọn nếu có
         ClearSelectedImage();
 
-        // Reset tráº¡ng thÃ¡i ná»™p bÃ i
+        // Reset trạng thái nộp bài và cache upload
+        HideLoading();
         currentSubmissionId = "";
+        uploadedDriveFileId = "";
+        uploadedDriveFileUrl = "";
+        uploadedDriveFileName = "";
         isSubmitting = false;
         if (btnNopBai != null) btnNopBai.interactable = true;
 
@@ -890,6 +904,9 @@ public class TuLuanController : MonoBehaviour
         selectedImagePath = "";
         selectedImageBytes = null;
         selectedImageMimeType = "";
+        uploadedDriveFileId = "";
+        uploadedDriveFileUrl = "";
+        uploadedDriveFileName = "";
 
         if (imgAnh != null)
         {
@@ -907,16 +924,24 @@ public class TuLuanController : MonoBehaviour
             txtCauHoi.text = currentQuestion.question;
             txtCauHoi.color = Color.black; // Text câu hỏi màu đen
 
-            // Reset vị trí cuộn lên đỉnh đầu câu hỏi
+            // Reset vị trí cuộn lên đỉnh đầu câu hỏi mượt mà
             ScrollRect scrollRect = txtCauHoi.GetComponentInParent<ScrollRect>();
-            if (scrollRect != null)
+            if (scrollRect != null && gameObject.activeInHierarchy)
             {
-                Canvas.ForceUpdateCanvases();
-                scrollRect.verticalNormalizedPosition = 1f;
+                StartCoroutine(ResetQuestionScrollRoutine(scrollRect));
             }
         }
 
         Debug.Log($"[TuLuan] Đã nạp câu hỏi: ID={currentQuestion.id} | Chủ đề={currentQuestion.topic} | Độ khó={currentQuestion.difficulty}");
+    }
+
+    private IEnumerator ResetQuestionScrollRoutine(ScrollRect sr)
+    {
+        yield return null;
+        if (sr != null)
+        {
+            sr.verticalNormalizedPosition = 1f;
+        }
     }
 
     /// <summary>
@@ -954,6 +979,8 @@ public class TuLuanController : MonoBehaviour
 
         return list;
     }
+
+    public List<string[]> ParseCsv(string csvData) => ParseCSVRows(csvData);
 
     private List<string[]> ParseCSVRows(string csvData)
     {
@@ -1073,6 +1100,9 @@ public class TuLuanController : MonoBehaviour
                 selectedImagePath = path;
                 selectedImageBytes = fileBytes;
                 selectedImageMimeType = (ext == ".png") ? "image/png" : "image/jpeg";
+                uploadedDriveFileId = "";
+                uploadedDriveFileUrl = "";
+                uploadedDriveFileName = "";
 
                 Sprite newSprite = Sprite.Create(
                     tex,
@@ -1130,9 +1160,33 @@ public class TuLuanController : MonoBehaviour
 
     #region Submission Logic
     /// <summary>
+    /// Lấy ID người chơi thực tế từ hệ thống đăng nhập (GameSession hoặc PlayerPrefs).
+    /// Tuyệt đối không hardcode ID giả.
+    /// </summary>
+    public static string GetCurrentUserId()
+    {
+        if (!string.IsNullOrEmpty(GameSession.UserId))
+            return GameSession.UserId;
+
+        string savedId = PlayerPrefs.GetString("UserID", "");
+        if (!string.IsNullOrEmpty(savedId))
+            return savedId;
+
+        if (!string.IsNullOrEmpty(GameSession.Username))
+            return GameSession.Username;
+
+        string savedUser = PlayerPrefs.GetString("Username", "");
+        if (!string.IsNullOrEmpty(savedUser))
+            return savedUser;
+
+        return "HS001"; // Dự phòng nếu test trực tiếp Scene mà chưa qua màn Login
+    }
+
+    /// <summary>
     /// Xử lý sự kiện nhấn nút Nộp bài.
     /// Cho phép nộp văn bản, ảnh hoặc cả hai.
-    /// Chống nộp trùng, gửi ảnh bất đồng bộ lên Drive qua backend, giữ nguyên dữ liệu và ID nếu retry.
+    /// Chống nộp trùng, gửi ảnh lên Drive (nếu có), ghi bài nộp vào sheet BaiNopTuLuan và chờ kết quả AI thật.
+    /// Giữ nguyên SubmissionID và không upload lại ảnh nếu chỉ bước lưu Sheet hoặc chờ chấm bị gián đoạn.
     /// </summary>
     public void OnSubmitClicked()
     {
@@ -1152,7 +1206,7 @@ public class TuLuanController : MonoBehaviour
             return;
         }
 
-        // Tạo SubmissionID duy nhất nếu chưa có (khi retry giữ nguyên ID này)
+        // Tạo SubmissionID duy nhất nếu chưa có (khi retry giữ nguyên ID này để chống bản ghi trùng)
         if (string.IsNullOrEmpty(currentSubmissionId))
         {
             currentSubmissionId = Guid.NewGuid().ToString();
@@ -1166,16 +1220,15 @@ public class TuLuanController : MonoBehaviour
         isSubmitting = true;
         if (btnNopBai != null) btnNopBai.interactable = false;
 
-        string username = !string.IsNullOrEmpty(GameSession.Username) 
-            ? GameSession.Username 
-            : PlayerPrefs.GetString("Username", "student01");
+        string currentUserId = GetCurrentUserId();
+        string questionId = currentQuestion != null ? currentQuestion.id : "TL_DEFAULT";
 
         // 1. Thu thập dữ liệu bài nộp
         TuLuanSubmissionData submission = new TuLuanSubmissionData
         {
             submissionId = currentSubmissionId,
-            userId = username,
-            cauHoiId = currentQuestion != null ? currentQuestion.id : "TL_DEFAULT",
+            userId = currentUserId,
+            cauHoiId = questionId,
             cauTraLoi = answerText,
             anhBaiLamPath = selectedImagePath,
             anhBaiLamBytes = selectedImageBytes,
@@ -1184,68 +1237,184 @@ public class TuLuanController : MonoBehaviour
 
         Debug.Log($"[TuLuan] Bắt đầu nộp bài: ID={submission.submissionId} | User={submission.userId} | Câu={submission.cauHoiId} | Chữ={answerText.Length} ký tự | Có ảnh={hasImage}");
 
-        // 2. Nếu có ảnh, upload bất đồng bộ lên Google Drive qua Backend
+        // 2. Nếu có ảnh: kiểm tra xem ảnh đã được upload Drive ở lần bấm trước chưa
+        string fileUrlToSubmit = "";
         if (hasImage)
         {
-            ShowNotification("Đang tải ảnh bài làm lên Google Drive...");
-
-            bool uploadSuccess = false;
-            EssayImageUploadResponse uploadResp = null;
-            string uploadError = "";
-
-            yield return UploadEssayImageRoutine(
-                submission.submissionId,
-                selectedImageBytes,
-                selectedImageMimeType,
-                (success, resp, err) =>
-                {
-                    uploadSuccess = success;
-                    uploadResp = resp;
-                    uploadError = err;
-                }
-            );
-
-            if (!uploadSuccess)
+            if (string.IsNullOrEmpty(uploadedDriveFileUrl))
             {
-                // Thất bại: Giữ nguyên văn bản & ảnh đã chọn, giữ currentSubmissionId để retry
-                isSubmitting = false;
-                if (btnNopBai != null) btnNopBai.interactable = true;
-                submission.uploadStatus = "Thất bại";
-                lastSubmission = submission;
+                ShowNotification("Đang tải ảnh bài làm lên Google Drive...");
 
-                string displayErr = !string.IsNullOrEmpty(uploadError) ? uploadError : "Lỗi server";
-                ShowNotification($"Tải ảnh thất bại: {displayErr}. Nhấn Nộp bài để thử lại!");
-                Debug.LogError($"[TuLuan] Upload ảnh thất bại: {uploadError} (Submission ID: {currentSubmissionId})");
-                yield break;
+                bool uploadSuccess = false;
+                EssayImageUploadResponse uploadResp = null;
+                string uploadError = "";
+
+                yield return UploadEssayImageRoutine(
+                    submission.submissionId,
+                    selectedImageBytes,
+                    selectedImageMimeType,
+                    (success, resp, err) =>
+                    {
+                        uploadSuccess = success;
+                        uploadResp = resp;
+                        uploadError = err;
+                    }
+                );
+
+                if (!uploadSuccess)
+                {
+                    // Thất bại khi upload ảnh: Giữ nguyên văn bản & ảnh đã chọn, giữ currentSubmissionId để retry
+                    isSubmitting = false;
+                    if (btnNopBai != null) btnNopBai.interactable = true;
+                    submission.uploadStatus = "Tải ảnh thất bại";
+                    lastSubmission = submission;
+
+                    string displayErr = !string.IsNullOrEmpty(uploadError) ? uploadError : "Lỗi server Drive";
+                    ShowNotification($"Tải ảnh thất bại: {displayErr}. Nhấn Nộp bài để thử lại!");
+                    Debug.LogError($"[TuLuan] Upload ảnh thất bại: {uploadError} (Submission ID: {currentSubmissionId})");
+                    yield break;
+                }
+
+                uploadedDriveFileId = (uploadResp != null) ? uploadResp.fileId : "";
+                uploadedDriveFileUrl = (uploadResp != null) ? uploadResp.fileUrl : "";
+                uploadedDriveFileName = (uploadResp != null) ? uploadResp.fileName : "";
             }
 
-            // Upload thành công -> Lưu fileId, fileUrl, fileName vào model bài nộp
-            submission.driveFileId = (uploadResp != null) ? uploadResp.fileId : "";
-            submission.driveFileUrl = (uploadResp != null) ? uploadResp.fileUrl : "";
-            submission.driveFileName = (uploadResp != null) ? uploadResp.fileName : "";
-            submission.uploadStatus = "Đã tải lên";
-            Debug.Log($"[TuLuan] Upload ảnh thành công! FileId={submission.driveFileId} | Url={submission.driveFileUrl}");
+            submission.driveFileId = uploadedDriveFileId;
+            submission.driveFileUrl = uploadedDriveFileUrl;
+            submission.driveFileName = uploadedDriveFileName;
+            submission.uploadStatus = "Đã tải lên Drive";
+            fileUrlToSubmit = uploadedDriveFileUrl;
+            Debug.Log($"[TuLuan] Ảnh Drive đã sẵn sàng: FileId={submission.driveFileId} | Url={submission.driveFileUrl}");
         }
         else
         {
             submission.uploadStatus = "Không có ảnh";
+            fileUrlToSubmit = "";
         }
 
-        // Lưu dữ liệu bài nộp hoàn chỉnh
-        lastSubmission = submission;
-        isSubmitting = false;
-        if (btnNopBai != null) btnNopBai.interactable = true;
-        currentSubmissionId = ""; // Hoàn tất nộp bài thành công, giải phóng ID cho lượt mới
+        // 3. Tải ảnh hoàn tất -> Bắt đầu quá trình lưu bài và chấm AI: Hiển thị màn hình Loading
+        ShowLoading("AI đang chấm bài... Vui lòng chờ trong giây lát...");
 
-        // 3. Chấm điểm (Mock Result để kiểm thử - Chưa kết nối AI API)
-        if (useMockResult)
+        bool sheetSuccess = false;
+        EssaySubmissionSaveResponse sheetResp = null;
+        string sheetError = "";
+
+        yield return SaveSubmissionToSheetRoutine(
+            submission.submissionId,
+            submission.userId,
+            submission.cauHoiId,
+            submission.cauTraLoi,
+            fileUrlToSubmit,
+            (success, resp, err) =>
+            {
+                sheetSuccess = success;
+                sheetResp = resp;
+                sheetError = err;
+            }
+        );
+
+        if (!sheetSuccess)
         {
-            TuLuanGradingResult mockResult = GenerateMockResult(answerText, hasImage);
-            ShowResultPopup(mockResult);
+            // Thất bại khi lưu vào sheet: Ẩn loading, giữ nguyên bài làm và ảnh để retry
+            HideLoading();
+            isSubmitting = false;
+            if (btnNopBai != null) btnNopBai.interactable = true;
+            submission.uploadStatus = "Lưu Sheet thất bại";
+            lastSubmission = submission;
+
+            string displayErr = !string.IsNullOrEmpty(sheetError) ? sheetError : "Lỗi lưu dữ liệu Sheet";
+            ShowNotification($"Lưu bài nộp thất bại: {displayErr}. Nhấn Nộp bài để thử lại!");
+            Debug.LogError($"[TuLuan] Lưu Sheet thất bại: {sheetError} (Submission ID: {currentSubmissionId})");
+            yield break;
+        }
+
+        submission.isSavedToSheet = true;
+        submission.uploadStatus = "Đã lưu Sheet - Chờ AI chấm";
+        lastSubmission = submission;
+
+        Debug.Log($"[TuLuan] Lưu Google Sheets thành công! ID={submission.submissionId} | AlreadyExists={(sheetResp != null && sheetResp.alreadyExists)}");
+
+        // 4. Nhận kết quả chấm AI:
+        bool gradingDone = false;
+        TuLuanGradingResult realResult = null;
+        string gradingErrorMessage = "";
+
+        // Kiểm tra xem backend đã chấm xong và trả về kết quả trực tiếp trong phản hồi chưa
+        if (sheetResp != null && sheetResp.completed)
+        {
+            float finalScore = sheetResp.score;
+            string finalStatus = (finalScore >= 5.0f) ? "ĐẠT" : "CHƯA ĐẠT";
+
+            realResult = new TuLuanGradingResult
+            {
+                score = finalScore,
+                maxScore = 10f,
+                reviewText = sheetResp.feedback,
+                improvementSuggestion = sheetResp.improvements,
+                detailJson = sheetResp.criteria,
+                status = finalStatus,
+                isMock = false
+            };
+            gradingDone = true;
+            Debug.Log($"[TuLuan] Đã nhận kết quả AI trực tiếp từ backend: Điểm={finalScore} | {finalStatus}");
         }
         else
         {
-            ShowNotification("Bài nộp đã được ghi nhận thành công!");
+            // Nếu chưa xong trực tiếp: Gửi request kích hoạt backend và polling Google Sheets
+            yield return RequestBackendGradingRoutine(submission.submissionId);
+
+            yield return PollGradingResultRoutine(
+                submission.submissionId,
+                (success, result, err) =>
+                {
+                    gradingDone = success;
+                    realResult = result;
+                    gradingErrorMessage = err;
+                }
+            );
+        }
+
+        // Ẩn màn hình loading khi AI chấm xong
+        HideLoading();
+
+        if (gradingDone && realResult != null)
+        {
+            // Nhận kết quả AI thực tế thành công
+            submission.diemAI = realResult.score;
+            submission.nhanXetAI = realResult.reviewText;
+            submission.goiYCaiThien = realResult.improvementSuggestion;
+            submission.chiTietCham = realResult.detailJson;
+            submission.ketQua = realResult.status;
+            submission.trangThaiCham = "Completed";
+            lastSubmission = submission;
+
+            // Giải phóng trạng thái nộp bài cho lượt kế tiếp
+            isSubmitting = false;
+            if (btnNopBai != null) btnNopBai.interactable = true;
+            currentSubmissionId = "";
+            uploadedDriveFileId = "";
+            uploadedDriveFileUrl = "";
+            uploadedDriveFileName = "";
+
+            ShowResultPopup(realResult);
+        }
+        else
+        {
+            // AI chấm chưa hoàn tất hoặc timeout: Giữ nguyên bài làm của học sinh để retry
+            isSubmitting = false;
+            if (btnNopBai != null) btnNopBai.interactable = true;
+
+            string idShort = submission.submissionId.Length > 8 
+                ? submission.submissionId.Substring(0, 8) 
+                : submission.submissionId;
+
+            string notice = !string.IsNullOrEmpty(gradingErrorMessage)
+                ? $"Bài làm đã lưu (Mã: {idShort}...). {gradingErrorMessage}"
+                : $"Bài làm đã lưu (Mã: {idShort}...). AI đang ở trạng thái Chờ chấm (Pending). Backend cần kích hoạt trigger tự động.";
+
+            ShowNotification(notice);
+            Debug.LogWarning($"[TuLuan] AI chưa chấm xong hoặc timeout: {notice} (ID: {submission.submissionId})");
         }
     }
 
@@ -1320,30 +1489,206 @@ public class TuLuanController : MonoBehaviour
     }
 
     /// <summary>
-    /// Sinh Mock Result để kiểm thử các trường hợp điểm >= 5 (ĐẠT) và dưới 5 (CHƯA ĐẠT).
+    /// Gửi thông tin bài nộp lên Google Sheets (action = saveEssaySubmission).
+    /// Ghi dữ liệu vào sheet BaiNopTuLuan với trạng thái Pending.
     /// </summary>
-    private TuLuanGradingResult GenerateMockResult(string text, bool hasImage)
+    private IEnumerator SaveSubmissionToSheetRoutine(
+        string submissionId,
+        string userId,
+        string questionId,
+        string answerText,
+        string fileUrl,
+        Action<bool, EssaySubmissionSaveResponse, string> callback)
+    {
+        if (string.IsNullOrEmpty(backendApiUrl))
+        {
+            callback?.Invoke(false, null, "Chưa cấu hình URL backend.");
+            yield break;
+        }
+
+        WWWForm form = new WWWForm();
+        form.AddField("action", "saveEssaySubmission");
+        form.AddField("submissionId", submissionId);
+        form.AddField("userId", userId);
+        form.AddField("questionId", questionId);
+        form.AddField("answerText", answerText);
+        form.AddField("fileUrl", fileUrl ?? "");
+
+        using (UnityWebRequest req = UnityWebRequest.Post(backendApiUrl, form))
+        {
+            req.certificateHandler = new BypassCertificate();
+            req.timeout = 30; // Timeout 30s
+            yield return req.SendWebRequest();
+
+            if (req.result != UnityWebRequest.Result.Success)
+            {
+                callback?.Invoke(false, null, $"Lỗi kết nối ({req.error})");
+                yield break;
+            }
+
+            string responseText = req.downloadHandler.text;
+            Debug.Log($"[TuLuan] Backend saveEssaySubmission response: {responseText}");
+
+            EssaySubmissionSaveResponse resp = null;
+            try
+            {
+                resp = JsonUtility.FromJson<EssaySubmissionSaveResponse>(responseText);
+            }
+            catch (Exception ex)
+            {
+                callback?.Invoke(false, null, "Không đọc được phản hồi từ server: " + ex.Message);
+                yield break;
+            }
+
+            if (resp != null && resp.success)
+            {
+                callback?.Invoke(true, resp, null);
+            }
+            else
+            {
+                string msg = (resp != null && !string.IsNullOrEmpty(resp.message))
+                    ? resp.message
+                    : "Lỗi lưu bài nộp trên Google Sheets.";
+                callback?.Invoke(false, resp, msg);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Gửi request yêu cầu backend chấm bài theo SubmissionID nếu có action hỗ trợ.
+    /// Nếu backend bảo mật không mở trực tiếp action cho ANYONE_ANONYMOUS, request sẽ thất bại êm thấm và luồng chuyển sang polling.
+    /// </summary>
+    private IEnumerator RequestBackendGradingRoutine(string submissionId)
+    {
+        if (string.IsNullOrEmpty(backendApiUrl)) yield break;
+
+        WWWForm form = new WWWForm();
+        form.AddField("action", "gradeEssaySubmission");
+        form.AddField("submissionId", submissionId);
+
+        using (UnityWebRequest req = UnityWebRequest.Post(backendApiUrl, form))
+        {
+            req.certificateHandler = new BypassCertificate();
+            req.timeout = 10;
+            yield return req.SendWebRequest();
+
+            if (req.result == UnityWebRequest.Result.Success)
+            {
+                Debug.Log($"[TuLuan] Backend grade request response: {req.downloadHandler.text}");
+            }
+            else
+            {
+                Debug.Log($"[TuLuan] Backend grade request ignored or restricted: {req.error}");
+            }
+        }
+    }
+
+    /// <summary>
+    /// Thăm dò (polling) kết quả chấm AI thực tế từ Google Sheet BaiNopTuLuan qua Google Visualization Query API.
+    /// Polling mỗi 2.5 giây trong tối đa 25 giây (10 lần).
+    /// </summary>
+    public IEnumerator PollGradingResultRoutine(
+        string submissionId,
+        Action<bool, TuLuanGradingResult, string> callback)
+    {
+        string spreadsheetId = "1DcJwlN_fUDdcaQ6IfnlkMJApgWuEUqMhyZv9Kn8vfWo";
+        string sheetName = "BaiNopTuLuan";
+        string escapedQuery = UnityWebRequest.EscapeURL($"select * where A = '{submissionId}'");
+        string gvizUrl = $"https://docs.google.com/spreadsheets/d/{spreadsheetId}/gviz/tq?tqx=out:csv&sheet={sheetName}&tq={escapedQuery}";
+
+        const int maxPollAttempts = 10;
+        const float pollInterval = 2.5f;
+
+        for (int attempt = 1; attempt <= maxPollAttempts; attempt++)
+        {
+            yield return new WaitForSeconds(pollInterval);
+
+            using (UnityWebRequest req = UnityWebRequest.Get(gvizUrl))
+            {
+                req.certificateHandler = new BypassCertificate();
+                req.timeout = 15;
+                yield return req.SendWebRequest();
+
+                if (req.result != UnityWebRequest.Result.Success)
+                {
+                    Debug.LogWarning($"[TuLuan Polling] Lần {attempt}/{maxPollAttempts} lỗi mạng: {req.error}");
+                    continue;
+                }
+
+                string csvText = req.downloadHandler.text;
+                List<string[]> rows = ParseCSVRows(csvText);
+
+                // rows[0] là header, rows[1] là dòng dữ liệu nếu tìm thấy
+                if (rows != null && rows.Count >= 2)
+                {
+                    string[] cols = rows[1];
+                    if (cols != null && cols.Length >= 11)
+                    {
+                        string diemAiStr = cols[5].Trim();
+                        string nhanXetAi = cols.Length > 6 ? cols[6].Trim() : "";
+                        string goiYCaiThien = cols.Length > 7 ? cols[7].Trim() : "";
+                        string chiTietCham = cols.Length > 8 ? cols[8].Trim() : "";
+                        string trangThaiCham = cols[10].Trim();
+
+                        bool isCompleted = trangThaiCham.Equals("Completed", StringComparison.OrdinalIgnoreCase);
+                        bool hasScore = float.TryParse(diemAiStr, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out float scoreVal);
+
+                        if (isCompleted || (hasScore && !string.IsNullOrEmpty(diemAiStr)))
+                        {
+                            float finalScore = hasScore ? scoreVal : 0f;
+                            string finalStatus = (finalScore >= 5.0f) ? "ĐẠT" : "CHƯA ĐẠT";
+
+                            TuLuanGradingResult result = new TuLuanGradingResult
+                            {
+                                score = finalScore,
+                                maxScore = 10f,
+                                reviewText = nhanXetAi,
+                                improvementSuggestion = goiYCaiThien,
+                                detailJson = chiTietCham,
+                                status = finalStatus,
+                                isMock = false
+                            };
+
+                            Debug.Log($"[TuLuan Polling] Đã nhận kết quả AI thành công ở lần thử {attempt}: Điểm={finalScore} | {finalStatus}");
+                            callback?.Invoke(true, result, null);
+                            yield break;
+                        }
+                        else
+                        {
+                            Debug.Log($"[TuLuan Polling] Lần {attempt}/{maxPollAttempts}: Trạng thái '{trangThaiCham}', điểm '{diemAiStr}'");
+                        }
+                    }
+                }
+            }
+        }
+
+        // Hết thời gian chờ (Timeout)
+        callback?.Invoke(false, null, "Hết thời gian chờ kết quả AI (Timeout). Trạng thái hiện tại: Chờ chấm (Pending).");
+    }
+
+    /// <summary>
+    /// Sinh Mock Result để kiểm thử offline khi cần thiết (không dùng để quyết định gameplay nộp bài).
+    /// </summary>
+    public TuLuanGradingResult GenerateMockResult(string text, bool hasImage)
     {
         TuLuanGradingResult res = new TuLuanGradingResult();
         res.isMock = true;
 
-        // Nếu nội dung quá ngắn (< 25 ký tự) và không có ảnh đính kèm -> mô phỏng Điểm < 5 (Chưa đạt)
         if (text.Length < 25 && !hasImage)
         {
             res.score = 4.0f;
             res.status = "CHƯA ĐẠT";
-            res.reviewText = "• Bài làm còn quá sơ sài, chưa nêu đủ các ý chính của câu hỏi.\n" +
-                            "• Cần giải thích rõ cơ chế và chức năng của từng bộ phận.\n" +
-                            "• Gợi ý: Tham khảo lại kiến thức trong sách giáo khoa để bổ sung bài làm.";
+            res.reviewText = "• Bài làm còn sơ sài, chưa nêu đủ các ý chính của câu hỏi.\n" +
+                            "• Cần giải thích rõ cơ chế và chức năng của từng bộ phận.";
+            res.improvementSuggestion = "Tham khảo lại kiến thức trong sách giáo khoa để bổ sung bài làm.";
         }
         else
         {
-            // Bài làm chi tiết hoặc có ảnh bài làm -> mô phỏng Điểm >= 5 (Đạt)
             res.score = 8.5f;
             res.status = "ĐẠT";
             res.reviewText = "• Trả lời đúng trọng tâm câu hỏi, bố cục rõ ràng.\n" +
-                            "• Trình bày mạch lạc, nêu đúng tên và chức năng của các thành phần chính.\n" +
-                            "• Phát huy tốt tinh thần tự học và liên hệ thực tế.";
+                            "• Trình bày mạch lạc, nêu đúng tên và chức năng của các thành phần chính.";
+            res.improvementSuggestion = "Phát huy tốt tinh thần tự học và liên hệ thực tế sâu hơn.";
         }
 
         return res;
@@ -1414,22 +1759,40 @@ public class TuLuanController : MonoBehaviour
         if (txtPopupDiem != null)
         {
             txtPopupDiem.text = $"{result.score:0.0} / {result.maxScore:0}";
-            txtPopupDiem.color = result.score >= 5.0f 
-                ? new Color(0.2f, 0.85f, 0.2f) 
-                : new Color(0.95f, 0.25f, 0.25f);
+            txtPopupDiem.color = Color.black;
         }
 
         if (txtPopupKetQua != null)
         {
             txtPopupKetQua.text = result.status;
-            txtPopupKetQua.color = result.score >= 5.0f 
-                ? new Color(0.2f, 0.85f, 0.2f) 
-                : new Color(0.95f, 0.25f, 0.25f);
+            txtPopupKetQua.color = Color.black;
         }
 
         if (txtPopupNhanXet != null)
         {
-            txtPopupNhanXet.text = result.reviewText;
+            string fullReview = !string.IsNullOrEmpty(result.reviewText) ? result.reviewText.Trim() : "";
+            if (!string.IsNullOrEmpty(result.improvementSuggestion))
+            {
+                fullReview += "\n\n[Gợi ý cải thiện]:\n" + result.improvementSuggestion.Trim();
+            }
+            txtPopupNhanXet.text = fullReview;
+            txtPopupNhanXet.color = Color.black;
+
+            ScrollRect sr = txtPopupNhanXet.GetComponentInParent<ScrollRect>();
+            if (sr != null)
+            {
+                StartCoroutine(ResetScrollToTopRoutine(sr));
+            }
+        }
+
+        if (btnPopupDong != null)
+        {
+            TMP_Text txtBtn = btnPopupDong.GetComponentInChildren<TMP_Text>();
+            if (txtBtn != null)
+            {
+                txtBtn.text = "Tiếp tục";
+                txtBtn.color = Color.black;
+            }
         }
 
         if (txtPopupMockNotice != null)
@@ -1630,7 +1993,7 @@ public class TuLuanController : MonoBehaviour
         txtPopupKetQua.fontSize = 32;
         txtPopupKetQua.fontStyle = FontStyles.Bold;
         txtPopupKetQua.alignment = TextAlignmentOptions.Center;
-        txtPopupKetQua.color = new Color(0.2f, 0.85f, 0.2f);
+        txtPopupKetQua.color = Color.black;
 
         // 5. Điểm số
         GameObject diemObj = new GameObject("txtDiem", typeof(RectTransform));
@@ -1644,21 +2007,111 @@ public class TuLuanController : MonoBehaviour
         txtPopupDiem.fontSize = 52;
         txtPopupDiem.fontStyle = FontStyles.Bold;
         txtPopupDiem.alignment = TextAlignmentOptions.Center;
-        txtPopupDiem.color = new Color(1f, 0.85f, 0.2f);
+        txtPopupDiem.color = Color.black;
 
-        // 6. Nhận xét chi tiết
+        // 6. ScrollView Nhận xét chi tiết kèm Scrollbar dọc
+        GameObject scrollObj = new GameObject("ScrollView_NhanXet", typeof(RectTransform), typeof(ScrollRect));
+        scrollObj.transform.SetParent(frameObj.transform, false);
+        RectTransform rtScroll = scrollObj.GetComponent<RectTransform>();
+        rtScroll.anchoredPosition = new Vector2(0, -45);
+        rtScroll.sizeDelta = new Vector2(740, 240);
+
+        ScrollRect sRect = scrollObj.GetComponent<ScrollRect>();
+        sRect.horizontal = false;
+        sRect.vertical = true;
+        sRect.movementType = ScrollRect.MovementType.Clamped;
+        sRect.scrollSensitivity = 25f;
+
+        // Viewport
+        GameObject viewportObj = new GameObject("Viewport", typeof(RectTransform), typeof(RectMask2D), typeof(Image));
+        viewportObj.transform.SetParent(scrollObj.transform, false);
+        RectTransform rtVp = viewportObj.GetComponent<RectTransform>();
+        rtVp.anchorMin = Vector2.zero;
+        rtVp.anchorMax = Vector2.one;
+        rtVp.pivot = new Vector2(0f, 1f);
+        rtVp.offsetMin = Vector2.zero;
+        rtVp.offsetMax = new Vector2(-22, 0);
+
+        Image imgVp = viewportObj.GetComponent<Image>();
+        imgVp.color = Color.clear;
+
+        // Content
+        GameObject contentObj = new GameObject("Content", typeof(RectTransform), typeof(ContentSizeFitter), typeof(VerticalLayoutGroup));
+        contentObj.transform.SetParent(viewportObj.transform, false);
+        RectTransform rtContent = contentObj.GetComponent<RectTransform>();
+        rtContent.anchorMin = new Vector2(0, 1);
+        rtContent.anchorMax = new Vector2(1, 1);
+        rtContent.pivot = new Vector2(0.5f, 1);
+        rtContent.offsetMin = Vector2.zero;
+        rtContent.offsetMax = Vector2.zero;
+
+        ContentSizeFitter csf = contentObj.GetComponent<ContentSizeFitter>();
+        csf.horizontalFit = ContentSizeFitter.FitMode.Unconstrained;
+        csf.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+
+        VerticalLayoutGroup vlg = contentObj.GetComponent<VerticalLayoutGroup>();
+        vlg.padding = new RectOffset(6, 6, 6, 6);
+        vlg.childControlWidth = true;
+        vlg.childControlHeight = true;
+        vlg.childForceExpandWidth = true;
+        vlg.childForceExpandHeight = false;
+
+        // txtNhanXet bên trong Content
         GameObject nxObj = new GameObject("txtNhanXet", typeof(RectTransform));
-        nxObj.transform.SetParent(frameObj.transform, false);
+        nxObj.transform.SetParent(contentObj.transform, false);
         RectTransform rtNx = nxObj.GetComponent<RectTransform>();
-        rtNx.anchoredPosition = new Vector2(0, -20);
-        rtNx.sizeDelta = new Vector2(720, 180);
+        rtNx.anchorMin = new Vector2(0, 1);
+        rtNx.anchorMax = new Vector2(1, 1);
+        rtNx.pivot = new Vector2(0.5f, 1);
 
         txtPopupNhanXet = nxObj.AddComponent<TextMeshProUGUI>();
         txtPopupNhanXet.text = "Nhận xét chi tiết bài làm...";
-        txtPopupNhanXet.fontSize = 24;
+        txtPopupNhanXet.fontSize = 22;
         txtPopupNhanXet.alignment = TextAlignmentOptions.TopLeft;
         txtPopupNhanXet.textWrappingMode = TextWrappingModes.Normal;
-        txtPopupNhanXet.color = Color.white;
+        txtPopupNhanXet.overflowMode = TextOverflowModes.Overflow;
+        txtPopupNhanXet.color = Color.black;
+
+        // Scrollbar Vertical
+        GameObject sbObj = new GameObject("Scrollbar Vertical", typeof(RectTransform), typeof(Image), typeof(Scrollbar));
+        sbObj.transform.SetParent(scrollObj.transform, false);
+        RectTransform rtSb = sbObj.GetComponent<RectTransform>();
+        rtSb.anchorMin = new Vector2(1, 0);
+        rtSb.anchorMax = new Vector2(1, 1);
+        rtSb.pivot = new Vector2(1, 1);
+        rtSb.anchoredPosition = Vector2.zero;
+        rtSb.sizeDelta = new Vector2(16, 0);
+
+        Image imgTrack = sbObj.GetComponent<Image>();
+        imgTrack.color = new Color(0.85f, 0.85f, 0.85f, 0.6f);
+
+        Scrollbar sb = sbObj.GetComponent<Scrollbar>();
+        sb.direction = Scrollbar.Direction.BottomToTop;
+
+        GameObject slideArea = new GameObject("Sliding Area", typeof(RectTransform));
+        slideArea.transform.SetParent(sbObj.transform, false);
+        RectTransform rtSlide = slideArea.GetComponent<RectTransform>();
+        rtSlide.anchorMin = Vector2.zero;
+        rtSlide.anchorMax = Vector2.one;
+        rtSlide.sizeDelta = Vector2.zero;
+
+        GameObject handleObj = new GameObject("Handle", typeof(RectTransform), typeof(Image));
+        handleObj.transform.SetParent(slideArea.transform, false);
+        RectTransform rtHandle = handleObj.GetComponent<RectTransform>();
+        rtHandle.anchorMin = Vector2.zero;
+        rtHandle.anchorMax = Vector2.one;
+        rtHandle.sizeDelta = Vector2.zero;
+
+        Image imgHandle = handleObj.GetComponent<Image>();
+        imgHandle.color = new Color(0.35f, 0.35f, 0.35f, 0.85f);
+
+        sb.targetGraphic = imgHandle;
+        sb.handleRect = rtHandle;
+
+        sRect.content = rtContent;
+        sRect.viewport = rtVp;
+        sRect.verticalScrollbar = sb;
+        sRect.verticalScrollbarVisibility = ScrollRect.ScrollbarVisibility.AutoHide;
 
         // 7. Chú thích Mock test
         GameObject mockNoticeObj = new GameObject("txtMockNotice", typeof(RectTransform));
@@ -1698,13 +2151,24 @@ public class TuLuanController : MonoBehaviour
         tmpBtn.fontSize = 26;
         tmpBtn.fontStyle = FontStyles.Bold;
         tmpBtn.alignment = TextAlignmentOptions.Center;
-        tmpBtn.color = Color.white;
+        tmpBtn.color = Color.black;
 
         // Ẩn mặc định
         popupKetQua.SetActive(false);
 
-        // Đảm bảo có Toast thông báo
+        // Đảm bảo có Toast thông báo và Panel Loading
         EnsureToastNotification(canvas);
+        EnsureLoadingPanel(canvas);
+    }
+
+    private IEnumerator ResetScrollToTopRoutine(ScrollRect sr)
+    {
+        yield return null;
+        Canvas.ForceUpdateCanvases();
+        if (sr != null)
+        {
+            sr.verticalNormalizedPosition = 1f;
+        }
     }
 
     private void EnsureToastNotification(Canvas canvas)
@@ -1745,6 +2209,183 @@ public class TuLuanController : MonoBehaviour
         txtThongBao.color = new Color(1f, 0.9f, 0.4f);
 
         toast.SetActive(false);
+    }
+
+    private Coroutine loadingAnimCoroutine = null;
+
+    /// <summary>
+    /// Hiển thị màn hình loading kèm thông báo AI đang chấm bài cho người dùng biết.
+    /// </summary>
+    public void ShowLoading(string message = "AI đang chấm bài...")
+    {
+        if (panelLoading == null)
+        {
+            Canvas canvas = GetComponentInParent<Canvas>();
+            if (canvas == null) canvas = FindAnyObjectByType<Canvas>();
+            EnsureLoadingPanel(canvas);
+        }
+
+        if (panelLoading != null)
+        {
+            if (txtLoading != null && !string.IsNullOrEmpty(message))
+            {
+                txtLoading.text = message;
+            }
+            panelLoading.SetActive(true);
+            panelLoading.transform.SetAsLastSibling();
+
+            if (loadingAnimCoroutine != null) StopCoroutine(loadingAnimCoroutine);
+            loadingAnimCoroutine = StartCoroutine(AnimateLoadingRoutine(message));
+        }
+    }
+
+    /// <summary>
+    /// Ẩn màn hình loading khi AI chấm xong hoặc dừng.
+    /// </summary>
+    public void HideLoading()
+    {
+        if (loadingAnimCoroutine != null)
+        {
+            StopCoroutine(loadingAnimCoroutine);
+            loadingAnimCoroutine = null;
+        }
+
+        if (panelLoading != null)
+        {
+            panelLoading.SetActive(false);
+        }
+    }
+
+    /// <summary>
+    /// Hiệu ứng động nhấp nháy dấu chấm và xoay biểu tượng loading giúp người dùng thấy hệ thống đang xử lý.
+    /// </summary>
+    private IEnumerator AnimateLoadingRoutine(string baseMessage)
+    {
+        string baseText = string.IsNullOrEmpty(baseMessage) 
+            ? "AI đang chấm bài" 
+            : baseMessage.Replace("...", "").Replace("…", "").Trim();
+
+        int dotCount = 0;
+        Transform spinnerT = panelLoading != null ? panelLoading.transform.Find("Box/Spinner") : null;
+
+        while (true)
+        {
+            dotCount = (dotCount + 1) % 4;
+            string dots = new string('.', dotCount);
+
+            if (txtLoading != null)
+            {
+                txtLoading.text = baseText + dots;
+            }
+
+            if (spinnerT != null)
+            {
+                spinnerT.Rotate(0, 0, -45f);
+            }
+
+            yield return new WaitForSeconds(0.4f);
+        }
+    }
+
+    /// <summary>
+    /// Tự động khởi tạo giao diện Loading đồng bộ phong cách với game nếu chưa có trong Scene.
+    /// </summary>
+    private void EnsureLoadingPanel(Canvas canvas)
+    {
+        if (canvas == null) return;
+
+        Transform existing = canvas.transform.Find("PanelLoading");
+        if (existing != null)
+        {
+            panelLoading = existing.gameObject;
+            txtLoading = existing.Find("Box/txtLoading")?.GetComponent<TMP_Text>();
+            if (txtLoading == null) txtLoading = existing.GetComponentInChildren<TMP_Text>();
+            return;
+        }
+
+        // 1. Root Panel (Overlay đen mờ che màn hình chắn thao tác người dùng khi đang chấm)
+        GameObject loadingObj = new GameObject("PanelLoading", typeof(RectTransform));
+        loadingObj.transform.SetParent(canvas.transform, false);
+        panelLoading = loadingObj;
+
+        RectTransform rtRoot = loadingObj.GetComponent<RectTransform>();
+        rtRoot.anchorMin = Vector2.zero;
+        rtRoot.anchorMax = Vector2.one;
+        rtRoot.offsetMin = Vector2.zero;
+        rtRoot.offsetMax = Vector2.zero;
+
+        Image bgOverlay = loadingObj.AddComponent<Image>();
+        bgOverlay.color = new Color(0f, 0f, 0f, 0.65f);
+        bgOverlay.raycastTarget = true;
+
+        // 2. Box Khung thông báo ở giữa
+        GameObject boxObj = new GameObject("Box", typeof(RectTransform));
+        boxObj.transform.SetParent(loadingObj.transform, false);
+        RectTransform rtBox = boxObj.GetComponent<RectTransform>();
+        rtBox.sizeDelta = new Vector2(560, 200);
+        rtBox.anchoredPosition = Vector2.zero;
+
+        Image imgBox = boxObj.AddComponent<Image>();
+        Sprite frameSprite = null;
+        Transform khDe = canvas.transform.Find("KhungDe");
+        if (khDe != null)
+        {
+            Image imgDe = khDe.GetComponent<Image>();
+            if (imgDe != null) frameSprite = imgDe.sprite;
+        }
+
+        if (frameSprite != null)
+        {
+            imgBox.sprite = frameSprite;
+            imgBox.type = Image.Type.Sliced;
+        }
+        else
+        {
+            imgBox.color = new Color(0.14f, 0.10f, 0.08f, 0.95f);
+        }
+
+        // 3. Biểu tượng / Spinner xoay
+        GameObject spinnerObj = new GameObject("Spinner", typeof(RectTransform));
+        spinnerObj.transform.SetParent(boxObj.transform, false);
+        RectTransform rtSpinner = spinnerObj.GetComponent<RectTransform>();
+        rtSpinner.anchoredPosition = new Vector2(0, 38);
+        rtSpinner.sizeDelta = new Vector2(44, 44);
+
+        TextMeshProUGUI tmpSpin = spinnerObj.AddComponent<TextMeshProUGUI>();
+        tmpSpin.text = "⚙";
+        tmpSpin.fontSize = 38;
+        tmpSpin.alignment = TextAlignmentOptions.Center;
+        tmpSpin.color = new Color(1f, 0.85f, 0.2f);
+
+        // 4. Text tiêu đề loading
+        GameObject textObj = new GameObject("txtLoading", typeof(RectTransform));
+        textObj.transform.SetParent(boxObj.transform, false);
+        RectTransform rtText = textObj.GetComponent<RectTransform>();
+        rtText.anchoredPosition = new Vector2(0, -18);
+        rtText.sizeDelta = new Vector2(500, 45);
+
+        txtLoading = textObj.AddComponent<TextMeshProUGUI>();
+        txtLoading.text = "AI đang chấm bài...";
+        txtLoading.fontSize = 28;
+        txtLoading.fontStyle = FontStyles.Bold;
+        txtLoading.alignment = TextAlignmentOptions.Center;
+        txtLoading.color = new Color(1f, 0.92f, 0.55f);
+
+        // 5. Text phụ chú
+        GameObject subObj = new GameObject("txtSub", typeof(RectTransform));
+        subObj.transform.SetParent(boxObj.transform, false);
+        RectTransform rtSub = subObj.GetComponent<RectTransform>();
+        rtSub.anchoredPosition = new Vector2(0, -56);
+        rtSub.sizeDelta = new Vector2(500, 35);
+
+        TextMeshProUGUI tmpSub = subObj.AddComponent<TextMeshProUGUI>();
+        tmpSub.text = "Vui lòng chờ trong giây lát...";
+        tmpSub.fontSize = 20;
+        tmpSub.fontStyle = FontStyles.Italic;
+        tmpSub.alignment = TextAlignmentOptions.Center;
+        tmpSub.color = new Color(0.85f, 0.85f, 0.85f, 0.9f);
+
+        loadingObj.SetActive(false);
     }
     #endregion
 
