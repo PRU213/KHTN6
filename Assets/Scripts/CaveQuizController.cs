@@ -85,7 +85,26 @@ public class CaveQuizController : MonoBehaviour
 
     void OnEnable()
     {
+<<<<<<< Updated upstream
         StartCoroutine(Begin());
+=======
+        StopAllCoroutines();
+
+        if (GameSession.QuestionType == "Tự luận")
+        {
+            canMove = false;
+            locked = true;
+            CleanUp();
+            var essay = GetComponent<FootballEssayController>();
+            if (essay == null) essay = gameObject.AddComponent<FootballEssayController>();
+            essay.Open(this);
+            return;
+        }
+
+        StartCoroutine(
+            Begin()
+        );
+>>>>>>> Stashed changes
     }
 
     void OnDisable()

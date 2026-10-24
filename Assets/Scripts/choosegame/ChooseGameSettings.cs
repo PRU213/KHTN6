@@ -21,8 +21,28 @@ public class ChooseGameSettings : MonoBehaviour
     public GameSelectScreen gameSelectScreen;
     public GameObject chooseGamePanel;
 
+    void OnEnable()
+    {
+        bool supportsEssay = GameSession.SelectedGame == "Planet" || GameSession.SelectedGame == "Football" || GameSession.SelectedGame == "Sheep" || GameSession.SelectedGame == "Cave";
+        if (!supportsEssay && multipleChoiceToggle != null) multipleChoiceToggle.isOn = true;
+        if (essayToggle != null) {
+            essayToggle.interactable = supportsEssay;
+            if (!supportsEssay) essayToggle.isOn = false;
+        }
+        if (multipleChoiceToggle != null && (essayToggle == null || !essayToggle.isOn)) multipleChoiceToggle.isOn = true;
+    }
+
     private void Awake()
     {
+        // The scene's two toggles may not share a ToggleGroup.
+        if (multipleChoiceToggle != null) multipleChoiceToggle.onValueChanged.AddListener(value => {
+            if (value && essayToggle != null) essayToggle.isOn = false;
+            EnsureQuestionType();
+        });
+        if (essayToggle != null) essayToggle.onValueChanged.AddListener(value => {
+            if (value && multipleChoiceToggle != null) multipleChoiceToggle.isOn = false;
+            EnsureQuestionType();
+        });
         if (startButton != null)
         {
             startButton.onClick.AddListener(StartGame);
@@ -32,6 +52,15 @@ public class ChooseGameSettings : MonoBehaviour
         {
             backButton.onClick.AddListener(BackToGameSelect);
         }
+<<<<<<< Updated upstream
+=======
+    }
+
+    void EnsureQuestionType()
+    {
+        if (multipleChoiceToggle != null && !multipleChoiceToggle.isOn && (essayToggle == null || !essayToggle.isOn))
+            multipleChoiceToggle.isOn = true;
+>>>>>>> Stashed changes
     }
 
     public void StartGame()
@@ -66,10 +95,18 @@ public class ChooseGameSettings : MonoBehaviour
 
 
         // ============================
+<<<<<<< Updated upstream
         // 2. HIỆN TẠI CHỈ LÀM TRẮC NGHIỆM
         // ============================
 
         GameSession.QuestionType = "Trắc nghiệm";
+=======
+        // 2. LƯU HÌNH THỨC ĐÃ CHỌN
+        // ============================
+
+        bool supportsEssay = GameSession.SelectedGame == "Planet" || GameSession.SelectedGame == "Football" || GameSession.SelectedGame == "Sheep" || GameSession.SelectedGame == "Cave";
+        GameSession.QuestionType = supportsEssay && essayToggle != null && essayToggle.isOn ? "Tự luận" : "Trắc nghiệm";
+>>>>>>> Stashed changes
 
 
         // ============================
@@ -117,7 +154,7 @@ public class ChooseGameSettings : MonoBehaviour
 
         if (gameSelectScreen != null)
         {
-            gameSelectScreen.gameObject.SetActive(true);
+            gameSelectScreen.ReturnToSelection();
         }
     }
 }

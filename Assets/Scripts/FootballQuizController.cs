@@ -148,6 +148,12 @@ public class FootballQuizController : MonoBehaviour
     void OnEnable()
     {
         StopAllCoroutines();
+        if (GameSession.QuestionType == "Tự luận") {
+            var essay = GetComponent<FootballEssayController>();
+            if (essay == null) essay = gameObject.AddComponent<FootballEssayController>();
+            essay.Open(this);
+            return;
+        }
 
         StartCoroutine(
             LoadQuestions()

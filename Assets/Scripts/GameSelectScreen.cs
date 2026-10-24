@@ -19,6 +19,43 @@ public class GameSelectScreen : MonoBehaviour
     [Header("Danh sách game")]
     public GameEntry[] games;
 
+    [Header("Planet đối kháng")]
+    public Button duelButton;
+    public GameObject duelPanel;
+    GameObject duelHome;
+    bool duelConfigured;
+    bool directDuel;
+
+    public void ConfigureDuel()
+    {
+        if (duelConfigured || duelPanel == null) return;
+        duelConfigured = true;
+        if (duelButton != null)
+        {
+            duelHome = duelButton.GetComponentInParent<Canvas>().gameObject;
+            duelButton.onClick.AddListener(() => {
+                directDuel = true;
+                GameSession.SelectedGame = "Planet";
+                duelHome.SetActive(false);
+                gameObject.SetActive(false);
+                if (chooseGamePanel != null) chooseGamePanel.SetActive(true);
+            });
+        }
+        var planetIcon = transform.Find("game3");
+        if (planetIcon != null)
+        {
+            var button = planetIcon.GetComponent<Button>();
+            if (button == null) button = planetIcon.gameObject.AddComponent<Button>();
+            button.onClick.AddListener(() => SelectGame(new GameEntry { gameName = "Planet", gamePanel = duelPanel }));
+        }
+    }
+
+    public void ReturnToSelection()
+    {
+        if (directDuel && duelHome != null) { directDuel = false; duelHome.SetActive(true); }
+        else gameObject.SetActive(true);
+    }
+
     [Header("Nút quay lại")]
     public Button backButton;
 
@@ -29,6 +66,7 @@ public class GameSelectScreen : MonoBehaviour
 
     void Awake()
     {
+        ConfigureDuel();
         foreach (var g in games)
         {
             GameEntry entry = g;
@@ -71,6 +109,7 @@ public class GameSelectScreen : MonoBehaviour
     /// </summary>
     void SelectGame(GameEntry entry)
     {
+        directDuel = false;
         if (entry == null)
             return;
 
@@ -141,6 +180,7 @@ public class GameSelectScreen : MonoBehaviour
     /// </summary>
     public GameObject GetSelectedGamePanel()
     {
+        if (GameSession.SelectedGame == "Planet" && duelPanel != null) return duelPanel;
         foreach (var g in games)
         {
             if (

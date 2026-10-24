@@ -80,6 +80,8 @@ public class PhysicMapController : MonoBehaviour
 
     void OpenChapter(int chapter)
     {
+        GameSession.Subject = subjectName;
+        GameSession.Chapter = "Chương " + chapter;
         if (mapPanel != null)
             mapPanel.SetActive(false);
 

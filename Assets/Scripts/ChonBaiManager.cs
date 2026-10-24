@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -80,6 +80,15 @@ public class ChonBaiManager : MonoBehaviour
             else if (t.name == "TrungBinh") btnTrungBinh = t.GetComponent<Button>() ?? t.gameObject.AddComponent<Button>();
             else if (t.name == "Kho") btnKho = t.GetComponent<Button>() ?? t.gameObject.AddComponent<Button>();
             else if (t.name == "TongHop") btnTongHop = t.GetComponent<Button>() ?? t.gameObject.AddComponent<Button>();
+<<<<<<< Updated upstream
+=======
+            else if (t.name == "HomePage")
+            {
+                Button homeBtn = t.GetComponent<Button>() ?? t.gameObject.AddComponent<Button>();
+                homeBtn.onClick.RemoveAllListeners();
+                homeBtn.onClick.AddListener(() => SceneManager.LoadScene("HomePage"));
+            }
+>>>>>>> Stashed changes
         }
 
         if (listContainer != null)
@@ -402,3 +411,7 @@ public class ChonBaiManager : MonoBehaviour
 
 }
 
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes

@@ -64,7 +64,21 @@ public class SheepQuizController : MonoBehaviour
 
     void OnEnable()
     {
+<<<<<<< Updated upstream
         StartCoroutine(Begin());
+=======
+        StopAllCoroutines();
+        if (GameSession.QuestionType == "Tự luận") {
+            var essay = GetComponent<FootballEssayController>();
+            if (essay == null) essay = gameObject.AddComponent<FootballEssayController>();
+            essay.Open(this);
+            return;
+        }
+
+        StartCoroutine(
+            Begin()
+        );
+>>>>>>> Stashed changes
     }
 
     IEnumerator Begin()

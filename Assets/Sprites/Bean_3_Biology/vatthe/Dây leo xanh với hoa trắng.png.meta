@@ -1,4 +1,5 @@
 fileFormatVersion: 2
+<<<<<<<< Updated upstream:Assets/Sprites/Bean_3_Biology/vatthe/Dây leo xanh với hoa trắng.png.meta
 guid: c59c94587d83c0049a6686d5b4323789
 TextureImporter:
   internalIDToNameTable:
@@ -11,6 +12,17 @@ TextureImporter:
   - first:
       213: -6290381642831232221
     second: "D\xE2y leo xanh v\u1EDBi hoa tr\u1EAFng_2"
+========
+guid: f9e51df1af5641a40a42039d0d667def
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -2982373203027873618
+    second: 06_Nut_NopBai_0
+  - first:
+      213: 2810469755658132497
+    second: 06_Nut_NopBai_1
+>>>>>>>> Stashed changes:Assets/Sprites/Bean_3_Biology/vatthe/06_Nut_NopBai.png.meta
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -121,6 +133,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
+<<<<<<<< Updated upstream:Assets/Sprites/Bean_3_Biology/vatthe/Dây leo xanh với hoa trắng.png.meta
       name: "D\xE2y leo xanh v\u1EDBi hoa tr\u1EAFng_0"
       rect:
         serializedVersion: 2
@@ -128,6 +141,15 @@ TextureImporter:
         y: 21
         width: 875
         height: 1499
+========
+      name: 06_Nut_NopBai_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 99
+        width: 33
+        height: 14
+>>>>>>>> Stashed changes:Assets/Sprites/Bean_3_Biology/vatthe/06_Nut_NopBai.png.meta
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -136,13 +158,19 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
+<<<<<<<< Updated upstream:Assets/Sprites/Bean_3_Biology/vatthe/Dây leo xanh với hoa trắng.png.meta
       spriteID: 1c453da017081c2c0800000000000000
       internalID: -4413104936845093695
+========
+      spriteID: ea031e58f5b7c96d0800000000000000
+      internalID: -2982373203027873618
+>>>>>>>> Stashed changes:Assets/Sprites/Bean_3_Biology/vatthe/06_Nut_NopBai.png.meta
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
+<<<<<<<< Updated upstream:Assets/Sprites/Bean_3_Biology/vatthe/Dây leo xanh với hoa trắng.png.meta
       name: "D\xE2y leo xanh v\u1EDBi hoa tr\u1EAFng_1"
       rect:
         serializedVersion: 2
@@ -150,6 +178,15 @@ TextureImporter:
         y: 1046
         width: 7
         height: 10
+========
+      name: 06_Nut_NopBai_1
+      rect:
+        serializedVersion: 2
+        x: 10
+        y: 0
+        width: 659
+        height: 157
+>>>>>>>> Stashed changes:Assets/Sprites/Bean_3_Biology/vatthe/06_Nut_NopBai.png.meta
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -158,6 +195,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
+<<<<<<<< Updated upstream:Assets/Sprites/Bean_3_Biology/vatthe/Dây leo xanh với hoa trắng.png.meta
       spriteID: c251b9e4dbf9d2810800000000000000
       internalID: 1742224266278671660
       vertices: []
@@ -182,6 +220,10 @@ TextureImporter:
       bones: []
       spriteID: 3230865493314b8a0800000000000000
       internalID: -6290381642831232221
+========
+      spriteID: 11c5bfd2a5bc00720800000000000000
+      internalID: 2810469755658132497
+>>>>>>>> Stashed changes:Assets/Sprites/Bean_3_Biology/vatthe/06_Nut_NopBai.png.meta
       vertices: []
       indices: 
       edges: []
@@ -200,9 +242,14 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
+<<<<<<<< Updated upstream:Assets/Sprites/Bean_3_Biology/vatthe/Dây leo xanh với hoa trắng.png.meta
       "D\xE2y leo xanh v\u1EDBi hoa tr\u1EAFng_0": -4413104936845093695
       "D\xE2y leo xanh v\u1EDBi hoa tr\u1EAFng_1": 1742224266278671660
       "D\xE2y leo xanh v\u1EDBi hoa tr\u1EAFng_2": -6290381642831232221
+========
+      06_Nut_NopBai_0: -2982373203027873618
+      06_Nut_NopBai_1: 2810469755658132497
+>>>>>>>> Stashed changes:Assets/Sprites/Bean_3_Biology/vatthe/06_Nut_NopBai.png.meta
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
