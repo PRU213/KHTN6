@@ -1,0 +1,1101 @@
+{
+  "screen": "02_Trac_nghiem",
+  "title": "Tạo câu hỏi trắc nghiệm",
+  "referenceResolution": [
+    1920,
+    1080
+  ],
+  "coordinateSystem": "Top-left origin; rect=[x,y,width,height]; pixels at reference resolution",
+  "unityCanvas": {
+    "renderMode": "ScreenSpaceOverlay",
+    "scaleMode": "ScaleWithScreenSize",
+    "matchWidthOrHeight": 0.5
+  },
+  "elements": [
+    {
+      "name": "Background",
+      "type": "Image",
+      "sprite": "Sprites/Backgrounds/background_forest_1920x1080.png",
+      "rect": [
+        0,
+        0,
+        1920,
+        1080
+      ],
+      "sliced": false
+    },
+    {
+      "name": "BackdropDim",
+      "type": "Image",
+      "sprite": "Sprites/Backgrounds/overlay_dim.png",
+      "rect": [
+        0,
+        0,
+        1920,
+        1080
+      ],
+      "sliced": false
+    },
+    {
+      "name": "BackButton",
+      "type": "Button",
+      "sprite": "Sprites/UI/button_dark.png",
+      "rect": [
+        54,
+        29,
+        78,
+        78
+      ],
+      "sliced": true
+    },
+    {
+      "name": "icon_back",
+      "type": "Image",
+      "sprite": "Sprites/Icons/icon_back.png",
+      "rect": [
+        70,
+        45,
+        46,
+        46
+      ],
+      "sliced": false
+    },
+    {
+      "name": "PHÒNG GIÁO VIÊN",
+      "type": "TextMeshProUGUI",
+      "text": "PHÒNG GIÁO VIÊN",
+      "rect": [
+        151,
+        31,
+        730,
+        44
+      ],
+      "fontSize": 32,
+      "fontWeight": "Bold",
+      "color": "#fff6dc",
+      "alignment": "left",
+      "wrap": true
+    },
+    {
+      "name": "Khoa học tự nhiên 6",
+      "type": "TextMeshProUGUI",
+      "text": "Khoa học tự nhiên 6",
+      "rect": [
+        153,
+        79,
+        690,
+        29
+      ],
+      "fontSize": 21,
+      "fontWeight": "Regular",
+      "color": "#b0d0cb",
+      "alignment": "left",
+      "wrap": true
+    },
+    {
+      "name": "AccountBar",
+      "type": "Image",
+      "sprite": "Sprites/UI/header_account.png",
+      "rect": [
+        1050,
+        18,
+        814,
+        138
+      ],
+      "sliced": true
+    },
+    {
+      "name": "AvatarFrame",
+      "type": "Image",
+      "sprite": "Sprites/UI/avatar_frame.png",
+      "rect": [
+        1070,
+        31,
+        110,
+        110
+      ],
+      "sliced": true
+    },
+    {
+      "name": "TeacherAvatar",
+      "type": "Image",
+      "sprite": "Sprites/Characters/teacher_avatar.png",
+      "rect": [
+        1082,
+        39,
+        86,
+        94
+      ],
+      "sliced": false
+    },
+    {
+      "name": "Xin chào!",
+      "type": "TextMeshProUGUI",
+      "text": "Xin chào!",
+      "rect": [
+        1201,
+        35,
+        334,
+        32
+      ],
+      "fontSize": 22,
+      "fontWeight": "Regular",
+      "color": "#786044",
+      "alignment": "left",
+      "wrap": false
+    },
+    {
+      "name": "Giáo viên",
+      "type": "TextMeshProUGUI",
+      "text": "Giáo viên",
+      "rect": [
+        1201,
+        72,
+        334,
+        54
+      ],
+      "fontSize": 32,
+      "fontWeight": "Bold",
+      "color": "#35473d",
+      "alignment": "left",
+      "wrap": false
+    },
+    {
+      "name": "Cài đặt",
+      "type": "Button",
+      "sprite": "Sprites/UI/button_gold.png",
+      "rect": [
+        1548,
+        30,
+        96,
+        110
+      ],
+      "sliced": true
+    },
+    {
+      "name": "icon_gear",
+      "type": "Image",
+      "sprite": "Sprites/Icons/icon_gear.png",
+      "rect": [
+        1570,
+        40,
+        52,
+        52
+      ],
+      "sliced": false
+    },
+    {
+      "name": "Cài đặt",
+      "type": "TextMeshProUGUI",
+      "text": "Cài đặt",
+      "rect": [
+        1556,
+        96,
+        80,
+        28
+      ],
+      "fontSize": 18,
+      "fontWeight": "Bold",
+      "color": "#fff6dc",
+      "alignment": "center",
+      "wrap": false
+    },
+    {
+      "name": "Xếp hạng",
+      "type": "Button",
+      "sprite": "Sprites/UI/button_gold.png",
+      "rect": [
+        1646,
+        30,
+        96,
+        110
+      ],
+      "sliced": true
+    },
+    {
+      "name": "icon_trophy",
+      "type": "Image",
+      "sprite": "Sprites/Icons/icon_trophy.png",
+      "rect": [
+        1668,
+        40,
+        52,
+        52
+      ],
+      "sliced": false
+    },
+    {
+      "name": "Xếp hạng",
+      "type": "TextMeshProUGUI",
+      "text": "Xếp hạng",
+      "rect": [
+        1654,
+        96,
+        80,
+        28
+      ],
+      "fontSize": 18,
+      "fontWeight": "Bold",
+      "color": "#fff6dc",
+      "alignment": "center",
+      "wrap": false
+    },
+    {
+      "name": "Thoát",
+      "type": "Button",
+      "sprite": "Sprites/UI/button_gold.png",
+      "rect": [
+        1744,
+        30,
+        96,
+        110
+      ],
+      "sliced": true
+    },
+    {
+      "name": "icon_exit",
+      "type": "Image",
+      "sprite": "Sprites/Icons/icon_exit.png",
+      "rect": [
+        1766,
+        40,
+        52,
+        52
+      ],
+      "sliced": false
+    },
+    {
+      "name": "Thoát",
+      "type": "TextMeshProUGUI",
+      "text": "Thoát",
+      "rect": [
+        1752,
+        96,
+        80,
+        28
+      ],
+      "fontSize": 18,
+      "fontWeight": "Bold",
+      "color": "#fff6dc",
+      "alignment": "center",
+      "wrap": false
+    },
+    {
+      "name": "Tạo câu hỏi trắc nghiệm",
+      "type": "TextMeshProUGUI",
+      "text": "Tạo câu hỏi trắc nghiệm",
+      "rect": [
+        66,
+        163,
+        1310,
+        61
+      ],
+      "fontSize": 40,
+      "fontWeight": "Bold",
+      "color": "#fff6dc",
+      "alignment": "left",
+      "wrap": true
+    },
+    {
+      "name": "Soạn nội dung, thêm 4 phương án và chọn ",
+      "type": "TextMeshProUGUI",
+      "text": "Soạn nội dung, thêm 4 phương án và chọn một đáp án đúng.",
+      "rect": [
+        69,
+        220,
+        1460,
+        28
+      ],
+      "fontSize": 19,
+      "fontWeight": "Regular",
+      "color": "#c0d8cf",
+      "alignment": "left",
+      "wrap": true
+    },
+    {
+      "name": "PageBadge",
+      "type": "Image",
+      "sprite": "Sprites/UI/tag_green.png",
+      "rect": [
+        1600,
+        176,
+        248,
+        48
+      ],
+      "sliced": true
+    },
+    {
+      "name": "TRẮC NGHIỆM",
+      "type": "TextMeshProUGUI",
+      "text": "TRẮC NGHIỆM",
+      "rect": [
+        1610,
+        187,
+        228,
+        29
+      ],
+      "fontSize": 18,
+      "fontWeight": "Bold",
+      "color": "#fff6dc",
+      "alignment": "center",
+      "wrap": true
+    },
+    {
+      "name": "QuestionForm",
+      "type": "Image",
+      "sprite": "Sprites/UI/panel_main.png",
+      "rect": [
+        58,
+        269,
+        1804,
+        691
+      ],
+      "sliced": true
+    },
+    {
+      "name": "THÔNG TIN CÂU HỎI",
+      "type": "TextMeshProUGUI",
+      "text": "THÔNG TIN CÂU HỎI",
+      "rect": [
+        94,
+        294,
+        365,
+        29
+      ],
+      "fontSize": 20,
+      "fontWeight": "Bold",
+      "color": "#edc36f",
+      "alignment": "left",
+      "wrap": true
+    },
+    {
+      "name": "NỘI DUNG & ĐÁP ÁN",
+      "type": "TextMeshProUGUI",
+      "text": "NỘI DUNG & ĐÁP ÁN",
+      "rect": [
+        512,
+        294,
+        1255,
+        29
+      ],
+      "fontSize": 20,
+      "fontWeight": "Bold",
+      "color": "#edc36f",
+      "alignment": "left",
+      "wrap": true
+    },
+    {
+      "name": "ColumnDivider",
+      "type": "SolidColor",
+      "color": "#3c6160",
+      "rect": [
+        478,
+        305,
+        2,
+        618
+      ]
+    },
+    {
+      "name": "Mã câu hỏi",
+      "type": "TextMeshProUGUI",
+      "text": "Mã câu hỏi",
+      "rect": [
+        94,
+        340,
+        352,
+        30
+      ],
+      "fontSize": 21,
+      "fontWeight": "Bold",
+      "color": "#edc36f",
+      "alignment": "left",
+      "wrap": true
+    },
+    {
+      "name": "id",
+      "type": "TMP_InputField",
+      "sprite": "Sprites/UI/field_readonly.png",
+      "rect": [
+        94,
+        374,
+        352,
+        56
+      ],
+      "sliced": true,
+      "field": "id"
+    },
+    {
+      "name": "Tự động khi lưu",
+      "type": "TextMeshProUGUI",
+      "text": "Tự động khi lưu",
+      "rect": [
+        110,
+        387,
+        320,
+        38
+      ],
+      "fontSize": 22,
+      "fontWeight": "Regular",
+      "color": "#263c3c",
+      "alignment": "left",
+      "wrap": true,
+      "field": "id"
+    },
+    {
+      "name": "Môn học *",
+      "type": "TextMeshProUGUI",
+      "text": "Môn học *",
+      "rect": [
+        94,
+        444,
+        352,
+        30
+      ],
+      "fontSize": 21,
+      "fontWeight": "Bold",
+      "color": "#edc36f",
+      "alignment": "left",
+      "wrap": true
+    },
+    {
+      "name": "monID",
+      "type": "TMP_Dropdown",
+      "sprite": "Sprites/UI/field_cream.png",
+      "rect": [
+        94,
+        478,
+        352,
+        56
+      ],
+      "sliced": true,
+      "field": "monID"
+    },
+    {
+      "name": "Vật lý",
+      "type": "TextMeshProUGUI",
+      "text": "Vật lý",
+      "rect": [
+        110,
+        491,
+        270,
+        38
+      ],
+      "fontSize": 22,
+      "fontWeight": "Regular",
+      "color": "#263c3c",
+      "alignment": "left",
+      "wrap": true
+    },
+    {
+      "name": "monID_Arrow",
+      "type": "Image",
+      "sprite": "Sprites/Icons/icon_chevron_ink.png",
+      "rect": [
+        403,
+        489,
+        30,
+        30
+      ],
+      "sliced": false,
+      "field": "monID"
+    },
+    {
+      "name": "Chương / Chủ đề *",
+      "type": "TextMeshProUGUI",
+      "text": "Chương / Chủ đề *",
+      "rect": [
+        94,
+        548,
+        352,
+        30
+      ],
+      "fontSize": 21,
+      "fontWeight": "Bold",
+      "color": "#edc36f",
+      "alignment": "left",
+      "wrap": true
+    },
+    {
+      "name": "Chương / Chủ đề",
+      "type": "TMP_Dropdown",
+      "sprite": "Sprites/UI/field_cream.png",
+      "rect": [
+        94,
+        582,
+        352,
+        80
+      ],
+      "sliced": true,
+      "field": "Chương / Chủ đề"
+    },
+    {
+      "name": "Chương 1: Mở đầu\nvà Các phép đo",
+      "type": "TextMeshProUGUI",
+      "text": "Chương 1: Mở đầu\nvà Các phép đo",
+      "rect": [
+        110,
+        595,
+        270,
+        62
+      ],
+      "fontSize": 22,
+      "fontWeight": "Regular",
+      "color": "#263c3c",
+      "alignment": "left",
+      "wrap": true
+    },
+    {
+      "name": "Chương / Chủ đề_Arrow",
+      "type": "Image",
+      "sprite": "Sprites/Icons/icon_chevron_ink.png",
+      "rect": [
+        403,
+        593,
+        30,
+        30
+      ],
+      "sliced": false,
+      "field": "Chương / Chủ đề"
+    },
+    {
+      "name": "Độ khó *",
+      "type": "TextMeshProUGUI",
+      "text": "Độ khó *",
+      "rect": [
+        94,
+        674,
+        352,
+        30
+      ],
+      "fontSize": 21,
+      "fontWeight": "Bold",
+      "color": "#edc36f",
+      "alignment": "left",
+      "wrap": true
+    },
+    {
+      "name": "difficulty",
+      "type": "TMP_Dropdown",
+      "sprite": "Sprites/UI/field_cream.png",
+      "rect": [
+        94,
+        708,
+        352,
+        56
+      ],
+      "sliced": true,
+      "field": "difficulty"
+    },
+    {
+      "name": "Dễ",
+      "type": "TextMeshProUGUI",
+      "text": "Dễ",
+      "rect": [
+        110,
+        721,
+        270,
+        38
+      ],
+      "fontSize": 22,
+      "fontWeight": "Regular",
+      "color": "#263c3c",
+      "alignment": "left",
+      "wrap": true
+    },
+    {
+      "name": "difficulty_Arrow",
+      "type": "Image",
+      "sprite": "Sprites/Icons/icon_chevron_ink.png",
+      "rect": [
+        403,
+        719,
+        30,
+        30
+      ],
+      "sliced": false,
+      "field": "difficulty"
+    },
+    {
+      "name": "Điểm câu hỏi *",
+      "type": "TextMeshProUGUI",
+      "text": "Điểm câu hỏi *",
+      "rect": [
+        94,
+        778,
+        352,
+        30
+      ],
+      "fontSize": 21,
+      "fontWeight": "Bold",
+      "color": "#edc36f",
+      "alignment": "left",
+      "wrap": true
+    },
+    {
+      "name": "points",
+      "type": "TMP_InputField",
+      "sprite": "Sprites/UI/field_cream.png",
+      "rect": [
+        94,
+        812,
+        352,
+        56
+      ],
+      "sliced": true,
+      "field": "points"
+    },
+    {
+      "name": "10",
+      "type": "TextMeshProUGUI",
+      "text": "10",
+      "rect": [
+        110,
+        825,
+        320,
+        38
+      ],
+      "fontSize": 22,
+      "fontWeight": "Regular",
+      "color": "#263c3c",
+      "alignment": "left",
+      "wrap": true,
+      "field": "points"
+    },
+    {
+      "name": "Nội dung câu hỏi *",
+      "type": "TextMeshProUGUI",
+      "text": "Nội dung câu hỏi *",
+      "rect": [
+        512,
+        340,
+        1308,
+        30
+      ],
+      "fontSize": 21,
+      "fontWeight": "Bold",
+      "color": "#edc36f",
+      "alignment": "left",
+      "wrap": true
+    },
+    {
+      "name": "question",
+      "type": "TMP_InputField",
+      "sprite": "Sprites/UI/field_cream.png",
+      "rect": [
+        512,
+        374,
+        1308,
+        108
+      ],
+      "sliced": true,
+      "field": "question"
+    },
+    {
+      "name": "Đơn vị đo chiều dài trong hệ đo lường ch",
+      "type": "TextMeshProUGUI",
+      "text": "Đơn vị đo chiều dài trong hệ đo lường chuẩn quốc tế (SI) là gì?",
+      "rect": [
+        528,
+        387,
+        1276,
+        90
+      ],
+      "fontSize": 22,
+      "fontWeight": "Regular",
+      "color": "#263c3c",
+      "alignment": "left",
+      "wrap": true,
+      "field": "question"
+    },
+    {
+      "name": "Phương án A *",
+      "type": "TextMeshProUGUI",
+      "text": "Phương án A *",
+      "rect": [
+        512,
+        502,
+        440,
+        29
+      ],
+      "fontSize": 21,
+      "fontWeight": "Bold",
+      "color": "#edc36f",
+      "alignment": "left",
+      "wrap": true
+    },
+    {
+      "name": "option_a",
+      "type": "TMP_InputField",
+      "sprite": "Sprites/UI/field_cream.png",
+      "rect": [
+        512,
+        536,
+        640,
+        62
+      ],
+      "sliced": true,
+      "field": "option_a"
+    },
+    {
+      "name": "option_a_Correct",
+      "type": "Toggle",
+      "sprite": "Sprites/Controls/radio_off.png",
+      "rect": [
+        525,
+        547,
+        40,
+        40
+      ],
+      "sliced": false,
+      "field": "correct_option"
+    },
+    {
+      "name": "Centimet (cm)",
+      "type": "TextMeshProUGUI",
+      "text": "Centimet (cm)",
+      "rect": [
+        577,
+        552,
+        553,
+        38
+      ],
+      "fontSize": 22,
+      "fontWeight": "Regular",
+      "color": "#263c3c",
+      "alignment": "left",
+      "wrap": true
+    },
+    {
+      "name": "Phương án B *",
+      "type": "TextMeshProUGUI",
+      "text": "Phương án B *",
+      "rect": [
+        1180,
+        502,
+        440,
+        29
+      ],
+      "fontSize": 21,
+      "fontWeight": "Bold",
+      "color": "#edc36f",
+      "alignment": "left",
+      "wrap": true
+    },
+    {
+      "name": "option_b",
+      "type": "TMP_InputField",
+      "sprite": "Sprites/UI/field_cream.png",
+      "rect": [
+        1180,
+        536,
+        640,
+        62
+      ],
+      "sliced": true,
+      "field": "option_b"
+    },
+    {
+      "name": "option_b_Correct",
+      "type": "Toggle",
+      "sprite": "Sprites/Controls/radio_on.png",
+      "rect": [
+        1193,
+        547,
+        40,
+        40
+      ],
+      "sliced": false,
+      "field": "correct_option"
+    },
+    {
+      "name": "Met (m)",
+      "type": "TextMeshProUGUI",
+      "text": "Met (m)",
+      "rect": [
+        1245,
+        552,
+        553,
+        38
+      ],
+      "fontSize": 22,
+      "fontWeight": "Regular",
+      "color": "#263c3c",
+      "alignment": "left",
+      "wrap": true
+    },
+    {
+      "name": "Phương án C *",
+      "type": "TextMeshProUGUI",
+      "text": "Phương án C *",
+      "rect": [
+        512,
+        610,
+        440,
+        29
+      ],
+      "fontSize": 21,
+      "fontWeight": "Bold",
+      "color": "#edc36f",
+      "alignment": "left",
+      "wrap": true
+    },
+    {
+      "name": "option_c",
+      "type": "TMP_InputField",
+      "sprite": "Sprites/UI/field_cream.png",
+      "rect": [
+        512,
+        644,
+        640,
+        62
+      ],
+      "sliced": true,
+      "field": "option_c"
+    },
+    {
+      "name": "option_c_Correct",
+      "type": "Toggle",
+      "sprite": "Sprites/Controls/radio_off.png",
+      "rect": [
+        525,
+        655,
+        40,
+        40
+      ],
+      "sliced": false,
+      "field": "correct_option"
+    },
+    {
+      "name": "Kilomet (km)",
+      "type": "TextMeshProUGUI",
+      "text": "Kilomet (km)",
+      "rect": [
+        577,
+        660,
+        553,
+        38
+      ],
+      "fontSize": 22,
+      "fontWeight": "Regular",
+      "color": "#263c3c",
+      "alignment": "left",
+      "wrap": true
+    },
+    {
+      "name": "Phương án D *",
+      "type": "TextMeshProUGUI",
+      "text": "Phương án D *",
+      "rect": [
+        1180,
+        610,
+        440,
+        29
+      ],
+      "fontSize": 21,
+      "fontWeight": "Bold",
+      "color": "#edc36f",
+      "alignment": "left",
+      "wrap": true
+    },
+    {
+      "name": "option_d",
+      "type": "TMP_InputField",
+      "sprite": "Sprites/UI/field_cream.png",
+      "rect": [
+        1180,
+        644,
+        640,
+        62
+      ],
+      "sliced": true,
+      "field": "option_d"
+    },
+    {
+      "name": "option_d_Correct",
+      "type": "Toggle",
+      "sprite": "Sprites/Controls/radio_off.png",
+      "rect": [
+        1193,
+        655,
+        40,
+        40
+      ],
+      "sliced": false,
+      "field": "correct_option"
+    },
+    {
+      "name": "Milimet (mm)",
+      "type": "TextMeshProUGUI",
+      "text": "Milimet (mm)",
+      "rect": [
+        1245,
+        660,
+        553,
+        38
+      ],
+      "fontSize": 22,
+      "fontWeight": "Regular",
+      "color": "#263c3c",
+      "alignment": "left",
+      "wrap": true
+    },
+    {
+      "name": "Chọn vòng tròn trước phương án để đánh d",
+      "type": "TextMeshProUGUI",
+      "text": "Chọn vòng tròn trước phương án để đánh dấu đáp án đúng.",
+      "rect": [
+        514,
+        716,
+        1280,
+        28
+      ],
+      "fontSize": 18,
+      "fontWeight": "Regular",
+      "color": "#9ec9ba",
+      "alignment": "left",
+      "wrap": true
+    },
+    {
+      "name": "Giải thích đáp án",
+      "type": "TextMeshProUGUI",
+      "text": "Giải thích đáp án",
+      "rect": [
+        512,
+        758,
+        1308,
+        30
+      ],
+      "fontSize": 21,
+      "fontWeight": "Bold",
+      "color": "#edc36f",
+      "alignment": "left",
+      "wrap": true
+    },
+    {
+      "name": "explanation",
+      "type": "TMP_InputField",
+      "sprite": "Sprites/UI/field_cream.png",
+      "rect": [
+        512,
+        792,
+        1308,
+        123
+      ],
+      "sliced": true,
+      "field": "explanation"
+    },
+    {
+      "name": "Đơn vị đo độ dài cơ bản trong hệ SI là m",
+      "type": "TextMeshProUGUI",
+      "text": "Đơn vị đo độ dài cơ bản trong hệ SI là mét (m).",
+      "rect": [
+        528,
+        805,
+        1276,
+        105
+      ],
+      "fontSize": 22,
+      "fontWeight": "Regular",
+      "color": "#263c3c",
+      "alignment": "left",
+      "wrap": true,
+      "field": "explanation"
+    },
+    {
+      "name": "* Trường bắt buộc  ·  Mã câu hỏi được tạ",
+      "type": "TextMeshProUGUI",
+      "text": "* Trường bắt buộc  ·  Mã câu hỏi được tạo tự động khi lưu.",
+      "rect": [
+        76,
+        994,
+        1000,
+        30
+      ],
+      "fontSize": 18,
+      "fontWeight": "Regular",
+      "color": "#c5ddd3",
+      "alignment": "left",
+      "wrap": true
+    },
+    {
+      "name": "Làm mới",
+      "type": "Button",
+      "sprite": "Sprites/UI/button_dark.png",
+      "rect": [
+        1300,
+        980,
+        230,
+        72
+      ],
+      "sliced": true
+    },
+    {
+      "name": "icon_refresh",
+      "type": "Image",
+      "sprite": "Sprites/Icons/icon_refresh.png",
+      "rect": [
+        1319,
+        1000,
+        32,
+        32
+      ],
+      "sliced": false
+    },
+    {
+      "name": "Làm mới",
+      "type": "TextMeshProUGUI",
+      "text": "Làm mới",
+      "rect": [
+        1360,
+        992,
+        150,
+        52
+      ],
+      "fontSize": 22,
+      "fontWeight": "Bold",
+      "color": "#fff6dc",
+      "alignment": "center",
+      "wrap": false
+    },
+    {
+      "name": "Lưu câu hỏi",
+      "type": "Button",
+      "sprite": "Sprites/UI/button_teal.png",
+      "rect": [
+        1552,
+        980,
+        298,
+        72
+      ],
+      "sliced": true
+    },
+    {
+      "name": "icon_save",
+      "type": "Image",
+      "sprite": "Sprites/Icons/icon_save.png",
+      "rect": [
+        1571,
+        1000,
+        32,
+        32
+      ],
+      "sliced": false
+    },
+    {
+      "name": "Lưu câu hỏi",
+      "type": "TextMeshProUGUI",
+      "text": "Lưu câu hỏi",
+      "rect": [
+        1612,
+        992,
+        218,
+        52
+      ],
+      "fontSize": 22,
+      "fontWeight": "Bold",
+      "color": "#fff6dc",
+      "alignment": "center",
+      "wrap": false
+    }
+  ]
+}

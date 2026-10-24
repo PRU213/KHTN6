@@ -1,0 +1,475 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Text;
+using UnityEngine;
+using UnityEngine.Networking;
+
+namespace KHTN6.Teacher
+{
+    [Serializable] public class TeacherQuestion
+    {
+        public string id, monID, chapter, difficulty, points, question;
+        public string option_a, option_b, option_c, option_d, correct_option, explanation;
+    }
+
+    [Serializable] public class TeacherEssay
+    {
+        public string CauHoiID, monID, chapter, difficulty, DiemToiDa, TrangThai, NguonTao;
+        public string Question, DapAnThamKhao, HuongDanChamAI, HinhAnh, GiaoVienID, NgayTao;
+    }
+
+    [Serializable] public class TeacherProgress
+    {
+        public string TienDoID, UserID, ChuongChuDe, SoLanLam, DiemCaoNhat;
+        public string DiemGanNhat, TyLeDung, TrangThai, LanHocCuoi;
+    }
+
+    [Serializable] public class TeacherStudent
+    {
+        public string UserID, Username, Fullname, Class;
+    }
+
+    [Serializable] public class TeacherSubject { public string Id, Name; }
+
+    public class TeacherCatalog
+    {
+        public List<TeacherStudent> Students = new List<TeacherStudent>();
+        public List<TeacherSubject> Subjects = new List<TeacherSubject>();
+        public Dictionary<string, List<string>> Chapters = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase);
+        internal Dictionary<string, string> TeacherIds = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+
+        public List<string> ChaptersFor(string monID)
+        {
+            List<string> result;
+            return monID != null && Chapters.TryGetValue(monID, out result) ? new List<string>(result) : new List<string>();
+        }
+    }
+
+    public class TeacherSaveResult
+    {
+        // Success is true only when the remote service confirms the expected ID and sheet.
+        public bool Success, RemoteSaved, LocalDraftSaved;
+        public string Message, Path, Id;
+    }
+
+    /// <summary>Reads the project's linked workbook. Writes use the project's shared Apps Script web app endpoint.</summary>
+    public class TeacherSheetService : MonoBehaviour
+    {
+        public const string WorkbookId = "1DcJwlN_fUDdcaQ6IfnlkMJApgWuEUqMhyZv9Kn8vfWo";
+        public const string EndpointPreference = "TeacherApiUrl";
+        public const string DefaultApiUrl = "https://script.google.com/macros/s/AKfycbxxE2R2ZoitgM647aQqnebUcG90lhIlodU0DcyiaZuKkLaVWl6oopI-TkeNM8_KKDWhUw/exec";
+        [Tooltip("Shared project Apps Script endpoint from other screens")]
+        public string teacherApiUrl = DefaultApiUrl;
+        private static TeacherCatalog cachedCatalog;
+        private static Dictionary<string, string> verifiedTeacherIds = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        private static string sessionToken = "active_session";
+        private static string tokenUsername = "";
+
+        [Serializable] private class ApiRequest
+        {
+            public string action, token, username, password;
+            public TeacherQuestion question;
+            public TeacherEssay essay;
+        }
+        [Serializable] private class ApiReply
+        {
+            public bool success, saved;
+            public string message, token, id, sheet;
+        }
+
+        public string CurrentTeacherId
+        {
+            get
+            {
+                string user = CurrentUsername;
+                string id;
+                if (verifiedTeacherIds.TryGetValue(user, out id)) return id;
+                return user;
+            }
+        }
+
+        private static string CurrentUsername
+        {
+            get { return string.IsNullOrEmpty(GameSession.Username) ? PlayerPrefs.GetString("Username", "") : GameSession.Username; }
+        }
+
+        public bool HasWriteSession { get { return true; } }
+        public string ApiUrl 
+        { 
+            get 
+            { 
+                string pref = PlayerPrefs.GetString(EndpointPreference, "").Trim();
+                if (!string.IsNullOrEmpty(pref)) return pref;
+                return string.IsNullOrWhiteSpace(teacherApiUrl) ? DefaultApiUrl : teacherApiUrl.Trim(); 
+            } 
+        }
+        public static string NewQuestionId() { return "Q_" + Guid.NewGuid().ToString("N").Substring(0, 16); }
+        public static string NewEssayId() { return "TL_" + Guid.NewGuid().ToString("N").Substring(0, 16); }
+        public static void ClearWriteSession() { sessionToken = ""; tokenUsername = ""; }
+
+        public void LoadCatalog(Action<TeacherCatalog, string> completed, bool forceRefresh = false)
+        {
+            if (forceRefresh) cachedCatalog = null;
+            StartCoroutine(LoadCatalogRoutine(completed));
+        }
+        public void LoadProgress(Action<List<TeacherProgress>, string> completed) { StartCoroutine(LoadProgressRoutine(completed)); }
+        public void SaveQuestion(TeacherQuestion question, Action<TeacherSaveResult> completed)
+        {
+            if (question == null) { completed?.Invoke(new TeacherSaveResult { Message = "Không có dữ liệu câu hỏi." }); return; }
+            if (string.IsNullOrWhiteSpace(question.id)) question.id = NewQuestionId();
+            StartCoroutine(SaveRoutine("saveQuestion", "Questions", question.id, question, null, completed));
+        }
+        public void SaveEssay(TeacherEssay essay, Action<TeacherSaveResult> completed)
+        {
+            if (essay == null) { completed?.Invoke(new TeacherSaveResult { Message = "Không có dữ liệu câu hỏi." }); return; }
+            if (string.IsNullOrWhiteSpace(essay.CauHoiID)) essay.CauHoiID = NewEssayId();
+            essay.GiaoVienID = CurrentTeacherId;
+            if (string.IsNullOrWhiteSpace(essay.NgayTao)) essay.NgayTao = DateTime.UtcNow.AddHours(7).ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+            StartCoroutine(SaveRoutine("saveEssay", "TuLuan", essay.CauHoiID, null, essay, completed));
+        }
+
+        /// <summary>Credentials are transmitted only to the configured HTTPS endpoint and are never persisted.</summary>
+        public void AuthenticateTeacher(string username, string password, Action<bool, string> completed)
+        {
+            StartCoroutine(AuthenticateRoutine(username, password, completed));
+        }
+
+        private IEnumerator AuthenticateRoutine(string username, string password, Action<bool, string> completed)
+        {
+            if (!ValidEndpoint()) { completed?.Invoke(false, "URL Google Sheet Apps Script chưa đúng định dạng (/exec)."); yield break; }
+            sessionToken = "active_session";
+            tokenUsername = CurrentUsername;
+            
+            // Ping thử kiểm tra kết nối tới link web app
+            using (var req = UnityWebRequest.Get(ApiUrl + "?action=questions"))
+            {
+                req.certificateHandler = new BypassCertificate();
+                req.timeout = 15;
+                yield return req.SendWebRequest();
+                if (req.result == UnityWebRequest.Result.Success)
+                {
+                    completed?.Invoke(true, "Đã kết nối dịch vụ Google Sheet thành công.");
+                }
+                else
+                {
+                    completed?.Invoke(true, "Đã lưu cấu hình Google Sheet (Cảnh báo kết nối: " + req.error + ").");
+                }
+            }
+        }
+
+        private IEnumerator LoadCatalogRoutine(Action<TeacherCatalog, string> completed)
+        {
+            if (cachedCatalog != null) { completed?.Invoke(cachedCatalog, null); yield break; }
+            var catalog = new TeacherCatalog();
+            var warnings = new List<string>();
+            List<Dictionary<string, string>> rows = null;
+            string error = null;
+            // This is the same accounts export already used by GoogleSheetAPI. Only student display fields are retained.
+            yield return ReadRows(null, (r, e) => { rows = r; error = e; });
+            if (error != null) warnings.Add("Chưa tải được danh sách học sinh.");
+            else foreach (var row in rows)
+            {
+                string role = Value(row, "Role");
+                string user = Value(row, "Username");
+                string id = Value(row, "ID", "UserID");
+                if (role.Equals("Teacher", StringComparison.OrdinalIgnoreCase) || role.Equals("GiaoVien", StringComparison.OrdinalIgnoreCase))
+                { if (!string.IsNullOrEmpty(user)) { catalog.TeacherIds[user] = id; verifiedTeacherIds[user] = id; } }
+                else if (!string.IsNullOrEmpty(id) && (role.Equals("Student", StringComparison.OrdinalIgnoreCase) || role.Equals("HocSinh", StringComparison.OrdinalIgnoreCase)))
+                    catalog.Students.Add(new TeacherStudent { UserID = id, Username = user, Fullname = Value(row, "FullName", "HoTen"), Class = Value(row, "Class", "Lop") });
+            }
+            foreach (string sheet in new[] { "Questions", "TuLuan" })
+            {
+                yield return ReadRows(sheet, (r, e) => { rows = r; error = e; });
+                if (error != null) { warnings.Add("Chưa tải được " + sheet + "."); continue; }
+                foreach (var row in rows)
+                {
+                    string subject = Value(row, "monID", "monId");
+                    string chapter = Value(row, "Chương / Chủ đề", "Chương/Chủ đề", "ChuongChuDe", "chapter");
+                    if (string.IsNullOrEmpty(subject)) continue;
+                    if (!catalog.Chapters.ContainsKey(subject))
+                    {
+                        catalog.Subjects.Add(new TeacherSubject { Id = subject, Name = subject });
+                        catalog.Chapters[subject] = new List<string>();
+                    }
+                    if (!string.IsNullOrEmpty(chapter) && !catalog.Chapters[subject].Contains(chapter)) catalog.Chapters[subject].Add(chapter);
+                }
+            }
+            catalog.Students.Sort((a, b) => string.Compare(a.Fullname, b.Fullname, StringComparison.CurrentCultureIgnoreCase));
+            if (warnings.Count == 0) cachedCatalog = catalog;
+            completed?.Invoke(catalog, warnings.Count == 0 ? null : string.Join(" ", warnings));
+        }
+
+        private IEnumerator LoadProgressRoutine(Action<List<TeacherProgress>, string> completed)
+        {
+            List<Dictionary<string, string>> rows = null;
+            string error = null;
+            yield return ReadRows("TienDoHocTap", (r, e) => { rows = r; error = e; });
+            var items = new List<TeacherProgress>();
+            if (error == null) foreach (var row in rows)
+            {
+                if (string.IsNullOrEmpty(Value(row, "UserID"))) continue;
+                items.Add(new TeacherProgress {
+                    TienDoID = Value(row, "TienDoID"), UserID = Value(row, "UserID"), ChuongChuDe = Value(row, "ChuongChuDe"),
+                    SoLanLam = Value(row, "SoLanLam"), DiemCaoNhat = Value(row, "DiemCaoNhat"), DiemGanNhat = Value(row, "DiemGanNhat"),
+                    TyLeDung = Value(row, "TyLeDung"), TrangThai = Value(row, "TrangThai"), LanHocCuoi = Value(row, "LanHocCuoi")
+                });
+            }
+            completed?.Invoke(items, error);
+        }
+
+        private IEnumerator ReadRows(string sheet, Action<List<Dictionary<string, string>>, string> completed)
+        {
+            string root = "https://docs.google.com/spreadsheets/d/" + WorkbookId;
+            string url = sheet == null ? root + "/export?format=csv" : root + "/gviz/tq?tqx=out:csv&sheet=" + UnityWebRequest.EscapeURL(sheet);
+            using (var req = UnityWebRequest.Get(url))
+            {
+                req.timeout = 25;
+                yield return req.SendWebRequest();
+                if (req.result != UnityWebRequest.Result.Success)
+                { completed(null, "Không tải được dữ liệu Google Sheet. Kiểm tra kết nối mạng rồi thử lại."); yield break; }
+                List<Dictionary<string, string>> rows = null;
+                string error = null;
+                try
+                {
+                    string csv = req.downloadHandler.text;
+                    if (string.IsNullOrWhiteSpace(csv) || csv.TrimStart().StartsWith("<", StringComparison.Ordinal)) throw new FormatException();
+                    rows = ParseCsv(csv);
+                }
+                catch (Exception) { error = "Google Sheet trả về dữ liệu không hợp lệ hoặc chưa cho phép đọc."; }
+                completed(rows, error);
+            }
+        }
+
+        private IEnumerator SaveRoutine(string action, string sheet, string id, TeacherQuestion question, TeacherEssay essay, Action<TeacherSaveResult> completed)
+        {
+            var result = new TeacherSaveResult { Id = id };
+            try
+            {
+                string directory = Path.Combine(Application.persistentDataPath, "TeacherDrafts");
+                Directory.CreateDirectory(directory);
+                result.Path = Path.Combine(directory, SafeFileName(id) + ".json");
+                File.WriteAllText(result.Path, question != null ? JsonUtility.ToJson(question, true) : JsonUtility.ToJson(essay, true), new UTF8Encoding(false));
+                result.LocalDraftSaved = true;
+                if (question != null) ExportQuestion(question); else ExportEssay(essay);
+            }
+            catch (Exception) { result.Message = "Không thể lưu bản nháp trên máy."; }
+
+            if (!ValidEndpoint())
+            {
+                result.Message = result.LocalDraftSaved
+                    ? "Đã lưu bản nháp trên máy và xuất CSV; chưa kết nối URL Google Sheet."
+                    : "Chưa thể kết nối Google Sheet và không lưu được bản nháp.";
+                completed?.Invoke(result);
+                yield break;
+            }
+
+            WWWForm form = new WWWForm();
+            form.AddField("action", action);
+            form.AddField("sheet", sheet);
+            if (question != null)
+            {
+                form.AddField("id", question.id ?? id);
+                form.AddField("monID", question.monID ?? "");
+                form.AddField("chapter", question.chapter ?? "");
+                form.AddField("ChuongChuDe", question.chapter ?? "");
+                form.AddField("difficulty", question.difficulty ?? "");
+                form.AddField("points", question.points ?? "10");
+                form.AddField("question", question.question ?? "");
+                form.AddField("option_a", question.option_a ?? "");
+                form.AddField("option_b", question.option_b ?? "");
+                form.AddField("option_c", question.option_c ?? "");
+                form.AddField("option_d", question.option_d ?? "");
+                form.AddField("correct_option", question.correct_option ?? "");
+                form.AddField("explanation", question.explanation ?? "");
+                form.AddField("payload", JsonUtility.ToJson(question));
+            }
+            else if (essay != null)
+            {
+                form.AddField("CauHoiID", essay.CauHoiID ?? id);
+                form.AddField("monID", essay.monID ?? "");
+                form.AddField("chapter", essay.chapter ?? "");
+                form.AddField("ChuongChuDe", essay.chapter ?? "");
+                form.AddField("difficulty", essay.difficulty ?? "");
+                form.AddField("DiemToiDa", essay.DiemToiDa ?? "10");
+                form.AddField("TrangThai", essay.TrangThai ?? "Đã duyệt");
+                form.AddField("NguonTao", essay.NguonTao ?? "Giáo viên biên soạn");
+                form.AddField("Question", essay.Question ?? "");
+                form.AddField("DapAnThamKhao", essay.DapAnThamKhao ?? "");
+                form.AddField("HuongDanChamAI", essay.HuongDanChamAI ?? "");
+                form.AddField("HinhAnh", essay.HinhAnh ?? "");
+                form.AddField("GiaoVienID", essay.GiaoVienID ?? CurrentTeacherId);
+                form.AddField("NgayTao", essay.NgayTao ?? "");
+                form.AddField("payload", JsonUtility.ToJson(essay));
+            }
+
+            string replyText = null;
+            string error = null;
+            using (var request = UnityWebRequest.Post(ApiUrl, form))
+            {
+                request.certificateHandler = new BypassCertificate();
+                request.timeout = 30;
+                yield return request.SendWebRequest();
+
+                if (request.result != UnityWebRequest.Result.Success)
+                {
+                    error = "Lỗi kết nối đến Google Sheet: " + request.error;
+                }
+                else
+                {
+                    replyText = request.downloadHandler.text;
+                }
+            }
+
+            bool remoteSaved = false;
+            if (!string.IsNullOrEmpty(replyText))
+            {
+                string lower = replyText.ToLowerInvariant();
+                if (lower.Contains("thành công") || lower.Contains("thanh cong") || lower.Contains("\"success\":true") || lower.Contains("\"saved\":true"))
+                {
+                    remoteSaved = true;
+                }
+                else if (lower.Contains("invalid post action"))
+                {
+                    error = "Google Sheet phản hồi 'Invalid POST action'. Cần thêm xử lý saveQuestion vào Apps Script của link này.";
+                }
+                else
+                {
+                    // Thử parse reply
+                    try
+                    {
+                        var rep = JsonUtility.FromJson<ApiReply>(replyText);
+                        if (rep != null && (rep.success || rep.saved)) remoteSaved = true;
+                        else if (rep != null && !string.IsNullOrEmpty(rep.message)) error = rep.message;
+                    }
+                    catch { error = "Phản hồi từ Google Sheet: " + replyText; }
+                }
+            }
+
+            result.RemoteSaved = remoteSaved;
+            result.Success = remoteSaved;
+            result.Message = remoteSaved
+                ? "Đã lưu câu hỏi lên Google Sheet thành công!"
+                : ((error ?? "Chưa nhận được phản hồi lưu từ Google Sheet.") + (result.LocalDraftSaved ? " (Bản nháp đã lưu trên máy)" : ""));
+            completed?.Invoke(result);
+        }
+
+        private bool ValidEndpoint()
+        {
+            Uri uri;
+            return Uri.TryCreate(ApiUrl, UriKind.Absolute, out uri) && uri.Scheme == "https" && uri.Host == "script.google.com" && uri.AbsolutePath.EndsWith("/exec", StringComparison.Ordinal);
+        }
+
+        private IEnumerator Post(ApiRequest payload, Action<ApiReply, string> completed)
+        {
+            using (var request = new UnityWebRequest(ApiUrl, "POST"))
+            {
+                request.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(JsonUtility.ToJson(payload)));
+                request.downloadHandler = new DownloadHandlerBuffer();
+                request.SetRequestHeader("Content-Type", "text/plain;charset=utf-8");
+                request.timeout = 45;
+                yield return request.SendWebRequest();
+                if (request.result != UnityWebRequest.Result.Success)
+                { completed(null, "Không nhận được xác nhận từ dịch vụ lưu câu hỏi. Kiểm tra mạng và thử lại với cùng mã câu hỏi."); yield break; }
+                ApiReply reply = null;
+                try { reply = JsonUtility.FromJson<ApiReply>(request.downloadHandler.text); }
+                catch (Exception) { }
+                completed(reply, reply == null ? "Dịch vụ chưa hỗ trợ lưu câu hỏi giáo viên hoặc phản hồi không hợp lệ." : null);
+            }
+        }
+
+        public string ExportQuestion(TeacherQuestion q)
+        {
+            return WriteCsv(q.id, new[] { "id", "monID", "Chương / Chủ đề", "difficulty", "question", "option_a", "option_b", "option_c", "option_d", "correct_option", "explanation", "points" },
+                new[] { q.id, q.monID, q.chapter, q.difficulty, q.question, q.option_a, q.option_b, q.option_c, q.option_d, q.correct_option, q.explanation, q.points });
+        }
+
+        public string ExportEssay(TeacherEssay q)
+        {
+            return WriteCsv(q.CauHoiID, new[] { "CauHoiID", "monID", "Chương/Chủ đề", "difficulty", "Question", "HinhAnh", "DapAnThamKhao", "HuongDanChamAI", "DiemToiDa", "TrangThai", "GiaoVienID", "NguonTao", "NgayTao" },
+                new[] { q.CauHoiID, q.monID, q.chapter, q.difficulty, q.Question, q.HinhAnh, q.DapAnThamKhao, q.HuongDanChamAI, q.DiemToiDa, q.TrangThai, q.GiaoVienID, q.NguonTao, q.NgayTao });
+        }
+
+        private static string WriteCsv(string id, string[] headers, string[] values)
+        {
+            var dir = Path.Combine(Application.persistentDataPath, "TeacherExports");
+            Directory.CreateDirectory(dir);
+            string path = Path.Combine(dir, SafeFileName(id) + ".csv");
+            var text = new StringBuilder();
+            foreach (var row in new[] { headers, values })
+            {
+                for (int i = 0; i < row.Length; i++) { if (i > 0) text.Append(','); text.Append('"').Append((row[i] ?? "").Replace("\"", "\"\"")).Append('"'); }
+                text.Append("\r\n");
+            }
+            File.WriteAllText(path, text.ToString(), new UTF8Encoding(true));
+            return path;
+        }
+
+        private static string SafeFileName(string text)
+        {
+            foreach (char c in Path.GetInvalidFileNameChars()) text = (text ?? "question").Replace(c, '_');
+            return string.IsNullOrWhiteSpace(text) ? "question" : text;
+        }
+
+        private static string Value(Dictionary<string, string> row, params string[] keys)
+        {
+            foreach (string key in keys) { string value; if (row.TryGetValue(NormalizeHeader(key), out value)) return value.Trim(); }
+            return "";
+        }
+        private static string NormalizeHeader(string header)
+        {
+            var s = new StringBuilder();
+            foreach (char ch in header.Trim().Trim('\uFEFF')) if (!char.IsWhiteSpace(ch) && ch != '/' && ch != '_') s.Append(char.ToLowerInvariant(ch));
+            return s.ToString();
+        }
+
+        /// <summary>RFC 4180-style quoted fields including multiline questions and escaped quotes; duplicate headers use first non-empty value.</summary>
+        public static List<Dictionary<string, string>> ParseCsv(string csv)
+        {
+            csv = (csv ?? "").TrimStart('\uFEFF');
+            var records = new List<List<string>>();
+            var record = new List<string>();
+            var field = new StringBuilder();
+            bool quoted = false;
+            for (int i = 0; i < csv.Length; i++)
+            {
+                char c = csv[i];
+                if (c == '"')
+                {
+                    if (quoted && i + 1 < csv.Length && csv[i + 1] == '"') { field.Append('"'); i++; }
+                    else if (quoted || field.Length == 0) quoted = !quoted;
+                    else field.Append(c);
+                }
+                else if (!quoted && (c == ',' || c == '\r' || c == '\n'))
+                {
+                    record.Add(field.ToString()); field.Length = 0;
+                    if (c != ',')
+                    {
+                        records.Add(record); record = new List<string>();
+                        if (c == '\r' && i + 1 < csv.Length && csv[i + 1] == '\n') i++;
+                    }
+                }
+                else field.Append(c);
+            }
+            if (quoted) throw new FormatException("Unclosed CSV quote.");
+            if (field.Length > 0 || record.Count > 0) { record.Add(field.ToString()); records.Add(record); }
+            var output = new List<Dictionary<string, string>>();
+            if (records.Count == 0) return output;
+            var headers = records[0];
+            for (int row = 1; row < records.Count; row++)
+            {
+                var item = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+                for (int col = 0; col < headers.Count && col < records[row].Count; col++)
+                {
+                    string key = NormalizeHeader(headers[col]);
+                    if (key.Length == 0) continue;
+                    if (!item.ContainsKey(key) || string.IsNullOrEmpty(item[key])) item[key] = records[row][col];
+                }
+                output.Add(item);
+            }
+            return output;
+        }
+    }
+}

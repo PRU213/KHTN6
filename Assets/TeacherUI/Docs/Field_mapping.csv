@@ -1,0 +1,35 @@
+﻿Man_hinh,Truong_Excel,Nhan_hien_thi,Loai_control,Chi_doc,Bat_buoc
+02_Trac_nghiem,id,Mã câu hỏi,text,True,True
+02_Trac_nghiem,monID,Môn học,dropdown,False,True
+02_Trac_nghiem,Chương / Chủ đề,Chương / Chủ đề,dropdown,False,True
+02_Trac_nghiem,difficulty,Độ khó,dropdown,False,True
+02_Trac_nghiem,points,Điểm câu hỏi,number,False,True
+02_Trac_nghiem,question,Nội dung câu hỏi,multiline,False,True
+02_Trac_nghiem,option_a,Phương án A,text,False,True
+02_Trac_nghiem,option_b,Phương án B,text,False,True
+02_Trac_nghiem,option_c,Phương án C,text,False,True
+02_Trac_nghiem,option_d,Phương án D,text,False,True
+02_Trac_nghiem,correct_option,Đáp án đúng,"ToggleGroup (A/B/C/D, exactly one)",False,True
+02_Trac_nghiem,explanation,Giải thích đáp án,multiline,False,False
+03_Tu_luan,CauHoiID,Mã câu hỏi,text,True,True
+03_Tu_luan,monID,Môn học,dropdown,False,True
+03_Tu_luan,Chương/Chủ đề,Chương / Chủ đề,dropdown,False,True
+03_Tu_luan,difficulty,Độ khó,dropdown,False,True
+03_Tu_luan,DiemToiDa,Điểm tối đa,number,False,True
+03_Tu_luan,TrangThai,Trạng thái,dropdown,False,True
+03_Tu_luan,NguonTao,Nguồn tạo,text,False,True
+03_Tu_luan,Question,Nội dung câu hỏi,multiline,False,True
+03_Tu_luan,DapAnThamKhao,Đáp án tham khảo,multiline,False,True
+03_Tu_luan,HuongDanChamAI,Hướng dẫn chấm AI,multiline,False,True
+03_Tu_luan,HinhAnh,Hình ảnh minh họa,file picker + preview + remove,False,False
+03_Tu_luan,GiaoVienID,Mã giáo viên,text,True,True
+03_Tu_luan,NgayTao,Ngày tạo,text,True,True
+04_Tien_do,TienDoID,Mã tiến độ,display,True,True
+04_Tien_do,UserID,Mã học sinh,display,True,True
+04_Tien_do,ChuongChuDe,Chương / Chủ đề,display,True,True
+04_Tien_do,SoLanLam,Số lần làm,display,True,True
+04_Tien_do,DiemCaoNhat,Điểm cao nhất,display,True,True
+04_Tien_do,DiemGanNhat,Điểm gần nhất,display,True,True
+04_Tien_do,TyLeDung,Tỷ lệ đúng,display,True,True
+04_Tien_do,TrangThai,Trạng thái,display,True,True
+04_Tien_do,LanHocCuoi,Lần học cuối,display,True,True

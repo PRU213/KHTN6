@@ -1,0 +1,2 @@
+2026-10-24T08:38:00
+SUCCESS: Four correct-answer toggles receive pointer clicks; existing layout preserved.

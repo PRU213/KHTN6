@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
 /// <summary>
@@ -10,6 +10,7 @@ using UnityEngine.SceneManagement;
 public class EnemyTong : MonoBehaviour
 {
     private RectTransform rectTransform;
+    private bool hasTriggered = false;
 
     void Awake()
     {
@@ -32,8 +33,9 @@ public class EnemyTong : MonoBehaviour
         RectTransform playerRT = player.GetComponent<RectTransform>();
         if (playerRT == null) return;
 
-        if (RectsOverlap(GetWorldRect(rectTransform), GetWorldRect(playerRT)))
+        if (!hasTriggered && RectsOverlap(GetWorldRect(rectTransform), GetWorldRect(playerRT)))
         {
+            hasTriggered = true;
             OnPlayerTouch();
         }
     }
@@ -60,7 +62,21 @@ public class EnemyTong : MonoBehaviour
             }
         }
 
+        GameData.Instance.lastSceneName = SceneManager.GetActiveScene().name;
+
         // Chuyển sang scene câu hỏi dành cho bean_tong
+        bool isTuLuan = GameSession.questionSceneName == "TuLuan" || 
+            (!string.IsNullOrEmpty(GameSession.QuestionType) && 
+             (GameSession.QuestionType.IndexOf("Tự", System.StringComparison.OrdinalIgnoreCase) >= 0 || 
+              GameSession.QuestionType.IndexOf("Luận", System.StringComparison.OrdinalIgnoreCase) >= 0 || 
+              GameSession.QuestionType.IndexOf("TuLuan", System.StringComparison.OrdinalIgnoreCase) >= 0 ||
+              GameSession.QuestionType.IndexOf("Tu Luan", System.StringComparison.OrdinalIgnoreCase) >= 0));
+        if (isTuLuan)
+        {
+            SceneManager.LoadScene("TuLuan");
+            return;
+        }
+
         SceneManager.LoadScene("beantong_question");
     }
 

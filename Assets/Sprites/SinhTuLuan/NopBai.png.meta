@@ -1,0 +1,2082 @@
+fileFormatVersion: 2
+guid: 9fe338e564ab0ed4f9f2e6c0ab1f0dad
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 7097421354978724381
+    second: NopBai_0
+  - first:
+      213: -6759491868219280591
+    second: NopBai_1
+  - first:
+      213: 6584136704940633926
+    second: NopBai_2
+  - first:
+      213: 6782580692453281125
+    second: NopBai_3
+  - first:
+      213: -2620122805731189222
+    second: NopBai_4
+  - first:
+      213: 4718530153674772287
+    second: NopBai_5
+  - first:
+      213: -2241567317032176360
+    second: NopBai_6
+  - first:
+      213: -3742638254757921280
+    second: NopBai_7
+  - first:
+      213: 7545790562364778341
+    second: NopBai_8
+  - first:
+      213: -6312703279474977361
+    second: NopBai_9
+  - first:
+      213: -8025160317319331870
+    second: NopBai_10
+  - first:
+      213: -5729326139480280585
+    second: NopBai_11
+  - first:
+      213: -5445716925793576654
+    second: NopBai_12
+  - first:
+      213: 3019730308964225356
+    second: NopBai_13
+  - first:
+      213: 1464170881785646135
+    second: NopBai_14
+  - first:
+      213: -829178809023688636
+    second: NopBai_15
+  - first:
+      213: -2046014672805883103
+    second: NopBai_16
+  - first:
+      213: -1603760228865332658
+    second: NopBai_17
+  - first:
+      213: 8213597329087172818
+    second: NopBai_18
+  - first:
+      213: -1044510170129501424
+    second: NopBai_19
+  - first:
+      213: 3735686126587123541
+    second: NopBai_20
+  - first:
+      213: -4920337627725005421
+    second: NopBai_21
+  - first:
+      213: 4167034362574748684
+    second: NopBai_22
+  - first:
+      213: -2299524768566531914
+    second: NopBai_23
+  - first:
+      213: -5100985305507179103
+    second: NopBai_24
+  - first:
+      213: -3130539544559352823
+    second: NopBai_25
+  - first:
+      213: 4137018735616828615
+    second: NopBai_26
+  - first:
+      213: -4964704915000106588
+    second: NopBai_27
+  - first:
+      213: -4779021040475508323
+    second: NopBai_28
+  - first:
+      213: 5131573613958328591
+    second: NopBai_29
+  - first:
+      213: 8813567667789901131
+    second: NopBai_30
+  - first:
+      213: 681655834346570972
+    second: NopBai_31
+  - first:
+      213: 1803218391165756982
+    second: NopBai_32
+  - first:
+      213: -8314559541921931986
+    second: NopBai_33
+  - first:
+      213: 4155603477035448529
+    second: NopBai_34
+  - first:
+      213: 6024571946236690791
+    second: NopBai_35
+  - first:
+      213: 8494020438609661907
+    second: NopBai_36
+  - first:
+      213: -7135094953576996128
+    second: NopBai_37
+  - first:
+      213: 939188526941156500
+    second: NopBai_38
+  - first:
+      213: 2514948999227332545
+    second: NopBai_39
+  - first:
+      213: 759923568981309280
+    second: NopBai_40
+  - first:
+      213: -8221953081816876768
+    second: NopBai_41
+  - first:
+      213: 6206946253733353278
+    second: NopBai_42
+  - first:
+      213: 4580982584590730256
+    second: NopBai_43
+  - first:
+      213: -1513723639326772738
+    second: NopBai_44
+  - first:
+      213: -2739085120786337355
+    second: NopBai_45
+  - first:
+      213: 6040219142625758427
+    second: NopBai_46
+  - first:
+      213: -1929474125880080614
+    second: NopBai_47
+  - first:
+      213: 8522803437776739574
+    second: NopBai_48
+  - first:
+      213: 7312939488574143852
+    second: NopBai_49
+  - first:
+      213: -7431361021850888707
+    second: NopBai_50
+  - first:
+      213: 2424510079763885438
+    second: NopBai_51
+  - first:
+      213: -6604218721380451460
+    second: NopBai_52
+  - first:
+      213: 1221953607700610555
+    second: NopBai_53
+  - first:
+      213: 5041556847760597749
+    second: NopBai_54
+  - first:
+      213: -8654980389310193755
+    second: NopBai_55
+  - first:
+      213: -3059225595959398314
+    second: NopBai_56
+  - first:
+      213: 688747053135404305
+    second: NopBai_57
+  - first:
+      213: 4709631732370410058
+    second: NopBai_58
+  - first:
+      213: -6117081355386551072
+    second: NopBai_59
+  - first:
+      213: -8712604779775461992
+    second: NopBai_60
+  - first:
+      213: -2287186806433754553
+    second: NopBai_61
+  - first:
+      213: 327153480495607992
+    second: NopBai_62
+  - first:
+      213: 5087754168106291144
+    second: NopBai_63
+  - first:
+      213: 5930363265959097269
+    second: NopBai_64
+  - first:
+      213: 8824762255599731251
+    second: NopBai_65
+  - first:
+      213: -550401815620138451
+    second: NopBai_66
+  - first:
+      213: 6680589878752514674
+    second: NopBai_67
+  - first:
+      213: 8868360200876240804
+    second: NopBai_68
+  - first:
+      213: -6494845374410817793
+    second: NopBai_69
+  - first:
+      213: -4317530174864443332
+    second: NopBai_70
+  - first:
+      213: -3316220034187791151
+    second: NopBai_71
+  - first:
+      213: -8974751572369053562
+    second: NopBai_72
+  - first:
+      213: 2836085364339030347
+    second: NopBai_73
+  - first:
+      213: -3241162173623956580
+    second: NopBai_74
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationMethod: 0
+  spriteTessellationDetail: -1
+  spriteGeometrySubdivision: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: NopBai_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 2139
+        height: 716
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d1a47cc5e1b1f7260800000000000000
+      internalID: 7097421354978724381
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NopBai_1
+      rect:
+        serializedVersion: 2
+        x: 209
+        y: 683
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 133f5ac85f57132a0800000000000000
+      internalID: -6759491868219280591
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NopBai_2
+      rect:
+        serializedVersion: 2
+        x: 763
+        y: 628
+        width: 47
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 64fe89ae27d8f5b50800000000000000
+      internalID: 6584136704940633926
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NopBai_3
+      rect:
+        serializedVersion: 2
+        x: 818
+        y: 689
+        width: 10
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 56dc9124431902e50800000000000000
+      internalID: 6782580692453281125
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NopBai_4
+      rect:
+        serializedVersion: 2
+        x: 861
+        y: 687
+        width: 7
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a1e1e70b03473abd0800000000000000
+      internalID: -2620122805731189222
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NopBai_5
+      rect:
+        serializedVersion: 2
+        x: 923
+        y: 651
+        width: 41
+        height: 66
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f3f01c7cc269b7140800000000000000
+      internalID: 4718530153674772287
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NopBai_6
+      rect:
+        serializedVersion: 2
+        x: 1020
+        y: 692
+        width: 9
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 815fb28c66a54e0e0800000000000000
+      internalID: -2241567317032176360
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NopBai_7
+      rect:
+        serializedVersion: 2
+        x: 1108
+        y: 675
+        width: 25
+        height: 41
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 00ebd5e265a7f0cc0800000000000000
+      internalID: -3742638254757921280
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NopBai_8
+      rect:
+        serializedVersion: 2
+        x: 1174
+        y: 674
+        width: 20
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5676f33898808b860800000000000000
+      internalID: 7545790562364778341
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NopBai_9
+      rect:
+        serializedVersion: 2
+        x: 1206
+        y: 690
+        width: 18
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fa5537e30d5c468a0800000000000000
+      internalID: -6312703279474977361
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NopBai_10
+      rect:
+        serializedVersion: 2
+        x: 1492
+        y: 667
+        width: 84
+        height: 49
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2efbe94e537e0a090800000000000000
+      internalID: -8025160317319331870
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NopBai_11
+      rect:
+        serializedVersion: 2
+        x: 1616
+        y: 678
+        width: 58
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7f1faed3b385d70b0800000000000000
+      internalID: -5729326139480280585
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NopBai_12
+      rect:
+        serializedVersion: 2
+        x: 609
+        y: 651
+        width: 38
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 239ddb20f4dec64b0800000000000000
+      internalID: -5445716925793576654
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NopBai_13
+      rect:
+        serializedVersion: 2
+        x: 699
+        y: 665
+        width: 8
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c411b4f77bc38e920800000000000000
+      internalID: 3019730308964225356
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NopBai_14
+      rect:
+        serializedVersion: 2
+        x: 820
+        y: 628
+        width: 66
+        height: 56
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 73ccd43d8a7c15410800000000000000
+      internalID: 1464170881785646135
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NopBai_15
+      rect:
+        serializedVersion: 2
+        x: 1007
+        y: 644
+        width: 46
+        height: 37
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4409cd0344a2e74f0800000000000000
+      internalID: -829178809023688636
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NopBai_16
+      rect:
+        serializedVersion: 2
+        x: 1048
+        y: 664
+        width: 13
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1231b2ece781b93e0800000000000000
+      internalID: -2046014672805883103
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NopBai_17
+      rect:
+        serializedVersion: 2
+        x: 1205
+        y: 629
+        width: 109
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e4a2595a19c4eb9e0800000000000000
+      internalID: -1603760228865332658
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NopBai_18
+      rect:
+        serializedVersion: 2
+        x: 1325
+        y: 658
+        width: 36
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2d09658d04f8cf170800000000000000
+      internalID: 8213597329087172818
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NopBai_19
+      rect:
+        serializedVersion: 2
+        x: 1611
+        y: 676
+        width: 6
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 013f529c8872181f0800000000000000
+      internalID: -1044510170129501424
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NopBai_20
+      rect:
+        serializedVersion: 2
+        x: 722
+        y: 642
+        width: 21
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 55794975db2d7d330800000000000000
+      internalID: 3735686126587123541
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NopBai_21
+      rect:
+        serializedVersion: 2
+        x: 748
+        y: 661
+        width: 13
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 39d76742ff277bbb0800000000000000
+      internalID: -4920337627725005421
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NopBai_22
+      rect:
+        serializedVersion: 2
+        x: 883
+        y: 638
+        width: 35
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c0c3d14cca744d930800000000000000
+      internalID: 4167034362574748684
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NopBai_23
+      rect:
+        serializedVersion: 2
+        x: 917
+        y: 660
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6b8216908627610e0800000000000000
+      internalID: -2299524768566531914
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NopBai_24
+      rect:
+        serializedVersion: 2
+        x: 979
+        y: 659
+        width: 16
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1a5d1cc04e8a539b0800000000000000
+      internalID: -5100985305507179103
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NopBai_25
+      rect:
+        serializedVersion: 2
+        x: 1052
+        y: 628
+        width: 32
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9040a3bded61e84d0800000000000000
+      internalID: -3130539544559352823
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NopBai_26
+      rect:
+        serializedVersion: 2
+        x: 1084
+        y: 661
+        width: 9
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7c4a3950f94a96930800000000000000
+      internalID: 4137018735616828615
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NopBai_27
+      rect:
+        serializedVersion: 2
+        x: 1358
+        y: 661
+        width: 10
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4a168c61f23d91bb0800000000000000
+      internalID: -4964704915000106588
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NopBai_28
+      rect:
+        serializedVersion: 2
+        x: 1388
+        y: 657
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d91f65c1fa18dadb0800000000000000
+      internalID: -4779021040475508323
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NopBai_29
+      rect:
+        serializedVersion: 2
+        x: 1390
+        y: 624
+        width: 30
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f01f0ce7303073740800000000000000
+      internalID: 5131573613958328591
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NopBai_30
+      rect:
+        serializedVersion: 2
+        x: 1414
+        y: 639
+        width: 25
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b4d2c7af815105a70800000000000000
+      internalID: 8813567667789901131
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NopBai_31
+      rect:
+        serializedVersion: 2
+        x: 1438
+        y: 657
+        width: 15
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cd4cc49ae5ab57900800000000000000
+      internalID: 681655834346570972
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NopBai_32
+      rect:
+        serializedVersion: 2
+        x: 1530
+        y: 659
+        width: 14
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 636e2e9a291560910800000000000000
+      internalID: 1803218391165756982
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NopBai_33
+      rect:
+        serializedVersion: 2
+        x: 1569
+        y: 662
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e2d98e72620cc9c80800000000000000
+      internalID: -8314559541921931986
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NopBai_34
+      rect:
+        serializedVersion: 2
+        x: 922
+        y: 648
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1d87314585baba930800000000000000
+      internalID: 4155603477035448529
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NopBai_35
+      rect:
+        serializedVersion: 2
+        x: 1080
+        y: 628
+        width: 19
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 761c83bf3449b9350800000000000000
+      internalID: 6024571946236690791
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NopBai_36
+      rect:
+        serializedVersion: 2
+        x: 1116
+        y: 642
+        width: 17
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3df8c3ee592d0e570800000000000000
+      internalID: 8494020438609661907
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NopBai_37
+      rect:
+        serializedVersion: 2
+        x: 1134
+        y: 644
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0e26c5d61fc0bfc90800000000000000
+      internalID: -7135094953576996128
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NopBai_38
+      rect:
+        serializedVersion: 2
+        x: 1137
+        y: 648
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 494337d3dfaa80d00800000000000000
+      internalID: 939188526941156500
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NopBai_39
+      rect:
+        serializedVersion: 2
+        x: 1158
+        y: 643
+        width: 6
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1c75b2f3ac4e6e220800000000000000
+      internalID: 2514948999227332545
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NopBai_40
+      rect:
+        serializedVersion: 2
+        x: 1317
+        y: 623
+        width: 17
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 067f391b57acb8a00800000000000000
+      internalID: 759923568981309280
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NopBai_41
+      rect:
+        serializedVersion: 2
+        x: 1357
+        y: 642
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 029706edb31c5ed80800000000000000
+      internalID: -8221953081816876768
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NopBai_42
+      rect:
+        serializedVersion: 2
+        x: 1446
+        y: 632
+        width: 9
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e37d7b16bb0832650800000000000000
+      internalID: 6206946253733353278
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NopBai_43
+      rect:
+        serializedVersion: 2
+        x: 1452
+        y: 628
+        width: 11
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 01408ccb36be29f30800000000000000
+      internalID: 4580982584590730256
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NopBai_44
+      rect:
+        serializedVersion: 2
+        x: 1460
+        y: 641
+        width: 11
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ef1f0ddbe5c2efae0800000000000000
+      internalID: -1513723639326772738
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NopBai_45
+      rect:
+        serializedVersion: 2
+        x: 1496
+        y: 632
+        width: 17
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5b1f8fd4890dcf9d0800000000000000
+      internalID: -2739085120786337355
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NopBai_46
+      rect:
+        serializedVersion: 2
+        x: 1531
+        y: 642
+        width: 11
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bdc09b9ce4b23d350800000000000000
+      internalID: 6040219142625758427
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NopBai_47
+      rect:
+        serializedVersion: 2
+        x: 1607
+        y: 639
+        width: 11
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a174c9b51812935e0800000000000000
+      internalID: -1929474125880080614
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NopBai_48
+      rect:
+        serializedVersion: 2
+        x: 315
+        y: 638
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6fc19272294174670800000000000000
+      internalID: 8522803437776739574
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NopBai_49
+      rect:
+        serializedVersion: 2
+        x: 718
+        y: 637
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c6d736028b7cc7560800000000000000
+      internalID: 7312939488574143852
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NopBai_50
+      rect:
+        serializedVersion: 2
+        x: 742
+        y: 612
+        width: 51
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: df5d4ee06808ed890800000000000000
+      internalID: -7431361021850888707
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NopBai_51
+      rect:
+        serializedVersion: 2
+        x: 1520
+        y: 612
+        width: 36
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e7d2eaa621795a120800000000000000
+      internalID: 2424510079763885438
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NopBai_52
+      rect:
+        serializedVersion: 2
+        x: 1614
+        y: 632
+        width: 6
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c7b3225401a1954a0800000000000000
+      internalID: -6604218721380451460
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NopBai_53
+      rect:
+        serializedVersion: 2
+        x: 889
+        y: 610
+        width: 19
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bfd700ff45045f010800000000000000
+      internalID: 1221953607700610555
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NopBai_54
+      rect:
+        serializedVersion: 2
+        x: 1311
+        y: 629
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5f265b1ed3537f540800000000000000
+      internalID: 5041556847760597749
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NopBai_55
+      rect:
+        serializedVersion: 2
+        x: 1347
+        y: 624
+        width: 8
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5af9135213553e780800000000000000
+      internalID: -8654980389310193755
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NopBai_56
+      rect:
+        serializedVersion: 2
+        x: 828
+        y: 620
+        width: 6
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 650be0967827b85d0800000000000000
+      internalID: -3059225595959398314
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NopBai_57
+      rect:
+        serializedVersion: 2
+        x: 1343
+        y: 616
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 11d9b32bbcbee8900800000000000000
+      internalID: 688747053135404305
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NopBai_58
+      rect:
+        serializedVersion: 2
+        x: 764
+        y: 120
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a4a88de9b19fb5140800000000000000
+      internalID: 4709631732370410058
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NopBai_59
+      rect:
+        serializedVersion: 2
+        x: 561
+        y: 101
+        width: 9
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0e4050ebae2cb1ba0800000000000000
+      internalID: -6117081355386551072
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NopBai_60
+      rect:
+        serializedVersion: 2
+        x: 784
+        y: 99
+        width: 22
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 895fc193d1c961780800000000000000
+      internalID: -8712604779775461992
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NopBai_61
+      rect:
+        serializedVersion: 2
+        x: 939
+        y: 95
+        width: 9
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7425e83b7b74240e0800000000000000
+      internalID: -2287186806433754553
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NopBai_62
+      rect:
+        serializedVersion: 2
+        x: 1156
+        y: 103
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8b039ff6b584a8400800000000000000
+      internalID: 327153480495607992
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NopBai_63
+      rect:
+        serializedVersion: 2
+        x: 1164
+        y: 101
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8cf0d76b5755b9640800000000000000
+      internalID: 5087754168106291144
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NopBai_64
+      rect:
+        serializedVersion: 2
+        x: 1223
+        y: 93
+        width: 23
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5b3748058f1ec4250800000000000000
+      internalID: 5930363265959097269
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NopBai_65
+      rect:
+        serializedVersion: 2
+        x: 555
+        y: 79
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3320c40148ad77a70800000000000000
+      internalID: 8824762255599731251
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NopBai_66
+      rect:
+        serializedVersion: 2
+        x: 869
+        y: 79
+        width: 7
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d2a4b3007749c58f0800000000000000
+      internalID: -550401815620138451
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NopBai_67
+      rect:
+        serializedVersion: 2
+        x: 1231
+        y: 87
+        width: 9
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2721d15791936bc50800000000000000
+      internalID: 6680589878752514674
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NopBai_68
+      rect:
+        serializedVersion: 2
+        x: 2075
+        y: 69
+        width: 20
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4afa079bd9eb21b70800000000000000
+      internalID: 8868360200876240804
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NopBai_69
+      rect:
+        serializedVersion: 2
+        x: 802
+        y: 55
+        width: 8
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ffe772b0b8cadd5a0800000000000000
+      internalID: -6494845374410817793
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NopBai_70
+      rect:
+        serializedVersion: 2
+        x: 1132
+        y: 49
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c38bc246e2d0514c0800000000000000
+      internalID: -4317530174864443332
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NopBai_71
+      rect:
+        serializedVersion: 2
+        x: 428
+        y: 16
+        width: 30
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1d4f331f27b6af1d0800000000000000
+      internalID: -3316220034187791151
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NopBai_72
+      rect:
+        serializedVersion: 2
+        x: 513
+        y: 25
+        width: 15
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6886095cef6437380800000000000000
+      internalID: -8974751572369053562
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NopBai_73
+      rect:
+        serializedVersion: 2
+        x: 1704
+        y: 31
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b49bc16dc9ccb5720800000000000000
+      internalID: 2836085364339030347
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NopBai_74
+      rect:
+        serializedVersion: 2
+        x: 1695
+        y: 15
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c9b06bdec241503d0800000000000000
+      internalID: -3241162173623956580
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      NopBai_0: 7097421354978724381
+      NopBai_1: -6759491868219280591
+      NopBai_10: -8025160317319331870
+      NopBai_11: -5729326139480280585
+      NopBai_12: -5445716925793576654
+      NopBai_13: 3019730308964225356
+      NopBai_14: 1464170881785646135
+      NopBai_15: -829178809023688636
+      NopBai_16: -2046014672805883103
+      NopBai_17: -1603760228865332658
+      NopBai_18: 8213597329087172818
+      NopBai_19: -1044510170129501424
+      NopBai_2: 6584136704940633926
+      NopBai_20: 3735686126587123541
+      NopBai_21: -4920337627725005421
+      NopBai_22: 4167034362574748684
+      NopBai_23: -2299524768566531914
+      NopBai_24: -5100985305507179103
+      NopBai_25: -3130539544559352823
+      NopBai_26: 4137018735616828615
+      NopBai_27: -4964704915000106588
+      NopBai_28: -4779021040475508323
+      NopBai_29: 5131573613958328591
+      NopBai_3: 6782580692453281125
+      NopBai_30: 8813567667789901131
+      NopBai_31: 681655834346570972
+      NopBai_32: 1803218391165756982
+      NopBai_33: -8314559541921931986
+      NopBai_34: 4155603477035448529
+      NopBai_35: 6024571946236690791
+      NopBai_36: 8494020438609661907
+      NopBai_37: -7135094953576996128
+      NopBai_38: 939188526941156500
+      NopBai_39: 2514948999227332545
+      NopBai_4: -2620122805731189222
+      NopBai_40: 759923568981309280
+      NopBai_41: -8221953081816876768
+      NopBai_42: 6206946253733353278
+      NopBai_43: 4580982584590730256
+      NopBai_44: -1513723639326772738
+      NopBai_45: -2739085120786337355
+      NopBai_46: 6040219142625758427
+      NopBai_47: -1929474125880080614
+      NopBai_48: 8522803437776739574
+      NopBai_49: 7312939488574143852
+      NopBai_5: 4718530153674772287
+      NopBai_50: -7431361021850888707
+      NopBai_51: 2424510079763885438
+      NopBai_52: -6604218721380451460
+      NopBai_53: 1221953607700610555
+      NopBai_54: 5041556847760597749
+      NopBai_55: -8654980389310193755
+      NopBai_56: -3059225595959398314
+      NopBai_57: 688747053135404305
+      NopBai_58: 4709631732370410058
+      NopBai_59: -6117081355386551072
+      NopBai_6: -2241567317032176360
+      NopBai_60: -8712604779775461992
+      NopBai_61: -2287186806433754553
+      NopBai_62: 327153480495607992
+      NopBai_63: 5087754168106291144
+      NopBai_64: 5930363265959097269
+      NopBai_65: 8824762255599731251
+      NopBai_66: -550401815620138451
+      NopBai_67: 6680589878752514674
+      NopBai_68: 8868360200876240804
+      NopBai_69: -6494845374410817793
+      NopBai_7: -3742638254757921280
+      NopBai_70: -4317530174864443332
+      NopBai_71: -3316220034187791151
+      NopBai_72: -8974751572369053562
+      NopBai_73: 2836085364339030347
+      NopBai_74: -3241162173623956580
+      NopBai_8: 7545790562364778341
+      NopBai_9: -6312703279474977361
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
