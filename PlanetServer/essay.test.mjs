@@ -41,6 +41,7 @@ test('both players submit once, AI owns scores, and reference is hidden until re
   let calls = 0;
   const { arena, p, q, m } = fixture(async () => { calls++; return { score: 8, feedback: 'Đúng ý chính.' }; });
   assert.equal(arena.view(p).sampleAnswer, '');
+  assert.deepEqual(arena.view(p).reviewQuestions, []);
   arena.choose(m, 0, 0, 1); arena.fire(m, 0);
   assert.deepEqual(m.scores, [0, 0]); assert.equal(m.bullets.length, 0);
   await arena.submitEssay(p, 'Bài làm của em', 1);
@@ -51,6 +52,25 @@ test('both players submit once, AI owns scores, and reference is hidden until re
   assert.equal(m.phase, 'reveal'); assert.deepEqual(m.scores, [8, 8]);
   assert.ok(arena.view(p).sampleAnswer.length > 0);
   assert.equal(arena.view(p).feedback, 'Đúng ý chính.');
+  assert.deepEqual(arena.view(p).reviewQuestions, []);
+});
+
+test('post-match review retains each seat own answer and excludes future questions', async () => {
+  const { arena, p, q, m, advance } = fixture(async (_question, answer) => ({ score: 7, feedback: 'Cần bổ sung.', transcription: answer, suggestedAnswer: 'Ví dụ giải thích.' }));
+  await arena.submitEssay(p, 'Bài riêng của A', 1);
+  await arena.submitEssay(q, 'Bài riêng của B', 1);
+  assert.deepEqual(arena.view(p).reviewQuestions, []);
+  advance(30000);
+  await arena.submitEssay(p, 'Bài A câu 2', 2);
+  arena.finish(m, 0);
+  const a = arena.view(p).reviewQuestions, b = arena.view(q).reviewQuestions;
+  assert.equal(a.length, 2); assert.equal(b.length, 2);
+  assert.equal(a[0].transcription, 'Bài riêng của A');
+  assert.equal(b[0].transcription, 'Bài riêng của B');
+  assert.equal(a[1].transcription, 'Bài A câu 2');
+  assert.equal(b[1].transcription, '');
+  assert.ok(a.every(entry => entry.sampleAnswer && entry.round <= 2));
+  assert.deepEqual(m.scores, [14, 7]);
 });
 
 test('deadline waits for an in-flight grade and late submissions are rejected', async () => {
@@ -97,6 +117,8 @@ test('bot essay match completes and returns a winner', async () => {
     advance(30000);
   }
   assert.equal(p.match.phase, 'finished'); assert.equal(p.match.scores[0], 90);
+  assert.equal(arena.view(p).reviewQuestions.length, 9);
+  assert.deepEqual(arena.view(p).reviewQuestions.map(entry => entry.round), [1, 2, 3, 4, 5, 6, 7, 8, 9]);
   assert.ok([0, -1].includes(p.match.winner));
 });
 
@@ -214,6 +236,18 @@ test('production join loads the Sheet bank instead of silently using sample ques
 });
 
 const sheetRow = { id: 'TL01', monId: 'Vật lý', difficulty: 'Dễ', question: 'Đề bài?', sampleAnswer: 'Đáp án.', rubric: 'Ý 1: 5 điểm; ý 2: 5 điểm', maxPoints: 10, imageUrl: 'none' };
+test('illustrated questions do not block text questions from other subjects', () => {
+  const questions = parseEssayQuestions({ success: true, questionType: 'essay', questions: [
+    { ...sheetRow, id: 'TL_BIO_01_E07', monId: 'Sinh học', imageUrl: 'https://example.com/diagram.png' },
+    sheetRow,
+    { ...sheetRow, id: 'TL02', imageUrl: '' }
+  ] });
+  assert.deepEqual(questions.map(q => q.id), ['TL01', 'TL02']);
+  assert.ok(questions.every(q => q.imageUrl === ''));
+  assert.deepEqual(parseEssayQuestions({ success: true, questionType: 'essay', questions: [
+    { ...sheetRow, imageUrl: 'https://example.com/diagram.png' }
+  ] }), []);
+});
 test('source maps Sheet fields and rejects an old deployment or incomplete rubric', () => {
   const [q] = parseEssayQuestions({ success: true, questionType: 'essay', questions: [sheetRow] });
   assert.equal(q.subject, 'Physics'); assert.equal(q.rubric, sheetRow.rubric);

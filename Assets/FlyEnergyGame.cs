@@ -2251,6 +2251,7 @@ public class FlyEnergyGame : MonoBehaviour
             historyQueued = true;
             PlanetHistorySync.Enqueue(new PlanetMatchRecord {
                 matchId = historyRunId, username = historyUsername, opponent = "Máy AI", mode = "Luyện tập",
+                subject = GameSession.Subject, chapter = GameSession.Chapter,
                 questionType = "multipleChoice", score = score, maxScore = 0,
                 result = answeredCount > 0 && correctCount * 2 >= answeredCount ? "THẮNG" : "THUA"
             });

@@ -19,7 +19,7 @@ public class FootballEssayController : MonoBehaviour
     }
     [Serializable] class State {
         public string token, state, error, text, subject, chapter, difficulty, feedback, transcription, sampleAnswer, suggestedAnswer;
-        public string[] hints; public int round, total, score, maxScore, earned; public float remaining, duration; public bool hintPending;
+        public string[] hints; public int round, total, score, maxScore, earned; public float remaining, duration; public bool hintPending, paused;
     }
     TMP_FontAsset fallbackFont;
     bool sheepSkin, caveSkin;
@@ -42,6 +42,9 @@ public class FootballEssayController : MonoBehaviour
     bool commandBusy, hintBusy, picking;
     int generation, revision, round = -1, cameraVersion;
     float receivedAt;
+    RectTransform exitConfirmation;
+    Button stayButton;
+    bool exitPending;
     CancellationTokenSource pickerCancellation;
     readonly HashSet<UnityWebRequest> requests = new HashSet<UnityWebRequest>();
     Color Ink => ParchmentSkin ? new Color(.25f, .12f, .035f) : new Color(.035f, .07f, .38f);
@@ -97,6 +100,10 @@ public class FootballEssayController : MonoBehaviour
         var placeholder = Text(area, "Nhập câu trả lời… (Enter để xuống dòng)", 24, 0, 0, 1, 1, new Color(.45f, .49f, .55f)); placeholder.alignment = TextAlignmentOptions.TopLeft;
         input = field.gameObject.AddComponent<TMP_InputField>(); input.textViewport = area; input.textComponent = answer; input.placeholder = placeholder;
         input.targetGraphic = field.GetComponent<Image>(); input.contentType = TMP_InputField.ContentType.Standard; input.lineType = TMP_InputField.LineType.MultiLineNewline;
+        // Keep the input and its label in plain-text mode so TMP does not
+        // insert visible <u> tags around Vietnamese IME composition text.
+        input.richText = false;
+        EssayInputState.Configure(input);
         input.characterLimit = 2000; input.customCaretColor = true; input.caretColor = Ink; input.caretWidth = 2; field.gameObject.SetActive(true);
         if (ParchmentSkin) {
             var counter = Text(field, "0/2000", 21, .72f, .82f, .985f, .99f, Ink); counter.alignment = TextAlignmentOptions.BottomRight;
@@ -140,12 +147,19 @@ public class FootballEssayController : MonoBehaviour
         retry = Click("Retry", errorPanel, .08f, .73f, .48f, .91f, "Thử lại", StartPractice);
         Click("Back", errorPanel, .52f, .73f, .92f, .91f, "Chọn game", Close);
         errorPanel.gameObject.SetActive(false);
+        var exitShade = Box("ExitConfirmation", page, 0, 0, 1, 1, new Color(0, 0, 0, .65f));
+        exitConfirmation = exitShade;
+        var exitCard = Box("Card", exitShade, .18f, .3f, .82f, .7f, new Color(.015f, .105f, .29f, 1));
+        Text(exitCard, "Bạn có muốn thoát game không?", 32, .05f, .1f, .95f, .5f, Color.white);
+        stayButton = Click("Stay", exitCard, .07f, .65f, .47f, .9f, "Ở lại", () => StartCoroutine(SetExitPause(false)));
+        Click("Leave", exitCard, .53f, .65f, .93f, .9f, "Thoát game", LeavePractice);
+        exitConfirmation.gameObject.SetActive(false);
     }
     void BuildResults()
     {
         resultPanel = Modal("Results", .08f, .18f, .92f, .97f);
         Text(resultPanel, "KẾT QUẢ TỰ LUẬN", 34, .08f, .025f, .92f, .11f, Color.white);
-        var view = Box("Viewport", resultPanel, .05f, .13f, .95f, .79f, ParchmentSkin ? new Color(1, .97f, .89f) : new Color(.94f, .98f, 1)); view.gameObject.AddComponent<RectMask2D>();
+        var view = Box("Viewport", resultPanel, .05f, .13f, .95f, .69f, ParchmentSkin ? new Color(1, .97f, .89f) : new Color(.94f, .98f, 1)); view.gameObject.AddComponent<RectMask2D>();
         results = view.gameObject.AddComponent<ScrollRect>(); results.horizontal = false; results.viewport = view; results.movementType = ScrollRect.MovementType.Clamped;
         var content = Box("Content", view, 0, 0, 1, 0, Color.clear); content.anchorMin = new Vector2(0, 1); content.anchorMax = Vector2.one; content.pivot = new Vector2(.5f, 1);
         content.GetComponent<Image>().raycastTarget = false;
@@ -153,6 +167,11 @@ public class FootballEssayController : MonoBehaviour
         content.gameObject.AddComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.PreferredSize;
         resultText = Text(content, "", 26, 0, 0, 1, 1, Ink); resultText.enableAutoSizing = false; resultText.alignment = TextAlignmentOptions.TopLeft;
         results.content = content;
+        Click("AskMore", resultPanel, .22f, .71f, .78f, .81f, "Hỏi AI thêm", () => {
+            if (latest == null || (latest.state != "review" && latest.state != "finished")) return;
+            ScienceChatController.ForReview(this).OpenReview(token + ":" + round, "Câu " + round + " • " + latest.text,
+                resultText.text, ParchmentSkin ? new Color(.24f, .12f, .055f) : new Color(.015f, .105f, .29f));
+        });
         Click("ExitPractice", resultPanel, .05f, .84f, .48f, .96f, "Thoát luyện tập", Close,
             ParchmentSkin ? new Color(.55f, .22f, .08f) : new Color(.15f, .27f, .44f));
         next = Click("Next", resultPanel, .52f, .84f, .95f, .96f, "Câu tiếp theo", Next);
@@ -217,8 +236,8 @@ public class FootballEssayController : MonoBehaviour
         go.GetComponent<AspectRatioFitter>().aspectMode = AspectRatioFitter.AspectMode.FitInParent; return image;
     }
     void Fit() { if (page != null && overlay != null) { var rect = (RectTransform)overlay.transform; page.localScale = Vector3.one * Mathf.Min(rect.rect.width / 1672, rect.rect.height / 941); } }
-    bool Editable() { return latest != null && latest.state == "answering" && !commandBusy && Remaining() > 0; }
-    float Remaining() { return latest == null ? 0 : Mathf.Max(0, latest.remaining - (Time.realtimeSinceStartup - receivedAt)); }
+    bool Editable() { return !exitPending && latest != null && !latest.paused && latest.state == "answering" && !commandBusy && Remaining() > 0; }
+    float Remaining() { return latest == null ? 0 : Mathf.Max(0, latest.remaining - (latest.paused ? 0 : Time.realtimeSinceStartup - receivedAt)); }
     void Update()
     {
         if (overlay == null || !overlay.activeSelf) return;
@@ -235,10 +254,12 @@ public class FootballEssayController : MonoBehaviour
     }
     void StartPractice()
     {
+        var chat = GetComponent<ScienceChatController>(); if (chat != null) chat.ClearReviews();
         historyQueued = false;
         practiceUsername = string.IsNullOrWhiteSpace(GameSession.Username) ? PlayerPrefs.GetString("Username", "") : GameSession.Username;
         ReleaseSession(); generation++; revision++; StopAllCoroutines(); AbortRequests(); latest = null; round = -1; commandBusy = true; hintBusy = false;
         notice = "Đang tải 5 câu đúng môn và chương…"; question.text = notice; ClearPhoto(); StopCamera(); CancelPicker();
+        EssayInputState.Clear(input);
         errorPanel.gameObject.SetActive(false); resultPanel.gameObject.SetActive(false); hintPanel.gameObject.SetActive(false);
         context.text = GameSession.Subject + "\n" + GameSession.Chapter;
         StartCoroutine(StartRoutine(generation));
@@ -255,7 +276,7 @@ public class FootballEssayController : MonoBehaviour
     {
         while (version == generation && !string.IsNullOrEmpty(token)) {
             yield return new WaitForSecondsRealtime(1);
-            if (commandBusy) continue;
+            if (commandBusy || exitPending) continue;
             int expected = revision; State state = null; string error = null;
             yield return Request("state", new Command { token = token }, (s, e) => { state = s; error = e; });
             if (version != generation) yield break;
@@ -286,10 +307,11 @@ public class FootballEssayController : MonoBehaviour
             PlanetHistorySync.Enqueue(new PlanetMatchRecord {
                 matchId = "practice-" + state.token, username = practiceUsername, opponent = "Máy AI",
                 mode = "Luyện tập", questionType = "essay", score = state.score, maxScore = 50,
+                subject = state.subject, chapter = state.chapter,
                 result = state.score >= 25 ? "THẮNG" : "THUA"
             });
         }
-        if (changed) { round = state.round; input.text = ""; notice = null; ClearPhoto(); hintPanel.gameObject.SetActive(false); }
+        if (changed) { round = state.round; EssayInputState.Clear(input); notice = null; ClearPhoto(); hintPanel.gameObject.SetActive(false); }
         question.text = state.difficulty + " • " + state.text;
         if (state.state == "review" || state.state == "finished") {
             resultPanel.gameObject.SetActive(true); resultPanel.SetAsLastSibling(); hintPanel.gameObject.SetActive(false);
@@ -340,7 +362,31 @@ public class FootballEssayController : MonoBehaviour
         RenderHints(); if (error != null) hintText.text = error;
     }
     void Error(string message) { notice = message; errorText.text = message; errorPanel.gameObject.SetActive(true); errorPanel.SetAsLastSibling(); }
-    void Close() { ReleaseSession(); if (selector != null) selector.ReturnFromGame(hostPanel); else hostPanel.SetActive(false); }
+    void Close()
+    {
+        if (exitPending) return;
+        exitPending = true; StopCamera(); CancelPicker();
+        exitConfirmation.gameObject.SetActive(true); exitConfirmation.SetAsLastSibling();
+        StartCoroutine(SetExitPause(true));
+    }
+    IEnumerator SetExitPause(bool pause)
+    {
+        stayButton.interactable = false;
+        // Let a submission or initial session request finish before pausing.
+        // Hint generation can continue while the answer deadline is paused.
+        while (commandBusy) yield return null;
+        revision++;
+        State state = null; string error = null;
+        if (!string.IsNullOrEmpty(token)) {
+            yield return Request(pause ? "pause" : "resume", new Command { token = token }, (s, e) => { state = s; error = e; });
+            if (state != null && !string.IsNullOrEmpty(state.state)) Apply(state);
+        }
+        stayButton.interactable = true;
+        exitConfirmation.SetAsLastSibling();
+        if (error != null) { Error(error); exitConfirmation.SetAsLastSibling(); yield break; }
+        if (!pause) { exitPending = false; exitConfirmation.gameObject.SetActive(false); }
+    }
+    void LeavePractice() { exitPending = false; exitConfirmation.gameObject.SetActive(false); ReleaseSession(); if (selector != null) selector.ReturnFromGame(hostPanel); else hostPanel.SetActive(false); }
     void ReleaseSession()
     {
         if (string.IsNullOrEmpty(token) || string.IsNullOrEmpty(url)) return;
@@ -349,7 +395,7 @@ public class FootballEssayController : MonoBehaviour
         request.SendWebRequest().completed += _ => request.Dispose(); token = null;
     }
     void AbortRequests() { foreach (var request in requests) { request.Abort(); request.Dispose(); } requests.Clear(); }
-    void OnDisable() { generation++; revision++; StopAllCoroutines(); AbortRequests(); ReleaseSession(); StopCamera(); CancelPicker(); ClearPhoto(); if (overlay != null) overlay.SetActive(false); }
+    void OnDisable() { exitPending = false; if (exitConfirmation != null) exitConfirmation.gameObject.SetActive(false); generation++; revision++; StopAllCoroutines(); AbortRequests(); ReleaseSession(); StopCamera(); CancelPicker(); ClearPhoto(); if (overlay != null) overlay.SetActive(false); }
     void OnDestroy() { if (overlay != null) Destroy(overlay); }
 
     // Photo routines share Planet's isolated Windows picker; webcam is opened only on request.
@@ -423,4 +469,31 @@ public class FootballEssayController : MonoBehaviour
         finally { Destroy(photo); StopCamera(); }
     }
     void StopCamera() { cameraVersion++; if (webcam != null) { webcam.Stop(); Destroy(webcam); webcam = null; } if (cameraPreview != null) cameraPreview.texture = null; if (cameraPanel != null) cameraPanel.gameObject.SetActive(false); }
+}
+
+// TMP reads the OS composition even when an input is not focused. Keep idle
+// answer fields read-only so an unfinished syllable cannot appear in a new game.
+internal static class EssayInputState
+{
+    public static void Configure(TMP_InputField field)
+    {
+        field.readOnly = true;
+        field.onSelect.AddListener(_ => { field.readOnly = false; field.ForceLabelUpdate(); });
+        field.onDeselect.AddListener(_ => { field.readOnly = true; field.ForceLabelUpdate(); });
+    }
+
+    public static void Clear(TMP_InputField field)
+    {
+        // Deselect first: TMP may commit the pending composition on focus loss.
+        // Clearing afterwards also removes that commit from the previous round.
+        var events = UnityEngine.EventSystems.EventSystem.current;
+        if (events != null && events.currentSelectedGameObject == field.gameObject)
+            events.SetSelectedGameObject(null);
+        field.DeactivateInputField(true);
+        field.readOnly = true;
+        field.text = "";
+        field.caretPosition = 0;
+        // The text setter skips updates when the value was already empty.
+        field.ForceLabelUpdate();
+    }
 }

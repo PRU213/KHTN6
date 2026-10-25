@@ -27,11 +27,13 @@ export function parseEssayQuestions(data) {
     if (!item.id || ids.has(item.id) || !item.subject || !['Dễ', 'Trung bình', 'Khó'].includes(item.difficulty) || !item.text || !item.sampleAnswer || !item.rubric || !Number.isFinite(item.maxPoints) || item.maxPoints <= 0 || item.maxPoints > 100)
       throw new Error('Dữ liệu TuLuan thiếu hoặc sai ID, môn, độ khó, đáp án, hướng dẫn chấm hoặc điểm tối đa.');
     ids.add(item.id);
-    // Never silently drop an illustration required to understand the question.
-    if (item.imageUrl && item.imageUrl.toLowerCase() !== 'none') throw new Error(`Câu ${item.id} có ảnh đề. Bản hiện tại cần câu đề bằng chữ; hãy bỏ ảnh bắt buộc hoặc bổ sung nội dung ảnh vào Question.`);
+    // Current game clients display text questions only. Exclude the whole
+    // illustrated question rather than showing an incomplete prompt or failing
+    // the entire bank (including unrelated subjects and chapters).
+    if (item.imageUrl && item.imageUrl.toLowerCase() !== 'none') return null;
     item.imageUrl = '';
     return item;
-  });
+  }).filter(item => item !== null);
 }
 export function createEssaySource({ url = process.env.APPS_SCRIPT_URL || DEFAULT_APPS_SCRIPT_URL, secret = process.env.APPS_SCRIPT_SECRET,
   fetchImpl = fetch, now = Date.now, timeoutMs = 35000, cacheDirectory = null, maxCacheAgeMs = 86400000, onWarning = message => console.warn(message) } = {}) {

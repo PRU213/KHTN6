@@ -8,6 +8,8 @@ public class HistoryItem
     public string result;
     public int score;
     public string time;
+    public string subject;
+    public string chapter;
 }
 
 [Serializable]

@@ -325,6 +325,8 @@ function getHistory(e) {
   }
 
   var historyData = historySheet.getDataRange().getValues();
+  var subjectColumn = historyData[0].indexOf('Subject');
+  var chapterColumn = historyData[0].indexOf('Chapter');
   var userData = userSheet.getDataRange().getValues();
 
   // -----------------------------------
@@ -394,7 +396,9 @@ function getHistory(e) {
       mode: String(row[2]),
       result: result,
       score: Number(row[4]) || 0,
-      time: timeValue
+      time: timeValue,
+      subject: subjectColumn >= 0 ? String(row[subjectColumn] || '') : '',
+      chapter: chapterColumn >= 0 ? String(row[chapterColumn] || '') : ''
     });
   }
 

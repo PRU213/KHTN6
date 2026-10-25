@@ -16,6 +16,7 @@ public static class HistoryAPI
         PlanetHistorySync.Enqueue(new PlanetMatchRecord {
             matchId = "practice-" + System.Guid.NewGuid().ToString("N"), username = username,
             opponent = opponent, mode = mode, result = result, score = score, maxScore = 0,
+            subject = GameSession.Subject, chapter = GameSession.Chapter,
             questionType = "multipleChoice"
         });
         yield break;
@@ -58,7 +59,7 @@ public static class AppsScriptEndpoint
 [System.Serializable]
 public class PlanetMatchRecord
 {
-    public string matchId, username, opponent, result, questionType, mode, finishedAt;
+    public string matchId, username, opponent, result, questionType, mode, finishedAt, subject, chapter;
     public int score, maxScore;
 }
 
@@ -127,8 +128,10 @@ public class PlanetHistorySync : MonoBehaviour
                 var form = new WWWForm(); form.AddField("action", "savePlanetMatch"); form.AddField("record", JsonUtility.ToJson(record));
                 bool success = false; string error = "Không kết nối được; sẽ tự thử lại.";
                 using (var request = UnityWebRequest.Post(AppsScriptEndpoint.Url, form)) {
-                    request.timeout = 20;
+                    request.timeout = 45;
                     yield return request.SendWebRequest();
+                    if (request.result != UnityWebRequest.Result.Success)
+                        error = "Kết nối Google: " + request.error + "; kết quả vẫn đang chờ đồng bộ.";
                     if (request.result == UnityWebRequest.Result.Success) {
                         string body = request.downloadHandler.text;
                         Reply reply = null;

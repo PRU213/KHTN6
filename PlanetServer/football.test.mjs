@@ -33,6 +33,22 @@ test('chapter matching never mistakes chapter 1 for chapter 10 and accepts legac
   assert.equal(sameChapter('', 'Chương 1'), false);
 });
 
+test('exit confirmation pauses the server deadline and resumes exactly once', async () => {
+  const { practice, advance } = fixture();
+  const state = await practice.start(body()), session = practice.get(state.token);
+  advance(10000);
+  assert.equal(practice.pause(session).remaining, 50);
+  advance(120000);
+  assert.equal(practice.view(practice.get(state.token)).state, 'answering');
+  assert.equal(practice.pause(session).remaining, 50);
+  assert.equal((await practice.submit(session, { round: 1, text: 'answer' })).score, 0);
+  assert.equal(practice.resume(session).remaining, 50);
+  advance(10000);
+  assert.equal(practice.resume(session).remaining, 40);
+  advance(40000);
+  assert.equal(practice.view(session).state, 'review');
+});
+
 for (const game of ['Sheep', 'Cave']) test(`${game} uses the same five-question rules for both subjects and all difficulties`, async () => {
   for (const subject of ['Vật lý', 'Hóa học']) for (const difficulty of ['Dễ', 'Trung bình', 'Khó']) {
     const { practice } = fixture();

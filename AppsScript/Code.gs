@@ -326,6 +326,8 @@ function getHistory(e) {
   }
 
   var historyData = historySheet.getDataRange().getValues();
+  var subjectColumn = historyData[0].indexOf('Subject');
+  var chapterColumn = historyData[0].indexOf('Chapter');
   var userData = userSheet.getDataRange().getValues();
 
   // -----------------------------------
@@ -395,7 +397,9 @@ function getHistory(e) {
       mode: String(row[2]),
       result: result,
       score: Number(row[4]) || 0,
-      time: timeValue
+      time: timeValue,
+      subject: subjectColumn >= 0 ? String(row[subjectColumn] || '') : '',
+      chapter: chapterColumn >= 0 ? String(row[chapterColumn] || '') : ''
     });
   }
 
@@ -804,11 +808,27 @@ function planetSaveMatch_(p) {
       return /^\s*[=+@-]/.test(text) ? "'" + text : text;
     }
     var rankScore = Math.max(0, Math.min(100, maximum ? Math.round(record.score / maximum * 100) : 0));
-    sheet.appendRow([safe(username), safe(record.opponent || 'Máy AI'), mode, record.result,
-      record.score, new Date(completed), id, rankScore]);
+    var lessonColumns = planetHistoryLessonColumns_(sheet);
+    var entry = [safe(username), safe(record.opponent || 'Máy AI'), mode, record.result,
+      record.score, new Date(completed), id, rankScore];
+    while (entry.length <= Math.max(lessonColumns.subject, lessonColumns.chapter)) entry.push('');
+    entry[lessonColumns.subject] = practice ? safe(record.subject) : '';
+    entry[lessonColumns.chapter] = practice ? safe(record.chapter) : '';
+    sheet.appendRow(entry);
     SpreadsheetApp.flush();
     return jsonOut({ success: true, matchId: id, rankScore: rankScore });
   } finally { lock.releaseLock(); }
+}
+
+function planetHistoryLessonColumns_(sheet) {
+  var headers = sheet.getDataRange().getValues()[0].slice();
+  while (headers.length < 8) headers.push('');
+  var subject = headers.indexOf('Subject'), chapter = headers.indexOf('Chapter');
+  if (subject < 0) { subject = headers.length; headers.push('Subject'); }
+  if (chapter < 0) { chapter = headers.length; headers.push('Chapter'); }
+  if (sheet.getMaxColumns() < headers.length) sheet.insertColumnsAfter(sheet.getMaxColumns(), headers.length - sheet.getMaxColumns());
+  sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
+  return { subject: subject, chapter: chapter };
 }
 
 // Week is [Monday 00:00, next Monday 00:00), Asia/Ho_Chi_Minh (UTC+7).
