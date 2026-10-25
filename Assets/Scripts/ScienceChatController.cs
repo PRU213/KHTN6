@@ -11,10 +11,14 @@ using UnityEngine.UI;
 public class ScienceChatController : MonoBehaviour
 {
     [Serializable] public class Message { public string role; public string text; }
-    [Serializable] class Request { public string message; public List<Message> history; public string clientId; }
+    [Serializable] class Request { public string message; public List<Message> history; public string clientId, reviewContext; }
     [Serializable] class Reply { public string reply; public string error; }
     [Serializable] class Settings { public string serverUrl = "http://localhost:8787"; }
-    readonly List<Message> history = new List<Message>();
+    List<Message> history = new List<Message>();
+    readonly Dictionary<string, List<Message>> reviewChats = new Dictionary<string, List<Message>>();
+    string reviewContext;
+    bool reviewMode;
+    TMP_Text reviewTitle;
     RectTransform page, content;
     GameObject overlay;
     TMP_InputField input;
@@ -55,6 +59,7 @@ public class ScienceChatController : MonoBehaviour
 
     void Build()
     {
+        if (reviewMode) { BuildReview(); return; }
         overlay = new GameObject("Science AI chat", typeof(RectTransform), typeof(Canvas), typeof(CanvasScaler), typeof(GraphicRaycaster));
         var canvas = overlay.GetComponent<Canvas>(); canvas.renderMode = RenderMode.ScreenSpaceOverlay; canvas.sortingOrder = 300;
         var scaler = overlay.GetComponent<CanvasScaler>(); scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize; scaler.referenceResolution = new Vector2(1920, 1080); scaler.matchWidthOrHeight = .5f;
@@ -95,6 +100,7 @@ public class ScienceChatController : MonoBehaviour
         input.textViewport = textArea; input.textComponent = text; input.placeholder = placeholder;
         input.readOnly = false; input.interactable = true;
         input.contentType = TMP_InputField.ContentType.Standard;
+        input.richText = false;
         input.characterLimit = 1200; input.lineType = TMP_InputField.LineType.SingleLine;
         input.customCaretColor = true; input.caretColor = Ink; input.caretWidth = 2;
         input.onSubmit.AddListener(_ => Send());
@@ -118,6 +124,67 @@ public class ScienceChatController : MonoBehaviour
         input.ActivateInputField();
     }
     public void Open() { if (overlay == null) Build(); overlay.SetActive(true); Update(); FocusInput(); }
+    public static ScienceChatController ForReview(Component owner)
+    {
+        return owner.GetComponent<ScienceChatController>() ?? owner.gameObject.AddComponent<ScienceChatController>();
+    }
+    public void ClearReviews()
+    {
+        Close(); reviewChats.Clear(); history = new List<Message>(); reviewContext = null;
+    }
+    public void OpenReview(string key, string title, string context, Color accent)
+    {
+        CancelRequest(); reviewMode = true;
+        var settings = Resources.Load<TextAsset>("PlanetDuelSettings");
+        if (settings != null) serverUrl = JsonUtility.FromJson<Settings>(settings.text).serverUrl;
+        if (overlay == null) BuildReview(accent);
+        if (!reviewChats.TryGetValue(key, out history)) { history = new List<Message>(); reviewChats[key] = history; }
+        reviewContext = context.Length > 12000 ? context.Substring(0, 12000) : context;
+        reviewTitle.text = title;
+        foreach (Transform child in content) { child.gameObject.SetActive(false); Destroy(child.gameObject); }
+        AddMessage("robot", "Em muốn hiểu rõ phần nào của câu vừa làm? Tớ có thể giải thích chỗ còn thiếu, giải thích đáp án hoặc đưa ví dụ.");
+        foreach (var message in history) AddMessage(message.role == "user" ? "user" : "robot", message.text);
+        EssayInputState.Clear(input);
+        overlay.SetActive(true); Update();
+        status.text = "Hỏi thêm để hiểu bài • Nội dung trò chuyện không thay đổi điểm.";
+    }
+    void BuildReview(Color? accent = null)
+    {
+        overlay = new GameObject("Essay review chat", typeof(RectTransform), typeof(Canvas), typeof(CanvasScaler), typeof(GraphicRaycaster));
+        var canvas = overlay.GetComponent<Canvas>(); canvas.renderMode = RenderMode.ScreenSpaceOverlay; canvas.sortingOrder = 500;
+        var scaler = overlay.GetComponent<CanvasScaler>(); scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize; scaler.referenceResolution = new Vector2(1920, 1080); scaler.matchWidthOrHeight = .5f;
+        Rect("Shade", overlay.transform, 0, 0, 1, 1).gameObject.AddComponent<Image>().color = new Color(0, 0, 0, .8f);
+        page = Rect("Review", overlay.transform, .5f, .5f, .5f, .5f); page.sizeDelta = new Vector2(1780, 980);
+        page.gameObject.AddComponent<Image>().color = accent ?? new Color(.055f, .09f, .2f);
+        Label(page, "HỎI AI THÊM", 42, .05f, .035f, .8f, .11f, Color.white);
+        Click("Đóng", .85f, .035f, .96f, .11f, Close, 26);
+        reviewTitle = Label(page, "", 27, .05f, .13f, .95f, .23f, Color.white);
+        SuggestReview("Giải thích chỗ em thiếu", .31f);
+        SuggestReview("Giải thích đáp án dễ hiểu hơn", .47f);
+        SuggestReview("Cho em một ví dụ thực tế", .63f);
+        var view = TopRect("Messages", page, .30f, .26f, .95f, .73f);
+        view.gameObject.AddComponent<Image>().color = new Color(.94f, .97f, 1);
+        view.gameObject.AddComponent<RectMask2D>();
+        scroll = view.gameObject.AddComponent<ScrollRect>(); scroll.horizontal = false; scroll.viewport = view; scroll.movementType = ScrollRect.MovementType.Clamped;
+        content = Rect("Content", view, 0, 1, 1, 1); content.pivot = new Vector2(.5f, 1);
+        var layout = content.gameObject.AddComponent<VerticalLayoutGroup>(); layout.spacing = 14; layout.padding = new RectOffset(12, 12, 12, 12); layout.childControlHeight = true; layout.childControlWidth = true; layout.childForceExpandHeight = false;
+        content.gameObject.AddComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.PreferredSize; scroll.content = content;
+        var field = TopRect("Question", page, .30f, .77f, .81f, .85f); field.gameObject.SetActive(false);
+        var graphic = field.gameObject.AddComponent<Image>(); graphic.color = Color.white;
+        var area = Rect("TextArea", field, 0, 0, 1, 1); area.offsetMin = new Vector2(12, 6); area.offsetMax = new Vector2(-12, -6); area.gameObject.AddComponent<RectMask2D>();
+        var text = Label(area, "", 27, 0, 0, 1, 1); text.alignment = TextAlignmentOptions.TopLeft;
+        var placeholder = Label(area, "Nhập điều em chưa hiểu…", 25, 0, 0, 1, 1, Color.gray); placeholder.alignment = TextAlignmentOptions.TopLeft;
+        input = field.gameObject.AddComponent<TMP_InputField>(); input.textViewport = area; input.textComponent = text; input.placeholder = placeholder; input.targetGraphic = graphic;
+        input.contentType = TMP_InputField.ContentType.Standard; input.richText = false; input.characterLimit = 1200; input.lineType = TMP_InputField.LineType.MultiLineNewline;
+        EssayInputState.Configure(input); field.gameObject.SetActive(true);
+        send = Click("Gửi", .83f, .77f, .95f, .85f, Send, 30);
+        status = Label(page, "", 22, .30f, .87f, .95f, .92f, Color.white);
+        Click("Trò chuyện mới", .30f, .93f, .57f, .98f, ResetChat, 23);
+    }
+    void SuggestReview(string question, float top)
+    {
+        Click(question, .035f, top, .275f, top + .11f, () => { if (!busy) { input.text = question; Send(); } }, 25);
+    }
     void Close() { CancelRequest(); if (overlay != null) overlay.SetActive(false); }
     void ResetChat()
     {
@@ -131,7 +198,7 @@ public class ScienceChatController : MonoBehaviour
     {
         busy = true; send.interactable = false; input.interactable = false; status.text = "Tớ đang suy nghĩ…";
         AddMessage("user", question);
-        var payload = new Request { message = question, history = new List<Message>(history), clientId = clientId };
+        var payload = new Request { message = question, history = new List<Message>(history), clientId = clientId, reviewContext = reviewContext };
         pending = new UnityWebRequest(serverUrl.TrimEnd('/') + "/chat", "POST");
         pending.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(JsonUtility.ToJson(payload)));
         // Server has a 45-second total deadline; allow time for its error response.

@@ -1109,9 +1109,6 @@ public class TuLuanController : MonoBehaviour
     /// </summary>
     public static string GetCurrentUserId()
     {
-        if (!string.IsNullOrEmpty(GameSession.UserId))
-            return GameSession.UserId;
-
         string savedId = PlayerPrefs.GetString("UserID", "");
         if (!string.IsNullOrEmpty(savedId))
             return savedId;

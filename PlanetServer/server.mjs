@@ -126,7 +126,17 @@ export class Arena {
     const dx = -Math.sin(a), dy = Math.cos(a), g = m.layout.guns[seat];
     m.bullets.push({ id: ++m.nextBullet, player: seat, x: g.x + dx * 90, y: g.y + dy * 90, dx, dy });
   }
-  endRound(m) { m.phase = 'reveal'; m.revealUntil = this.now() + (m.questionType === 'essay' ? 30000 : 1500); m.bullets = []; }
+  saveEssayReview(m) {
+    if (m.questionType !== 'essay' || m.index >= m.questions.length) return;
+    m.essayHistory ??= [[], []];
+    const q = m.questions[m.index];
+    for (let seat = 0; seat < 2; seat++) m.essayHistory[seat][m.index] = {
+      round: m.index + 1, text: q.text, difficulty: q.difficulty, sampleAnswer: q.sampleAnswer,
+      earned: m.reviews[seat]?.score ?? 0, feedback: m.reviews[seat]?.feedback || 'Bạn chưa có bài được chấm ở câu này.',
+      transcription: m.reviews[seat]?.transcription || '', suggestedAnswer: m.reviews[seat]?.suggestedAnswer || ''
+    };
+  }
+  endRound(m) { this.saveEssayReview(m); m.phase = 'reveal'; m.revealUntil = this.now() + (m.questionType === 'essay' ? 30000 : 1500); m.bullets = []; }
   choose(m, seat, answer, round) {
     if (m.questionType === 'essay') return;
     const now = this.now();
@@ -165,7 +175,7 @@ export class Arena {
       throw new Error('AI chưa chấm được bài. Bạn thử nộp lại khi còn thời gian nhé.');
     }
   }
-  finish(m, winner, reason = '') { m.phase = 'finished'; m.winner = winner; m.reason = reason; m.finishedAt = this.now(); m.bullets = []; }
+  finish(m, winner, reason = '') { this.saveEssayReview(m); m.phase = 'finished'; m.winner = winner; m.reason = reason; m.finishedAt = this.now(); m.bullets = []; }
   leave(p) {
     if (p.match && p.match.phase !== 'finished') this.finish(p.match, 1 - p.seat, 'Đối thủ đã rời trận.');
     p.state = 'cancelled'; this.players.delete(p.token);
@@ -240,6 +250,7 @@ export class Arena {
     const q = m.questions[Math.min(m.index, m.questions.length - 1)];
     return { token: p.token, matchId: m.id, finishedAt: m.finishedAt ? new Date(m.finishedAt).toISOString() : '', maxScore: m.questions.length * (m.questionType === 'essay' ? 10 : 10 + m.roundMs / 1000), state: m.phase, seat: p.seat, bot: m.bot, names: m.names,
       questionType: m.questionType, submissions: m.submissions,
+      reviewQuestions: m.questionType === 'essay' && m.phase === 'finished' ? (m.essayHistory?.[p.seat] || []).filter(Boolean) : [],
       difficulty: q.difficulty || '', duration: m.roundMs / 1000, revealRemaining: m.phase === 'reveal' ? Math.max(0, (m.revealUntil - now) / 1000) : 0,
       transcription: ['reveal', 'finished'].includes(m.phase) ? (m.reviews[p.seat]?.transcription || '') : '',
       suggestedAnswer: ['reveal', 'finished'].includes(m.phase) ? (m.reviews[p.seat]?.suggestedAnswer || '') : '',
@@ -280,6 +291,8 @@ export function createServer(arena = new Arena(), chat = createChat(), { essaySo
         else {
           const session = football.get(body.token);
           if (req.url === '/football/state') result = football.view(session);
+          else if (req.url === '/football/pause') result = football.pause(session);
+          else if (req.url === '/football/resume') result = football.resume(session);
           else if (req.url === '/football/submit') result = await football.submit(session, body);
           else if (req.url === '/football/hint') result = await football.getHint(session, body);
           else if (req.url === '/football/next') result = football.next(session, body);

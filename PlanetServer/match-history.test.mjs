@@ -9,7 +9,8 @@ function fixture(main = 'Code.gs') {
   class Clock extends Date { constructor(...args) { super(...(args.length ? args : [current])); } static now() { return current; } }
   function sheet(initial) {
     const data = initial.map(r => [...r]);
-    return { data, getMaxColumns: () => 8, getDataRange: () => ({ getValues: () => data.map(r => [...r]) }),
+    let columns = 8;
+    return { data, getMaxColumns: () => columns, insertColumnsAfter: (_after, count) => { columns += count; }, getDataRange: () => ({ getValues: () => data.map(r => [...r]) }),
       getRange: (row, col, height, width) => ({
         getValues: () => Array.from({ length: height }, (_, y) => Array.from({ length: width }, (_, x) => data[row - 1 + y]?.[col - 1 + x] ?? '')),
         setValues: values => values.forEach((line, y) => line.forEach((value, x) => { (data[row - 1 + y] ??= [])[col - 1 + x] = value; }))
@@ -51,6 +52,30 @@ test('finished Planet match writes compatible history and raises the same user r
   assert.equal(players[0].fullName, 'Học sinh Một');
   const history = context.doGet({ parameter: { action: 'history', username: 'student01' } });
   assert.equal(history.total, 2); assert.equal(history.histories[0].mode, 'Đối kháng');
+});
+
+for (const main of ['Code.gs', 'Ma-da-sua.gs']) test(`${main}: practice history round-trips subject/chapter while old rows remain blank`, () => {
+  const { save, sheets, context } = fixture(main);
+  assert.equal(save({ mode: 'Luyện tập', questionType: 'essay', maxScore: 50, score: 35, subject: 'Physics', chapter: 'Chương 1' }).success, true);
+  const headers = sheets.History.data[0];
+  assert.equal(headers[6], 'PlanetMatchID'); assert.equal(headers[7], 'PlanetRankScore');
+  assert.equal(sheets.History.data[2][headers.indexOf('Subject')], 'Physics');
+  const result = context.doGet({ parameter: { action: 'history', username: 'student01' } });
+  assert.equal(result.histories[0].subject, 'Physics'); assert.equal(result.histories[0].chapter, 'Chương 1');
+  assert.equal(result.histories[1].subject, ''); assert.equal(result.histories[1].chapter, '');
+  assert.equal(save({ mode: 'Luyện tập', questionType: 'essay', maxScore: 50, score: 35, subject: 'Physics', chapter: 'Chương 1' }).duplicate, true);
+  assert.equal(sheets.History.data.length, 3);
+});
+
+test('lesson metadata preserves other columns and follows named headers instead of fixed indexes', () => {
+  const { save, sheets, context } = fixture();
+  sheets.History.data[0].push('PlanetMatchID', 'PlanetRankScore', 'TeacherNote', 'Chapter', 'Subject');
+  sheets.History.data[1][8] = 'Giữ nguyên';
+  assert.equal(save({ mode: 'Luyện tập', questionType: 'multipleChoice', maxScore: 0, score: 25, subject: 'Chemistry', chapter: 'CH_CHM_01' }).success, true);
+  assert.equal(sheets.History.data[1][8], 'Giữ nguyên');
+  assert.equal(sheets.History.data[2][9], 'CH_CHM_01'); assert.equal(sheets.History.data[2][10], 'Chemistry');
+  const result = context.doGet({ parameter: { action: 'history', username: 'student01' } });
+  assert.equal(result.histories[0].subject, 'Chemistry'); assert.equal(result.histories[0].chapter, 'CH_CHM_01');
 });
 
 test('corrected user main script routes match saves through POST and restores essay GET', () => {

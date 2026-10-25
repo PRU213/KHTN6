@@ -19,6 +19,7 @@ public class PlanetDuelController : MonoBehaviour
     [Serializable] class EssayCommand { public string token, text, imageBase64, mimeType; public int round; }
     [Serializable] public class Shot { public int id, player; public float x, y, dx, dy; }
     [Serializable] public class State {
+        public ReviewQuestion[] reviewQuestions;
         public string token, matchId, finishedAt, state, text, reason, error; public string[] names, options;
         public int maxScore;
         public int seat, round, total, correct, winner; public bool bot;
@@ -26,6 +27,10 @@ public class PlanetDuelController : MonoBehaviour
         public float[] angles; public Vector2[] targets; public bool[] shot, stunned; public Shot[] bullets;
         public string questionType, sampleAnswer, feedback; public int[] submissions; public int earned;
         public string difficulty, transcription, suggestedAnswer; public float duration, revealRemaining;
+    }
+    [Serializable] public class ReviewQuestion {
+        public int round, earned;
+        public string text, difficulty, sampleAnswer, feedback, transcription, suggestedAnswer;
     }
     [Serializable] public class Bank { public BankQuestion[] questions; }
     [Serializable] public class BankQuestion {
@@ -70,6 +75,9 @@ public class PlanetDuelController : MonoBehaviour
     System.Threading.CancellationTokenSource imagePickerCancellation;
     int shownResultRound = -1;
     string historyMatchId, matchUsername;
+    RectTransform exitConfirmation;
+    RectTransform reviewPicker;
+    Button askAfterMatch;
 
     public void Open(BlastRoundManager manager)
     {
@@ -128,7 +136,7 @@ public class PlanetDuelController : MonoBehaviour
         badge = Label("MatchBadge", card, new Vector2(.06f, .65f), new Vector2(.94f, .76f), 24);
         detail = Label("Status", card, new Vector2(.08f, .25f), new Vector2(.92f, .45f), 28);
         primary = MakeButton("Primary", card, new Vector2(.13f, .07f), new Vector2(.48f, .21f), "", () => Primary());
-        secondary = MakeButton("Secondary", card, new Vector2(.52f, .07f), new Vector2(.87f, .21f), "Về menu", ReturnToMenu);
+        secondary = MakeButton("Secondary", card, new Vector2(.52f, .07f), new Vector2(.87f, .21f), "Về trang chủ", ConfirmExit);
         hud = Box("DuelHUD", root, Vector2.zero, Vector2.one, Color.clear);
         hud.GetComponent<Image>().raycastTarget = false;
         hudText = Label("Players", hud, new Vector2(.2f, .91f), new Vector2(.8f, .99f), 23);
@@ -136,6 +144,15 @@ public class PlanetDuelController : MonoBehaviour
         exit = MakeButton("Exit", hud, new Vector2(.025f, .92f), new Vector2(.17f, .985f), "Rời trận", ConfirmExit);
         BuildEssayScreen();
         overlay.SetAsLastSibling();
+        exitConfirmation = Box("ExitConfirmation", root, Vector2.zero, Vector2.one, new Color(0, 0, 0, .7f));
+        var exitCard = Box("ExitCard", exitConfirmation, new Vector2(.2f, .3f), new Vector2(.8f, .7f), new Color(.085f, .04f, .19f, 1));
+        Label("Question", exitCard, new Vector2(.06f, .5f), new Vector2(.94f, .9f), 32).text = "Bạn có muốn thoát game không?";
+        Label("Warning", exitCard, new Vector2(.06f, .33f), new Vector2(.94f, .5f), 22).text = "Thời gian vẫn chạy. Rời trận đang đấu sẽ tính là bỏ cuộc.";
+        MakeButton("Stay", exitCard, new Vector2(.07f, .08f), new Vector2(.47f, .28f), "Ở lại", () => exitConfirmation.gameObject.SetActive(false));
+        MakeButton("Leave", exitCard, new Vector2(.53f, .08f), new Vector2(.93f, .28f), "Thoát game", ReturnToMenu);
+        exitConfirmation.gameObject.SetActive(false);
+        askAfterMatch = MakeButton("AskAfterMatch", card, new Vector2(.2f, .215f), new Vector2(.8f, .295f), "Xem lại câu / Hỏi AI thêm", OpenReviewPicker);
+        askAfterMatch.gameObject.SetActive(false);
     }
 
     void BuildEssayScreen()
@@ -164,6 +181,9 @@ public class PlanetDuelController : MonoBehaviour
         essayInput.targetGraphic = field.GetComponent<Image>(); essayInput.textViewport = area;
         essayInput.textComponent = text; essayInput.placeholder = placeholder;
         essayInput.contentType = TMP_InputField.ContentType.Standard;
+        // Match the plain-text label during Vietnamese IME composition.
+        essayInput.richText = false;
+        EssayInputState.Configure(essayInput);
         essayInput.lineType = TMP_InputField.LineType.MultiLineNewline; essayInput.characterLimit = 2000;
         essayInput.customCaretColor = true; essayInput.caretColor = text.color; essayInput.caretWidth = 2;
         field.gameObject.SetActive(true);
@@ -341,7 +361,7 @@ public class PlanetDuelController : MonoBehaviour
         essayQuestion.text = state.difficulty + " • " + state.text;
         bool newRound = essayRound != state.round;
         if (newRound) {
-            essayRound = state.round; essayInput.text = ""; essayError = null; ClearEssayImage(); CloseCamera(); CancelImagePicker();
+            essayRound = state.round; EssayInputState.Clear(essayInput); essayError = null; ClearEssayImage(); CloseCamera(); CancelImagePicker();
             essayCounter.text = "0 / 2.000 ký tự • Enter để xuống dòng";
         }
         int submission = state.submissions != null && state.submissions.Length > state.seat ? state.submissions[state.seat] : 0;
@@ -433,15 +453,20 @@ public class PlanetDuelController : MonoBehaviour
     void ButtonText(Button button, string text) { button.GetComponentInChildren<TMP_Text>().text = text; }
     void Screen(string state, string title, string message, string action)
     {
+        if (askAfterMatch != null) askAfterMatch.gameObject.SetActive(essayMode && state == "finished" && latest != null && latest.reviewQuestions != null && latest.reviewQuestions.Length > 0);
+        var detailRect = detail.rectTransform;
+        detailRect.anchorMin = new Vector2(.08f, essayMode && state == "finished" ? .34f : .25f);
         mode = state; overlay.gameObject.SetActive(true); overlay.SetAsLastSibling();
         heading.text = title; detail.text = message; badge.text = essayMode ? "PLANET • TỰ LUẬN • AI CHẤM BÀI" : "PLANET • ĐỐI KHÁNG";
         primary.gameObject.SetActive(!string.IsNullOrEmpty(action)); ButtonText(primary, action);
         primary.interactable = state != "searching" || !pendingBot;
-        ButtonText(secondary, state == "searching" || state == "countdown" ? "Hủy tìm" : "Về menu");
+        ButtonText(secondary, state == "searching" || state == "countdown" ? "Hủy tìm" : "Về trang chủ");
     }
 
     void BeginSearch()
     {
+        var chat = GetComponent<ScienceChatController>(); if (chat != null) chat.ClearReviews();
+        if (reviewPicker != null) { Destroy(reviewPicker.gameObject); reviewPicker = null; }
         foreach (var drift in root.GetComponentsInChildren<BlobDrift>(true)) drift.enabled = false;
         StopConnection(); game.StopMatch(); ClearProjectiles(); game.resultPanel.SetActive(false);
         local = false; pendingFire = false; pendingBot = false; pendingAnswer = -1; latest = null; game.OnlineControlled = true;
@@ -597,6 +622,7 @@ public class PlanetDuelController : MonoBehaviour
 
     void Update()
     {
+        if (exitConfirmation != null && exitConfirmation.gameObject.activeSelf) exitConfirmation.SetAsLastSibling();
         if (mode == "finished" && !string.IsNullOrEmpty(historyMatchId))
             badge.text = PlanetHistorySync.Status(historyMatchId, matchUsername);
         if (webcam != null && cameraPreview != null && webcam.width > 16) {
@@ -635,14 +661,13 @@ public class PlanetDuelController : MonoBehaviour
             primary.interactable = false; ButtonText(primary, "Đang chuyển…");
             return;
         }
-        if (mode == "confirmExit") { mode = "playing"; overlay.gameObject.SetActive(false); return; }
         if (mode == "error") { if (essayMode) BeginSearch(); else StartLocalBot(); return; }
         BeginSearch();
     }
     void ConfirmExit()
     {
-        if (mode != "playing") return;
-        Screen("confirmExit", "RỜI TRẬN?", "Rời trận online được tính là bỏ cuộc.", "Tiếp tục chơi");
+        CloseCamera(); CancelImagePicker();
+        exitConfirmation.gameObject.SetActive(true); exitConfirmation.SetAsLastSibling();
     }
     void StartLocalBot()
     {
@@ -698,13 +723,31 @@ public class PlanetDuelController : MonoBehaviour
     void ReturnToMenu()
     {
         StopConnection(); game.StopMatch(); ClearProjectiles();
-        var selectors = UnityEngine.Object.FindObjectsByType<GameSelectScreen>(FindObjectsInactive.Include);
+        exitConfirmation.gameObject.SetActive(false);
+        var homes = UnityEngine.Object.FindObjectsByType<HomeMenuController>(FindObjectsInactive.Include);
         root.gameObject.SetActive(false);
-        if (selectors.Length > 0) selectors[0].ReturnToSelection();
-        else {
-            var homes = UnityEngine.Object.FindObjectsByType<HomeMenuController>(FindObjectsInactive.Include);
-            if (homes.Length > 0 && homes[0].homeCanvas != null) homes[0].homeCanvas.SetActive(true);
+        if (homes.Length > 0) homes[0].BackToHome();
+    }
+    void OpenReviewPicker()
+    {
+        if (!essayMode || latest == null || latest.state != "finished" || latest.reviewQuestions == null) return;
+        if (reviewPicker != null) Destroy(reviewPicker.gameObject);
+        reviewPicker = Box("ReviewQuestions", root, Vector2.zero, Vector2.one, new Color(.035f, .02f, .09f, .99f));
+        Label("Title", reviewPicker, new Vector2(.1f, .86f), new Vector2(.8f, .97f), 34).text = "CHỌN CÂU ĐỂ HỎI AI THÊM";
+        MakeButton("Close", reviewPicker, new Vector2(.82f, .87f), new Vector2(.96f, .96f), "Đóng", () => reviewPicker.gameObject.SetActive(false));
+        foreach (var entry in latest.reviewQuestions) {
+            var questionReview = entry;
+            int index = entry.round - 1, column = index % 3, row = index / 3;
+            float left = .07f + column * .30f, top = .78f - row * .23f;
+            MakeButton("Question" + entry.round, reviewPicker, new Vector2(left, top - .18f), new Vector2(left + .27f, top),
+                "Câu " + entry.round + " • " + entry.earned + "/10\n" + entry.difficulty,
+                () => ScienceChatController.ForReview(this).OpenReview(latest.matchId + ":" + questionReview.round,
+                    "Câu " + questionReview.round + " • " + questionReview.text,
+                    "Đề: " + questionReview.text + "\nĐiểm: " + questionReview.earned + "/10\nBài làm học sinh (AI đọc): " + questionReview.transcription
+                        + "\nNhận xét: " + questionReview.feedback + "\nĐáp án tham khảo: " + questionReview.sampleAnswer + "\nGiải thích: " + questionReview.suggestedAnswer,
+                    new Color(.085f, .04f, .19f)));
         }
+        reviewPicker.SetAsLastSibling();
     }
     void StopConnection()
     {
@@ -725,6 +768,8 @@ public class PlanetDuelController : MonoBehaviour
     }
     void OnDisable()
     {
+        if (reviewPicker != null) reviewPicker.gameObject.SetActive(false);
+        if (exitConfirmation != null) exitConfirmation.gameObject.SetActive(false);
         StopConnection(); ClearProjectiles();
         if (game != null) { game.StopMatch(); game.MatchFinished = null; game.OnlineControlled = true; }
         foreach (var animation in previouslyEnabled) if (animation != null) animation.enabled = true;

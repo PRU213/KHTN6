@@ -47,7 +47,7 @@ export class FootballPractice {
     if (this.sessions.size >= 500) throw new Error('Máy chủ đang đầy. Bạn thử lại sau nhé.');
     const bank = await this.source();
     const pool = bank.filter(q => q.subject === subject && sameChapter(q.topic, body.chapter) && body.difficulties.includes(q.difficulty));
-    if (pool.length < 5) throw new Error(`Chưa đủ 5 câu tự luận đã duyệt cho ${body.subject}, ${body.chapter} và độ khó đã chọn. Hiện có ${pool.length} câu; hãy bổ sung trong tab TuLuan.`);
+    if (pool.length < 5) throw new Error(`Chưa đủ 5 câu tự luận dạng chữ đã duyệt cho ${body.subject}, ${body.chapter} và độ khó đã chọn. Hiện có ${pool.length} câu; câu có ảnh đề chưa được hỗ trợ. Hãy bổ sung câu dạng chữ trong tab TuLuan hoặc chọn thêm độ khó.`);
     for (let i = pool.length - 1; i > 0; i--) { const j = Math.floor(this.random() * (i + 1)); [pool[i], pool[j]] = [pool[j], pool[i]]; }
     const session = { token: randomUUID(), game, subject, chapter: body.chapter.trim(), username: String(body.username || body.name || 'Người chơi').slice(0, 100),
       questions: pool.slice(0, 5), index: 0, score: 0, phase: 'answering', hints: [], hintPending: false, gradePending: false, review: null, seen: this.now() };
@@ -63,7 +63,7 @@ export class FootballPractice {
   }
   cleanup() { for (const [token, s] of this.sessions) if (this.now() - s.seen > 1800000) this.sessions.delete(token); }
   expire(s) {
-    if (s.phase === 'answering' && !s.gradePending && this.now() >= s.deadline) {
+    if (s.pausedAt == null && s.phase === 'answering' && !s.gradePending && this.now() >= s.deadline) {
       s.phase = 'review'; s.review = { score: 0, feedback: 'Hết giờ, bạn chưa nộp bài.', transcription: '', suggestedAnswer: '' };
     }
   }
@@ -71,14 +71,22 @@ export class FootballPractice {
     this.expire(s);
     const q = s.questions[s.index]; const reveal = s.phase === 'review' || s.phase === 'finished';
     return { token: s.token, game: s.game, state: s.gradePending ? 'grading' : s.phase, subject: s.subject, chapter: s.chapter, round: s.index + 1, total: 5, score: s.score, maxScore: 50,
-      text: q.text, difficulty: q.difficulty, duration: duration(q.difficulty), remaining: Math.max(0, (s.deadline - this.now()) / 1000), hints: s.hints, hintPending: s.hintPending,
+      text: q.text, difficulty: q.difficulty, duration: duration(q.difficulty), paused: s.pausedAt != null, remaining: Math.max(0, (s.deadline - (s.pausedAt ?? this.now())) / 1000), hints: s.hints, hintPending: s.hintPending,
       earned: reveal ? s.review?.score || 0 : 0, feedback: reveal ? s.review?.feedback || '' : '', transcription: reveal ? s.review?.transcription || '' : '',
       suggestedAnswer: reveal ? s.review?.suggestedAnswer || '' : '', sampleAnswer: reveal ? q.sampleAnswer : '' };
   }
   checkRound(s, round) { if (round !== s.index + 1) throw new Error('Câu hỏi đã thay đổi. Bạn tải lại trạng thái nhé.'); }
+  pause(s) {
+    if (s.pausedAt == null && s.phase === 'answering' && !s.gradePending) s.pausedAt = this.now();
+    return this.view(s);
+  }
+  resume(s) {
+    if (s.pausedAt != null) { s.deadline += this.now() - s.pausedAt; s.pausedAt = null; }
+    return this.view(s);
+  }
   async submit(s, body) {
     this.checkRound(s, body.round); this.expire(s);
-    if (s.phase !== 'answering' || s.gradePending) return this.view(s);
+    if (s.pausedAt != null || s.phase !== 'answering' || s.gradePending) return this.view(s);
     const text = body.text || ''; const image = validateEssayImage(body.imageBase64, body.mimeType);
     if (typeof text !== 'string' || text.length > 2000 || (!text.trim() && !image)) throw new Error('Nhập câu trả lời hoặc chọn ảnh trước khi nộp bài.');
     s.gradePending = true; const index = s.index;
@@ -102,7 +110,7 @@ export class FootballPractice {
   }
   async getHint(s, body) {
     this.checkRound(s, body.round); this.expire(s);
-    if (s.phase !== 'answering' || s.gradePending) return this.view(s);
+    if (s.pausedAt != null || s.phase !== 'answering' || s.gradePending) return this.view(s);
     const level = body.level;
     if (!Number.isInteger(level) || level < 1 || level > 2) throw new Error('Mỗi câu có tối đa hai gợi ý.');
     if (s.hints[level - 1]) return this.view(s);

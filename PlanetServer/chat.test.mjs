@@ -5,6 +5,21 @@ import { createServer } from './server.mjs';
 import http from 'node:http';
 
 const success = () => ({ ok: true, json: async () => ({ candidates: [{ content: { parts: [{ text: 'Câu trả lời.' }] } }] }) });
+test('review chat keeps question context on every turn and bounds untrusted input', async () => {
+  const calls = [];
+  const chat = createChat({ key: 'test', fetchImpl: async (_url, options) => { calls.push(JSON.parse(options.body)); return success(); } });
+  const reviewContext = 'Đề: Giới hạn đo là gì? Bài làm: 10 cm. Điểm: 4/10. Nhận xét: Cần định nghĩa.';
+  assert.equal((await chat({ message: 'Giải thích chỗ em thiếu', reviewContext })).status, 200);
+  assert.equal((await chat({ message: 'Cho ví dụ khác', reviewContext, history: [{ role: 'user', text: 'Giải thích chỗ em thiếu' }, { role: 'model', text: 'Giới hạn đo là giá trị lớn nhất.' }] })).status, 200);
+  for (const call of calls) {
+    assert.ok(call.contents[0].parts[0].text.includes(reviewContext));
+    assert.match(call.systemInstruction.parts[0].text, /Không tự thay đổi điểm/);
+  }
+  assert.equal(calls[1].contents[2].parts[0].text, 'Giải thích chỗ em thiếu');
+  assert.equal((await chat({ message: 'Hi', reviewContext: 'x'.repeat(12001) })).status, 400);
+  assert.equal((await chat({ message: 'Hi', reviewContext: {} })).status, 400);
+  assert.equal(calls.length, 2);
+});
 const waitForAbort = (_url, { signal }) => new Promise((resolve, reject) => {
   signal.addEventListener('abort', () => reject(new Error('aborted')), { once: true });
   if (signal.aborted) reject(new Error('aborted'));
