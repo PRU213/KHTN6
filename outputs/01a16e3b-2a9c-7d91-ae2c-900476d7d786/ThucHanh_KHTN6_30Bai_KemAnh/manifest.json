@@ -1,0 +1,233 @@
+{
+  "lessons": 30,
+  "steps": 90,
+  "pngImages": 60,
+  "chapters": {
+    "PHY": [
+      "Mở đầu và Các phép đo",
+      "Lực và Tác dụng của lực",
+      "Lực ma sát và Lực cản",
+      "Năng lượng và sự truyền năng lượng",
+      "Trái Đất và Bầu trời"
+    ],
+    "CHM": [
+      "An toàn trong phòng thực hành",
+      "Các thể của chất và Sự chuyển thể",
+      "Oxygen và Không khí",
+      "Vật liệu, nhiên liệu, nguyên liệu, lương thực - thực phẩm",
+      "Hỗn hợp, dung dịch và Phương pháp tách chất"
+    ]
+  },
+  "items": [
+    {
+      "id": "TH_PHY_01_01",
+      "title": "Đo chiều dài khi vật không đặt ở vạch 0",
+      "chapter": "CH_PHY_01",
+      "cover": "images/TH_PHY_01_01_daidien.png",
+      "guide": "images/TH_PHY_01_01_huongdan.png"
+    },
+    {
+      "id": "TH_PHY_01_02",
+      "title": "Cân khối lượng bằng cân thăng bằng",
+      "chapter": "CH_PHY_01",
+      "cover": "images/TH_PHY_01_02_daidien.png",
+      "guide": "images/TH_PHY_01_02_huongdan.png"
+    },
+    {
+      "id": "TH_PHY_01_03",
+      "title": "Đo thể tích hòn đá bằng nước dâng",
+      "chapter": "CH_PHY_01",
+      "cover": "images/TH_PHY_01_03_daidien.png",
+      "guide": "images/TH_PHY_01_03_huongdan.png"
+    },
+    {
+      "id": "TH_PHY_02_01",
+      "title": "Lực làm lò xo biến dạng",
+      "chapter": "CH_PHY_02",
+      "cover": "images/TH_PHY_02_01_daidien.png",
+      "guide": "images/TH_PHY_02_01_huongdan.png"
+    },
+    {
+      "id": "TH_PHY_02_02",
+      "title": "Hai lực đẩy ngược chiều lên xe",
+      "chapter": "CH_PHY_02",
+      "cover": "images/TH_PHY_02_02_daidien.png",
+      "guide": "images/TH_PHY_02_02_huongdan.png"
+    },
+    {
+      "id": "TH_PHY_02_03",
+      "title": "Khối lượng và lực hút của Trái Đất",
+      "chapter": "CH_PHY_02",
+      "cover": "images/TH_PHY_02_03_daidien.png",
+      "guide": "images/TH_PHY_02_03_huongdan.png"
+    },
+    {
+      "id": "TH_PHY_03_01",
+      "title": "Xe trượt trên ba mặt đường",
+      "chapter": "CH_PHY_03",
+      "cover": "images/TH_PHY_03_01_daidien.png",
+      "guide": "images/TH_PHY_03_01_huongdan.png"
+    },
+    {
+      "id": "TH_PHY_03_02",
+      "title": "Hình dạng và lực cản của nước",
+      "chapter": "CH_PHY_03",
+      "cover": "images/TH_PHY_03_02_daidien.png",
+      "guide": "images/TH_PHY_03_02_huongdan.png"
+    },
+    {
+      "id": "TH_PHY_03_03",
+      "title": "Ma sát có ích hay có hại",
+      "chapter": "CH_PHY_03",
+      "cover": "images/TH_PHY_03_03_daidien.png",
+      "guide": "images/TH_PHY_03_03_huongdan.png"
+    },
+    {
+      "id": "TH_PHY_04_01",
+      "title": "Từ tay quay đến đèn sáng",
+      "chapter": "CH_PHY_04",
+      "cover": "images/TH_PHY_04_01_daidien.png",
+      "guide": "images/TH_PHY_04_01_huongdan.png"
+    },
+    {
+      "id": "TH_PHY_04_02",
+      "title": "Giữ ấm cốc nước bằng vật cách nhiệt",
+      "chapter": "CH_PHY_04",
+      "cover": "images/TH_PHY_04_02_daidien.png",
+      "guide": "images/TH_PHY_04_02_huongdan.png"
+    },
+    {
+      "id": "TH_PHY_04_03",
+      "title": "Chọn thiết bị ít hao phí năng lượng",
+      "chapter": "CH_PHY_04",
+      "cover": "images/TH_PHY_04_03_daidien.png",
+      "guide": "images/TH_PHY_04_03_huongdan.png"
+    },
+    {
+      "id": "TH_PHY_05_01",
+      "title": "Vì sao có ngày và đêm",
+      "chapter": "CH_PHY_05",
+      "cover": "images/TH_PHY_05_01_daidien.png",
+      "guide": "images/TH_PHY_05_01_huongdan.png"
+    },
+    {
+      "id": "TH_PHY_05_02",
+      "title": "Quan sát các pha Mặt Trăng",
+      "chapter": "CH_PHY_05",
+      "cover": "images/TH_PHY_05_02_daidien.png",
+      "guide": "images/TH_PHY_05_02_huongdan.png"
+    },
+    {
+      "id": "TH_PHY_05_03",
+      "title": "Sắp xếp các hành tinh trong Hệ Mặt Trời",
+      "chapter": "CH_PHY_05",
+      "cover": "images/TH_PHY_05_03_daidien.png",
+      "guide": "images/TH_PHY_05_03_huongdan.png"
+    },
+    {
+      "id": "TH_CHM_01_01",
+      "title": "Chọn trang bị trước khi vào phòng thực hành",
+      "chapter": "CH_CHM_01",
+      "cover": "images/TH_CHM_01_01_daidien.png",
+      "guide": "images/TH_CHM_01_01_huongdan.png"
+    },
+    {
+      "id": "TH_CHM_01_02",
+      "title": "Đọc nhãn cảnh báo trước khi chọn thao tác",
+      "chapter": "CH_CHM_01",
+      "cover": "images/TH_CHM_01_02_daidien.png",
+      "guide": "images/TH_CHM_01_02_huongdan.png"
+    },
+    {
+      "id": "TH_CHM_01_03",
+      "title": "Tìm lỗi trên bàn thực hành",
+      "chapter": "CH_CHM_01",
+      "cover": "images/TH_CHM_01_03_daidien.png",
+      "guide": "images/TH_CHM_01_03_huongdan.png"
+    },
+    {
+      "id": "TH_CHM_02_01",
+      "title": "Ba thể của chất qua mô hình hạt",
+      "chapter": "CH_CHM_02",
+      "cover": "images/TH_CHM_02_01_daidien.png",
+      "guide": "images/TH_CHM_02_01_huongdan.png"
+    },
+    {
+      "id": "TH_CHM_02_02",
+      "title": "Theo dõi nước đá nóng chảy",
+      "chapter": "CH_CHM_02",
+      "cover": "images/TH_CHM_02_02_daidien.png",
+      "guide": "images/TH_CHM_02_02_huongdan.png"
+    },
+    {
+      "id": "TH_CHM_02_03",
+      "title": "Phân biệt bay hơi và sôi",
+      "chapter": "CH_CHM_02",
+      "cover": "images/TH_CHM_02_03_daidien.png",
+      "guide": "images/TH_CHM_02_03_huongdan.png"
+    },
+    {
+      "id": "TH_CHM_03_01",
+      "title": "Ghép thành phần không khí khô",
+      "chapter": "CH_CHM_03",
+      "cover": "images/TH_CHM_03_01_daidien.png",
+      "guide": "images/TH_CHM_03_01_huongdan.png"
+    },
+    {
+      "id": "TH_CHM_03_02",
+      "title": "Oxygen và sự cháy trong mô phỏng",
+      "chapter": "CH_CHM_03",
+      "cover": "images/TH_CHM_03_02_daidien.png",
+      "guide": "images/TH_CHM_03_02_huongdan.png"
+    },
+    {
+      "id": "TH_CHM_03_03",
+      "title": "Chọn hành động giảm ô nhiễm không khí",
+      "chapter": "CH_CHM_03",
+      "cover": "images/TH_CHM_03_03_daidien.png",
+      "guide": "images/TH_CHM_03_03_huongdan.png"
+    },
+    {
+      "id": "TH_CHM_04_01",
+      "title": "Chọn vật liệu cho từng bộ phận",
+      "chapter": "CH_CHM_04",
+      "cover": "images/TH_CHM_04_01_daidien.png",
+      "guide": "images/TH_CHM_04_01_huongdan.png"
+    },
+    {
+      "id": "TH_CHM_04_02",
+      "title": "Phân loại nhiên liệu và cách dùng tiết kiệm",
+      "chapter": "CH_CHM_04",
+      "cover": "images/TH_CHM_04_02_daidien.png",
+      "guide": "images/TH_CHM_04_02_huongdan.png"
+    },
+    {
+      "id": "TH_CHM_04_03",
+      "title": "Đọc nhãn và bảo quản lương thực thực phẩm",
+      "chapter": "CH_CHM_04",
+      "cover": "images/TH_CHM_04_03_daidien.png",
+      "guide": "images/TH_CHM_04_03_huongdan.png"
+    },
+    {
+      "id": "TH_CHM_05_01",
+      "title": "Lọc hỗn hợp cát và nước",
+      "chapter": "CH_CHM_05",
+      "cover": "images/TH_CHM_05_01_daidien.png",
+      "guide": "images/TH_CHM_05_01_huongdan.png"
+    },
+    {
+      "id": "TH_CHM_05_02",
+      "title": "Thu muối từ dung dịch bằng bay hơi",
+      "chapter": "CH_CHM_05",
+      "cover": "images/TH_CHM_05_02_daidien.png",
+      "guide": "images/TH_CHM_05_02_huongdan.png"
+    },
+    {
+      "id": "TH_CHM_05_03",
+      "title": "Chọn rây để tách gạo và bột",
+      "chapter": "CH_CHM_05",
+      "cover": "images/TH_CHM_05_03_daidien.png",
+      "guide": "images/TH_CHM_05_03_huongdan.png"
+    }
+  ]
+}

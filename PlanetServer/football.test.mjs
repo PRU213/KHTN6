@@ -69,7 +69,7 @@ test('Football and Sheep sessions keep hints, points and progress separate', asy
   await practice.getHint(b, { round: 1, level: 1 });
   await practice.submit(b, { round: 1, text: 'Bài của Sheep' });
   assert.equal(practice.view(a).score, 0); assert.deepEqual(practice.view(a).hints, []); assert.equal(a.phase, 'answering');
-  assert.equal(practice.view(b).score, 8); assert.equal(b.game, 'Sheep');
+  assert.equal(practice.view(b).score, 7); assert.equal(b.game, 'Sheep');
   await assert.rejects(practice.start(body({ game: 'Unknown' })), /không hợp lệ/);
 });
 
@@ -80,7 +80,7 @@ test('Cave keeps its hints and graded results separate from Football and Sheep',
   const cave = practice.get(states[2].token);
   await practice.getHint(cave, { round: 1, level: 1 });
   const result = await practice.submit(cave, { round: 1, text: 'Bài làm Đào hang' });
-  assert.equal(result.game, 'Cave'); assert.equal(result.earned, 8);
+  assert.equal(result.game, 'Cave'); assert.equal(result.earned, 7);
   assert.equal(result.sampleAnswer, 'Đáp án tham khảo'); assert.equal(result.suggestedAnswer, 'Bài mẫu');
   for (const state of states.slice(0, 2)) {
     const untouched = practice.view(practice.get(state.token));
@@ -112,7 +112,7 @@ test('insufficient questions and missing lesson selection fail instead of borrow
   await assert.rejects(practice.start(body({ subject: 'Sinh học' })), /Lí\/Hóa/);
 });
 
-test('two hints are cached, sequential and do not deduct points or reveal the reference', async () => {
+test('two hints are cached, sequential and deduct one plus two points without revealing the reference', async () => {
   let calls = 0;
   const { practice } = fixture({ hint: async (_q, level, previous) => { calls++; assert.equal(previous.length, level - 1); return `Gợi ý ${level}`; } });
   const state = await practice.start(body()), s = practice.get(state.token);
@@ -120,8 +120,42 @@ test('two hints are cached, sequential and do not deduct points or reveal the re
   assert.deepEqual(first.hints, ['Gợi ý 1']); assert.equal(first.score, 0); assert.equal(first.sampleAnswer, '');
   await practice.getHint(s, { round: 1, level: 1 }); assert.equal(calls, 1);
   await practice.getHint(s, { round: 1, level: 2 }); assert.equal(calls, 2);
+  await practice.getHint(s, { round: 1, level: 2 }); assert.equal(calls, 2);
   await assert.rejects(practice.getHint(s, { round: 1, level: 3 }), /hai gợi ý/);
-  const result = await practice.submit(s, { round: 1, text: 'Bài' }); assert.equal(result.score, 8);
+  const result = await practice.submit(s, { round: 1, text: 'Bài' }); assert.equal(result.score, 5);
+  assert.equal(result.rawScore, 8); assert.equal(result.hintPenalty, 3); assert.equal(result.earned, 5);
+});
+
+for (const game of ['Football', 'Sheep', 'Cave']) test(`${game} applies hint costs to final points and recorded results, resetting each question`, async () => {
+  for (const used of [0, 1, 2]) {
+    const records = [];
+    const { practice } = fixture({ record: async value => records.push(value) });
+    const state = await practice.start(body({ game })), s = practice.get(state.token);
+    for (let level = 1; level <= used; level++) await practice.getHint(s, { round: 1, level });
+    const penalty = [0, 1, 3][used];
+    const result = await practice.submit(s, { round: 1, text: 'Bài', hintPenalty: -999, score: 999 });
+    assert.equal(result.rawScore, 8); assert.equal(result.hintPenalty, penalty); assert.equal(result.earned, 8 - penalty);
+    assert.equal(result.score, 8 - penalty);
+    assert.equal(records[0].rawScore, 8); assert.equal(records[0].score, 8 - penalty); assert.equal(records[0].hintPenalty, penalty);
+    const again = await practice.submit(s, { round: 1, text: 'Trùng' }); assert.equal(again.score, result.score);
+    assert.equal(practice.next(s, { round: 1 }).hintPenalty, 0);
+    const next = await practice.submit(s, { round: 2, text: 'Bài mới' }); assert.equal(next.earned, 8); assert.equal(next.score, result.score + 8);
+  }
+});
+
+test('failed or empty hints are free, while low scores and timeouts never become negative', async () => {
+  let fail = false;
+  const { practice, advance } = fixture({ grade: async () => ({ ...review, score: 2 }), hint: async () => { if (fail) throw new Error('offline'); return 'Gợi ý'; } });
+  const state = await practice.start(body()), s = practice.get(state.token);
+  await practice.getHint(s, { round: 1, level: 1 }); fail = true;
+  await assert.rejects(practice.getHint(s, { round: 1, level: 2 })); assert.equal(practice.view(s).hintPenalty, 1);
+  practice.hint = async () => '';
+  await assert.rejects(practice.getHint(s, { round: 1, level: 2 })); assert.equal(practice.view(s).hintPenalty, 1);
+  practice.hint = async () => 'Gợi ý 2'; await practice.getHint(s, { round: 1, level: 2 });
+  const result = await practice.submit(s, { round: 1, text: 'Bài' });
+  assert.equal(result.rawScore, 2); assert.equal(result.hintPenalty, 3); assert.equal(result.earned, 0); assert.equal(result.score, 0);
+  practice.next(s, { round: 1 }); await practice.getHint(s, { round: 2, level: 1 });
+  advance(60000); const expired = practice.view(s); assert.equal(expired.earned, 0); assert.equal(expired.score, 0); assert.equal(expired.rawScore, 0);
 });
 
 test('failed hints do not consume allowance and late hint results do not enter the next question', async () => {
@@ -205,7 +239,7 @@ for (const game of ['Football', 'Sheep', 'Cave']) test(`${game} HTTP start, hint
     assert.equal(state.game, game);
     await post('hint', { token: state.token, round: 1, level: 1 });
     const result = await post('submit', { token: state.token, round: 1, text: 'Bài làm', score: 999 });
-    assert.equal(result.score, 8); assert.equal(result.state, 'review');
+    assert.equal(result.score, 7); assert.equal(result.state, 'review');
     assert.equal((await post('next', { token: state.token, round: 1 })).round, 2);
     await post('leave', { token: state.token }); assert.equal(practice.sessions.size, 0);
   } finally { server.closeAllConnections(); await new Promise(resolve => server.close(resolve)); }

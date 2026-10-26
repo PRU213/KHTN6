@@ -10,6 +10,12 @@ public class TheoryPanel : MonoBehaviour
 
     public void Show(string id)
     {
+        PracticeLearningUI.Open(id.StartsWith("CH_CHM_") ? "Hóa học" : "Vật lý", id,
+            () => ShowTheory(id));
+    }
+
+    void ShowTheory(string id)
+    {
         gameObject.SetActive(true);
 
         StartCoroutine(LoadTheory(id));
