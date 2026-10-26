@@ -1,0 +1,934 @@
+{
+  "items": [
+    {
+      "lesson": {
+        "id": "TH_PHY_01_01",
+        "title": "Đo chiều dài khi vật không đặt ở vạch 0",
+        "simulationType": "DoChieuDai",
+        "configJson": "{\"startCm\":2,\"endCm\":10,\"answer\":8,\"unit\":\"cm\",\"tolerance\":0.1}",
+        "objective": "Đặt thước song song với vật; tính chiều dài từ hai số đọc.",
+        "equipment": "Thước 0–15 cm, chiếc bút, hai mốc kéo thả",
+        "referenceAnswer": "10 cm là vị trí cuối trên thước; chiều dài là 10 − 2 = 8 cm.",
+        "conclusionQuestion": "Vì sao không thể kết luận bút dài 10 cm?",
+        "imageUrl": "",
+        "instructionImageUrl": ""
+      },
+      "steps": [
+        {
+          "title": "Đặt thước",
+          "action": "Kéo thước song song với bút, đưa hai mốc đến hai đầu bút.",
+          "incorrectFeedback": "Đặt thước sát và song song với bút."
+        },
+        {
+          "title": "Đọc hai đầu",
+          "action": "Đọc số 2 cm và 10 cm trên thước ảo.",
+          "incorrectFeedback": "Chưa thể dùng riêng số ở đầu cuối làm chiều dài."
+        },
+        {
+          "title": "Tính chiều dài",
+          "action": "Nhập chiều dài và chọn đơn vị cm.",
+          "incorrectFeedback": "Lấy số đọc cuối trừ số đọc đầu."
+        }
+      ]
+    },
+    {
+      "lesson": {
+        "id": "TH_PHY_01_02",
+        "title": "Cân khối lượng bằng cân thăng bằng",
+        "simulationType": "CanKhoiLuong",
+        "configJson": "{\"massG\":150,\"weightsG\":[50,100],\"answer\":150,\"unit\":\"g\"}",
+        "objective": "Xác định khối lượng vật qua tổng khối lượng quả cân khi cân bằng.",
+        "equipment": "Cân hai đĩa, vật mẫu, quả cân 50 g và 100 g",
+        "referenceAnswer": "Trong mô hình cân hai đĩa lý tưởng, khối lượng hai bên bằng nhau.",
+        "conclusionQuestion": "Cân bằng cho biết gì về khối lượng hai bên?",
+        "imageUrl": "",
+        "instructionImageUrl": ""
+      },
+      "steps": [
+        {
+          "title": "Đặt vật",
+          "action": "Kéo vật mẫu lên đĩa trái.",
+          "incorrectFeedback": "Đặt vật trọn trên đĩa cân."
+        },
+        {
+          "title": "Chọn quả cân",
+          "action": "Thêm quả 100 g và 50 g vào đĩa phải.",
+          "incorrectFeedback": "So sánh độ cao hai đĩa để điều chỉnh."
+        },
+        {
+          "title": "Đọc kết quả",
+          "action": "Cộng khối lượng hai quả cân và nhập kết quả.",
+          "incorrectFeedback": "Cộng tất cả quả cân trên đĩa phải."
+        }
+      ]
+    },
+    {
+      "lesson": {
+        "id": "TH_PHY_01_03",
+        "title": "Đo thể tích hòn đá bằng nước dâng",
+        "simulationType": "DoTheTich",
+        "configJson": "{\"beforeMl\":40,\"afterMl\":70,\"answer\":30,\"unit\":\"cm3\"}",
+        "objective": "Suy ra thể tích vật không thấm nước từ độ tăng thể tích nước.",
+        "equipment": "Ống đong 100 mL, nước, hòn đá ảo",
+        "referenceAnswer": "Không; thể tích đá bằng phần nước tăng thêm: 70 − 40 = 30 mL = 30 cm³.",
+        "conclusionQuestion": "Mực nước sau có phải thể tích riêng của đá không?",
+        "imageUrl": "",
+        "instructionImageUrl": ""
+      },
+      "steps": [
+        {
+          "title": "Đọc mức đầu",
+          "action": "Đặt mắt ảo ngang mực nước và đọc mức ban đầu.",
+          "incorrectFeedback": "Đọc ngang mực nước."
+        },
+        {
+          "title": "Đặt đá vào",
+          "action": "Kéo đá chìm hoàn toàn trong ống đong ảo.",
+          "incorrectFeedback": "Đá cần chìm hoàn toàn, không có bọt khí bám."
+        },
+        {
+          "title": "Tính thể tích",
+          "action": "Lấy mức sau trừ mức trước.",
+          "incorrectFeedback": "1 mL bằng 1 cm³."
+        }
+      ]
+    },
+    {
+      "lesson": {
+        "id": "TH_PHY_02_01",
+        "title": "Lực làm lò xo biến dạng",
+        "simulationType": "LucBienDang",
+        "configJson": "{\"forceLevelsN\":[0,1,2],\"elasticRange\":true}",
+        "objective": "Quan sát lò xo biến dạng khi lực kéo thay đổi trong giới hạn mô hình.",
+        "equipment": "Lò xo ảo, tay kéo, thước",
+        "referenceAnswer": "Lực có thể làm vật biến dạng; khi bỏ lực, lò xo trong giới hạn đàn hồi trở về hình dạng ban đầu.",
+        "conclusionQuestion": "Thí nghiệm này cho thấy tác dụng nào của lực?",
+        "imageUrl": "",
+        "instructionImageUrl": ""
+      },
+      "steps": [
+        {
+          "title": "Quan sát ban đầu",
+          "action": "Đưa lực kéo về 0 bằng thanh trượt.",
+          "incorrectFeedback": "Ghi chiều dài trước khi kéo."
+        },
+        {
+          "title": "Tăng lực",
+          "action": "Chuyển thanh trượt qua ba mức lực nhỏ.",
+          "incorrectFeedback": "Giữ cùng một lò xo để so sánh."
+        },
+        {
+          "title": "Thả lực",
+          "action": "Đưa lực về 0 và chọn nhận xét.",
+          "incorrectFeedback": "Đây là biến dạng đàn hồi trong giới hạn mô phỏng."
+        }
+      ]
+    },
+    {
+      "lesson": {
+        "id": "TH_PHY_02_02",
+        "title": "Hai lực đẩy ngược chiều lên xe",
+        "simulationType": "HaiLucNguocChieu",
+        "configJson": "{\"leftN\":10,\"rightLevelsN\":[10,20],\"friction\":false,\"initialSpeed\":0}",
+        "objective": "So sánh chuyển động từ trạng thái nghỉ khi hai lực cân bằng hoặc không cân bằng.",
+        "equipment": "Xe ảo, hai mũi tên lực, đường không ma sát",
+        "referenceAnswer": "Không trong mô hình này; tổng lực bằng 0. Khi lực phải lớn hơn, xe tăng tốc sang phải.",
+        "conclusionQuestion": "Xe đang nghỉ với hai lực cân bằng có tăng tốc không?",
+        "imageUrl": "",
+        "instructionImageUrl": ""
+      },
+      "steps": [
+        {
+          "title": "Cân bằng lực",
+          "action": "Đặt lực trái và phải cùng 10 N.",
+          "incorrectFeedback": "So cả độ lớn và chiều của hai lực."
+        },
+        {
+          "title": "Tạo chênh lệch",
+          "action": "Đổi lực sang phải thành 20 N, giữ lực còn lại 10 N.",
+          "incorrectFeedback": "Theo dõi sự thay đổi tốc độ, không chỉ vị trí."
+        },
+        {
+          "title": "So sánh",
+          "action": "Chọn nhận xét đúng cho hai tình huống.",
+          "incorrectFeedback": "Mô hình này bỏ qua ma sát."
+        }
+      ]
+    },
+    {
+      "lesson": {
+        "id": "TH_PHY_02_03",
+        "title": "Khối lượng và lực hút của Trái Đất",
+        "simulationType": "TrongLuc",
+        "configJson": "{\"massesG\":[100,200],\"gravityNPerKg\":10,\"weightsN\":[1,2]}",
+        "objective": "Phân biệt đơn vị khối lượng và lực; đọc số chỉ lực kế ảo.",
+        "equipment": "Lực kế 0–5 N, vật 100 g và 200 g",
+        "referenceAnswer": "Lực kế đo lực bằng N, còn g là đơn vị khối lượng.",
+        "conclusionQuestion": "Vì sao không ghi số chỉ lực kế là 200 g?",
+        "imageUrl": "",
+        "instructionImageUrl": ""
+      },
+      "steps": [
+        {
+          "title": "Treo vật thứ nhất",
+          "action": "Chọn vật 100 g trên lực kế ảo.",
+          "incorrectFeedback": "Lực kế đo lực bằng N."
+        },
+        {
+          "title": "Đổi vật",
+          "action": "Thay bằng vật 200 g ở cùng vị trí.",
+          "incorrectFeedback": "Đừng nhầm g với N."
+        },
+        {
+          "title": "Kết luận",
+          "action": "Ghép 100 g với 1 N và 200 g với 2 N.",
+          "incorrectFeedback": "Các số là gần đúng với g ≈ 10 N/kg."
+        }
+      ]
+    },
+    {
+      "lesson": {
+        "id": "TH_PHY_03_01",
+        "title": "Xe trượt trên ba mặt đường",
+        "simulationType": "MaSatBeMat",
+        "configJson": "{\"surfaces\":[\"kinh\",\"go\",\"tham\"],\"initialSpeed\":2,\"frictionLevels\":[0.1,0.3,0.6]}",
+        "objective": "So sánh quãng đường trượt khi giữ cùng vận tốc ban đầu.",
+        "equipment": "Xe, mặt kính, gỗ và thảm trong mô hình",
+        "referenceAnswer": "Để thay đổi quãng đường chủ yếu phản ánh sự khác nhau của ma sát.",
+        "conclusionQuestion": "Vì sao phải dùng cùng vận tốc ban đầu?",
+        "imageUrl": "",
+        "instructionImageUrl": ""
+      },
+      "steps": [
+        {
+          "title": "Giữ điều kiện",
+          "action": "Đặt cùng xe và cùng vận tốc đầu cho ba lượt.",
+          "incorrectFeedback": "So sánh cần giữ các yếu tố khác như nhau."
+        },
+        {
+          "title": "Thử ba mặt",
+          "action": "Bấm thả xe trên từng bề mặt.",
+          "incorrectFeedback": "Quan sát quãng đường đến lúc dừng."
+        },
+        {
+          "title": "Xếp thứ tự",
+          "action": "Xếp lực cản ma sát từ nhỏ đến lớn.",
+          "incorrectFeedback": "Thứ tự này áp dụng cho vật liệu đã cấu hình, không phải mọi bề mặt thực tế."
+        }
+      ]
+    },
+    {
+      "lesson": {
+        "id": "TH_PHY_03_02",
+        "title": "Hình dạng và lực cản của nước",
+        "simulationType": "LucCanChatLong",
+        "configJson": "{\"speed\":1,\"shapes\":[\"mat_tu\",\"cau\",\"thuon\"],\"dragN\":[3,2,1]}",
+        "objective": "Quan sát lực cản khác nhau khi các hình được kéo với cùng tốc độ.",
+        "equipment": "Bể nước ảo, ba vật cùng diện tích cản lớn nhất, lực kế",
+        "referenceAnswer": "Vì tốc độ cũng ảnh hưởng lực cản; giữ tốc độ giúp so sánh ảnh hưởng của hình dạng.",
+        "conclusionQuestion": "Vì sao phải kéo các vật với cùng tốc độ?",
+        "imageUrl": "",
+        "instructionImageUrl": ""
+      },
+      "steps": [
+        {
+          "title": "Thiết lập",
+          "action": "Chọn cùng tốc độ kéo và độ sâu trong nước.",
+          "incorrectFeedback": "Không đồng thời đổi tốc độ và hình dạng."
+        },
+        {
+          "title": "Kéo từng vật",
+          "action": "Chọn vật mặt tù, hình cầu rồi hình thuôn.",
+          "incorrectFeedback": "So lực kéo khi vật đã chuyển động đều."
+        },
+        {
+          "title": "Chọn hình",
+          "action": "Chọn hình cần lực kéo nhỏ nhất.",
+          "incorrectFeedback": "Hình dạng có ảnh hưởng đến lực cản."
+        }
+      ]
+    },
+    {
+      "lesson": {
+        "id": "TH_PHY_03_03",
+        "title": "Ma sát có ích hay có hại",
+        "simulationType": "MaSatDoiSong",
+        "configJson": "{\"situations\":[\"de_giay\",\"phanh_xe\",\"ban_le\"],\"actions\":[\"tang\",\"tang\",\"giam\"]}",
+        "objective": "Nhận biết tác dụng của ma sát trong các tình huống đời sống.",
+        "equipment": "Thẻ giày, phanh xe, bản lề và dầu bôi trơn ảo",
+        "referenceAnswer": "Giày cần độ bám; bản lề cần giảm lực cản khi quay.",
+        "conclusionQuestion": "Vì sao đế giày có rãnh nhưng bản lề thường được bôi trơn?",
+        "imageUrl": "",
+        "instructionImageUrl": ""
+      },
+      "steps": [
+        {
+          "title": "Quan sát tình huống",
+          "action": "Mở các thẻ đế giày, phanh xe và bản lề.",
+          "incorrectFeedback": "Xét mục đích của từng thiết bị."
+        },
+        {
+          "title": "Chọn giải pháp",
+          "action": "Ghép tăng độ bám với đế giày, tăng lực hãm với phanh, bôi trơn với bản lề.",
+          "incorrectFeedback": "Không bôi trơn bộ phận cần độ bám như má phanh."
+        },
+        {
+          "title": "Giải thích",
+          "action": "Chọn có ích hoặc có hại theo từng mục đích.",
+          "incorrectFeedback": "Ma sát không luôn có hại."
+        }
+      ]
+    },
+    {
+      "lesson": {
+        "id": "TH_PHY_04_01",
+        "title": "Từ tay quay đến đèn sáng",
+        "simulationType": "ChuyenHoaNangLuong",
+        "configJson": "{\"storage\":false,\"chain\":[\"co_nang\",\"dien_nang\",\"anh_sang_va_nhiet\"]}",
+        "objective": "Theo dõi chuỗi chuyển hóa năng lượng trong máy phát điện ảo.",
+        "equipment": "Tay quay, máy phát, đèn LED, mũi tên năng lượng",
+        "referenceAnswer": "Không; đèn nhận điện năng, phát ánh sáng và tỏa nhiệt.",
+        "conclusionQuestion": "Đèn có tự tạo năng lượng không?",
+        "imageUrl": "",
+        "instructionImageUrl": ""
+      },
+      "steps": [
+        {
+          "title": "Nối mô hình",
+          "action": "Nối tay quay, máy phát và đèn bằng các cổng ảo.",
+          "incorrectFeedback": "Theo dõi từ nguồn đến nơi nhận."
+        },
+        {
+          "title": "Quay tay",
+          "action": "Tăng thanh trượt tốc độ quay.",
+          "incorrectFeedback": "Năng lượng đến từ thao tác quay."
+        },
+        {
+          "title": "Dừng và giải thích",
+          "action": "Dừng quay và ghép tên các dạng năng lượng.",
+          "incorrectFeedback": "Đèn không biến toàn bộ điện năng thành ánh sáng."
+        }
+      ]
+    },
+    {
+      "lesson": {
+        "id": "TH_PHY_04_02",
+        "title": "Giữ ấm cốc nước bằng vật cách nhiệt",
+        "simulationType": "TruyenNhiet",
+        "configJson": "{\"initialC\":60,\"afterC\":[40,50],\"roomC\":25,\"illustrativeData\":true}",
+        "objective": "So sánh nhiệt độ sau cùng thời gian khi chỉ thay vật bọc cốc.",
+        "equipment": "Hai cốc ảo, nước ấm, lớp bọc cách nhiệt, nhiệt kế",
+        "referenceAnswer": "Giảm tốc độ truyền nhiệt; không tự tạo năng lượng.",
+        "conclusionQuestion": "Lớp bọc giữ ấm bằng cách tạo thêm nhiệt hay giảm truyền nhiệt?",
+        "imageUrl": "",
+        "instructionImageUrl": ""
+      },
+      "steps": [
+        {
+          "title": "Đặt điều kiện",
+          "action": "Chọn hai cốc giống nhau cùng lượng nước ở 60 °C.",
+          "incorrectFeedback": "Chỉ thay lớp bọc ngoài."
+        },
+        {
+          "title": "Chạy thời gian",
+          "action": "Bọc cốc B bằng lớp cách nhiệt rồi chạy đồng hồ ảo.",
+          "incorrectFeedback": "Không mở thêm nguồn nhiệt."
+        },
+        {
+          "title": "Đọc nhiệt độ",
+          "action": "So sánh nhiệt kế của hai cốc.",
+          "incorrectFeedback": "Lớp bọc không tự sinh nhiệt."
+        }
+      ]
+    },
+    {
+      "lesson": {
+        "id": "TH_PHY_04_03",
+        "title": "Chọn thiết bị ít hao phí năng lượng",
+        "simulationType": "NangLuongHaoPhi",
+        "configJson": "{\"input\":100,\"useful\":[20,60],\"waste\":[80,40],\"illustrativeData\":true}",
+        "objective": "So sánh năng lượng có ích và hao phí trong hai mô hình chiếu sáng.",
+        "equipment": "Hai đèn ảo, sơ đồ dòng năng lượng",
+        "referenceAnswer": "Một dạng năng lượng có thể có ích cho mục đích này nhưng không có ích cho mục đích khác.",
+        "conclusionQuestion": "Vì sao cần xác định mục đích trước khi nói năng lượng hao phí?",
+        "imageUrl": "",
+        "instructionImageUrl": ""
+      },
+      "steps": [
+        {
+          "title": "Cấp năng lượng",
+          "action": "Cấp cùng 100 đơn vị năng lượng cho hai đèn mẫu.",
+          "incorrectFeedback": "Đây là đơn vị minh họa, không phải số đo một loại đèn cụ thể."
+        },
+        {
+          "title": "Quan sát đầu ra",
+          "action": "Đọc phần ánh sáng có ích và nhiệt hao phí.",
+          "incorrectFeedback": "Tổng đầu ra mỗi đèn bằng đầu vào."
+        },
+        {
+          "title": "Lựa chọn",
+          "action": "Chọn đèn có phần năng lượng có ích lớn hơn.",
+          "incorrectFeedback": "Nhiệt được xem là hao phí đối với mục đích chiếu sáng."
+        }
+      ]
+    },
+    {
+      "lesson": {
+        "id": "TH_PHY_05_01",
+        "title": "Vì sao có ngày và đêm",
+        "simulationType": "NgayDem",
+        "configJson": "{\"sunFixed\":true,\"rotationDegrees\":[0,90,180,270,360],\"notToScale\":true}",
+        "objective": "Liên hệ ngày đêm với sự tự quay của Trái Đất.",
+        "equipment": "Mặt Trời, Trái Đất, điểm đánh dấu vị trí",
+        "referenceAnswer": "Không; vị trí quan sát quay sang phần không được Mặt Trời chiếu trực tiếp.",
+        "conclusionQuestion": "Có phải ban đêm Mặt Trời ngừng phát sáng?",
+        "imageUrl": "",
+        "instructionImageUrl": ""
+      },
+      "steps": [
+        {
+          "title": "Chọn vị trí",
+          "action": "Đánh dấu một điểm trên Trái Đất mô phỏng.",
+          "incorrectFeedback": "Nguồn sáng giữ cố định."
+        },
+        {
+          "title": "Quay Trái Đất",
+          "action": "Kéo thanh góc tự quay một vòng.",
+          "incorrectFeedback": "Mô hình không dùng chuyển động của Mặt Trời quanh Trái Đất."
+        },
+        {
+          "title": "Ghép thời điểm",
+          "action": "Ghép vùng sáng với ngày và vùng tối với đêm.",
+          "incorrectFeedback": "Mô hình đơn giản bỏ qua chạng vạng."
+        }
+      ]
+    },
+    {
+      "lesson": {
+        "id": "TH_PHY_05_02",
+        "title": "Quan sát các pha Mặt Trăng",
+        "simulationType": "PhaMatTrang",
+        "configJson": "{\"phases\":[\"trang_moi\",\"ban_nguyet\",\"trang_tron\"],\"eclipse\":false,\"notToScale\":true}",
+        "objective": "Nhận biết pha Trăng do góc nhìn phần được Mặt Trời chiếu sáng.",
+        "equipment": "Mặt Trời, Trái Đất, Mặt Trăng, cửa sổ góc nhìn",
+        "referenceAnswer": "Không; pha Trăng là sự thay đổi phần nửa sáng nhìn thấy, còn nguyệt thực là hiện tượng khác.",
+        "conclusionQuestion": "Pha Trăng thông thường có phải là nguyệt thực không?",
+        "imageUrl": "",
+        "instructionImageUrl": ""
+      },
+      "steps": [
+        {
+          "title": "Đặt góc nhìn",
+          "action": "Bật góc nhìn từ Trái Đất.",
+          "incorrectFeedback": "Mặt Trăng không tự phát sáng."
+        },
+        {
+          "title": "Đổi vị trí",
+          "action": "Di chuyển Trăng quanh quỹ đạo ảo.",
+          "incorrectFeedback": "Không đồng nhất pha Trăng với nguyệt thực."
+        },
+        {
+          "title": "Ghép pha",
+          "action": "Ghép ảnh trăng mới, bán nguyệt và trăng tròn.",
+          "incorrectFeedback": "Mô hình không mô tả nguyệt thực và không theo tỉ lệ khoảng cách."
+        }
+      ]
+    },
+    {
+      "lesson": {
+        "id": "TH_PHY_05_03",
+        "title": "Sắp xếp các hành tinh trong Hệ Mặt Trời",
+        "simulationType": "HeMatTroi",
+        "configJson": "{\"order\":[\"Thuy\",\"Kim\",\"TraiDat\",\"Hoa\",\"Moc\",\"Tho\",\"ThienVuong\",\"HaiVuong\"],\"notToScale\":true}",
+        "objective": "Xếp thứ tự tám hành tinh từ gần Mặt Trời ra xa.",
+        "equipment": "Thẻ tám hành tinh, các vị trí quỹ đạo",
+        "referenceAnswer": "Sao Kim nằm trước và sao Hỏa nằm sau Trái Đất theo thứ tự từ Mặt Trời ra ngoài.",
+        "conclusionQuestion": "Trong thứ tự quỹ đạo, hành tinh nào nằm ngay trước và sau Trái Đất?",
+        "imageUrl": "",
+        "instructionImageUrl": ""
+      },
+      "steps": [
+        {
+          "title": "Nhận diện",
+          "action": "Mở tên trên tám thẻ hành tinh.",
+          "incorrectFeedback": "Kích thước hình và khoảng cách không theo tỉ lệ."
+        },
+        {
+          "title": "Sắp thứ tự",
+          "action": "Kéo thẻ vào vị trí từ gần đến xa Mặt Trời.",
+          "incorrectFeedback": "Không dùng kích thước hình để suy thứ tự."
+        },
+        {
+          "title": "Xác định vị trí",
+          "action": "Chọn Trái Đất và hai hành tinh lân cận theo thứ tự quỹ đạo.",
+          "incorrectFeedback": "Mặt Trời là một ngôi sao, không phải một hành tinh."
+        }
+      ]
+    },
+    {
+      "lesson": {
+        "id": "TH_CHM_01_01",
+        "title": "Chọn trang bị trước khi vào phòng thực hành",
+        "simulationType": "TrangBiBaoHo",
+        "configJson": "{\"required\":[\"kinh_bao_ho\",\"ao_choang\",\"giay_kin\",\"toc_gon\"]}",
+        "objective": "Nhận biết trang bị và trang phục phù hợp trước khi thao tác.",
+        "equipment": "Tủ đồ ảo, kính bảo hộ, áo choàng, giày kín, dây buộc tóc",
+        "referenceAnswer": "Các trang bị bảo vệ những bộ phận khác nhau; cần đáp ứng đầy đủ yêu cầu của hoạt động.",
+        "conclusionQuestion": "Vì sao không chỉ đeo kính mà bỏ qua trang phục?",
+        "imageUrl": "",
+        "instructionImageUrl": ""
+      },
+      "steps": [
+        {
+          "title": "Quan sát nhiệm vụ",
+          "action": "Đọc yêu cầu của phòng thực hành ảo.",
+          "incorrectFeedback": "Đọc nhiệm vụ trước khi chọn đồ."
+        },
+        {
+          "title": "Chọn trang bị",
+          "action": "Kéo kính bảo hộ, áo choàng, giày kín và buộc tóc dài cho nhân vật.",
+          "incorrectFeedback": "Không chọn dép hở hoặc kính thời trang thay kính bảo hộ."
+        },
+        {
+          "title": "Kiểm tra",
+          "action": "Bấm kiểm tra trước khi vào bàn thực hành.",
+          "incorrectFeedback": "Trang bị không thay thế hướng dẫn của giáo viên."
+        }
+      ]
+    },
+    {
+      "lesson": {
+        "id": "TH_CHM_01_02",
+        "title": "Đọc nhãn cảnh báo trước khi chọn thao tác",
+        "simulationType": "NhanCanhBao",
+        "configJson": "{\"labels\":[\"de_chay\",\"an_mon\",\"doc\"],\"virtualOnly\":true}",
+        "objective": "Đọc tên cảnh báo và chọn cách ứng xử phù hợp trong mô phỏng.",
+        "equipment": "Ba nhãn minh họa: dễ cháy, ăn mòn, độc; bảng hành vi",
+        "referenceAnswer": "Dừng thao tác và hỏi giáo viên; không tự nếm, ngửi hay chạm để thử.",
+        "conclusionQuestion": "Nếu không hiểu nhãn, em nên làm gì?",
+        "imageUrl": "",
+        "instructionImageUrl": ""
+      },
+      "steps": [
+        {
+          "title": "Đọc nhãn",
+          "action": "Mở ba thẻ cảnh báo có tên rõ ràng.",
+          "incorrectFeedback": "Hình trong bộ dữ liệu là minh họa, không thay bảng nhãn chuẩn của phòng học."
+        },
+        {
+          "title": "Ghép hành vi",
+          "action": "Ghép tránh nguồn lửa, tránh tiếp xúc trực tiếp và không nếm/ngửi trực tiếp.",
+          "incorrectFeedback": "Không thử bằng hóa chất thật."
+        },
+        {
+          "title": "Giải thích",
+          "action": "Chọn lý do phải đọc nhãn trước khi sử dụng.",
+          "incorrectFeedback": "Không suy đoán tính an toàn qua màu hoặc mùi."
+        }
+      ]
+    },
+    {
+      "lesson": {
+        "id": "TH_CHM_01_03",
+        "title": "Tìm lỗi trên bàn thực hành",
+        "simulationType": "TimLoiAnToan",
+        "configJson": "{\"errors\":[\"do_an\",\"coc_khong_nhan\",\"chai_khong_day\"],\"virtualOnly\":true}",
+        "objective": "Phát hiện hành vi chưa phù hợp và chọn cách báo hoặc sửa trong mô phỏng.",
+        "equipment": "Bàn ảo, cốc không nhãn, đồ ăn, chai không đậy, thẻ báo giáo viên",
+        "referenceAnswer": "Không biết chất gì và nguy cơ nào; cần hỏi người phụ trách trước.",
+        "conclusionQuestion": "Vì sao không tự đổ chất trong cốc không có nhãn?",
+        "imageUrl": "",
+        "instructionImageUrl": ""
+      },
+      "steps": [
+        {
+          "title": "Quan sát bàn",
+          "action": "Mở góc nhìn toàn bàn trong phòng ảo.",
+          "incorrectFeedback": "Không kéo hóa chất thật để xử lý."
+        },
+        {
+          "title": "Đánh dấu lỗi",
+          "action": "Bấm vào ba điểm cần xử lý.",
+          "incorrectFeedback": "Không chọn vật an toàn chỉ để tăng số lỗi."
+        },
+        {
+          "title": "Chọn cách xử lý",
+          "action": "Chọn bỏ đồ ăn ra khu vực phù hợp và báo giáo viên về đồ chứa chưa rõ.",
+          "incorrectFeedback": "Không tự đổ hoặc trộn chất không rõ."
+        }
+      ]
+    },
+    {
+      "lesson": {
+        "id": "TH_CHM_02_01",
+        "title": "Ba thể của chất qua mô hình hạt",
+        "simulationType": "BaTheCuaChat",
+        "configJson": "{\"states\":[\"ran\",\"long\",\"khi\"],\"particleModel\":true}",
+        "objective": "So sánh hình dạng, thể tích và cách sắp xếp hạt trong mô hình đơn giản.",
+        "equipment": "Ba bình mô phỏng rắn, lỏng, khí",
+        "referenceAnswer": "Chất lỏng không có hình dạng riêng, nên nhận hình dạng phần bình chứa nó.",
+        "conclusionQuestion": "Vì sao nước lỏng đổi hình khi rót sang cốc khác?",
+        "imageUrl": "",
+        "instructionImageUrl": ""
+      },
+      "steps": [
+        {
+          "title": "Xem ba mô hình",
+          "action": "Chọn lần lượt rắn, lỏng và khí.",
+          "incorrectFeedback": "Hạt là ký hiệu phóng đại, không phải ảnh chụp."
+        },
+        {
+          "title": "Đổi bình chứa",
+          "action": "Đổi hình bình chứa trên màn hình.",
+          "incorrectFeedback": "Mô hình giữ lượng chất không đổi."
+        },
+        {
+          "title": "Ghép tính chất",
+          "action": "Ghép mỗi thể với mô tả hình dạng và thể tích.",
+          "incorrectFeedback": "Không đồng nhất hình dạng của bình với hình dạng riêng của chất."
+        }
+      ]
+    },
+    {
+      "lesson": {
+        "id": "TH_CHM_02_02",
+        "title": "Theo dõi nước đá nóng chảy",
+        "simulationType": "NongChay",
+        "configJson": "{\"startC\":-5,\"meltingC\":0,\"pressure\":\"1 atm\",\"pureWater\":true,\"virtualOnly\":true}",
+        "objective": "Nhận biết chuyển từ rắn sang lỏng và đoạn nhiệt độ gần như không đổi.",
+        "equipment": "Nước đá tinh khiết ảo, nguồn nhiệt ảo, nhiệt kế, đồ thị",
+        "referenceAnswer": "Năng lượng được dùng cho sự chuyển thể trong mô hình, không làm nhiệt độ tăng ở đoạn đó.",
+        "conclusionQuestion": "Vì sao vẫn cấp nhiệt mà nhiệt độ có đoạn gần như không đổi?",
+        "imageUrl": "",
+        "instructionImageUrl": ""
+      },
+      "steps": [
+        {
+          "title": "Đọc nhiệt độ đầu",
+          "action": "Quan sát nước đá ở −5 °C trên màn hình.",
+          "incorrectFeedback": "Các điều kiện là áp suất khí quyển thông thường."
+        },
+        {
+          "title": "Cấp nhiệt ảo",
+          "action": "Bấm chạy mô phỏng và theo dõi lúc đá tan.",
+          "incorrectFeedback": "Không thực hiện gia nhiệt thật theo hình minh họa."
+        },
+        {
+          "title": "Đọc đồ thị",
+          "action": "Chọn đoạn đá tan và đoạn nước lỏng ấm lên.",
+          "incorrectFeedback": "Phần phẳng không có nghĩa là ngừng nhận năng lượng."
+        }
+      ]
+    },
+    {
+      "lesson": {
+        "id": "TH_CHM_02_03",
+        "title": "Phân biệt bay hơi và sôi",
+        "simulationType": "BayHoiVaSoi",
+        "configJson": "{\"temperaturesC\":[40,100],\"pressure\":\"1 atm\",\"virtualOnly\":true}",
+        "objective": "Phân biệt bay hơi ở mặt thoáng với sôi trong toàn khối chất lỏng.",
+        "equipment": "Hai bình nước ảo ở 40 °C và 100 °C, kính phóng đại",
+        "referenceAnswer": "Nhờ sự bay hơi của nước, không cần nước đạt nhiệt độ sôi.",
+        "conclusionQuestion": "Khăn ướt khô ở nhiệt độ phòng nhờ hiện tượng nào?",
+        "imageUrl": "",
+        "instructionImageUrl": ""
+      },
+      "steps": [
+        {
+          "title": "Xem bình 40 °C",
+          "action": "Chọn kính phóng đại trên mặt nước.",
+          "incorrectFeedback": "Không nhìn thấy từng phân tử bằng mắt thường; đây là mô hình."
+        },
+        {
+          "title": "Xem bình đang sôi",
+          "action": "Chọn bình ở khoảng 100 °C trong mô hình áp suất 1 atm.",
+          "incorrectFeedback": "Giá trị sôi phụ thuộc áp suất, ở đây đã cố định."
+        },
+        {
+          "title": "So sánh",
+          "action": "Ghép hai hiện tượng với mô tả.",
+          "incorrectFeedback": "Không kết luận bay hơi chỉ xảy ra khi sôi."
+        }
+      ]
+    },
+    {
+      "lesson": {
+        "id": "TH_CHM_03_01",
+        "title": "Ghép thành phần không khí khô",
+        "simulationType": "ThanhPhanKhongKhi",
+        "configJson": "{\"nitrogenPercent\":78,\"oxygenPercent\":21,\"otherPercent\":1,\"dryAir\":true}",
+        "objective": "Nhận biết tỉ lệ gần đúng của nitrogen và oxygen trong không khí khô.",
+        "equipment": "Bảng 100 ô, thẻ nitrogen, oxygen và khí khác",
+        "referenceAnswer": "Không; oxygen cần cho hô hấp nhưng nitrogen mới chiếm tỉ lệ lớn nhất.",
+        "conclusionQuestion": "Khí cần cho hô hấp có phải khí chiếm nhiều nhất trong không khí?",
+        "imageUrl": "",
+        "instructionImageUrl": ""
+      },
+      "steps": [
+        {
+          "title": "Xem bảng 100 ô",
+          "action": "Mở chú giải từng nhóm khí.",
+          "incorrectFeedback": "Đây là không khí khô, tỉ lệ đã làm tròn."
+        },
+        {
+          "title": "Phân bố khí",
+          "action": "Gán 78 ô nitrogen, 21 ô oxygen, 1 ô khí khác.",
+          "incorrectFeedback": "Không dùng ô khí khác để mô tả toàn bộ hơi nước trong không khí ẩm."
+        },
+        {
+          "title": "Kết luận",
+          "action": "Chọn khí chiếm tỉ lệ lớn nhất.",
+          "incorrectFeedback": "Oxygen quan trọng nhưng không phải thành phần nhiều nhất."
+        }
+      ]
+    },
+    {
+      "lesson": {
+        "id": "TH_CHM_03_02",
+        "title": "Oxygen và sự cháy trong mô phỏng",
+        "simulationType": "OxygenSuChay",
+        "configJson": "{\"oxygenLevels\":[\"khong_co\",\"khong_khi\",\"giau_oxygen\"],\"qualitative\":true,\"virtualOnly\":true}",
+        "objective": "Nhận biết oxygen hỗ trợ sự cháy, không phải là nhiên liệu.",
+        "equipment": "Ba buồng cháy ảo, chỉ báo oxygen, cùng mẫu nhiên liệu",
+        "referenceAnswer": "Trong tình huống này mẫu là chất cháy, oxygen hỗ trợ quá trình cháy, không được dùng như tên nhiên liệu.",
+        "conclusionQuestion": "Vì sao không gọi oxygen là nhiên liệu?",
+        "imageUrl": "",
+        "instructionImageUrl": ""
+      },
+      "steps": [
+        {
+          "title": "Giữ mẫu so sánh",
+          "action": "Chọn cùng mẫu nhiên liệu và cùng điều kiện kích hoạt ảo.",
+          "incorrectFeedback": "Chỉ dùng mô phỏng, không thao tác với oxygen hoặc lửa thật."
+        },
+        {
+          "title": "Chạy ba buồng",
+          "action": "Quan sát buồng không có oxygen, không khí và giàu oxygen.",
+          "incorrectFeedback": "Không suy công thức tốc độ cháy từ hoạt ảnh minh họa."
+        },
+        {
+          "title": "Giải thích",
+          "action": "Ghép nhiên liệu với vai trò chất cháy, oxygen với vai trò hỗ trợ.",
+          "incorrectFeedback": "Oxygen làm tăng nguy cơ cháy; không thử ngoài đời."
+        }
+      ]
+    },
+    {
+      "lesson": {
+        "id": "TH_CHM_03_03",
+        "title": "Chọn hành động giảm ô nhiễm không khí",
+        "simulationType": "BaoVeKhongKhi",
+        "configJson": "{\"sources\":[\"xe_no_may\",\"dot_rac\",\"bui\"],\"qualitative\":true}",
+        "objective": "Nhận biết nguồn phát thải và hành động giảm ô nhiễm tại nguồn.",
+        "equipment": "Bản đồ khu phố ảo, thẻ giao thông, đốt rác và vệ sinh",
+        "referenceAnswer": "Cần giảm chất ô nhiễm ngay tại nguồn; cây xanh không loại bỏ tức thì mọi chất ô nhiễm.",
+        "conclusionQuestion": "Vì sao không chỉ trồng cây mà vẫn cần giảm đốt rác?",
+        "imageUrl": "",
+        "instructionImageUrl": ""
+      },
+      "steps": [
+        {
+          "title": "Tìm nguồn",
+          "action": "Đánh dấu xe nổ máy lâu, đốt rác và bụi xây dựng trong tranh.",
+          "incorrectFeedback": "Không đánh đồng mọi khí nhìn thấy với cùng mức nguy hại."
+        },
+        {
+          "title": "Chọn hành động",
+          "action": "Ghép giảm nổ máy không cần thiết, không đốt rác và kiểm soát bụi.",
+          "incorrectFeedback": "Chỉ số trong tranh là minh họa, không phải dự báo chất lượng không khí."
+        },
+        {
+          "title": "Đánh giá",
+          "action": "Chọn nhận xét về giới hạn của giải pháp.",
+          "incorrectFeedback": "Cây xanh không thay thế việc giảm phát thải."
+        }
+      ]
+    },
+    {
+      "lesson": {
+        "id": "TH_CHM_04_01",
+        "title": "Chọn vật liệu cho từng bộ phận",
+        "simulationType": "ChonVatLieu",
+        "configJson": "{\"parts\":[\"than_noi\",\"tay_cam\",\"cua_so\"],\"matches\":[\"kim_loai\",\"cach_nhiet_phu_hop\",\"kinh\"]}",
+        "objective": "Liên hệ lựa chọn vật liệu với tính chất và mục đích sử dụng.",
+        "equipment": "Thẻ kim loại, nhựa chịu nhiệt, kính; nồi, tay cầm, cửa sổ ảo",
+        "referenceAnswer": "Thân nồi cần truyền nhiệt cho thức ăn; tay cầm cần hạn chế truyền nhiệt tới tay.",
+        "conclusionQuestion": "Vì sao thân nồi và tay cầm có thể dùng vật liệu khác nhau?",
+        "imageUrl": "",
+        "instructionImageUrl": ""
+      },
+      "steps": [
+        {
+          "title": "Xem yêu cầu",
+          "action": "Mở yêu cầu dẫn nhiệt, cách nhiệt và truyền ánh sáng.",
+          "incorrectFeedback": "Không chọn chỉ theo màu sắc."
+        },
+        {
+          "title": "Ghép vật liệu",
+          "action": "Chọn kim loại cho thân nồi, vật liệu cách nhiệt phù hợp cho tay cầm, kính cho cửa sổ.",
+          "incorrectFeedback": "Không phải mọi loại nhựa đều dùng được ở nhiệt độ cao."
+        },
+        {
+          "title": "Giải thích",
+          "action": "Chọn lý do cho từng lựa chọn.",
+          "incorrectFeedback": "Phần này không phải hướng dẫn chế tạo dụng cụ thật."
+        }
+      ]
+    },
+    {
+      "lesson": {
+        "id": "TH_CHM_04_02",
+        "title": "Phân loại nhiên liệu và cách dùng tiết kiệm",
+        "simulationType": "NhienLieu",
+        "configJson": "{\"fuels\":[\"cui\",\"than\",\"khi_thien_nhien\"],\"notFuels\":[\"cat\",\"kinh\"],\"virtualOnly\":true}",
+        "objective": "Phân biệt nhiên liệu với vật liệu không dùng làm nhiên liệu trong tình huống.",
+        "equipment": "Thẻ củi, than, khí thiên nhiên, cát và kính; thiết bị ảo",
+        "referenceAnswer": "Chúng được dùng theo tính chất vật liệu, không phải để đốt cung cấp năng lượng trong các ví dụ này.",
+        "conclusionQuestion": "Vì sao cát và kính không nằm trong nhóm nhiên liệu của bài?",
+        "imageUrl": "",
+        "instructionImageUrl": ""
+      },
+      "steps": [
+        {
+          "title": "Đọc thẻ",
+          "action": "Xem tên và công dụng được mô tả trên năm thẻ.",
+          "incorrectFeedback": "Không thử đốt vật liệu thật."
+        },
+        {
+          "title": "Phân loại",
+          "action": "Kéo củi, than và khí thiên nhiên vào nhóm nhiên liệu.",
+          "incorrectFeedback": "Không xếp điện vào nhiên liệu trong bài phân loại này."
+        },
+        {
+          "title": "Chọn tiết kiệm",
+          "action": "Chọn tắt thiết bị khi không dùng và giảm thất thoát năng lượng.",
+          "incorrectFeedback": "Hoạt ảnh không đại diện số liệu tiêu thụ thực."
+        }
+      ]
+    },
+    {
+      "lesson": {
+        "id": "TH_CHM_04_03",
+        "title": "Đọc nhãn và bảo quản lương thực thực phẩm",
+        "simulationType": "BaoQuanThucPham",
+        "configJson": "{\"items\":[\"goi_kho\",\"goi_can_mat\",\"goi_qua_han\"],\"labelDriven\":true}",
+        "objective": "Đọc thông tin bảo quản thay vì quyết định an toàn chỉ qua hình ảnh hoặc mùi.",
+        "equipment": "Gói thực phẩm ảo có nhãn, tủ mát và kệ khô",
+        "referenceAnswer": "Ảnh không cho biết đủ thời gian, điều kiện bảo quản hay nguy cơ; cần kiểm tra thông tin và nhờ người phụ trách khi có nghi ngờ.",
+        "conclusionQuestion": "Vì sao không chỉ dựa vào hình ảnh để kết luận thực phẩm an toàn?",
+        "imageUrl": "",
+        "instructionImageUrl": ""
+      },
+      "steps": [
+        {
+          "title": "Đọc nhãn",
+          "action": "Mở ngày hạn dùng và điều kiện bảo quản trên ba gói mẫu.",
+          "incorrectFeedback": "Không nếm thực phẩm nghi hỏng để kiểm tra."
+        },
+        {
+          "title": "Chọn nơi",
+          "action": "Đưa gói vào tủ mát hoặc kệ khô theo nhãn mẫu.",
+          "incorrectFeedback": "Nhiệt độ và điều kiện phải theo nhãn, không áp dụng chung cho mọi loại thực phẩm."
+        },
+        {
+          "title": "Xử lý gói lỗi",
+          "action": "Đánh dấu gói quá hạn hoặc hư bao bì và chọn báo người lớn.",
+          "incorrectFeedback": "Ảnh minh họa không chứng nhận an toàn của thực phẩm thật."
+        }
+      ]
+    },
+    {
+      "lesson": {
+        "id": "TH_CHM_05_01",
+        "title": "Lọc hỗn hợp cát và nước",
+        "simulationType": "LocHonHop",
+        "configJson": "{\"mixture\":[\"cat\",\"nuoc\"],\"soluble\":false,\"virtualOnly\":true}",
+        "objective": "Dùng mô hình lọc để tách chất rắn không tan khỏi chất lỏng.",
+        "equipment": "Cốc nước cát ảo, phễu, giấy lọc, cốc nhận",
+        "referenceAnswer": "Không trong mô hình này; muối hòa tan đi cùng nước qua giấy lọc.",
+        "conclusionQuestion": "Có thể dùng giấy lọc thường để tách muối đã tan trong nước không?",
+        "imageUrl": "",
+        "instructionImageUrl": ""
+      },
+      "steps": [
+        {
+          "title": "Lắp mô hình",
+          "action": "Kéo giấy lọc vào phễu và đặt cốc nhận bên dưới.",
+          "incorrectFeedback": "Cốc nhận không được đặt lệch khỏi đầu phễu."
+        },
+        {
+          "title": "Cho hỗn hợp vào",
+          "action": "Kéo cốc nước cát tới vị trí rót ảo.",
+          "incorrectFeedback": "Đây là lọc chất rắn không tan, không phải khử trùng nước."
+        },
+        {
+          "title": "Kết luận",
+          "action": "Chọn phần giữ lại và phần đi qua.",
+          "incorrectFeedback": "Nước sau lọc không được mặc định là nước uống."
+        }
+      ]
+    },
+    {
+      "lesson": {
+        "id": "TH_CHM_05_02",
+        "title": "Thu muối từ dung dịch bằng bay hơi",
+        "simulationType": "BayHoiThuMuoi",
+        "configJson": "{\"solute\":\"muoi\",\"solvent\":\"nuoc\",\"recover\":\"muoi\",\"virtualOnly\":true}",
+        "objective": "Nhận biết bay hơi tách dung môi để thu chất rắn hòa tan.",
+        "equipment": "Dung dịch muối ảo, khay, nguồn gia nhiệt ảo, đồng hồ",
+        "referenceAnswer": "Muối hòa tan qua giấy lọc cùng nước, nhưng khi nước bay hơi thì muối còn lại.",
+        "conclusionQuestion": "Vì sao bay hơi phù hợp hơn lọc giấy để thu muối đã tan?",
+        "imageUrl": "",
+        "instructionImageUrl": ""
+      },
+      "steps": [
+        {
+          "title": "Xác định hỗn hợp",
+          "action": "Chọn dung dịch muối và kiểm tra giấy lọc ảo.",
+          "incorrectFeedback": "Không thực hiện gia nhiệt thật theo mô phỏng."
+        },
+        {
+          "title": "Chạy bay hơi",
+          "action": "Bấm nguồn nhiệt ảo và tăng thời gian mô phỏng.",
+          "incorrectFeedback": "Mô hình đã giản lược tốc độ và hình dạng tinh thể."
+        },
+        {
+          "title": "Kết luận",
+          "action": "Chọn phần thu được và phần rời khỏi khay.",
+          "incorrectFeedback": "Muốn thu lại nước cần thêm bước ngưng tụ; bài này chỉ thu muối."
+        }
+      ]
+    },
+    {
+      "lesson": {
+        "id": "TH_CHM_05_03",
+        "title": "Chọn rây để tách gạo và bột",
+        "simulationType": "RayHonHop",
+        "configJson": "{\"particleSizes\":[1,5],\"sieveSizes\":[0.5,3,8],\"idealized\":true}",
+        "objective": "Tách hỗn hợp chất rắn dựa trên kích thước hạt khác nhau.",
+        "equipment": "Hỗn hợp gạo bột ảo, ba rây cỡ lỗ khác nhau, khay",
+        "referenceAnswer": "Nếu lỗ lớn hơn cả hạt gạo thì cả gạo và bột đều đi qua, không tách được.",
+        "conclusionQuestion": "Tại sao không chọn rây có lỗ lớn nhất?",
+        "imageUrl": "",
+        "instructionImageUrl": ""
+      },
+      "steps": [
+        {
+          "title": "So kích thước",
+          "action": "Xem hạt bột, hạt gạo và ba cỡ lỗ rây phóng đại.",
+          "incorrectFeedback": "Kích thước hình đã phóng đại để dễ quan sát."
+        },
+        {
+          "title": "Chọn rây",
+          "action": "Chọn lỗ lớn hơn hạt bột nhưng nhỏ hơn hạt gạo.",
+          "incorrectFeedback": "Lỗ quá nhỏ giữ cả hai, quá lớn cho cả hai đi qua."
+        },
+        {
+          "title": "Kiểm tra hai phần",
+          "action": "Ghép khay dưới với bột và phần trên với gạo.",
+          "incorrectFeedback": "Mô hình giản lược hình dạng và sự bám dính của hạt."
+        }
+      ]
+    }
+  ]
+}

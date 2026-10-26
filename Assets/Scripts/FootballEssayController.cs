@@ -19,7 +19,7 @@ public class FootballEssayController : MonoBehaviour
     }
     [Serializable] class State {
         public string token, state, error, text, subject, chapter, difficulty, feedback, transcription, sampleAnswer, suggestedAnswer;
-        public string[] hints; public int round, total, score, maxScore, earned; public float remaining, duration; public bool hintPending, paused;
+        public string[] hints; public int round, total, score, maxScore, earned, rawScore, hintPenalty; public float remaining, duration; public bool hintPending, paused;
     }
     TMP_FontAsset fallbackFont;
     bool sheepSkin, caveSkin;
@@ -180,7 +180,7 @@ public class FootballEssayController : MonoBehaviour
     void BuildHints()
     {
         hintPanel = Modal("AIHints", .14f, .24f, .86f, .81f);
-        Text(hintPanel, "AI GỢI Ý • KHÔNG TRỪ ĐIỂM", 32, .05f, .04f, .95f, .17f, Color.white);
+        Text(hintPanel, "AI GỢI Ý • LẦN 1: -1 • LẦN 2: -2 ĐIỂM", 32, .05f, .04f, .95f, .17f, Color.white);
         hintText = Text(hintPanel, "", 26, .07f, .21f, .93f, .72f, Color.white); hintText.alignment = TextAlignmentOptions.TopLeft;
         hintNext = Click("MoreHint", hintPanel, .07f, .78f, .54f, .94f, "Gợi ý tiếp", () => StartCoroutine(HintRoutine()));
         Click("CloseHint", hintPanel, .59f, .78f, .93f, .94f, "Làm bài", () => hintPanel.gameObject.SetActive(false));
@@ -316,9 +316,10 @@ public class FootballEssayController : MonoBehaviour
         if (state.state == "review" || state.state == "finished") {
             resultPanel.gameObject.SetActive(true); resultPanel.SetAsLastSibling(); hintPanel.gameObject.SetActive(false);
             resultText.text = (state.state == "finished" ? "HOÀN THÀNH: " + state.score + "/50 ĐIỂM\n\n" : "CÂU " + state.round + ": " + state.earned + "/10 ĐIỂM\n\n")
+                + "Điểm bài làm: " + state.rawScore + "/10\nTrừ gợi ý: " + state.hintPenalty + " điểm\nĐiểm nhận: " + state.earned + "/10 (tối thiểu 0)\n\n"
                 + state.text + "\n\nNHẬN XÉT CỦA AI\n" + state.feedback + "\n\nBÀI LÀM AI ĐỌC ĐƯỢC\n" + state.transcription
                 + "\n\nĐÁP ÁN THAM KHẢO\n" + state.sampleAnswer + "\n\nBÀI GIẢI GỢI Ý CỦA AI\n" + state.suggestedAnswer
-                + "\n\nGợi ý đã dùng: " + (state.hints == null ? 0 : state.hints.Length) + "/2 • Không trừ điểm";
+                + "\n\nGợi ý đã dùng: " + (state.hints == null ? 0 : state.hints.Length) + "/2 • Tổng mức trừ: " + state.hintPenalty + " điểm\nHỏi AI thêm sau khi nộp: miễn phí.";
             next.GetComponentInChildren<TMP_Text>().text = state.state == "finished" ? "Luyện tập lại" : state.round == 5 ? "Xem tổng kết" : "Câu tiếp theo";
             if (changed || previous != state.state) { Canvas.ForceUpdateCanvases(); LayoutRebuilder.ForceRebuildLayoutImmediate(results.content); results.verticalNormalizedPosition = 1; }
         } else { resultPanel.gameObject.SetActive(false); if (changed && !commandBusy) { input.Select(); input.ActivateInputField(); } }
@@ -342,13 +343,14 @@ public class FootballEssayController : MonoBehaviour
     {
         if (!Editable() || hintBusy) return;
         hintPanel.gameObject.SetActive(true); hintPanel.SetAsLastSibling();
-        if (latest.hints == null || latest.hints.Length == 0) StartCoroutine(HintRoutine()); else RenderHints();
+        RenderHints();
     }
     void RenderHints()
     {
         var hints = latest == null || latest.hints == null ? new string[0] : latest.hints;
         var lines = new List<string>(); for (int i = 0; i < hints.Length; i++) lines.Add("Gợi ý " + (i + 1) + "/2: " + hints[i]);
-        hintText.text = hints.Length == 0 ? "AI đang gợi ý hướng làm…" : string.Join("\n\n", lines);
+        hintText.text = hints.Length == 0 ? (hintBusy ? "AI đang gợi ý hướng làm…" : "Gợi ý 1 trừ 1 điểm. Gợi ý 2 trừ thêm 2 điểm.\nChỉ tính khi nhận gợi ý thành công; xem lại không trừ thêm.\nĐiểm cuối câu không thấp hơn 0.") : string.Join("\n\n", lines) + "\n\nTổng mức trừ khi chấm câu này: " + latest.hintPenalty + " điểm.";
+        hintNext.GetComponentInChildren<TMP_Text>().text = hintBusy ? "Đang lấy gợi ý…" : hints.Length == 0 ? "Gợi ý 1 (-1 điểm)" : "Gợi ý 2 (-2 điểm)";
         hintNext.gameObject.SetActive(hints.Length < 2); hintNext.interactable = !hintBusy && Editable();
     }
     IEnumerator HintRoutine()

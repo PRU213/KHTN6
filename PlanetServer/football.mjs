@@ -12,6 +12,7 @@ export function sameChapter(topic, chapter) {
   return !!chapter && !!topic && key(topic) === key(chapter);
 }
 const duration = difficulty => ({ 'Dễ': 60, 'Trung bình': 120, 'Khó': 240 }[difficulty]);
+const hintPenalty = s => s.hints.length >= 2 ? 3 : s.hints.length === 1 ? 1 : 0;
 
 export function createFootballHint({ key = process.env.GEMINI_API_KEY, model = process.env.GEMINI_MODEL || 'gemini-3.5-flash-lite', fetchImpl = fetch } = {}) {
   return async (question, level, previousHints) => {
@@ -73,6 +74,7 @@ export class FootballPractice {
     return { token: s.token, game: s.game, state: s.gradePending ? 'grading' : s.phase, subject: s.subject, chapter: s.chapter, round: s.index + 1, total: 5, score: s.score, maxScore: 50,
       text: q.text, difficulty: q.difficulty, duration: duration(q.difficulty), paused: s.pausedAt != null, remaining: Math.max(0, (s.deadline - (s.pausedAt ?? this.now())) / 1000), hints: s.hints, hintPending: s.hintPending,
       earned: reveal ? s.review?.score || 0 : 0, feedback: reveal ? s.review?.feedback || '' : '', transcription: reveal ? s.review?.transcription || '' : '',
+      rawScore: reveal ? s.review?.rawScore ?? s.review?.score ?? 0 : 0, hintPenalty: hintPenalty(s),
       suggestedAnswer: reveal ? s.review?.suggestedAnswer || '' : '', sampleAnswer: reveal ? q.sampleAnswer : '' };
   }
   checkRound(s, round) { if (round !== s.index + 1) throw new Error('Câu hỏi đã thay đổi. Bạn tải lại trạng thái nhé.'); }
@@ -98,8 +100,8 @@ export class FootballPractice {
         return { ...this.view(s), state: 'answering', error: 'Ảnh chưa đọc được. Bạn chụp rõ lại hoặc nhập chữ. Có ít nhất 20 giây để nộp lại.' };
       }
       if (!Number.isInteger(review.score) || review.score < 0 || review.score > 10 || typeof review.feedback !== 'string') throw new Error('Kết quả chấm không hợp lệ.');
-      s.review = { score: review.score, feedback: review.feedback.slice(0, 500), transcription: String(review.transcription || text).slice(0, 2000), suggestedAnswer: String(review.suggestedAnswer || '').slice(0, 1000) };
-      s.score += review.score; s.phase = 'review';
+      s.review = { rawScore: review.score, hintPenalty: hintPenalty(s), score: Math.max(0, review.score - hintPenalty(s)), feedback: review.feedback.slice(0, 500), transcription: String(review.transcription || text).slice(0, 2000), suggestedAnswer: String(review.suggestedAnswer || '').slice(0, 1000) };
+      s.score += s.review.score; s.phase = 'review';
       Promise.resolve().then(() => this.record({ submissionId: `${s.token}:${index}`, matchId: s.token, game: s.game, username: s.username, questionId: s.questions[index].id, subject: s.subject,
         difficulty: s.questions[index].difficulty, answer: text.trim(), hasImage: !!image, hintsUsed: s.hints.length, ...s.review, maxScore: 10 })).catch(() => console.warn('Football essay history was not saved.'));
     } catch {
@@ -118,6 +120,7 @@ export class FootballPractice {
     s.hintPending = true; const index = s.index;
     try {
       const text = await this.hint(s.questions[index], level, [...s.hints]);
+      if (typeof text !== 'string' || !text.trim()) throw new Error('Chưa tạo được gợi ý. Bạn thử lại nhé.');
       this.expire(s);
       if (s.index === index && s.phase === 'answering' && !s.gradePending && this.sessions.has(s.token)) s.hints.push(text);
     } finally { if (s.index === index) s.hintPending = false; }

@@ -1,0 +1,16 @@
+D:\GitHub\KHTN6\Tests\PracticeExperiments\obj\Debug\net10.0\PracticeExperiments.GeneratedMSBuildEditorConfig.editorconfig
+D:\GitHub\KHTN6\Tests\PracticeExperiments\obj\Debug\net10.0\PracticeExperiments.AssemblyInfoInputs.cache
+D:\GitHub\KHTN6\Tests\PracticeExperiments\obj\Debug\net10.0\PracticeExperiments.AssemblyInfo.cs
+D:\GitHub\KHTN6\Tests\PracticeExperiments\obj\Debug\net10.0\PracticeExperiments.csproj.CoreCompileInputs.cache
+D:\GitHub\KHTN6\Tests\PracticeExperiments\obj\Debug\net10.0\PracticeExperiments.sourcelink.json
+D:\GitHub\KHTN6\Tests\PracticeExperiments\bin\Debug\net10.0\fixtures.json
+D:\GitHub\KHTN6\Tests\PracticeExperiments\bin\Debug\net10.0\PracticeExperiments.exe
+D:\GitHub\KHTN6\Tests\PracticeExperiments\bin\Debug\net10.0\PracticeExperiments.deps.json
+D:\GitHub\KHTN6\Tests\PracticeExperiments\bin\Debug\net10.0\PracticeExperiments.runtimeconfig.json
+D:\GitHub\KHTN6\Tests\PracticeExperiments\bin\Debug\net10.0\PracticeExperiments.dll
+D:\GitHub\KHTN6\Tests\PracticeExperiments\bin\Debug\net10.0\PracticeExperiments.pdb
+D:\GitHub\KHTN6\Tests\PracticeExperiments\obj\Debug\net10.0\PracticeExperiments.dll
+D:\GitHub\KHTN6\Tests\PracticeExperiments\obj\Debug\net10.0\refint\PracticeExperiments.dll
+D:\GitHub\KHTN6\Tests\PracticeExperiments\obj\Debug\net10.0\PracticeExperiments.pdb
+D:\GitHub\KHTN6\Tests\PracticeExperiments\obj\Debug\net10.0\PracticeExperiments.genruntimeconfig.cache
+D:\GitHub\KHTN6\Tests\PracticeExperiments\obj\Debug\net10.0\ref\PracticeExperiments.dll

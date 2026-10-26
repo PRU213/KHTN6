@@ -27,7 +27,7 @@ Màn trắc nghiệm Cave vẫn chạy qua CaveQuizController như trước.
 - AI dùng DapAnThamKhao, HuongDanChamAI và DiemToiDa của Sheet, quy đổi tối đa
   10 điểm/câu và 50 điểm/lượt. Không đọc được ảnh hoặc lỗi AI thì cho ít nhất
   20 giây để nộp lại, không chốt 0 điểm cho ảnh chưa đọc được.
-- AI Gợi ý tối đa hai lần/câu, không trừ điểm, mở lại dùng gợi ý đã lưu;
+- AI Gợi ý tối đa hai lần/câu: lần 1 trừ 1 điểm, lần 2 trừ thêm 2 điểm; chỉ tính khi nhận thành công, mở lại không trừ thêm, điểm cuối không dưới 0. Hỏi AI thêm sau nộp miễn phí;
   không cần thêm cột gợi ý trong Sheet. AI được yêu cầu gợi hướng làm thay vì
   đưa đáp số hoặc giải toàn bộ bài.
 - Sau mỗi câu: điểm, nhận xét, nội dung AI đọc, đáp án Sheet và bài giải AI.

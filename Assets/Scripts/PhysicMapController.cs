@@ -80,6 +80,12 @@ public class PhysicMapController : MonoBehaviour
 
     void OpenChapter(int chapter)
     {
+        PracticeLearningUI.Open(subjectName, "CH_PHY_" + chapter.ToString("00"),
+            () => OpenTheoryChapter(chapter));
+    }
+
+    void OpenTheoryChapter(int chapter)
+    {
         GameSession.Subject = subjectName;
         GameSession.Chapter = "Chương " + chapter;
         if (mapPanel != null)

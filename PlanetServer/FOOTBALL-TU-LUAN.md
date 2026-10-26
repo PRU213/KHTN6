@@ -38,7 +38,10 @@ không chốt 0 điểm và cho ít nhất 20 giây để nộp lại. Nộp tr�
 
 Không cần thêm cột gợi ý vào Sheet. Máy chủ dùng câu hỏi, đáp án và rubric để yêu cầu
 Gemini gợi ý hướng làm, không đưa đáp số hoặc giải trọn bài. Mức 1 nhắc kiến thức;
-mức 2 gợi bước tiếp theo. Tối đa hai gợi ý mỗi câu, không trừ điểm.
+mức 2 gợi bước tiếp theo. Tối đa hai gợi ý mỗi câu: lần 1 trừ 1 điểm,
+lần 2 trừ thêm 2 điểm (tổng 3). Chỉ tính gợi ý nhận thành công; xem lại
+hoặc yêu cầu lỗi không trừ thêm. Điểm nhận = max(0, điểm AI chấm - mức trừ).
+Hỏi AI thêm sau khi nộp không trừ điểm.
 Gợi ý được cache trong phiên; mở lại không gọi AI lần nữa. Gợi ý lỗi có thể thử lại
 và không bị mất lượt. Gợi ý có thể sai hoặc vô tình quá cụ thể, cần rà soát khi dùng
 cho hoạt động đánh giá chính thức. Bài làm và số gợi ý sử dụng được giữ trong phiên.

@@ -10,6 +10,8 @@ function doGet(e) {
     var action = params.action || "";
 
     if (action === "essayQuestions") return getEssayQuestions(e);
+    if (action === "practiceList") return getPracticeLessons(e);
+    if (action === "practiceDetail") return getPracticeLesson(e);
 
     // 1. QUESTIONS
     if (action === "questions") {
