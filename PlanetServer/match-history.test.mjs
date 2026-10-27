@@ -108,13 +108,13 @@ test('essay, draw and signed duel points add to the weekly total without normali
   assert.equal(rank().players.find(p => p.userID === 'student01').score, 141);
 });
 
-test('invalid account, malformed result, impossible points and occupied History columns never append', () => {
+test('invalid records never append and named extra columns are preserved', () => {
   const { save, sheets } = fixture();
   for (const bad of [{ username: 'absent' }, { matchId: '' }, { score: 451 }, { maxScore: 150 }, { score: NaN }, { result: 'win' }])
     assert.equal(save(bad).success, false);
   assert.equal(sheets.History.data.length, 2);
   sheets.History.data[0][6] = 'ExistingData';
-  assert.equal(save().success, false); assert.equal(sheets.History.data[0][6], 'ExistingData');
+  assert.equal(save().success, true); assert.equal(sheets.History.data[0][6], 'ExistingData');
 });
 
 test('rank works from match history without a progress sheet and preserves old practice rows', () => {
@@ -199,4 +199,20 @@ test('Sheet date values and explicit Vietnamese strings are parsed without US da
   assert.ok(Number.isNaN(context.planetRankTime_('31/02/2026 12:00')));
   assert.ok(Number.isNaN(context.planetRankTime_('24/10/2026 25:00')));
   assert.equal(context.planetRankTime_(new Date('2026-10-24T05:00:00Z')), Date.parse('2026-10-24T05:00:00Z'));
+});
+
+for (const main of ['Code.gs', 'Ma-da-sua.gs']) test(main + ': screenshot layout round-trips and ranks', () => {
+  const { sheets, save, rank, context } = fixture(main);
+  const headers = ['Username', 'Fullname', 'Difficulty', 'Opponent', 'Mode', 'Result', 'Score', 'Time', 'Duration', 'PlanetMatchID', 'PlanetRankScore', 'Subject', 'Chapter'];
+  sheets.History.data[0] = headers;
+  sheets.History.data[1] = ['student01', 'Tên cũ', 'Dễ', 'Máy AI', 'Luyện tập', 'THẮNG', 90, '24/10/2026 08:15', 120, '', '', 'Physics', 'Chương 1'];
+  assert.equal(save().success, true); assert.equal(save().duplicate, true);
+  assert.deepEqual(sheets.History.data[0], headers); assert.equal(sheets.History.data[1][8], 120);
+  const row = sheets.History.data[2];
+  assert.equal(row[3], 'Máy Planet'); assert.equal(row[6], 360); assert.equal(row[9], 'match-12345678');
+  assert.equal(row[1], ''); assert.equal(row[2], ''); assert.equal(row[8], '');
+  const h = context.doGet({ parameter: { action: 'history', username: 'student01' } });
+  assert.equal(h.total, 2); assert.equal(h.histories[0].score, 360);
+  assert.equal(h.histories[1].result, 'THẮNG'); assert.equal(h.histories[1].time, '24/10/2026 08:15');
+  assert.equal(rank().players[0].score, 450);
 });
