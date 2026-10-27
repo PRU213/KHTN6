@@ -327,8 +327,9 @@ function getHistory(e) {
   }
 
   var historyData = historySheet.getDataRange().getValues();
-  var subjectColumn = historyData[0].indexOf('Subject');
-  var chapterColumn = historyData[0].indexOf('Chapter');
+  var columns = planetHistoryColumns_(historyData[0] || []);
+  var subjectColumn = columns.Subject === undefined ? -1 : columns.Subject;
+  var chapterColumn = columns.Chapter === undefined ? -1 : columns.Chapter;
   var userData = userSheet.getDataRange().getValues();
 
   // -----------------------------------
@@ -366,13 +367,13 @@ function getHistory(e) {
   for (var j = 1; j < historyData.length; j++) {
     var row = historyData[j];
 
-    var rowUsername = String(row[0]).trim();
+    var rowUsername = String(row[columns.Username]).trim();
 
     if (rowUsername !== username) {
       continue;
     }
 
-    var result = String(row[3]).trim().toUpperCase();
+    var result = String(row[columns.Result]).trim().toUpperCase();
 
     if (result === "THẮNG") {
       win++;
@@ -380,7 +381,7 @@ function getHistory(e) {
       lose++;
     }
 
-    var timeValue = row[5];
+    var timeValue = row[columns.Time];
 
     // Định dạng ngày tháng
     if (timeValue instanceof Date) {
@@ -394,10 +395,10 @@ function getHistory(e) {
     }
 
     histories.push({
-      opponent: String(row[1]),
-      mode: String(row[2]),
+      opponent: String(row[columns.Opponent]),
+      mode: String(row[columns.Mode]),
       result: result,
-      score: Number(row[4]) || 0,
+      score: Number(row[columns.Score]) || 0,
       time: timeValue,
       subject: subjectColumn >= 0 ? String(row[subjectColumn] || '') : '',
       chapter: chapterColumn >= 0 ? String(row[chapterColumn] || '') : ''

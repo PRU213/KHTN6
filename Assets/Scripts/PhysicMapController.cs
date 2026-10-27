@@ -80,8 +80,10 @@ public class PhysicMapController : MonoBehaviour
 
     void OpenChapter(int chapter)
     {
+        System.Action next = null;
+        if(chapter < chapterButtons.Length) next = () => OpenChapter(chapter + 1);
         PracticeLearningUI.Open(subjectName, "CH_PHY_" + chapter.ToString("00"),
-            () => OpenTheoryChapter(chapter));
+            () => OpenTheoryChapter(chapter), next);
     }
 
     void OpenTheoryChapter(int chapter)

@@ -47,8 +47,9 @@ của HistoryManager/RankManager được thay bằng cấu hình chung này khi
 
 - Mỗi người chơi lưu một dòng vào History khi nhận kết quả kết thúc trận.
   Chế độ là **Đối kháng**, đối thủ là Máy Planet hoặc tên người đấu cùng.
-- Giữ A:F như lịch sử cũ. Chỉ thêm G:H có tên **PlanetMatchID**, **PlanetRankScore**.
-  Nếu G:H đang có dữ liệu khác, API từ chối và giữ nguyên dữ liệu đó.
+- History đọc/ghi theo tên tiêu đề, hỗ trợ Fullname, Difficulty, Duration.
+  PlanetMatchID, PlanetRankScore, Subject, Chapter nếu thiếu được thêm ở cuối.
+  Các cột và dữ liệu cũ được bảo toàn.
 - Trận hòa ghi **HÒA**; tổng trận bao gồm hòa. Hai bộ đếm Thắng/Thua vẫn chỉ đếm
   đúng các kết quả tương ứng như tên trên giao diện.
 - Điểm lịch sử là điểm thực của trận, có thể âm do trả lời sai.

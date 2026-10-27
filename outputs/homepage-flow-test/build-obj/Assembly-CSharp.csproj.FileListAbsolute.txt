@@ -1,0 +1,10 @@
+D:\PRU_Git\KHTN6\outputs\homepage-flow-test\build-bin\Assembly-CSharp.deps.json
+D:\PRU_Git\KHTN6\outputs\homepage-flow-test\build-bin\Assembly-CSharp.dll
+D:\PRU_Git\KHTN6\outputs\homepage-flow-test\build-bin\Assembly-CSharp.pdb
+D:\PRU_Git\KHTN6\outputs\homepage-flow-test\build-obj\Assembly-CSharp.csproj.AssemblyReference.cache
+D:\PRU_Git\KHTN6\outputs\homepage-flow-test\build-obj\Assembly-CSharp.GeneratedMSBuildEditorConfig.editorconfig
+D:\PRU_Git\KHTN6\outputs\homepage-flow-test\build-obj\Assembly-CSharp.csproj.CoreCompileInputs.cache
+D:\PRU_Git\KHTN6\outputs\homepage-flow-test\build-obj\Assembly-CSharp.sourcelink.json
+D:\PRU_Git\KHTN6\outputs\homepage-flow-test\build-obj\Assembly.44154EF1.Up2Date
+D:\PRU_Git\KHTN6\outputs\homepage-flow-test\build-obj\Assembly-CSharp.dll
+D:\PRU_Git\KHTN6\outputs\homepage-flow-test\build-obj\Assembly-CSharp.pdb

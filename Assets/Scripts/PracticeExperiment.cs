@@ -42,6 +42,28 @@ public class PracticeExperiment
     public readonly List<string> Journal=new List<string>();
     public int Choice {get;private set;}=-1;
     public string LastAction {get;private set;}="";
+    class StepState {
+        public Dictionary<string,float> Values;
+        public int[] Visited; public float[] Samples;
+        public Dictionary<int,string> Answers,Placements;
+        public int Choice; public string LastAction;
+    }
+    readonly Stack<StepState> previousSteps=new Stack<StepState>();
+    void SaveStep(){previousSteps.Push(new StepState{
+        Values=new Dictionary<string,float>(Values),Visited=Visited.ToArray(),Samples=Samples.ToArray(),
+        Answers=new Dictionary<int,string>(Answers),Placements=new Dictionary<int,string>(Placements),
+        Choice=Choice,LastAction=LastAction});}
+    public bool Back(){
+        if(Stage==0||previousSteps.Count==0)return false;
+        var saved=previousSteps.Pop();Stage--;
+        Values.Clear();foreach(var item in saved.Values)Values[item.Key]=item.Value;
+        Visited.Clear();Visited.UnionWith(saved.Visited);Samples.Clear();Samples.UnionWith(saved.Samples);
+        Answers.Clear();foreach(var item in saved.Answers)Answers[item.Key]=item.Value;
+        Placements.Clear();foreach(var item in saved.Placements)Placements[item.Key]=item.Value;
+        Choice=saved.Choice;LastAction=saved.LastAction;
+        if(Journal.Count>Stage)Journal.RemoveRange(Stage,Journal.Count-Stage);
+        return true;
+    }
     public float Get(string key,float fallback=0){float v;return Values.TryGetValue(key,out v)?v:fallback;}
     public static string N(float n){return n.ToString("0.##",CultureInfo.InvariantCulture);}
     static bool Finite(float n){return !float.IsNaN(n)&&!float.IsInfinity(n);}
@@ -102,8 +124,11 @@ public class PracticeExperiment
         if(Current.CorrectChoice>=0&&Choice!=Current.CorrectChoice){hint="Nhận xét chưa phù hợp với kết quả quan sát.";return false;}
         if(Current.Extra!=null&&!Current.Extra(this)){hint="Mô hình chưa đạt điều kiện. Hãy kiểm tra dụng cụ đang chọn.";return false;}return true;
     }
-    public bool Advance(out string hint){if(Completed){hint="Bài đã hoàn thành.";return false;}if(!Ready(out hint))return false;Journal.Add(Current.Title+": "+Observation());Stage++;if(!Completed)BeginStage();return true;}
+    public bool Advance(out string hint){if(Completed){hint="Bài đã hoàn thành.";return false;}if(!Ready(out hint))return false;SaveStep();Journal.Add(Current.Title+": "+Observation());Stage++;if(!Completed)BeginStage();return true;}
     public float WeightSum(){float sum=0;for(int i=0;i<(C.weightsG??new float[0]).Length;i++)sum+=Get("weight"+i)*C.weightsG[i];return sum;}
+    // Use a graduated capacity (100 mL for the chapter-one lesson), never
+    // derive an arbitrary scale such as 91 mL from the displaced water level.
+    public float CylinderCapacityMl(){return Math.Max(100,(float)Math.Ceiling(C.afterMl/100f)*100);}
     public float Temperature(){float p=Get("time");return p<30?C.startC+(C.meltingC-C.startC)*p/30:p<=70?C.meltingC:C.meltingC+(p-70)/3;}
     static Task T(string title,string instruction,params ActionItem[] actions){return new Task{Title=title,Instruction=instruction,Actions=actions.ToList()};}
     static Task Quiz(string title,string instruction,string correct,params string[] other){return new Task{Title=title,Instruction=instruction,Choices=other.Concat(new[]{correct}).ToArray(),CorrectChoice=other.Length};}
@@ -113,11 +138,11 @@ public class PracticeExperiment
     Task[] Build(){Task a,b,c;switch(Type){
 case "CanKhoiLuong":
  a=T("Đặt vật lên cân","Bấm Đặt vật để đưa vật mẫu lên đĩa trái.",new ActionItem("Đặt vật lên đĩa trái","object"));
- b=T("Làm cân thăng bằng","Thêm hoặc nhấc từng quả cân bên phải đến khi cân nằm ngang.",C.weightsG.Select((v,i)=>new ActionItem(N(v)+" g","weight"+i,1,true,false)).ToArray());b.Extra=s=>Math.Abs(s.WeightSum()-C.massG)<.01f;
+ b=T("Làm cân thăng bằng","Bấm nút khối lượng để thêm quả cân; bấm lại để nhấc ra. Điều chỉnh đến khi cân nằm ngang.",C.weightsG.Select((v,i)=>new ActionItem(N(v)+" g","weight"+i,1,true,false)).ToArray());b.Extra=s=>Math.Abs(s.WeightSum()-C.massG)<.01f;
  c=T("Đọc khối lượng","Cộng khối lượng các quả cân trên đĩa phải.");c.Numbers.Add(new NumberItem("Khối lượng vật (g)",C.massG));break;
 case "DoTheTich":
- a=T("Đọc mực nước đầu","Đặt mắt ngang mực nước rồi nhập số đọc.",new ActionItem("Đặt mắt ngang mực nước","eye"));a.Numbers.Add(new NumberItem("Mực nước đầu (mL)",C.beforeMl));
- b=T("Đặt đá vào ống đong","Cho đá chìm hoàn toàn rồi đọc mực nước mới.",new ActionItem("Thả đá chìm trong nước","stone"));b.Numbers.Add(new NumberItem("Mực nước sau (mL)",C.afterMl));
+ a=T("Đọc mực nước đầu","Bấm Đặt mắt ngang mực nước, đọc thang chia trên ống đong rồi nhập số đo (mL).",new ActionItem("Đặt mắt ngang mực nước","eye"));a.Numbers.Add(new NumberItem("Mực nước đầu (mL)",C.beforeMl));
+ b=T("Đặt đá vào ống đong","Bấm Thả đá chìm trong nước, quan sát mực nước dâng rồi nhập số đo mới (mL).",new ActionItem("Thả đá chìm trong nước","stone"));b.Numbers.Add(new NumberItem("Mực nước sau (mL)",C.afterMl));
  c=T("Tính thể tích đá","Lấy số đọc sau trừ số đọc đầu.");c.Numbers.Add(new NumberItem("Thể tích đá (cm³)",C.afterMl-C.beforeMl));break;
 case "LucBienDang":
  a=Explore("Lò xo ban đầu","Chọn lực bằng 0, quan sát chiều dài ban đầu.","force",new[]{"Lực 0 N"},new[]{0f});

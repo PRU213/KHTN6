@@ -1,0 +1,44 @@
+{
+  "account": "student01",
+  "loginSource": {
+    "status": 200,
+    "accountFound": true,
+    "matchingAccounts": 1,
+    "fullName": "Nguyễn Văn An",
+    "role": "Student",
+    "loginParserMatchesProfile": true,
+    "passwordPresent": true,
+    "note": "CSV downloaded only in memory. No passwords saved or printed; no login credentials submitted."
+  },
+  "history": {
+    "status": 200,
+    "success": true,
+    "username": "student01",
+    "fullName": "Nguyễn Văn An",
+    "total": 27,
+    "rowCount": 27,
+    "win": 11,
+    "lose": 16,
+    "winRate": 41,
+    "modeCounts": {
+      "Luyện tập": 22,
+      "Đối kháng": 5
+    },
+    "firstTime": "24/10/2026 23:59",
+    "lastTime": "07/10/2026 08:15",
+    "missingChapter": 18,
+    "validSummary": true
+  },
+  "rank": {
+    "status": 200,
+    "success": false,
+    "playerCount": 0,
+    "accountPresent": false,
+    "missingNames": 0,
+    "sorted": true,
+    "error": "ReferenceError: planetGetProgressRank_ is not defined"
+  },
+  "issues": [
+    "Rank response unavailable or incompatible with client weekly-v2"
+  ]
+}

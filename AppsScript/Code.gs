@@ -328,8 +328,9 @@ function getHistory(e) {
   }
 
   var historyData = historySheet.getDataRange().getValues();
-  var subjectColumn = historyData[0].indexOf('Subject');
-  var chapterColumn = historyData[0].indexOf('Chapter');
+  var columns = planetHistoryColumns_(historyData[0] || []);
+  var subjectColumn = columns.Subject === undefined ? -1 : columns.Subject;
+  var chapterColumn = columns.Chapter === undefined ? -1 : columns.Chapter;
   var userData = userSheet.getDataRange().getValues();
 
   // -----------------------------------
@@ -367,13 +368,13 @@ function getHistory(e) {
   for (var j = 1; j < historyData.length; j++) {
     var row = historyData[j];
 
-    var rowUsername = String(row[0]).trim();
+    var rowUsername = String(row[columns.Username]).trim();
 
     if (rowUsername !== username) {
       continue;
     }
 
-    var result = String(row[3]).trim().toUpperCase();
+    var result = String(row[columns.Result]).trim().toUpperCase();
 
     if (result === "THẮNG") {
       win++;
@@ -381,7 +382,7 @@ function getHistory(e) {
       lose++;
     }
 
-    var timeValue = row[5];
+    var timeValue = row[columns.Time];
 
     // Định dạng ngày tháng
     if (timeValue instanceof Date) {
@@ -395,10 +396,10 @@ function getHistory(e) {
     }
 
     histories.push({
-      opponent: String(row[1]),
-      mode: String(row[2]),
+      opponent: String(row[columns.Opponent]),
+      mode: String(row[columns.Mode]),
       result: result,
-      score: Number(row[4]) || 0,
+      score: Number(row[columns.Score]) || 0,
       time: timeValue,
       subject: subjectColumn >= 0 ? String(row[subjectColumn] || '') : '',
       chapter: chapterColumn >= 0 ? String(row[chapterColumn] || '') : ''
@@ -762,7 +763,7 @@ function saveEssayImage() {
 }
 
 // Also embedded in Code.gs. Do not paste both copies into the same project.
-// Existing History columns A:F are preserved. G:H are match ID and rank score.
+// History fields are located by header; existing extra columns are preserved.
 function planetSaveMatch_(p) {
   var record = JSON.parse(p.record || '{}');
   var username = String(record.username || '').trim();
@@ -789,20 +790,18 @@ function planetSaveMatch_(p) {
       sheet = ss.insertSheet('History');
       sheet.appendRow(['Username', 'Opponent', 'Mode', 'Result', 'Score', 'Time']);
     }
-    if (sheet.getMaxColumns() < 8) sheet.insertColumnsAfter(sheet.getMaxColumns(), 8 - sheet.getMaxColumns());
-    var extra = sheet.getRange(1, 7, 1, 2).getValues()[0];
-    var expected = ['PlanetMatchID', 'PlanetRankScore'];
-    for (var col = 0; col < 2; col++) {
-      if (extra[col] && extra[col] !== expected[col])
-        return jsonOut({ success: false, message: 'History cột G:H đã có dữ liệu khác. Cần kiểm tra trước khi lưu Planet.' });
-    }
+    var columns = planetHistoryColumns_(sheet.getDataRange().getValues()[0] || []);
+    var headers = sheet.getDataRange().getValues()[0].slice();
+    // Append metadata after existing columns; never reuse an unnamed occupied column.
+    ['PlanetMatchID', 'PlanetRankScore', 'Subject', 'Chapter'].forEach(function(name) {
+      if (headers.indexOf(name) < 0) headers.push(name);
+    });
+    if (sheet.getMaxColumns() < headers.length) sheet.insertColumnsAfter(sheet.getMaxColumns(), headers.length - sheet.getMaxColumns());
+    sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
+    columns = planetHistoryColumns_(headers);
     var rows = sheet.getDataRange().getValues();
-    if ((!extra[0] || !extra[1]) && rows.slice(1).some(function(row) {
-      return (!extra[0] && row[6] !== '' && row[6] != null) || (!extra[1] && row[7] !== '' && row[7] != null);
-    })) return jsonOut({ success: false, message: 'History G:H có dữ liệu chưa đặt tên; không ghi đè.' });
-    sheet.getRange(1, 7, 1, 2).setValues([expected]);
     for (var i = 1; i < rows.length; i++) {
-      if (String(rows[i][0]).trim() === username && String(rows[i][6]) === id)
+      if (String(rows[i][columns.Username]).trim() === username && String(rows[i][columns.PlanetMatchID]) === id)
         return jsonOut({ success: true, duplicate: true, matchId: id });
     }
     function safe(value) {
@@ -810,27 +809,29 @@ function planetSaveMatch_(p) {
       return /^\s*[=+@-]/.test(text) ? "'" + text : text;
     }
     var rankScore = Math.max(0, Math.min(100, maximum ? Math.round(record.score / maximum * 100) : 0));
-    var lessonColumns = planetHistoryLessonColumns_(sheet);
-    var entry = [safe(username), safe(record.opponent || 'Máy AI'), mode, record.result,
-      record.score, new Date(completed), id, rankScore];
-    while (entry.length <= Math.max(lessonColumns.subject, lessonColumns.chapter)) entry.push('');
-    entry[lessonColumns.subject] = practice ? safe(record.subject) : '';
-    entry[lessonColumns.chapter] = practice ? safe(record.chapter) : '';
+    var entry = headers.map(function() { return ''; });
+    var values = { Username: safe(username), Opponent: safe(record.opponent || 'Máy AI'), Mode: mode,
+      Result: record.result, Score: record.score, Time: new Date(completed), PlanetMatchID: id,
+      PlanetRankScore: rankScore, Subject: practice ? safe(record.subject) : '', Chapter: practice ? safe(record.chapter) : '' };
+    Object.keys(values).forEach(function(name) { entry[columns[name]] = values[name]; });
     sheet.appendRow(entry);
     SpreadsheetApp.flush();
     return jsonOut({ success: true, matchId: id, rankScore: rankScore });
   } finally { lock.releaseLock(); }
 }
 
-function planetHistoryLessonColumns_(sheet) {
-  var headers = sheet.getDataRange().getValues()[0].slice();
-  while (headers.length < 8) headers.push('');
-  var subject = headers.indexOf('Subject'), chapter = headers.indexOf('Chapter');
-  if (subject < 0) { subject = headers.length; headers.push('Subject'); }
-  if (chapter < 0) { chapter = headers.length; headers.push('Chapter'); }
-  if (sheet.getMaxColumns() < headers.length) sheet.insertColumnsAfter(sheet.getMaxColumns(), headers.length - sheet.getMaxColumns());
-  sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
-  return { subject: subject, chapter: chapter };
+function planetHistoryColumns_(headers) {
+  var columns = Object.create(null);
+  headers.forEach(function(name, index) {
+    var key = String(name || '').trim();
+    if (!key) return;
+    if (columns[key] !== undefined) throw new Error('History trùng cột ' + key);
+    columns[key] = index;
+  });
+  ['Username', 'Opponent', 'Mode', 'Result', 'Score', 'Time'].forEach(function(name) {
+    if (columns[name] === undefined) throw new Error('History thiếu cột ' + name);
+  });
+  return columns;
 }
 
 // Week is [Monday 00:00, next Monday 00:00), Asia/Ho_Chi_Minh (UTC+7).
@@ -875,18 +876,19 @@ function planetGetProgressRank_() {
   var history = ss.getSheetByName('History');
   if (history) {
     var rows = history.getDataRange().getValues();
-    var hasMatchId = rows.length && rows[0][6] === 'PlanetMatchID';
+    var columns = planetHistoryColumns_(rows[0] || []);
+    var hasMatchId = columns.PlanetMatchID !== undefined;
     rows.slice(1).forEach(function(row) {
-      var mode = String(row[2] || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[đĐ]/g, 'd').toLowerCase().trim();
+      var mode = String(row[columns.Mode] || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[đĐ]/g, 'd').toLowerCase().trim();
       if (!['luyen tap', 'doi khang'].includes(mode)) return;
-      var key = String(row[0] || '').trim(), points = Number(row[4]);
-      if (!key || row[4] === '' || row[4] == null || !Number.isFinite(points)) return;
+      var key = String(row[columns.Username] || '').trim(), points = Number(row[columns.Score]);
+      if (!key || row[columns.Score] === '' || row[columns.Score] == null || !Number.isFinite(points)) return;
       key = aliases[key] || key;
-      var stamp = planetRankTime_(row[5]);
+      var stamp = planetRankTime_(row[columns.Time]);
       if (!Number.isFinite(stamp)) { undated++; return; }
       if (stamp < week.start || stamp >= week.end || stamp > now) return;
-      if (hasMatchId && row[6]) {
-        var id = key + ':' + String(row[6]);
+      if (hasMatchId && row[columns.PlanetMatchID]) {
+        var id = key + ':' + String(row[columns.PlanetMatchID]);
         if (seen[id]) return;
         seen[id] = true;
       }

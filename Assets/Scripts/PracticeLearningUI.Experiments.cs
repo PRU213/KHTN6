@@ -28,16 +28,21 @@ public partial class PracticeLearningUI
     }
     void ShowExperiment()
     {
-        ResetPage(lesson.title,()=>Detail(lesson.id));pickedCard=null;
+        ResetPage(lesson.title,()=>{
+            if(experiment.Back()) ShowExperiment(); else Detail(lesson.id);
+        });pickedCard=null;
         var task=experiment.Current;
-        Label(page,"Bước "+(experiment.Stage+1)+"/3 • "+task.Title,0,290,1460,50,34,TextAlignmentOptions.Center).fontStyle=FontStyles.Bold;
-        Label(page,task.Instruction,0,238,1460,48,27,TextAlignmentOptions.Center);
-        var area=Box(page,"Experiment diagram",-285,30,900,350,new Color(.92f,.96f,.96f));
+        Label(page,"Bước "+(experiment.Stage+1)+"/3 • "+task.Title,0,310,1460,48,34,TextAlignmentOptions.Center).fontStyle=FontStyles.Bold;
+        var instruction=Label(page,task.Instruction,0,255,1460,64,27,TextAlignmentOptions.Center);
+        instruction.enableAutoSizing=true;instruction.fontSizeMin=22;instruction.fontSizeMax=27;
+        var area=Box(page,"Experiment diagram",-285,-5,900,350,new Color(.92f,.96f,.96f));
         var graphic=new GameObject("Interactive model",typeof(RectTransform)).GetComponent<RectTransform>();graphic.SetParent(area,false);graphic.sizeDelta=area.sizeDelta;
         diagram=graphic.gameObject.AddComponent<PracticeExperimentDiagram>();diagram.raycastTarget=false;diagram.Session=experiment;diagram.Refresh();
-        Label(page,DiagramLegend(),-285,202,890,38,22,TextAlignmentOptions.Center);
-        var observation=Label(page,experiment.Observation(),-285,-204,900,95,24,TextAlignmentOptions.Center);
-        feedback=Label(page,"Thao tác trên mô hình rồi bấm Kiểm tra bước.",0,-340,1450,40,24,TextAlignmentOptions.Center);
+        Label(page,DiagramLegend(),-285,202,900,34,22,TextAlignmentOptions.Center);
+        var observation=Label(page,experiment.Observation(),-285,-238,900,85,24,TextAlignmentOptions.Center);
+        // Keep feedback below the controls, inside the paper and clear of
+        // both the wooden footer and the answer cards on the left.
+        feedback=Label(page,"Thao tác rồi bấm Kiểm tra bước.",515,-300,530,70,24,TextAlignmentOptions.Center);
         Btn(page,"Kiểm tra bước",610,FooterY,390,82,()=>{
             string hint;
             if(!experiment.Advance(out hint)){feedback.text=hint;feedback.color=new Color(.65f,.17f,.08f);return;}
@@ -51,6 +56,17 @@ public partial class PracticeLearningUI
         scroll.content=content;scroll.viewport=view;
         var updates=new List<Action>();
         Action refresh=()=>{observation.text=experiment.Observation();foreach(var update in updates)update();diagram.Refresh();};
+        if(experiment.Type=="TrongLuc") {
+            Label(area,"N",40,65,60,30,25,TextAlignmentOptions.Center).fontStyle=FontStyles.Bold;
+            for(int force=0;force<=5;force++)
+                Label(area,force.ToString(),40,diagram.ForceMeterScaleY(force),45,26,22,TextAlignmentOptions.Center);
+        }
+        if(experiment.Type=="DoTheTich") {
+            float capacity=experiment.CylinderCapacityMl();
+            Label(area,"mL",135,153,70,30,22,TextAlignmentOptions.Center);
+            for(int tick=0;tick<=10;tick++)
+                Label(area,PracticeExperiment.N(capacity*tick/10),140,-130+tick*26,70,26,20,TextAlignmentOptions.MidlineLeft);
+        }
         float y=-12;
         for(int i=0;i<task.Actions.Count;i++) {
             int index=i;var action=task.Actions[i];y-=38;
@@ -76,7 +92,9 @@ public partial class PracticeLearningUI
         }
         for(int i=0;i<task.Numbers.Count;i++) {
             int index=i;y-=28;var label=Label(content,task.Numbers[i].Label,0,y,480,40,25);Top(label.transform);y-=53;
-            var input=Input(content,0,y,460,60);Top(input.transform);input.onValueChanged.AddListener(text=>{experiment.SetNumber(index,text);refresh();});y-=42;
+            var input=Input(content,0,y,460,60);Top(input.transform);
+            string savedAnswer;if(experiment.Answers.TryGetValue(index,out savedAnswer)) input.SetTextWithoutNotify(savedAnswer);
+            input.onValueChanged.AddListener(text=>{experiment.SetNumber(index,text);refresh();});y-=42;
         }
         if(task.Choices!=null)for(int i=0;i<task.Choices.Length;i++) {
             int index=i;y-=48;var option=Btn(content,task.Choices[i],0,y,490,88,()=>{experiment.Choose(index);refresh();});Top(option.transform);
@@ -86,22 +104,26 @@ public partial class PracticeLearningUI
         if(task.Matches.Count>0) {
             observation.gameObject.SetActive(false);
             var options=task.Matches.Select(m=>m.Answer).Distinct().OrderBy(v=>v,StringComparer.Ordinal).ToArray();
-            Label(page,"Chọn hoặc kéo thẻ vào ô bên phải",-285,-172,900,40,23,TextAlignmentOptions.Center);
-            int columns=options.Length>4?3:2;float width=options.Length>4?285:430;
+            Label(page,"Chọn hoặc kéo thẻ vào ô bên phải",-285,-195,900,28,23,TextAlignmentOptions.Center);
+            int columns=options.Length>4?4:2;float width=options.Length>4?216:430;
             for(int i=0;i<options.Length;i++) {
-                string payload=options[i];float x=-285+(i%columns-(columns-1)*.5f)*(width+10), yy=-220-i/columns*52;
-                var token=Btn(page,payload,x,yy,width,46,()=>{pickedCard=payload;feedback.text="Đã chọn: "+payload+". Bấm vào ô cần ghép.";});
+                int row=i/columns, rowColumns=Mathf.Min(columns,options.Length-row*columns);
+                string payload=options[i];float x=-285+(i%columns-(rowColumns-1)*.5f)*(width+12), yy=-238-row*54;
+                var token=Btn(page,payload,x,yy,width,48,()=>{pickedCard=payload;feedback.text="Đã chọn: "+payload+". Bấm vào ô cần ghép.";});
                 var txt=token.GetComponentInChildren<TMP_Text>();txt.fontSizeMin=18;txt.fontSizeMax=23;
                 var drag=token.gameObject.AddComponent<PracticeAnswerToken>();drag.Value=payload;drag.Pick=()=>pickedCard=payload;
             }
             for(int i=0;i<task.Matches.Count;i++) {
-                int index=i;y-=38;
-                var label=Label(content,task.Matches[i].Label,-128,y,240,65,23,TextAlignmentOptions.MidlineLeft);Top(label.transform);
+                int index=i;y-=54;
+                var label=Label(content,task.Matches[i].Label,-180,y,150,104,23,TextAlignmentOptions.MidlineLeft);Top(label.transform);
                 Action<string> place=value=>{if(string.IsNullOrEmpty(value)){feedback.text="Chọn thẻ đáp án ở phía dưới mô hình trước nhé.";return;}experiment.Place(index,value);refresh();};
-                var target=Btn(content,"Chọn thẻ…",132,y,248,65,()=>place(pickedCard),true);Top(target.transform);
-                var text=target.GetComponentInChildren<TMP_Text>();text.fontSizeMin=18;text.fontSizeMax=23;
+                var target=Btn(content,"Chọn thẻ…",90,y,330,104,()=>place(pickedCard),true);Top(target.transform);
+                var text=target.GetComponentInChildren<TMP_Text>();
+                // Text stays inside the plain centre, away from wood and leaves.
+                text.rectTransform.sizeDelta=new Vector2(210,62);
+                text.fontSizeMin=19;text.fontSizeMax=22;text.fontStyle=FontStyles.Normal;
                 var drop=target.gameObject.AddComponent<PracticeAnswerTarget>();drop.Accept=place;
-                updates.Add(()=>{string value;text.text=experiment.Placements.TryGetValue(index,out value)?value:"Chọn thẻ…";});y-=40;
+                updates.Add(()=>{string value;text.text=experiment.Placements.TryGetValue(index,out value)?value:"Chọn thẻ…";});y-=64;
             }
         }
         content.sizeDelta=new Vector2(0,Mathf.Max(470,-y+20));
@@ -133,17 +155,19 @@ public partial class PracticeLearningUI
     string DiagramLegend()
     {
         switch(experiment.Type){
-            case "CanKhoiLuong":return "Vật mẫu (trái)                         Quả cân (phải)";
-            case "TruyenNhiet":return "Cốc A: không bọc                         Cốc B: bọc cách nhiệt";
+            case "CanKhoiLuong":return "Vật mẫu ở đĩa trái • Quả cân ở đĩa phải";
+            case "TrongLuc":return "Lực kế • Đơn vị N • Đọc vạch ngang tại đầu dưới lò xo";
+            case "DoTheTich":return "Ống đong "+PracticeExperiment.N(experiment.CylinderCapacityMl())+" mL • Mỗi khoảng chia: "+PracticeExperiment.N(experiment.CylinderCapacityMl()/10)+" mL";
+            case "TruyenNhiet":return "Cốc A: không bọc • Cốc B: bọc cách nhiệt";
             case "NangLuongHaoPhi":return "Đèn A (trên), B (dưới) • Vàng: có ích • Đỏ: hao phí";
-            case "OxygenSuChay":return "Không oxygen                 Không khí                 Giàu oxygen";
+            case "OxygenSuChay":return "Từ trái sang phải: Không oxygen • Không khí • Giàu oxygen";
             case "ThanhPhanKhongKhi":return "Xanh: nitrogen • Vàng: oxygen • Xám: khí khác";
-            case "NhanCanhBao":return "Dễ cháy                    Ăn mòn                    Độc (minh họa)";
+            case "NhanCanhBao":return "Từ trái sang phải: Dễ cháy • Ăn mòn • Độc (minh họa)";
             case "HeMatTroi":return "Mặt Trời ở trái • Kích thước và khoảng cách không đúng tỉ lệ";
-            case "PhaMatTrang":return "Quỹ đạo nhìn từ trên                      Nhìn từ Trái Đất";
-            case "NongChay":return "Nước đá / nước                            Đồ thị nhiệt độ – thời gian";
-            case "NhienLieu":return "Củi              Than            Khí thiên nhiên           Cát              Kính";
-            case "BaoQuanThucPham":return "Gói A: nơi khô               Gói B: giữ mát               Gói C: quá hạn";
+            case "PhaMatTrang":return "Bên trái: Quỹ đạo nhìn từ trên • Bên phải: Nhìn từ Trái Đất";
+            case "NongChay":return "Bên trái: Nước đá / nước • Bên phải: Đồ thị nhiệt độ – thời gian";
+            case "NhienLieu":return "Từ trái sang phải: Củi • Than • Khí thiên nhiên • Cát • Kính";
+            case "BaoQuanThucPham":return "Gói A: nơi khô • Gói B: giữ mát • Gói C: quá hạn";
             default:return "MÔ HÌNH THỰC HÀNH ẢO";
         }
     }
