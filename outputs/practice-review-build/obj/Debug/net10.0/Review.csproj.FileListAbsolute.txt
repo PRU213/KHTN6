@@ -1,0 +1,16 @@
+D:\PRU_Git\KHTN6\outputs\practice-review-build\bin\Debug\net10.0\Review.exe
+D:\PRU_Git\KHTN6\outputs\practice-review-build\bin\Debug\net10.0\fixtures.json
+D:\PRU_Git\KHTN6\outputs\practice-review-build\bin\Debug\net10.0\Review.deps.json
+D:\PRU_Git\KHTN6\outputs\practice-review-build\bin\Debug\net10.0\Review.runtimeconfig.json
+D:\PRU_Git\KHTN6\outputs\practice-review-build\bin\Debug\net10.0\Review.dll
+D:\PRU_Git\KHTN6\outputs\practice-review-build\bin\Debug\net10.0\Review.pdb
+D:\PRU_Git\KHTN6\outputs\practice-review-build\obj\Debug\net10.0\Review.GeneratedMSBuildEditorConfig.editorconfig
+D:\PRU_Git\KHTN6\outputs\practice-review-build\obj\Debug\net10.0\Review.AssemblyInfoInputs.cache
+D:\PRU_Git\KHTN6\outputs\practice-review-build\obj\Debug\net10.0\Review.AssemblyInfo.cs
+D:\PRU_Git\KHTN6\outputs\practice-review-build\obj\Debug\net10.0\Review.csproj.CoreCompileInputs.cache
+D:\PRU_Git\KHTN6\outputs\practice-review-build\obj\Debug\net10.0\Review.sourcelink.json
+D:\PRU_Git\KHTN6\outputs\practice-review-build\obj\Debug\net10.0\Review.dll
+D:\PRU_Git\KHTN6\outputs\practice-review-build\obj\Debug\net10.0\refint\Review.dll
+D:\PRU_Git\KHTN6\outputs\practice-review-build\obj\Debug\net10.0\Review.pdb
+D:\PRU_Git\KHTN6\outputs\practice-review-build\obj\Debug\net10.0\Review.genruntimeconfig.cache
+D:\PRU_Git\KHTN6\outputs\practice-review-build\obj\Debug\net10.0\ref\Review.dll

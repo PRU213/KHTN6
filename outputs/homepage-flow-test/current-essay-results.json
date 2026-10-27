@@ -1,0 +1,753 @@
+{
+  "bankCount": 260,
+  "bySubject": {
+    "Physics": 89,
+    "Chemistry": 87,
+    "Biology": 84
+  },
+  "attempts": 90,
+  "passed": 87,
+  "issues": [
+    {
+      "game": "Football",
+      "subject": "Hóa học",
+      "chapter": 5,
+      "difficulty": "Khó",
+      "error": "Chưa đủ 5 câu tự luận dạng chữ đã duyệt cho Hóa học, Chương 5 và độ khó đã chọn. Hiện có 3 câu; câu có ảnh đề chưa được hỗ trợ. Hãy bổ sung câu dạng chữ trong tab TuLuan hoặc chọn thêm độ khó."
+    },
+    {
+      "game": "Sheep",
+      "subject": "Hóa học",
+      "chapter": 5,
+      "difficulty": "Khó",
+      "error": "Chưa đủ 5 câu tự luận dạng chữ đã duyệt cho Hóa học, Chương 5 và độ khó đã chọn. Hiện có 3 câu; câu có ảnh đề chưa được hỗ trợ. Hãy bổ sung câu dạng chữ trong tab TuLuan hoặc chọn thêm độ khó."
+    },
+    {
+      "game": "Cave",
+      "subject": "Hóa học",
+      "chapter": 5,
+      "difficulty": "Khó",
+      "error": "Chưa đủ 5 câu tự luận dạng chữ đã duyệt cho Hóa học, Chương 5 và độ khó đã chọn. Hiện có 3 câu; câu có ảnh đề chưa được hỗ trợ. Hãy bổ sung câu dạng chữ trong tab TuLuan hoặc chọn thêm độ khó."
+    }
+  ],
+  "sessionsRemaining": 0,
+  "results": [
+    {
+      "game": "Football",
+      "subject": "Vật lý",
+      "chapter": 1,
+      "difficulty": "Dễ",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Football",
+      "subject": "Vật lý",
+      "chapter": 1,
+      "difficulty": "Trung bình",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Football",
+      "subject": "Vật lý",
+      "chapter": 1,
+      "difficulty": "Khó",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Football",
+      "subject": "Vật lý",
+      "chapter": 2,
+      "difficulty": "Dễ",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Football",
+      "subject": "Vật lý",
+      "chapter": 2,
+      "difficulty": "Trung bình",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Football",
+      "subject": "Vật lý",
+      "chapter": 2,
+      "difficulty": "Khó",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Football",
+      "subject": "Vật lý",
+      "chapter": 3,
+      "difficulty": "Dễ",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Football",
+      "subject": "Vật lý",
+      "chapter": 3,
+      "difficulty": "Trung bình",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Football",
+      "subject": "Vật lý",
+      "chapter": 3,
+      "difficulty": "Khó",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Football",
+      "subject": "Vật lý",
+      "chapter": 4,
+      "difficulty": "Dễ",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Football",
+      "subject": "Vật lý",
+      "chapter": 4,
+      "difficulty": "Trung bình",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Football",
+      "subject": "Vật lý",
+      "chapter": 4,
+      "difficulty": "Khó",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Football",
+      "subject": "Vật lý",
+      "chapter": 5,
+      "difficulty": "Dễ",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Football",
+      "subject": "Vật lý",
+      "chapter": 5,
+      "difficulty": "Trung bình",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Football",
+      "subject": "Vật lý",
+      "chapter": 5,
+      "difficulty": "Khó",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Football",
+      "subject": "Hóa học",
+      "chapter": 1,
+      "difficulty": "Dễ",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Football",
+      "subject": "Hóa học",
+      "chapter": 1,
+      "difficulty": "Trung bình",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Football",
+      "subject": "Hóa học",
+      "chapter": 1,
+      "difficulty": "Khó",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Football",
+      "subject": "Hóa học",
+      "chapter": 2,
+      "difficulty": "Dễ",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Football",
+      "subject": "Hóa học",
+      "chapter": 2,
+      "difficulty": "Trung bình",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Football",
+      "subject": "Hóa học",
+      "chapter": 2,
+      "difficulty": "Khó",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Football",
+      "subject": "Hóa học",
+      "chapter": 3,
+      "difficulty": "Dễ",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Football",
+      "subject": "Hóa học",
+      "chapter": 3,
+      "difficulty": "Trung bình",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Football",
+      "subject": "Hóa học",
+      "chapter": 3,
+      "difficulty": "Khó",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Football",
+      "subject": "Hóa học",
+      "chapter": 4,
+      "difficulty": "Dễ",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Football",
+      "subject": "Hóa học",
+      "chapter": 4,
+      "difficulty": "Trung bình",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Football",
+      "subject": "Hóa học",
+      "chapter": 4,
+      "difficulty": "Khó",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Football",
+      "subject": "Hóa học",
+      "chapter": 5,
+      "difficulty": "Dễ",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Football",
+      "subject": "Hóa học",
+      "chapter": 5,
+      "difficulty": "Trung bình",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Football",
+      "subject": "Hóa học",
+      "chapter": 5,
+      "difficulty": "Khó",
+      "error": "Chưa đủ 5 câu tự luận dạng chữ đã duyệt cho Hóa học, Chương 5 và độ khó đã chọn. Hiện có 3 câu; câu có ảnh đề chưa được hỗ trợ. Hãy bổ sung câu dạng chữ trong tab TuLuan hoặc chọn thêm độ khó."
+    },
+    {
+      "game": "Sheep",
+      "subject": "Vật lý",
+      "chapter": 1,
+      "difficulty": "Dễ",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Sheep",
+      "subject": "Vật lý",
+      "chapter": 1,
+      "difficulty": "Trung bình",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Sheep",
+      "subject": "Vật lý",
+      "chapter": 1,
+      "difficulty": "Khó",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Sheep",
+      "subject": "Vật lý",
+      "chapter": 2,
+      "difficulty": "Dễ",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Sheep",
+      "subject": "Vật lý",
+      "chapter": 2,
+      "difficulty": "Trung bình",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Sheep",
+      "subject": "Vật lý",
+      "chapter": 2,
+      "difficulty": "Khó",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Sheep",
+      "subject": "Vật lý",
+      "chapter": 3,
+      "difficulty": "Dễ",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Sheep",
+      "subject": "Vật lý",
+      "chapter": 3,
+      "difficulty": "Trung bình",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Sheep",
+      "subject": "Vật lý",
+      "chapter": 3,
+      "difficulty": "Khó",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Sheep",
+      "subject": "Vật lý",
+      "chapter": 4,
+      "difficulty": "Dễ",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Sheep",
+      "subject": "Vật lý",
+      "chapter": 4,
+      "difficulty": "Trung bình",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Sheep",
+      "subject": "Vật lý",
+      "chapter": 4,
+      "difficulty": "Khó",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Sheep",
+      "subject": "Vật lý",
+      "chapter": 5,
+      "difficulty": "Dễ",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Sheep",
+      "subject": "Vật lý",
+      "chapter": 5,
+      "difficulty": "Trung bình",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Sheep",
+      "subject": "Vật lý",
+      "chapter": 5,
+      "difficulty": "Khó",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Sheep",
+      "subject": "Hóa học",
+      "chapter": 1,
+      "difficulty": "Dễ",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Sheep",
+      "subject": "Hóa học",
+      "chapter": 1,
+      "difficulty": "Trung bình",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Sheep",
+      "subject": "Hóa học",
+      "chapter": 1,
+      "difficulty": "Khó",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Sheep",
+      "subject": "Hóa học",
+      "chapter": 2,
+      "difficulty": "Dễ",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Sheep",
+      "subject": "Hóa học",
+      "chapter": 2,
+      "difficulty": "Trung bình",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Sheep",
+      "subject": "Hóa học",
+      "chapter": 2,
+      "difficulty": "Khó",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Sheep",
+      "subject": "Hóa học",
+      "chapter": 3,
+      "difficulty": "Dễ",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Sheep",
+      "subject": "Hóa học",
+      "chapter": 3,
+      "difficulty": "Trung bình",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Sheep",
+      "subject": "Hóa học",
+      "chapter": 3,
+      "difficulty": "Khó",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Sheep",
+      "subject": "Hóa học",
+      "chapter": 4,
+      "difficulty": "Dễ",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Sheep",
+      "subject": "Hóa học",
+      "chapter": 4,
+      "difficulty": "Trung bình",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Sheep",
+      "subject": "Hóa học",
+      "chapter": 4,
+      "difficulty": "Khó",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Sheep",
+      "subject": "Hóa học",
+      "chapter": 5,
+      "difficulty": "Dễ",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Sheep",
+      "subject": "Hóa học",
+      "chapter": 5,
+      "difficulty": "Trung bình",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Sheep",
+      "subject": "Hóa học",
+      "chapter": 5,
+      "difficulty": "Khó",
+      "error": "Chưa đủ 5 câu tự luận dạng chữ đã duyệt cho Hóa học, Chương 5 và độ khó đã chọn. Hiện có 3 câu; câu có ảnh đề chưa được hỗ trợ. Hãy bổ sung câu dạng chữ trong tab TuLuan hoặc chọn thêm độ khó."
+    },
+    {
+      "game": "Cave",
+      "subject": "Vật lý",
+      "chapter": 1,
+      "difficulty": "Dễ",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Cave",
+      "subject": "Vật lý",
+      "chapter": 1,
+      "difficulty": "Trung bình",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Cave",
+      "subject": "Vật lý",
+      "chapter": 1,
+      "difficulty": "Khó",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Cave",
+      "subject": "Vật lý",
+      "chapter": 2,
+      "difficulty": "Dễ",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Cave",
+      "subject": "Vật lý",
+      "chapter": 2,
+      "difficulty": "Trung bình",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Cave",
+      "subject": "Vật lý",
+      "chapter": 2,
+      "difficulty": "Khó",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Cave",
+      "subject": "Vật lý",
+      "chapter": 3,
+      "difficulty": "Dễ",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Cave",
+      "subject": "Vật lý",
+      "chapter": 3,
+      "difficulty": "Trung bình",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Cave",
+      "subject": "Vật lý",
+      "chapter": 3,
+      "difficulty": "Khó",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Cave",
+      "subject": "Vật lý",
+      "chapter": 4,
+      "difficulty": "Dễ",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Cave",
+      "subject": "Vật lý",
+      "chapter": 4,
+      "difficulty": "Trung bình",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Cave",
+      "subject": "Vật lý",
+      "chapter": 4,
+      "difficulty": "Khó",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Cave",
+      "subject": "Vật lý",
+      "chapter": 5,
+      "difficulty": "Dễ",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Cave",
+      "subject": "Vật lý",
+      "chapter": 5,
+      "difficulty": "Trung bình",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Cave",
+      "subject": "Vật lý",
+      "chapter": 5,
+      "difficulty": "Khó",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Cave",
+      "subject": "Hóa học",
+      "chapter": 1,
+      "difficulty": "Dễ",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Cave",
+      "subject": "Hóa học",
+      "chapter": 1,
+      "difficulty": "Trung bình",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Cave",
+      "subject": "Hóa học",
+      "chapter": 1,
+      "difficulty": "Khó",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Cave",
+      "subject": "Hóa học",
+      "chapter": 2,
+      "difficulty": "Dễ",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Cave",
+      "subject": "Hóa học",
+      "chapter": 2,
+      "difficulty": "Trung bình",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Cave",
+      "subject": "Hóa học",
+      "chapter": 2,
+      "difficulty": "Khó",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Cave",
+      "subject": "Hóa học",
+      "chapter": 3,
+      "difficulty": "Dễ",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Cave",
+      "subject": "Hóa học",
+      "chapter": 3,
+      "difficulty": "Trung bình",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Cave",
+      "subject": "Hóa học",
+      "chapter": 3,
+      "difficulty": "Khó",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Cave",
+      "subject": "Hóa học",
+      "chapter": 4,
+      "difficulty": "Dễ",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Cave",
+      "subject": "Hóa học",
+      "chapter": 4,
+      "difficulty": "Trung bình",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Cave",
+      "subject": "Hóa học",
+      "chapter": 4,
+      "difficulty": "Khó",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Cave",
+      "subject": "Hóa học",
+      "chapter": 5,
+      "difficulty": "Dễ",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Cave",
+      "subject": "Hóa học",
+      "chapter": 5,
+      "difficulty": "Trung bình",
+      "state": "answering",
+      "total": 5
+    },
+    {
+      "game": "Cave",
+      "subject": "Hóa học",
+      "chapter": 5,
+      "difficulty": "Khó",
+      "error": "Chưa đủ 5 câu tự luận dạng chữ đã duyệt cho Hóa học, Chương 5 và độ khó đã chọn. Hiện có 3 câu; câu có ảnh đề chưa được hỗ trợ. Hãy bổ sung câu dạng chữ trong tab TuLuan hoặc chọn thêm độ khó."
+    }
+  ]
+}

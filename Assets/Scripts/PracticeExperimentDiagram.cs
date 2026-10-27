@@ -59,8 +59,20 @@ public class PracticeExperimentDiagram : MaskableGraphic
     void Cart(float x,float y,Color color){Quad(x,y,100,45,color);Quad(x-12,y+30,55,25,color);Circle(x-30,y-28,15,Ink);Circle(x+30,y-28,15,Ink);Circle(x-30,y-28,6,Grey);Circle(x+30,y-28,6,Grey);}
     void Spring(float x,float top,float length){Quad(x,top+8,180,14,Ink);Line(x,top,x,top-15,5,Ink);float previous=x;float y=top-15;for(int i=0;i<15;i++){float xx=x+(i%2==0?-30:30);float yy=top-15-(i+1)*(length-30)/15;Line(previous,y,xx,yy,5,Blue);previous=xx;y=yy;}Line(previous,y,x,top-length,5,Blue);Quad(x,top-length-20,70,35,Gold);}
     void Balance(){float difference=Session.C.massG*Session.Get("object")-Session.WeightSum();float tilt=Mathf.Clamp(difference/Session.C.massG,-1,1)*38;Line(-290,55-tilt,290,55+tilt,10,Ink);Tri(new Vector2(-25,-120),new Vector2(25,-120),new Vector2(0,55),Grey);Quad(0,-130,170,15,Ink);for(int side=-1;side<=1;side+=2){float x=side*240,y=55+side*tilt;Line(x,y,x-80,y-95,3,Grey);Line(x,y,x+80,y-95,3,Grey);Quad(x,y-100,180,14,Gold);if(side<0&&Session.Get("object")>0)Quad(x,y-70,68,50,Blue);if(side>0)for(int i=0;i<Session.C.weightsG.Length;i++)if(Session.Get("weight"+i)>0)Quad(x-50+i*40,y-76,30,40,Grey);}}
-    void Cylinder(){float max=Session.C.afterMl*1.3f;float water=Session.Get("stone")>0?Session.C.afterMl:Session.C.beforeMl;Cup(0,0,190,260,water/max,new Color(.2f,.65f,.92f,.8f));for(int i=0;i<=10;i++)Line(75,-130+i*26,105,-130+i*26,3,Ink);if(Session.Get("stone")>0)Circle(-25,-88,26,Grey);else Circle(-220,50,28,Grey);if(Session.Get("eye")>0){Circle(210,-130+water/max*260,16,Ink);Circle(210,-130+water/max*260,8,Color.white);Line(120,-130+water/max*260,190,-130+water/max*260,2,Red);}}
-    void ForceMeter(){int i=Mathf.Clamp((int)Session.Get("sample"),0,1);float force=Session.C.massesG[i]/1000*Session.C.gravityNPerKg;Cup(-80,20,90,220,0,Pale);Spring(-80,125,100+force/Mathf.Max(Session.C.massesG[1]*Session.C.gravityNPerKg/1000,1)*60);for(int j=0;j<8;j++)Line(-25,100-j*22,10,100-j*22,3,Ink);Arrow(140,90,0,-160,Red);}
+    void Cylinder(){float max=Session.CylinderCapacityMl();float water=Session.Get("stone")>0?Session.C.afterMl:Session.C.beforeMl;Cup(0,0,190,260,water/max,new Color(.2f,.65f,.92f,.8f));for(int i=0;i<=10;i++)Line(75,-130+i*26,105,-130+i*26,3,Ink);if(Session.Get("stone")>0)Circle(-25,-88,26,Grey);else Circle(-220,50,28,Grey);if(Session.Get("eye")>0){Circle(210,-130+water/max*260,16,Ink);Circle(210,-130+water/max*260,8,Color.white);Line(120,-130+water/max*260,190,-130+water/max*260,2,Red);}}
+    public float ForceMeterScaleY(float force){return 25-force/Mathf.Max(Session.C.massesG[1]*Session.C.gravityNPerKg/1000,1)*60;}
+    void ForceMeter()
+    {
+        int i=Mathf.Clamp((int)Session.Get("sample"),0,1);
+        float force=Session.C.massesG[i]/1000*Session.C.gravityNPerKg;
+        Cup(-80,20,90,220,0,Pale);
+        Spring(-80,125,100+force/Mathf.Max(Session.C.massesG[1]*Session.C.gravityNPerKg/1000,1)*60);
+        for(int tick=0;tick<=5;tick++) {
+            float y=ForceMeterScaleY(tick);
+            Line(-25,y,10,y,3,Ink);
+        }
+        Arrow(140,90,0,-160,Red);
+    }
     void CartForces(){Line(-400,-100,400,-100,9,Grey);float net=Session.Get("right",Session.C.leftN)-Session.C.leftN;float t=Mathf.Min(Time.unscaledTime-changedAt,3);float x=net>0?-120+Mathf.Min(300,t*t*35):0;Cart(x,-55,Blue);Arrow(x-55,-35,-Session.C.leftN/Session.C.rightLevelsN[1]*140,0,Red);Arrow(x+55,-35,Session.Get("right",Session.C.leftN)/Session.C.rightLevelsN[1]*140,0,Green);}
     void Friction(){int i=Mathf.Clamp((int)Session.Get("sample"),0,2);float mu=Session.C.frictionLevels[i],v=Session.C.initialSpeed;float stop=v/(mu*10),t=Mathf.Min(Time.unscaledTime-changedAt,stop);float d=v*t-.5f*mu*10*t*t;float scale=650/(v*v/(2*Mathf.Min(Session.C.frictionLevels)*10));Line(-390,-100,390,-100,16,new[]{Pale,new Color(.6f,.35f,.14f),Green}[i]);Cart(-330+d*scale,-55,Gold);Arrow(-330+d*scale-55,-45,-mu*160,0,Red);}
     void WaterDrag(){int i=Mathf.Clamp((int)Session.Get("sample"),0,2);Quad(0,0,800,280,new Color(.7f,.9f,1));for(int j=0;j<8;j++){float x=-390+Mathf.Repeat(j*110-Time.unscaledTime*50,780);Line(x,110-j%3*85,x+60,110-j%3*85,3,Blue);}float length=i==2?180:90;if(i==1)Circle(-60,0,55,Gold);else if(i==2){Tri(new Vector2(-155,0),new Vector2(15,45),new Vector2(45,0),Gold);Tri(new Vector2(-155,0),new Vector2(45,0),new Vector2(15,-45),Gold);}else Quad(-60,0,length,100,Gold);Line(25,0,180,0,5,Ink);Quad(230,0,110,45,Pale);Arrow(295,0,Session.C.dragN[i]/Mathf.Max(Session.C.dragN)*100,0,Red);}

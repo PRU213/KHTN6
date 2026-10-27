@@ -1,0 +1,125 @@
+[
+  {
+    "class": "ChooseGameSettings",
+    "object": "'choosegame '",
+    "file": "Assets/Scenes/HomePage.unity",
+    "line": 1223,
+    "id": "223015173",
+    "active": "0",
+    "fields": "  easyToggle: {fileID: 1904409299}\n  mediumToggle: {fileID: 1087840890}\n  hardToggle: {fileID: 1617716927}\n  multipleChoiceToggle: {fileID: 1536344460}\n  essayToggle: {fileID: 830475402}\n  startButton: {fileID: 1053018883}\n  backButton: {fileID: 2085220547}\n  gameSelectScreen: {fileID: 1598943557}\n  chooseGamePanel: {fileID: 223015168}",
+    "overrides": []
+  },
+  {
+    "class": "HomeMenuController",
+    "object": "HomeMenuController",
+    "file": "Assets/Scenes/HomePage.unity",
+    "line": 5155,
+    "id": "992832818",
+    "active": "1",
+    "fields": "  txtName: {fileID: 0}\n  txtRole: {fileID: 0}\n  homeCanvas: {fileID: 0}\n  physicsMap: {fileID: 0}\n  chemistryMap: {fileID: 0}\n  biologyMap: {fileID: 0}\n  btnPhysics: {fileID: 0}\n  btnChemistry: {fileID: 0}\n  btnBiology: {fileID: 0}\n  backPhysics: {fileID: 0}\n  backChemistry: {fileID: 0}\n  backBiology: {fileID: 0}\n  btnQuit: {fileID: 0}",
+    "overrides": []
+  },
+  {
+    "class": "SheetLoader1",
+    "object": "SheetLoader1",
+    "file": "Assets/Scenes/HomePage.unity",
+    "line": 8822,
+    "id": "1490848083",
+    "active": "0",
+    "fields": "  url: https://script.google.com/macros/s/AKfycbxxE2R2ZoitgM647aQqnebUcG90lhIlodU0DcyiaZuKkLaVWl6oopI-TkeNM8_KKDWhUw/exec",
+    "overrides": []
+  },
+  {
+    "class": "GameSelectScreen",
+    "file": "Assets/Scenes/HomePage.unity",
+    "line": 9339,
+    "id": "1598943557",
+    "fields": "  games:\n  duelButton: {fileID: 539411969}\n  duelPanel: {fileID: 2100000001}\n  backButton: {fileID: 0}\n  chooseGamePanel: {fileID: 223015168}",
+    "overrides": []
+  },
+  {
+    "class": "TheoryBackController",
+    "object": "UIManager",
+    "file": "Assets/Scenes/HomePage.unity",
+    "line": 9675,
+    "id": "1646039134",
+    "active": "0",
+    "fields": "  theoryPhysics: {fileID: 1100982008}\n  theoryChemistry: {fileID: 1100982008}\n  physicalMapGame: {fileID: 2082637694}\n  chemistryMapGame: {fileID: 1057441488}",
+    "overrides": []
+  },
+  {
+    "class": "PhysicMapController",
+    "object": "PhysicMapController",
+    "file": "Assets/Scenes/HomePage.unity",
+    "line": 9869,
+    "id": "1675939160",
+    "active": "1",
+    "fields": "  mapPanel: {fileID: 2082637694}\n  theoryPanel: {fileID: 543385125}\n  chapterButtons:\n  theoryBackButton: {fileID: 1877991900}\n  titleText: {fileID: 483081876}\n  theoryText: {fileID: 2079662713}\n  explainText: {fileID: 337912702}\n  playButton: {fileID: 2073538021}\n  gameSelectScreen: {fileID: 1598943557}\n  subjectName: \"V\\u1EADt l\\xFD\"\n  baseUrl: https://script.google.com/macros/s/AKfycbxxE2R2ZoitgM647aQqnebUcG90lhIlodU0DcyiaZuKkLaVWl6oopI-TkeNM8_KKDWhUw/exec",
+    "overrides": []
+  },
+  {
+    "class": "ChemistryMapController",
+    "object": "ChemistryMapController",
+    "file": "Assets/Scenes/HomePage.unity",
+    "line": 10093,
+    "id": "1713395237",
+    "active": "0",
+    "fields": "  chapterButtons: []\n  theoryPanel: {fileID: 0}\n  backTheoryButton: {fileID: 0}\n  subjectName: \"H\\xF3a h\\u1ECDc\"",
+    "overrides": []
+  },
+  {
+    "class": "HomeMenuController",
+    "object": "HomePage",
+    "file": "Assets/Scenes/HomePage.unity",
+    "line": 10337,
+    "id": "1725893612",
+    "active": "1",
+    "fields": "  txtName: {fileID: 0}\n  txtRole: {fileID: 0}\n  homeCanvas: {fileID: 1725893607}\n  physicsMap: {fileID: 2082637694}\n  chemistryMap: {fileID: 1057441488}\n  biologyMap: {fileID: 0}\n  btnPhysics: {fileID: 1451251368}\n  btnChemistry: {fileID: 1299963921}\n  btnBiology: {fileID: 1076779638}\n  backPhysics: {fileID: 905164448}\n  backChemistry: {fileID: 1651274537}\n  backBiology: {fileID: 0}\n  btnQuit: {fileID: 0}",
+    "overrides": []
+  },
+  {
+    "class": "TheoryPanel",
+    "object": "theory_chemistry",
+    "file": "Assets\\Prefabs\\ngoc\\theory_chemistry.prefab",
+    "line": 1158,
+    "id": "8632652216696221326",
+    "instance": "288550599",
+    "active": "0",
+    "fields": "  titleText: {fileID: 6405504978178435031}\n  theoryText: {fileID: 2536925350357518245}\n  explainText: {fileID: 8531645719604726293}",
+    "overrides": []
+  },
+  {
+    "class": "TheoryToGameMenu",
+    "object": "theory_chemistry",
+    "file": "Assets\\Prefabs\\ngoc\\theory_chemistry.prefab",
+    "line": 1173,
+    "id": "2054954434378178950",
+    "instance": "288550599",
+    "active": "0",
+    "fields": "  theoryScreen: {fileID: 5696051318513616926}\n  gameMenu: {fileID: 0}\n  playButton: {fileID: 3375217401878150698}",
+    "overrides": [
+      {
+        "property": "gameMenu",
+        "value": "",
+        "reference": "{fileID: 845362984}"
+      }
+    ]
+  },
+  {
+    "class": "ChemistryMapController",
+    "object": "Chemistry_map_game",
+    "file": "Assets\\Prefabs\\ngoc\\Chemistry_map_game.prefab",
+    "line": 494,
+    "id": "7283509843862531819",
+    "instance": "834924945",
+    "active": "0",
+    "fields": "  chapterButtons:\n  theoryPanel: {fileID: 0}\n  backTheoryButton: {fileID: 4470230583198202419}\n  subjectName: \"H\\xF3a h\\u1ECDc\"",
+    "overrides": [
+      {
+        "property": "theoryPanel",
+        "value": "",
+        "reference": "{fileID: 790952293}"
+      }
+    ]
+  }
+]

@@ -47,10 +47,20 @@ class Program
                 Check(e.Advance(out error),entry.Key+" can advance after correct work");
             }
             Check(e.Completed&&e.Journal.Count==3,entry.Key+" completed with observations");Check(!e.Advance(out error),"Cannot append duplicate result");
+            for(int stage=2;stage>=0;stage--){
+                Check(e.Back()&&e.Stage==stage&&!e.Completed,entry.Key+" returns to previous step");
+                Check(e.Ready(out error),entry.Key+" restores actions and answers: "+error);
+                Check(e.Journal.Count==stage,entry.Key+" removes later observations on back");
+            }
+            Check(!e.Back(),entry.Key+" cannot navigate before first step");
+            for(int stage=0;stage<3;stage++){CompleteStep(e);Check(e.Advance(out error),entry.Key+" can finish again after going back: "+error);}
+            Check(e.Journal.Count==3,entry.Key+" no duplicate observations after revisiting steps");
             var fresh=Make(entry.Key);Check(!fresh.Completed&&fresh.Stage==0&&fresh.Journal.Count==0,"Replay resets progress");
         }
         var balance=Make("CanKhoiLuong");balance.Act(0);balance.Advance(out _);balance.Act(0);Check(!balance.Ready(out _),"One weight cannot balance 150 g");balance.Act(1);Check(balance.WeightSum()==150&&balance.Ready(out _),"100 + 50 g balances 150 g");balance.Act(1);Check(!balance.Ready(out _),"Removing a weight invalidates balance");
         var volume=Make("DoTheTich");Check(volume.Tasks[0].Numbers[0].Expected==40&&volume.Tasks[1].Numbers[0].Expected==70&&volume.Tasks[2].Numbers[0].Expected==30,"Displacement is after minus before");
+        Check(volume.CylinderCapacityMl()==100,"Chapter-one cylinder is graduated to 100 mL");
+        Check(volume.C.beforeMl/volume.CylinderCapacityMl()==.4f&&volume.C.afterMl/volume.CylinderCapacityMl()==.7f,"Water levels align with the 40 and 70 mL graduations");
         var gravity=Make("TrongLuc");Check(gravity.Tasks[0].Numbers[0].Expected==1&&gravity.Tasks[1].Numbers[0].Expected==2,"g to kg conversion for force");
         var melting=Make("NongChay");CompleteStep(melting);melting.Advance(out _);melting.SetSlider(0);Check(melting.Temperature()==-5,"Ice starts at -5");melting.SetSlider(30);Check(melting.Temperature()==0,"Melting begins at 0");melting.SetSlider(60);Check(melting.Temperature()==0,"Temperature plateau during melting");melting.SetSlider(100);Check(melting.Temperature()==10,"Liquid warms after melting");
         var spring=Make("LucBienDang");CompleteStep(spring);spring.Advance(out _);spring.SetSlider(999);Check(spring.Get("force")==2,"Slider clamps to config range");spring.RecordSample();Check(!spring.Ready(out _),"Cannot skip intermediate observations");spring.SetSlider(float.NaN);Check(spring.Get("force")==2,"NaN slider update ignored");

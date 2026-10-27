@@ -1,0 +1,105 @@
+{
+  "account": "student01",
+  "history": {
+    "status": 200,
+    "success": true,
+    "total": 27,
+    "biologyRows": 0,
+    "practiceBiologyRows": 0,
+    "duelRows": 5,
+    "duelRowsWithSubject": 0,
+    "subjects": [
+      "Hóa học",
+      "Vật lý",
+      "(empty)"
+    ]
+  },
+  "weeklyRank": {
+    "status": 200,
+    "success": true,
+    "rankVersion": "weekly-v2",
+    "players": 0,
+    "weekStart": "26/10/2026",
+    "weekEnd": "01/11/2026"
+  },
+  "biologyLeaderboard": {
+    "status": 200,
+    "arrayResponse": true,
+    "total": 14,
+    "biology": 8,
+    "accountRows": 5,
+    "accountBiologyRows": 5,
+    "accountBiology": [
+      {
+        "subject": "Sinh học",
+        "chapter": "Tất cả",
+        "difficulty": "Tổng hợp",
+        "time": "Sat Dec 30 1899 05:09:00 GMT+0706 (Giờ Đông Dương)"
+      },
+      {
+        "subject": "Sinh học",
+        "chapter": "Tất cả",
+        "difficulty": "Tổng hợp",
+        "time": "Sat Dec 30 1899 05:09:00 GMT+0706 (Giờ Đông Dương)"
+      },
+      {
+        "subject": "Sinh học",
+        "chapter": "Chương 4: Nấm",
+        "difficulty": "Khó",
+        "time": "Sat Dec 30 1899 03:15:00 GMT+0706 (Giờ Đông Dương)"
+      },
+      {
+        "subject": "Sinh học",
+        "chapter": "Chương 4: Nấm",
+        "difficulty": "Khó",
+        "time": "Sat Dec 30 1899 03:50:00 GMT+0706 (Giờ Đông Dương)"
+      },
+      {
+        "subject": "Sinh học",
+        "chapter": "Chương 6: Giới Động vật",
+        "difficulty": "Trung bình",
+        "time": "Sat Dec 30 1899 06:00:00 GMT+0706 (Giờ Đông Dương)"
+      }
+    ]
+  },
+  "currentLeaderboard": {
+    "status": 200,
+    "arrayResponse": true,
+    "total": 14,
+    "biology": 8,
+    "accountRows": 5,
+    "accountBiologyRows": 5,
+    "accountBiology": [
+      {
+        "subject": "Sinh học",
+        "chapter": "Tất cả",
+        "difficulty": "Tổng hợp",
+        "time": "Sat Dec 30 1899 05:09:00 GMT+0706 (Giờ Đông Dương)"
+      },
+      {
+        "subject": "Sinh học",
+        "chapter": "Tất cả",
+        "difficulty": "Tổng hợp",
+        "time": "Sat Dec 30 1899 05:09:00 GMT+0706 (Giờ Đông Dương)"
+      },
+      {
+        "subject": "Sinh học",
+        "chapter": "Chương 4: Nấm",
+        "difficulty": "Khó",
+        "time": "Sat Dec 30 1899 03:15:00 GMT+0706 (Giờ Đông Dương)"
+      },
+      {
+        "subject": "Sinh học",
+        "chapter": "Chương 4: Nấm",
+        "difficulty": "Khó",
+        "time": "Sat Dec 30 1899 03:50:00 GMT+0706 (Giờ Đông Dương)"
+      },
+      {
+        "subject": "Sinh học",
+        "chapter": "Chương 6: Giới Động vật",
+        "difficulty": "Trung bình",
+        "time": "Sat Dec 30 1899 06:00:00 GMT+0706 (Giờ Đông Dương)"
+      }
+    ]
+  }
+}

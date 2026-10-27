@@ -1,0 +1,23 @@
+{
+  "history": [
+    {
+      "username": "student01",
+      "status": 200,
+      "success": true,
+      "total": 27,
+      "fullName": "Nguyễn Văn An"
+    },
+    {
+      "username": "STUDENT01",
+      "status": 200,
+      "success": true,
+      "total": 0,
+      "fullName": "STUDENT01"
+    }
+  ],
+  "rankRetry": {
+    "status": 200,
+    "success": false,
+    "message": "ReferenceError: planetGetProgressRank_ is not defined"
+  }
+}

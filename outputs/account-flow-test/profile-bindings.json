@@ -1,0 +1,83 @@
+[
+  {
+    "object": "84619814",
+    "name": "txtRole",
+    "chain": [
+      {
+        "transform": "84619815",
+        "gameObject": "84619814",
+        "name": "txtRole",
+        "active": "1"
+      },
+      {
+        "transform": "821463704",
+        "gameObject": "821463703",
+        "name": "role",
+        "active": "1"
+      },
+      {
+        "transform": "1725893611",
+        "gameObject": "1725893607",
+        "name": "HomePage",
+        "active": "1"
+      }
+    ],
+    "components": [
+      {
+        "class": "UnityEngine.UI::UnityEngine.UI.Text",
+        "text": "New Text"
+      }
+    ]
+  },
+  {
+    "object": "922391082",
+    "name": "txtFullname",
+    "chain": [
+      {
+        "transform": "922391083",
+        "gameObject": "922391082",
+        "name": "txtFullname",
+        "active": "1"
+      },
+      {
+        "transform": "286308146",
+        "gameObject": "286308145",
+        "name": "'profile '",
+        "active": "1"
+      },
+      {
+        "transform": "1725893611",
+        "gameObject": "1725893607",
+        "name": "HomePage",
+        "active": "1"
+      }
+    ],
+    "components": [
+      {
+        "class": "UnityEngine.UI::UnityEngine.UI.Text",
+        "text": "New Text"
+      }
+    ]
+  },
+  {
+    "object": "1249910512",
+    "name": "txtFullname",
+    "chain": [
+      {
+        "transform": "1249910513",
+        "gameObject": "1249910512",
+        "name": "txtFullname",
+        "active": "1"
+      },
+      {
+        "transform": "1566936794"
+      }
+    ],
+    "components": [
+      {
+        "class": "UnityEngine.UI::UnityEngine.UI.Text",
+        "text": "New Text"
+      }
+    ]
+  }
+]

@@ -1,0 +1,203 @@
+{
+  "questions": [
+    {
+      "subject": "Vật lý",
+      "difficulty": "Dễ",
+      "status": 200,
+      "success": true,
+      "count": 82,
+      "byChapter": [
+        {
+          "chapter": 1,
+          "count": 18
+        },
+        {
+          "chapter": 2,
+          "count": 18
+        },
+        {
+          "chapter": 3,
+          "count": 15
+        },
+        {
+          "chapter": 4,
+          "count": 15
+        },
+        {
+          "chapter": 5,
+          "count": 16
+        }
+      ],
+      "invalid": 0
+    },
+    {
+      "subject": "Vật lý",
+      "difficulty": "Trung bình",
+      "status": 200,
+      "success": true,
+      "count": 87,
+      "byChapter": [
+        {
+          "chapter": 1,
+          "count": 25
+        },
+        {
+          "chapter": 2,
+          "count": 16
+        },
+        {
+          "chapter": 3,
+          "count": 15
+        },
+        {
+          "chapter": 4,
+          "count": 16
+        },
+        {
+          "chapter": 5,
+          "count": 15
+        }
+      ],
+      "invalid": 0
+    },
+    {
+      "subject": "Vật lý",
+      "difficulty": "Khó",
+      "status": 200,
+      "success": true,
+      "count": 69,
+      "byChapter": [
+        {
+          "chapter": 1,
+          "count": 20
+        },
+        {
+          "chapter": 2,
+          "count": 11
+        },
+        {
+          "chapter": 3,
+          "count": 13
+        },
+        {
+          "chapter": 4,
+          "count": 13
+        },
+        {
+          "chapter": 5,
+          "count": 12
+        }
+      ],
+      "invalid": 0
+    },
+    {
+      "subject": "Hóa học",
+      "difficulty": "Dễ",
+      "status": 200,
+      "success": true,
+      "count": 85,
+      "byChapter": [
+        {
+          "chapter": 1,
+          "count": 17
+        },
+        {
+          "chapter": 2,
+          "count": 19
+        },
+        {
+          "chapter": 3,
+          "count": 16
+        },
+        {
+          "chapter": 4,
+          "count": 16
+        },
+        {
+          "chapter": 5,
+          "count": 17
+        }
+      ],
+      "invalid": 0
+    },
+    {
+      "subject": "Hóa học",
+      "difficulty": "Trung bình",
+      "status": 200,
+      "success": true,
+      "count": 80,
+      "byChapter": [
+        {
+          "chapter": 1,
+          "count": 15
+        },
+        {
+          "chapter": 2,
+          "count": 16
+        },
+        {
+          "chapter": 3,
+          "count": 15
+        },
+        {
+          "chapter": 4,
+          "count": 15
+        },
+        {
+          "chapter": 5,
+          "count": 19
+        }
+      ],
+      "invalid": 0
+    },
+    {
+      "subject": "Hóa học",
+      "difficulty": "Khó",
+      "status": 200,
+      "success": true,
+      "count": 59,
+      "byChapter": [
+        {
+          "chapter": 1,
+          "count": 11
+        },
+        {
+          "chapter": 2,
+          "count": 11
+        },
+        {
+          "chapter": 3,
+          "count": 12
+        },
+        {
+          "chapter": 4,
+          "count": 12
+        },
+        {
+          "chapter": 5,
+          "count": 13
+        }
+      ],
+      "invalid": 0
+    }
+  ],
+  "essayStarts": [
+    {
+      "subject": "Vật lý",
+      "chapter": 1,
+      "difficulty": "Dễ",
+      "status": 400,
+      "error": "Câu TL_BIO_01_E07 có ảnh đề. Bản hiện tại cần câu đề bằng chữ; hãy bỏ ảnh bắt buộc hoặc bổ sung nội dung ảnh vào Question."
+    }
+  ],
+  "issues": [
+    {
+      "kind": "essayStart",
+      "subject": "Vật lý",
+      "chapter": 1,
+      "difficulty": "Dễ",
+      "status": 400,
+      "error": "Câu TL_BIO_01_E07 có ảnh đề. Bản hiện tại cần câu đề bằng chữ; hãy bỏ ảnh bắt buộc hoặc bổ sung nội dung ảnh vào Question."
+    }
+  ]
+}

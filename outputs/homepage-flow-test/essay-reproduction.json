@@ -1,0 +1,38 @@
+[
+  {
+    "subject": "Vật lý",
+    "game": "Football",
+    "status": 400,
+    "error": "Câu TL_BIO_01_E07 có ảnh đề. Bản hiện tại cần câu đề bằng chữ; hãy bỏ ảnh bắt buộc hoặc bổ sung nội dung ảnh vào Question."
+  },
+  {
+    "subject": "Vật lý",
+    "game": "Sheep",
+    "status": 400,
+    "error": "Câu TL_BIO_01_E07 có ảnh đề. Bản hiện tại cần câu đề bằng chữ; hãy bỏ ảnh bắt buộc hoặc bổ sung nội dung ảnh vào Question."
+  },
+  {
+    "subject": "Vật lý",
+    "game": "Cave",
+    "status": 400,
+    "error": "Câu TL_BIO_01_E07 có ảnh đề. Bản hiện tại cần câu đề bằng chữ; hãy bỏ ảnh bắt buộc hoặc bổ sung nội dung ảnh vào Question."
+  },
+  {
+    "subject": "Hóa học",
+    "game": "Football",
+    "status": 400,
+    "error": "Câu TL_BIO_01_E07 có ảnh đề. Bản hiện tại cần câu đề bằng chữ; hãy bỏ ảnh bắt buộc hoặc bổ sung nội dung ảnh vào Question."
+  },
+  {
+    "subject": "Hóa học",
+    "game": "Sheep",
+    "status": 400,
+    "error": "Câu TL_BIO_01_E07 có ảnh đề. Bản hiện tại cần câu đề bằng chữ; hãy bỏ ảnh bắt buộc hoặc bổ sung nội dung ảnh vào Question."
+  },
+  {
+    "subject": "Hóa học",
+    "game": "Cave",
+    "status": 400,
+    "error": "Câu TL_BIO_01_E07 có ảnh đề. Bản hiện tại cần câu đề bằng chữ; hãy bỏ ảnh bắt buộc hoặc bổ sung nội dung ảnh vào Question."
+  }
+]
