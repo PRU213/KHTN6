@@ -1,4 +1,4 @@
-﻿%YAML 1.1
+%YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
 --- !u!29 &1
 OcclusionCullingSettings:
@@ -401,10 +401,10 @@ MonoBehaviour:
   txtLoading: {fileID: 1000603}
   txtSub: {fileID: 1000703}
   spinner: {fileID: 1000511}
-  spinSpeed: 120
   spinnerSprite: {fileID: 2513227999935615592, guid: d9012dea41eeff445b00d464c2e356f0, type: 3}
-    fontRegular: {fileID: 11400000, guid: 49b3f397ab321d34486c4ca931d8869b, type: 2}
-    fontBold: {fileID: 11400000, guid: 49b3f397ab321d34486c4ca931d8869b, type: 2}
+  spinSpeed: 120
+  fontRegular: {fileID: 11400000, guid: 49b3f397ab321d34486c4ca931d8869b, type: 2}
+  fontBold: {fileID: 11400000, guid: 49b3f397ab321d34486c4ca931d8869b, type: 2}
 --- !u!1 &1000400
 GameObject:
   m_ObjectHideFlags: 0
@@ -837,8 +837,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "Vui l\xF2ng ch\u1EDD trong gi\xE2y l\xE1t..."
   m_isRightToLeft: 0
-    m_fontAsset: {fileID: 11400000, guid: 49b3f397ab321d34486c4ca931d8869b, type: 2}
-    m_sharedMaterial: {fileID: 3766345937060187176, guid: 49b3f397ab321d34486c4ca931d8869b, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 49b3f397ab321d34486c4ca931d8869b, type: 2}
+  m_sharedMaterial: {fileID: 3766345937060187176, guid: 49b3f397ab321d34486c4ca931d8869b, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
