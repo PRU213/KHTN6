@@ -1,4 +1,4 @@
-#if UNITY_EDITOR
+﻿#if UNITY_EDITOR
 using System.IO;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -15,7 +15,7 @@ using UnityEngine.UI;
 public static class ChonBaiSetupTool
 {
     public const string CHONBAI_SCENE_PATH = "Assets/Scenes/Biology/ChonBai.unity";
-    public const string WEBAPP_URL = "https://script.google.com/macros/s/AKfycbxxE2R2ZoitgM647aQqnebUcG90lhIlodU0DcyiaZuKkLaVWl6oopI-TkeNM8_KKDWhUw/exec";
+    public const string WEBAPP_URL = "https://script.google.com/macros/s/AKfycbxLHvShuipgPg7x28IikDmzU7wHoE2e3ai9rhuoEnN50UsFUAWIPTG_nneHOxz-YmaY/exec";
     public const string SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/1DcJwlN_fUDdcaQ6IfnlkMJApgWuEUqMhyZv9Kn8vfWo/export?format=csv&gid=1463734910";
 
     [MenuItem("Tools/Sinh Hoc/Setup ChonBai Scene")]

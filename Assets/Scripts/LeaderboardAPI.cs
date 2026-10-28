@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.Networking;
 using System.Collections;
 using System.Collections.Generic;
@@ -26,7 +26,7 @@ public class LeaderboardAPI : MonoBehaviour
     public static LeaderboardAPI Instance { get; private set; }
     
     // YÊU CẦU: Dán link Web App URL của Google Apps Script vào đây (sau khi Deploy)
-    public string webAppUrl = "https://script.google.com/macros/s/AKfycbxxE2R2ZoitgM647aQqnebUcG90lhIlodU0DcyiaZuKkLaVWl6oopI-TkeNM8_KKDWhUw/exec";
+    public string webAppUrl = "https://script.google.com/macros/s/AKfycbxLHvShuipgPg7x28IikDmzU7wHoE2e3ai9rhuoEnN50UsFUAWIPTG_nneHOxz-YmaY/exec";
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     static void Initialize()
@@ -65,14 +65,20 @@ public class LeaderboardAPI : MonoBehaviour
     {
         WWWForm form = new WWWForm();
         form.AddField("action", "saveLeaderboard");
-        form.AddField("Username", username);
-        form.AddField("Fullname", fullname);
-        form.AddField("Subject", subject);
-        form.AddField("Chapter", chapter);
-        form.AddField("Difficulty", difficulty);
-        form.AddField("Time", time);
+        form.AddField("Username", username ?? "");
+        form.AddField("Fullname", fullname ?? "");
+        form.AddField("Subject", subject ?? "");
+        form.AddField("Chapter", chapter ?? "");
+        form.AddField("Difficulty", difficulty ?? "");
+        form.AddField("Time", time ?? "");
+        form.AddField("Duration", time ?? ""); // Lưu thời gian hoàn thành vào Duration ở History
+        form.AddField("Opponent", "Máy AI");
+        form.AddField("Mode", "Luyện tập");
+        form.AddField("Result", "THẮNG");
+        form.AddField("Score", "100");
 
-        using (UnityWebRequest www = UnityWebRequest.Post(webAppUrl, form))
+        string cleanUrl = (webAppUrl ?? "").Trim();
+        using (UnityWebRequest www = UnityWebRequest.Post(cleanUrl, form))
         {
             www.certificateHandler = new BypassCertificate();
             yield return www.SendWebRequest();
@@ -85,6 +91,73 @@ public class LeaderboardAPI : MonoBehaviour
             else
             {
                 Debug.Log("Score saved successfully!");
+                onComplete?.Invoke(true);
+            }
+        }
+    }
+
+    public void SaveHistory(
+        string username,
+        string fullname,
+        string difficulty,
+        string opponent,
+        string mode,
+        string result,
+        int score,
+        string duration,
+        string subject,
+        string chapter,
+        Action<bool> onComplete = null)
+    {
+        if (string.IsNullOrEmpty(webAppUrl) || webAppUrl == "YOUR_WEB_APP_URL_HERE")
+        {
+            Debug.LogWarning("[LeaderboardAPI] Chưa cài đặt Web App URL!");
+            onComplete?.Invoke(false);
+            return;
+        }
+        StartCoroutine(PostHistory(username, fullname, difficulty, opponent, mode, result, score, duration, subject, chapter, onComplete));
+    }
+
+    IEnumerator PostHistory(
+        string username,
+        string fullname,
+        string difficulty,
+        string opponent,
+        string mode,
+        string result,
+        int score,
+        string duration,
+        string subject,
+        string chapter,
+        Action<bool> onComplete)
+    {
+        WWWForm form = new WWWForm();
+        form.AddField("action", "saveHistory");
+        form.AddField("Username", username ?? "");
+        form.AddField("Fullname", fullname ?? "");
+        form.AddField("Difficulty", difficulty ?? "");
+        form.AddField("Opponent", opponent ?? "Máy AI");
+        form.AddField("Mode", mode ?? "Luyện tập");
+        form.AddField("Result", result ?? "THẮNG");
+        form.AddField("Score", score.ToString());
+        form.AddField("Duration", duration ?? "");
+        form.AddField("Subject", subject ?? "");
+        form.AddField("Chapter", chapter ?? "");
+
+        string cleanUrl = (webAppUrl ?? "").Trim();
+        using (UnityWebRequest www = UnityWebRequest.Post(cleanUrl, form))
+        {
+            www.certificateHandler = new BypassCertificate();
+            yield return www.SendWebRequest();
+
+            if (www.result != UnityWebRequest.Result.Success)
+            {
+                Debug.LogError("[LeaderboardAPI] Lỗi lưu History: " + www.error);
+                onComplete?.Invoke(false);
+            }
+            else
+            {
+                Debug.Log("[LeaderboardAPI] Đã lưu History thành công! " + www.downloadHandler.text);
                 onComplete?.Invoke(true);
             }
         }

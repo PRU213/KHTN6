@@ -65,15 +65,19 @@ public class VictoryDisplay : MonoBehaviour
                 rt.anchoredPosition = new Vector2(0, -250); 
                 rt.sizeDelta = new Vector2(800, 150);
 
-                // --- NEW LOGIC: Save Score to API ---
+                // --- NEW LOGIC: Save Score to LeaderBoard and History ---
                 string user = PlayerPrefs.GetString("Username", "Unknown");
                 string full = PlayerPrefs.GetString("Fullname", "Unknown");
                 string chapter = PlayerPrefs.GetString("SelectedChapter", "Tất cả");
                 string diff = PlayerPrefs.GetString("SelectedDifficulty", "Tổng hợp");
+                int score = (GameData.Instance != null && GameData.Instance.defeatedEnemies != null && GameData.Instance.defeatedEnemies.Count > 0)
+                    ? Mathf.Max(100, GameData.Instance.defeatedEnemies.Count * 10)
+                    : 100;
                 
                 if (LeaderboardAPI.Instance != null)
                 {
                     LeaderboardAPI.Instance.SaveScore(user, full, "Sinh học", chapter, diff, timeStr, null);
+                    LeaderboardAPI.Instance.SaveHistory(user, full, diff, "Máy AI", "Luyện tập", "THẮNG", score, timeStr, "Sinh học", chapter, null);
                 }
 
                 GameData.Instance.startTime = 0;
