@@ -21,6 +21,7 @@ namespace KHTN6.Teacher
         private readonly List<TeacherStudent> students = new List<TeacherStudent>();
         private List<TeacherProgress> progress = new List<TeacherProgress>();
         private readonly List<string> subjectIds = new List<string>();
+        private List<TeacherLessonPlan> lessonPlans = new List<TeacherLessonPlan>();
         private readonly List<string> chapters = new List<string>();
         private readonly Dictionary<string, Image> studentRows = new Dictionary<string, Image>();
         private TeacherStudent selectedStudent;
@@ -50,6 +51,13 @@ namespace KHTN6.Teacher
                 previewPosition = view.imagePreview.rectTransform.anchoredPosition;
             }
             AudioListener.volume = Mathf.Clamp01(PlayerPrefs.GetFloat("TeacherVolume", AudioListener.volume));
+            if (FindAnyObjectByType<UnityEngine.EventSystems.EventSystem>(FindObjectsInactive.Include) == null)
+            {
+                var esGo = new GameObject("EventSystem");
+                esGo.AddComponent<UnityEngine.EventSystems.EventSystem>();
+                esGo.AddComponent<UnityEngine.EventSystems.StandaloneInputModule>();
+            }
+
 
             SetLabel("AccountName", string.IsNullOrWhiteSpace(GameSession.Fullname)
                 ? PlayerPrefs.GetString("Fullname", "Giáo viên") : GameSession.Fullname);
@@ -61,8 +69,8 @@ namespace KHTN6.Teacher
             Bind("Navigate_02_Trac_nghiem", () => Navigate("GiaoVienTracNghiem"));
             Bind("Navigate_03_Tu_luan", () => Navigate("GiaoVienTuLuan"));
             Bind("Navigate_04_Tien_do", () => Navigate("GiaoVienTienDo"));
-            Bind("ResetButton", ResetForm);
-            Bind("SaveButton", Save);
+            Bind("Navigate_05_Giao_An", () => Navigate("GiaoVienGiaoAn"));
+            if (view.screen != TeacherScreen.LessonPlan) { Bind("ResetButton", ResetForm); Bind("SaveButton", Save); }
             Bind("PickImage", PickImage);
             Bind("ImageUploadArea", PickImage);
             Bind("RemoveImage", RemoveImage);
@@ -83,6 +91,21 @@ namespace KHTN6.Teacher
                 ClearProgressSelection();
                 LoadProgress();
             }
+            else if (view.screen == TeacherScreen.LessonPlan)
+            {
+                SetOptions("monID", TeacherSheetService.StandardSubjects);
+                SetOptions("TrangThai", new[] { "Đã duyệt", "Chờ duyệt", "Đang soạn thảo" });
+                subjectIds.Clear();
+                subjectIds.AddRange(TeacherSheetService.StandardSubjects);
+                Listen("monID", _ => OnLessonPlanSubjectChanged());
+                Listen(ChapterControl, val => OnLessonPlanChapterChanged(val));
+                Listen("Chương/Chủ đề", val => OnLessonPlanChapterChanged(val));
+                Listen("Chương / Chủ đề", val => OnLessonPlanChapterChanged(val));
+                Bind("SaveButton", SaveLessonPlan);
+                Bind("ResetButton", ResetLessonPlanForm);
+                Bind("RefreshLessonPlans", () => LoadAllLessonPlans(true));
+                LoadAllLessonPlans();
+            }
             else
             {
                 SetOptions("difficulty", new[] { "Dễ", "Trung bình", "Khó" });
@@ -100,7 +123,239 @@ namespace KHTN6.Teacher
             }
         }
 
-        private string ChapterControl { get { return view.screen == TeacherScreen.Essay ? "Chương/Chủ đề" : "Chương / Chủ đề"; } }
+        private string ChapterControl
+        {
+            get
+            {
+                if (view != null)
+                {
+                    if (view.Dropdown("Chương/Chủ đề") != null) return "Chương/Chủ đề";
+                    if (view.Dropdown("Chương / Chủ đề") != null) return "Chương / Chủ đề";
+                }
+                return view != null && (view.screen == TeacherScreen.Essay || view.screen == TeacherScreen.LessonPlan) ? "Chương/Chủ đề" : "Chương / Chủ đề";
+            }
+        }
+
+
+        private void LoadAllLessonPlans(bool forceRefresh = false)
+        {
+            LoadLessonPlanData(forceRefresh);
+        }
+
+        private void FilterLessonPlans()
+        {
+            UpdateLessonPlanChapters();
+        }
+
+        private void OnLessonPlanSubjectChanged()
+        {
+            UpdateLessonPlanChapters();
+        }
+
+        private void LoadLessonPlanData(bool forceRefresh = false)
+        {
+            SetBusy(true);
+            SetStatus("Đang tải dữ liệu giáo án từ Google Sheet…");
+            service.LoadCatalog((data, catError) =>
+            {
+                if (this == null) return;
+                catalog = data;
+                subjectIds.Clear();
+                var names = new List<string>();
+                if (data != null && data.Subjects != null && data.Subjects.Count > 0)
+                {
+                    foreach (var subject in data.Subjects)
+                    {
+                        subjectIds.Add(subject.Id);
+                        names.Add(subject.Name);
+                    }
+                }
+                else
+                {
+                    subjectIds.AddRange(TeacherSheetService.StandardSubjects);
+                    names.AddRange(TeacherSheetService.StandardSubjects);
+                }
+                SetOptions("monID", names);
+
+                service.LoadLessonPlans((plans, planError) =>
+                {
+                    if (this == null) return;
+                    lessonPlans = plans ?? new List<TeacherLessonPlan>();
+                    if (catalog != null) catalog.LessonPlans = lessonPlans;
+                    SetBusy(false);
+                    UpdateLessonPlanChapters();
+                    string err = string.Join(" ", new[] { catError, planError }.Where(e => !string.IsNullOrWhiteSpace(e)));
+                    SetStatus(err.Length > 0 ? err : "Đã tải xong giáo án từ Google Sheet.", err.Length > 0);
+                });
+            }, forceRefresh);
+        }
+
+        private void UpdateLessonPlanChapters()
+        {
+            if (view.screen != TeacherScreen.LessonPlan) return;
+            string subject = SelectedSubject();
+            var filtered = lessonPlans.Where(p => Same(TeacherSheetService.NormalizeSubject(p.monID), subject)).ToList();
+            var options = new List<string>();
+            foreach (var p in filtered)
+            {
+                string label = (!string.IsNullOrEmpty(p.ChapterOrder) && !string.IsNullOrEmpty(p.ChapterTitle))
+                    ? p.ChapterOrder + ": " + p.ChapterTitle
+                    : (!string.IsNullOrEmpty(p.ChapterTitle) ? p.ChapterTitle : p.ChapterID);
+                options.Add(label);
+            }
+            options.Add("+ Thêm chương giáo án mới");
+            SetOptions(ChapterControl, options);
+
+            var chapterDropdown = view.Dropdown(ChapterControl);
+            if (chapterDropdown != null)
+            {
+                chapterDropdown.onValueChanged.RemoveAllListeners();
+                chapterDropdown.onValueChanged.AddListener(val =>
+                {
+                    if (!changingOptions) OnLessonPlanChapterChanged(val);
+                });
+            }
+
+            OnLessonPlanChapterChanged(0);
+        }
+
+        private void SetEditable(string name, bool editable)
+        {
+            var field = view.Input(name);
+            if (field != null)
+            {
+                field.readOnly = !editable;
+                field.interactable = editable;
+            }
+        }
+
+        private void OnLessonPlanChapterChanged(int forcedIndex = -1)
+        {
+            if (view.screen != TeacherScreen.LessonPlan) return;
+            string subject = SelectedSubject();
+            var filtered = lessonPlans.Where(p => Same(TeacherSheetService.NormalizeSubject(p.monID), subject)).ToList();
+            var dropdown = view.Dropdown(ChapterControl);
+            int idx = forcedIndex >= 0 ? forcedIndex : (dropdown != null ? dropdown.value : 0);
+
+            if (idx >= 0 && idx < filtered.Count)
+            {
+                var plan = filtered[idx];
+                Put("CauHoiID", plan.ChapterID);
+                Put("Question", plan.Summary);
+                Put("DapAnThamKhao", plan.KeyPoints);
+                Put("HuongDanChamAI", plan.FormulaNote);
+                Put("NguonTao", "Giáo viên biên soạn");
+                Put("GiaoVienID", service.CurrentTeacherId);
+                Put("NgayTao", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture));
+                ReadOnly("CauHoiID"); ReadOnly("GiaoVienID"); ReadOnly("NgayTao");
+                SetEditable("Question", true);
+                SetEditable("DapAnThamKhao", true);
+                SetEditable("HuongDanChamAI", true);
+                SetEditable("NguonTao", true);
+                SetStatus("Đang xem/chỉnh sửa: " + plan.ChapterOrder + " - " + plan.ChapterTitle);
+            }
+            else
+            {
+                int nextNum = filtered.Count + 1;
+                string nextOrder = "Chương " + nextNum;
+                string nextId = TeacherSheetService.GenerateLessonPlanId(subject, nextOrder);
+                Put("CauHoiID", nextId);
+                Put("Question", "");
+                Put("DapAnThamKhao", "");
+                Put("HuongDanChamAI", "");
+                Put("NguonTao", "Giáo viên biên soạn");
+                Put("GiaoVienID", service.CurrentTeacherId);
+                Put("NgayTao", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture));
+                ReadOnly("CauHoiID"); ReadOnly("GiaoVienID"); ReadOnly("NgayTao");
+                SetEditable("Question", true);
+                SetEditable("DapAnThamKhao", true);
+                SetEditable("HuongDanChamAI", true);
+                SetEditable("NguonTao", true);
+                SetStatus("Soạn giáo án mới cho " + subject + " (" + nextOrder + ").");
+            }
+        }
+
+        private void SaveLessonPlan()
+        {
+            if (busy) return;
+            string subject = SelectedSubject();
+            if (string.IsNullOrEmpty(subject))
+            {
+                SetStatus("Vui lòng chọn môn học.", true);
+                return;
+            }
+
+            if (!Require("Question", "tóm tắt chương") || !Require("DapAnThamKhao", "trọng tâm kiến thức"))
+                return;
+
+            string chapterId = Read("CauHoiID");
+            var dropdown = view.Dropdown(ChapterControl);
+            int idx = dropdown != null ? dropdown.value : 0;
+            var filtered = lessonPlans.Where(p => Same(TeacherSheetService.NormalizeSubject(p.monID), subject)).ToList();
+
+            string chapterOrder = "";
+            string chapterTitle = "";
+
+            if (idx >= 0 && idx < filtered.Count)
+            {
+                chapterOrder = filtered[idx].ChapterOrder;
+                chapterTitle = filtered[idx].ChapterTitle;
+            }
+            else
+            {
+                chapterOrder = "Chương " + (filtered.Count + 1);
+                chapterTitle = Read("Question");
+                if (chapterTitle.Length > 40) chapterTitle = chapterTitle.Substring(0, 40) + "…";
+            }
+
+            var plan = new TeacherLessonPlan
+            {
+                ChapterID = chapterId,
+                monID = subject,
+                ChapterOrder = chapterOrder,
+                ChapterTitle = chapterTitle,
+                Summary = Read("Question"),
+                KeyPoints = Read("DapAnThamKhao"),
+                FormulaNote = Read("HuongDanChamAI"),
+                IconOrImage = string.IsNullOrWhiteSpace(imageData) ? "none" : imageData
+            };
+
+            SetBusy(true);
+            SetStatus("Đang lưu giáo án lên Google Sheet…");
+            service.SaveLessonPlan(plan, result =>
+            {
+                if (this == null) return;
+                SetBusy(false);
+                if (result == null) { SetStatus("Không nhận được phản hồi lưu từ Google Sheet.", true); return; }
+
+                if (result.RemoteSaved || result.Success)
+                {
+                    var existing = lessonPlans.FirstOrDefault(p => Same(p.ChapterID, plan.ChapterID));
+                    if (existing != null)
+                    {
+                        existing.Summary = plan.Summary;
+                        existing.KeyPoints = plan.KeyPoints;
+                        existing.FormulaNote = plan.FormulaNote;
+                        existing.IconOrImage = plan.IconOrImage;
+                    }
+                    else
+                    {
+                        lessonPlans.Add(plan);
+                        UpdateLessonPlanChapters();
+                    }
+                }
+
+                SetStatus(result.Message, !result.RemoteSaved);
+            });
+        }
+
+        private void ResetLessonPlanForm()
+        {
+            if (busy) return;
+            var dropdown = view.Dropdown(ChapterControl);
+            OnLessonPlanChapterChanged(dropdown != null ? dropdown.value : 0);
+            RemoveImage();
+        }
 
         private void Bind(string name, UnityAction action)
         {
@@ -245,7 +500,17 @@ namespace KHTN6.Teacher
         private void Put(string name, string value)
         {
             var input = view.Input(name);
-            if (input != null) input.SetTextWithoutNotify(value ?? "");
+            if (input != null)
+            {
+                input.text = value ?? "";
+                if (input.textComponent != null) input.textComponent.text = value ?? "";
+                input.ForceLabelUpdate();
+            }
+            else
+            {
+                var label = view.Label(name);
+                if (label != null) label.text = value ?? "";
+            }
         }
 
         private string Choice(string name)
@@ -316,9 +581,9 @@ namespace KHTN6.Teacher
         {
             if (this == null) return;
             SetBusy(false);
-            if (result == null) { SetStatus("Không nhận được phản hồi lưu. Nội dung vẫn được giữ trên màn hình.", true); return; }
+            if (result == null) { SetStatus("Không nhận được phản hồi lưu từ Google Sheet.", true); return; }
             bool remoteSaved = result.Success && result.RemoteSaved;
-            if ((remoteSaved || result.LocalDraftSaved) && !string.IsNullOrEmpty(result.Id))
+            if (remoteSaved && !string.IsNullOrEmpty(result.Id))
             {
                 Put(idField, result.Id);
                 if (catalog != null)
@@ -336,8 +601,6 @@ namespace KHTN6.Teacher
                 }
             }
             SetStatus(result.Message, !remoteSaved);
-            if (result.LocalDraftSaved && !string.IsNullOrEmpty(result.Path))
-                Debug.Log("Bản nháp câu hỏi: " + result.Path);
         }
 
         private void PickImage()
@@ -569,7 +832,7 @@ namespace KHTN6.Teacher
         private void SetBusy(bool value)
         {
             busy = value;
-            if (view.screen == TeacherScreen.Quiz || view.screen == TeacherScreen.Essay)
+            if (view.screen == TeacherScreen.Quiz || view.screen == TeacherScreen.Essay || view.screen == TeacherScreen.LessonPlan)
             {
                 foreach (var input in view.GetComponentsInChildren<TMP_InputField>(true))
                     if (!IsSettingsControl(input.transform)) input.interactable = !value;

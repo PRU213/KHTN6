@@ -21,6 +21,11 @@ namespace KHTN6.Teacher
         public string Question, DapAnThamKhao, HuongDanChamAI, HinhAnh, GiaoVienID, NgayTao;
     }
 
+    [Serializable] public class TeacherLessonPlan
+    {
+        public string ChapterID, monID, ChapterOrder, ChapterTitle, Summary, KeyPoints, FormulaNote, IconOrImage;
+    }
+
     [Serializable] public class TeacherProgress
     {
         public string TienDoID, UserID, ChuongChuDe, SoLanLam, DiemCaoNhat;
@@ -43,6 +48,7 @@ namespace KHTN6.Teacher
         public int MaxQuizNumber = 726;
         public HashSet<string> ExistingQuestionIds = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         public HashSet<string> ExistingEssayIds = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        public List<TeacherLessonPlan> LessonPlans = new List<TeacherLessonPlan>();
 
         public TeacherCatalog()
         {
@@ -264,6 +270,33 @@ namespace KHTN6.Teacher
             if (string.IsNullOrWhiteSpace(essay.NgayTao)) essay.NgayTao = DateTime.UtcNow.AddHours(7).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
             StartCoroutine(SaveRoutine("saveEssay", "TuLuan", essay.CauHoiID, null, essay, completed));
         }
+        public void SaveLessonPlan(TeacherLessonPlan plan, Action<TeacherSaveResult> completed)
+        {
+            if (plan == null) { completed?.Invoke(new TeacherSaveResult { Message = "Không có dữ liệu giáo án." }); return; }
+            if (string.IsNullOrWhiteSpace(plan.ChapterID))
+                plan.ChapterID = GenerateLessonPlanId(plan.monID, plan.ChapterOrder);
+            StartCoroutine(SaveLessonPlanRoutine(plan, completed));
+        }
+
+        public void LoadLessonPlans(Action<List<TeacherLessonPlan>, string> completed)
+        {
+            StartCoroutine(LoadLessonPlansRoutine(completed));
+        }
+
+        public static string GenerateLessonPlanId(string subject, string chapterOrder)
+        {
+            string subCode = "PHY";
+            string normSub = NormalizeSubject(subject);
+            if (normSub == "Hóa học") subCode = "CHM";
+            else if (normSub == "Sinh học") subCode = "BIO";
+            string chapNum = "01";
+            if (!string.IsNullOrEmpty(chapterOrder))
+            {
+                var match = System.Text.RegularExpressions.Regex.Match(chapterOrder, @"\d+");
+                if (match.Success) { int n; if (int.TryParse(match.Value, out n)) chapNum = n.ToString("D2"); }
+            }
+            return "CH_" + subCode + "_" + chapNum;
+        }
 
         /// <summary>Credentials are transmitted only to the configured HTTPS endpoint and are never persisted.</summary>
         public void AuthenticateTeacher(string username, string password, Action<bool, string> completed)
@@ -382,6 +415,116 @@ namespace KHTN6.Teacher
                 });
             }
             completed?.Invoke(items, error);
+        }
+
+        private IEnumerator LoadLessonPlansRoutine(Action<List<TeacherLessonPlan>, string> completed)
+        {
+            List<Dictionary<string, string>> rows = null;
+            string error = null;
+            yield return ReadRows("Theory", (r, e) => { rows = r; error = e; });
+            var items = new List<TeacherLessonPlan>();
+            if (error == null) foreach (var row in rows)
+            {
+                string id = Value(row, "ChapterID", "MãChương", "Mã chương (ChapterID)");
+                if (string.IsNullOrEmpty(id)) continue;
+                items.Add(new TeacherLessonPlan
+                {
+                    ChapterID = id,
+                    monID = Value(row, "monID", "monId"),
+                    ChapterOrder = Value(row, "ChapterOrder", "Thứ tự chương", "ThứTựChương"),
+                    ChapterTitle = Value(row, "ChapterTitle", "Tên chương (Chapter Title)", "TênChương"),
+                    Summary = Value(row, "Summary", "Tóm tắt chương (Summary)", "TómTắtChương"),
+                    KeyPoints = Value(row, "KeyPoints", "Trọng tâm kiến thức (KeyPoints)", "TrọngTâmKiếnThức"),
+                    FormulaNote = Value(row, "FormulaNote", "Công thức / Ghi nhớ (Formula_Note)", "CôngThức", "Formula_Note")
+                });
+            }
+            completed?.Invoke(items, error);
+        }
+
+        private IEnumerator SaveLessonPlanRoutine(TeacherLessonPlan plan, Action<TeacherSaveResult> completed)
+        {
+            var result = new TeacherSaveResult { Id = plan.ChapterID };
+
+            if (!ValidEndpoint())
+            {
+                result.Success = false;
+                result.RemoteSaved = false;
+                result.Message = "Chưa kết nối URL Google Sheet.";
+                completed?.Invoke(result);
+                yield break;
+            }
+
+            WWWForm form = new WWWForm();
+            form.AddField("action", "saveLessonPlan");
+            form.AddField("sheet", "Theory");
+            form.AddField("ChapterID", plan.ChapterID ?? "");
+            form.AddField("chapterId", plan.ChapterID ?? "");
+            form.AddField("monID", plan.monID ?? "");
+            form.AddField("monId", plan.monID ?? "");
+            form.AddField("ChapterOrder", plan.ChapterOrder ?? "");
+            form.AddField("chapterOrder", plan.ChapterOrder ?? "");
+            form.AddField("ChapterTitle", plan.ChapterTitle ?? "");
+            form.AddField("chapterTitle", plan.ChapterTitle ?? "");
+            form.AddField("Summary", plan.Summary ?? "");
+            form.AddField("summary", plan.Summary ?? "");
+            form.AddField("KeyPoints", plan.KeyPoints ?? "");
+            form.AddField("keyPoints", plan.KeyPoints ?? "");
+            form.AddField("FormulaNote", plan.FormulaNote ?? "");
+            form.AddField("formulaNote", plan.FormulaNote ?? "");
+            form.AddField("IconOrImage", string.IsNullOrWhiteSpace(plan.IconOrImage) ? "none" : plan.IconOrImage);
+            form.AddField("iconImage", string.IsNullOrWhiteSpace(plan.IconOrImage) ? "none" : plan.IconOrImage);
+            form.AddField("payload", JsonUtility.ToJson(plan));
+
+            string replyText = null;
+            string error = null;
+            long responseCode = 0;
+            using (var request = UnityWebRequest.Post(ApiUrl, form))
+            {
+                request.certificateHandler = new BypassCertificate();
+                request.timeout = 35;
+                yield return request.SendWebRequest();
+                responseCode = request.responseCode;
+                if (request.result != UnityWebRequest.Result.Success)
+                {
+                    if (responseCode == 401)
+                        error = "Google Sheet báo lỗi 401 Unauthorized: Vui lòng vào Apps Script chọn 'Who has access: Anyone' khi Deploy.";
+                    else
+                        error = "Lỗi kết nối đến Google Sheet: " + request.error;
+                }
+                else
+                {
+                    replyText = request.downloadHandler.text;
+                }
+            }
+
+            bool remoteSaved = false;
+            if (!string.IsNullOrEmpty(replyText))
+            {
+                string lower = replyText.ToLowerInvariant();
+                if (lower.Contains("accounts.google.com/signin") || lower.Contains("accounts.google.com/v3/signin"))
+                    error = "Google Sheet yêu cầu đăng nhập: Vui lòng Deploy Apps Script với mục 'Who has access: Anyone'.";
+                else if (lower.Contains("thành công") || lower.Contains("thanh cong") || lower.Contains("\"success\":true") || lower.Contains("\"saved\":true"))
+                    remoteSaved = true;
+                else if (lower.Contains("invalid post action"))
+                    error = "Apps Script trên Sheet cần cập nhật và Deploy phiên bản mới chứa hàm 'saveLessonPlan'.";
+                else
+                {
+                    try
+                    {
+                        var rep = JsonUtility.FromJson<ApiReply>(replyText);
+                        if (rep != null && (rep.success || rep.saved)) remoteSaved = true;
+                        else if (rep != null && !string.IsNullOrWhiteSpace(rep.message)) error = rep.message;
+                    }
+                    catch { error = "Phản hồi từ Google Sheet: " + replyText; }
+                }
+            }
+
+            result.RemoteSaved = remoteSaved;
+            result.Success = remoteSaved;
+            result.Message = remoteSaved
+                ? "Đã lưu giáo án lên Google Sheet thành công! Mã: " + plan.ChapterID
+                : (error ?? "Chưa nhận được xác nhận từ Google Sheet.");
+            completed?.Invoke(result);
         }
 
         private IEnumerator ReadRows(string sheet, Action<List<Dictionary<string, string>>, string> completed)
@@ -525,9 +668,7 @@ namespace KHTN6.Teacher
 
             result.RemoteSaved = remoteSaved;
             result.Success = remoteSaved;
-            result.Message = remoteSaved
-                ? "Đã lưu câu hỏi lên Google Sheet thành công! Mã: " + id
-                : ((error ?? "Chưa nhận được xác nhận từ Google Sheet.") + (result.LocalDraftSaved ? " (Bản nháp đã được lưu an toàn trên máy)" : ""));
+            result.Message = remoteSaved ? "Đã lưu câu hỏi lên Google Sheet thành công! Mã: " + id : (error ?? "Chưa nhận được xác nhận từ Google Sheet.");
             completed?.Invoke(result);
         }
 
@@ -572,6 +713,12 @@ namespace KHTN6.Teacher
         {
             return WriteCsv(q.CauHoiID, new[] { "CauHoiID", "monID", "Chương/Chủ đề", "difficulty", "Question", "HinhAnh", "DapAnThamKhao", "HuongDanChamAI", "DiemToiDa", "TrangThai", "GiaoVienID", "NguonTao", "NgayTao" },
                 new[] { q.CauHoiID, q.monID, q.chapter, q.difficulty, q.Question, q.HinhAnh, q.DapAnThamKhao, q.HuongDanChamAI, q.DiemToiDa, q.TrangThai, q.GiaoVienID, q.NguonTao, q.NgayTao });
+        }
+
+        public string ExportLessonPlan(TeacherLessonPlan q)
+        {
+            return WriteCsv(q.ChapterID, new[] { "ChapterID", "monID", "ChapterOrder", "ChapterTitle", "Summary", "KeyPoints", "FormulaNote" },
+                new[] { q.ChapterID, q.monID, q.ChapterOrder, q.ChapterTitle, q.Summary, q.KeyPoints, q.FormulaNote });
         }
 
         private static string WriteCsv(string id, string[] headers, string[] values)

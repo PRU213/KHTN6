@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace KHTN6.Teacher
 {
-    public enum TeacherScreen { Home, Quiz, Essay, Progress }
+    public enum TeacherScreen { Home, Quiz, Essay, Progress, LessonPlan }
 
     /// <summary>References to the editable, scene-owned Canvas controls.</summary>
     public sealed class TeacherCanvasView : MonoBehaviour
@@ -23,8 +23,22 @@ namespace KHTN6.Teacher
 
         T Find<T>(string controlName) where T : Component
         {
-            foreach (var component in GetComponentsInChildren<T>(true))
-                if (component.name == controlName) return component;
+            if (string.IsNullOrEmpty(controlName)) return null;
+            var components = GetComponentsInChildren<T>(true);
+            foreach (var component in components)
+            {
+                if (component == null) continue;
+                if (string.Equals(component.name, controlName, System.StringComparison.OrdinalIgnoreCase))
+                    return component;
+            }
+            string normTarget = controlName.Replace(" ", "").Replace("/", "").ToLowerInvariant();
+            foreach (var component in components)
+            {
+                if (component == null) continue;
+                string normComp = component.name.Replace(" ", "").Replace("/", "").ToLowerInvariant();
+                if (normComp == normTarget)
+                    return component;
+            }
             return null;
         }
     }

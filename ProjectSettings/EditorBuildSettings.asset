@@ -1,4 +1,4 @@
-﻿%YAML 1.1
+%YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
 --- !u!1045 &1
 EditorBuildSettings:
@@ -42,9 +42,6 @@ EditorBuildSettings:
     path: Assets/Scenes/HomePage.unity
     guid: 45788866c305da040971b248e2245198
   - enabled: 1
-    path: Assets/Scenes/Biology/GiaoVien.unity
-    guid: 7b59d151183059c438ed057bfa5d2de3
-  - enabled: 1
     path: Assets/Scenes/Biology/ChonBai.unity
     guid: a4b1ea6def7377149866d33acc598138
   - enabled: 1
@@ -80,5 +77,11 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/GiaoVienTienDo.unity
     guid: bd39e91f990c9eb40af007457d1cb566
+  - enabled: 1
+    path: Assets/Scenes/GiaoVien.unity
+    guid: 491611574eb8fb64a9cfb571a5d10a09
+  - enabled: 1
+    path: Assets/Scenes/GiaoVienGiaoAn.unity
+    guid: f0d088e83fae17341863bb8d5c3b4369
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
