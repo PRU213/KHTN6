@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -167,8 +167,27 @@ public class TuLuanController : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-        Time.timeScale = 1f; // Khôi phục thời gian bình thường, chống lỗi đứng/dừng màn hình
+        Time.timeScale = 1f;
+        if (!string.IsNullOrEmpty(backendApiUrl))
+        {
+            backendApiUrl = backendApiUrl.Trim();
+        }
+        else
+        {
+            backendApiUrl = "https://script.google.com/macros/s/AKfycbxLHvShuipgPg7x28IikDmzU7wHoE2e3ai9rhuoEnN50UsFUAWIPTG_nneHOxz-YmaY/exec";
+        }
         AutoBindUI();
+    }
+
+    private TMP_FontAsset GetPreferredFont()
+    {
+        if (txtCauHoi != null && txtCauHoi.font != null && !txtCauHoi.font.name.Contains("Liberation"))
+            return txtCauHoi.font;
+        if (inputCauTraLoi != null && inputCauTraLoi.textComponent != null && inputCauTraLoi.textComponent.font != null && !inputCauTraLoi.textComponent.font.name.Contains("Liberation"))
+            return inputCauTraLoi.textComponent.font;
+        if (TMP_Settings.defaultFontAsset != null)
+            return TMP_Settings.defaultFontAsset;
+        return null;
     }
 
     private void Start()
@@ -381,6 +400,12 @@ public class TuLuanController : MonoBehaviour
         // trong Awake hoặc khi chạy Setup Tool (tránh vòng lặp layout rebuild).
         BindRuntimeTextFields(canvas);
 
+        TMP_FontAsset prefFont = GetPreferredFont();
+        if (txtCauHoi != null && prefFont != null && (txtCauHoi.font == null || txtCauHoi.font.name.Contains("Liberation")))
+        {
+            txtCauHoi.font = prefFont;
+        }
+
         // 3. btnTaiAnh & Anh (Canvas -> KhungAnh -> btnTaiAnh, btnTai / Anh)
         Transform khAnh = canvas.transform.Find("KhungAnh");
         if (khAnh != null)
@@ -514,7 +539,8 @@ public class TuLuanController : MonoBehaviour
         textObj.transform.SetParent(viewportObj.transform, false);
         TextMeshProUGUI text = textObj.GetComponent<TextMeshProUGUI>();
         StretchRuntimeRect(text.rectTransform);
-        if (original != null && original.font != null) text.font = original.font;
+        TMP_FontAsset targetFont = GetPreferredFont() ?? (original != null ? original.font : null);
+        if (targetFont != null) text.font = targetFont;
         text.fontSize = 30;
         text.color = Color.black;
         text.textWrappingMode = TextWrappingModes.Normal;
@@ -524,7 +550,7 @@ public class TuLuanController : MonoBehaviour
         placeholderObj.transform.SetParent(viewportObj.transform, false);
         TextMeshProUGUI placeholder = placeholderObj.GetComponent<TextMeshProUGUI>();
         StretchRuntimeRect(placeholder.rectTransform);
-        if (original != null && original.font != null) placeholder.font = original.font;
+        if (targetFont != null) placeholder.font = targetFont;
         placeholder.text = "Nhập câu trả lời...";
         placeholder.fontSize = 30;
         placeholder.color = new Color(0.35f, 0.35f, 0.35f, 0.7f);
@@ -1389,7 +1415,8 @@ public class TuLuanController : MonoBehaviour
         form.AddField("mimeType", mimeType);
         form.AddField("base64", base64Data);
 
-        using (UnityWebRequest req = UnityWebRequest.Post(backendApiUrl, form))
+        string cleanUrl = (backendApiUrl ?? "").Trim();
+        using (UnityWebRequest req = UnityWebRequest.Post(cleanUrl, form))
         {
             req.certificateHandler = new BypassCertificate();
             req.timeout = 45; // Timeout 45s cho file upload
@@ -1455,7 +1482,8 @@ public class TuLuanController : MonoBehaviour
         form.AddField("answerText", answerText);
         form.AddField("fileUrl", fileUrl ?? "");
 
-        using (UnityWebRequest req = UnityWebRequest.Post(backendApiUrl, form))
+        string cleanUrl = (backendApiUrl ?? "").Trim();
+        using (UnityWebRequest req = UnityWebRequest.Post(cleanUrl, form))
         {
             req.certificateHandler = new BypassCertificate();
             req.timeout = 30; // Timeout 30s
@@ -1501,13 +1529,14 @@ public class TuLuanController : MonoBehaviour
     /// </summary>
     private IEnumerator RequestBackendGradingRoutine(string submissionId)
     {
-        if (string.IsNullOrEmpty(backendApiUrl)) yield break;
+        string cleanUrl = (backendApiUrl ?? "").Trim();
+        if (string.IsNullOrEmpty(cleanUrl)) yield break;
 
         WWWForm form = new WWWForm();
         form.AddField("action", "gradeEssaySubmission");
         form.AddField("submissionId", submissionId);
 
-        using (UnityWebRequest req = UnityWebRequest.Post(backendApiUrl, form))
+        using (UnityWebRequest req = UnityWebRequest.Post(cleanUrl, form))
         {
             req.certificateHandler = new BypassCertificate();
             req.timeout = 10;
