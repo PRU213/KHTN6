@@ -225,22 +225,11 @@ public class SheepQuizController : MonoBehaviour
         // SUBJECT
         // =====================================================
 
-        string mon =
-            GameSession.Subject;
-
-
-        if (
-            string.IsNullOrWhiteSpace(mon)
-        )
+        string mon = GameSession.Subject;
+        if (string.IsNullOrWhiteSpace(mon))
         {
-            questionText.text =
-                "Chưa xác định môn học!";
-
-            Debug.LogError(
-                "GameSession.Subject đang trống!"
-            );
-
-            yield break;
+            mon = "Vật lý";
+            GameSession.Subject = mon;
         }
 
 
@@ -276,15 +265,15 @@ public class SheepQuizController : MonoBehaviour
         // URL
         // =====================================================
 
+        string endpoint = !string.IsNullOrWhiteSpace(baseUrl) && baseUrl.StartsWith("http") && !baseUrl.Contains("AKfycbxxE2R2Zoitg")
+            ? baseUrl
+            : AppsScriptEndpoint.Url;
         string url =
-            baseUrl
+            endpoint
             + "?action=questions"
             + "&subject="
             + UnityWebRequest.EscapeURL(mon)
-            + "&difficulty="
-            + UnityWebRequest.EscapeURL(
-                difficultyString
-            );
+            + (string.IsNullOrWhiteSpace(difficultyString) ? "" : ("&difficulty=" + UnityWebRequest.EscapeURL(difficultyString)));
 
 
         Debug.Log(
@@ -465,94 +454,40 @@ public class SheepQuizController : MonoBehaviour
         );
 
 
-        foreach (
-            QuestionData q
-            in all
-        )
+        string sub = GameSession.Subject;
+        foreach (QuestionData q in all)
         {
-            if (q == null)
-                continue;
-
-
-            // =================================================
-            // SUBJECT
-            // =================================================
-
-            bool subjectOK =
-                string.Equals(
-                    q.monId?.Trim(),
-                    GameSession.Subject?.Trim(),
-                    System.StringComparison
-                        .OrdinalIgnoreCase
-                );
-
-
-            if (!subjectOK)
-                continue;
-
-
-            // =================================================
-            // CHAPTER
-            // =================================================
-
-            bool chapterOK = true;
-
-
-            if (
-                !string.IsNullOrWhiteSpace(ch)
-            )
-            {
-                chapterOK =
-                    !string.IsNullOrWhiteSpace(
-                        q.topic
-                    )
-                    &&
-                    q.topic
-                        .Trim()
-                        .StartsWith(
-                            ch.Trim(),
-                            System.StringComparison
-                                .OrdinalIgnoreCase
-                        );
-            }
-
-
-            if (!chapterOK)
-                continue;
-
-
-            // =================================================
-            // DIFFICULTY
-            // =================================================
-
-            bool difficultyOK = false;
-
-
-            foreach (
-                string selected
-                in GameSession.Difficulties
-            )
-            {
-                if (
-                    string.Equals(
-                        q.difficulty?.Trim(),
-                        selected?.Trim(),
-                        System.StringComparison
-                            .OrdinalIgnoreCase
-                    )
-                )
-                {
-                    difficultyOK = true;
-                    break;
-                }
-            }
-
-
-            if (!difficultyOK)
-                continue;
-
-
+            if (q == null) continue;
+            if (!GameSession.IsMatchingSubject(q.monId, sub)) continue;
+            if (!GameSession.IsMatchingChapter(q.topic, ch)) continue;
+            if (!GameSession.IsMatchingDifficulty(q.difficulty, GameSession.Difficulties)) continue;
             pool.Add(q);
+        }
+
+        if (pool.Count == 0 && all != null && all.Length > 0)
+        {
+            foreach (QuestionData q in all)
+            {
+                if (q == null) continue;
+                if (!GameSession.IsMatchingSubject(q.monId, sub)) continue;
+                if (!GameSession.IsMatchingDifficulty(q.difficulty, GameSession.Difficulties)) continue;
+                pool.Add(q);
+            }
+        }
+
+        if (pool.Count == 0 && all != null && all.Length > 0)
+        {
+            foreach (QuestionData q in all)
+            {
+                if (q == null) continue;
+                if (!GameSession.IsMatchingSubject(q.monId, sub)) continue;
+                pool.Add(q);
+            }
+        }
+
+        if (pool.Count == 0 && all != null && all.Length > 0)
+        {
+            pool.AddRange(all);
         }
 
 

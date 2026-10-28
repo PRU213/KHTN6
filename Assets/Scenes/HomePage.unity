@@ -7604,7 +7604,7 @@ MonoBehaviour:
   hintText: {fileID: 238161703}
   restartButton: {fileID: 1307508046}
   exitButton: {fileID: 149446545}
-  baseUrl: "D\xC1N_LINK_EXEC_V\xC0O_\u0110\xC2Y"
+  baseUrl: https://script.google.com/macros/s/AKfycbxLHvShuipgPg7x28IikDmzU7wHoE2e3ai9rhuoEnN50UsFUAWIPTG_nneHOxz-YmaY/exec
   maxQuestions: 10
   correctColor: {r: 0.3, g: 0.85, b: 0.3, a: 1}
   wrongColor: {r: 0.95, g: 0.3, b: 0.3, a: 1}

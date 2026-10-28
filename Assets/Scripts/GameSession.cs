@@ -44,8 +44,91 @@ public static class GameSession
     // MÔN HỌC & CHƯƠNG
     // =========================
 
-    public static string Subject = "";
+    private static string _subject = "";
+    public static string Subject
+    {
+        get => NormalizeSubject(_subject);
+        set => _subject = NormalizeSubject(value);
+    }
     public static string Chapter = "";
+
+    /// <summary>
+    /// Chuẩn hóa tên môn học sang định dạng chuẩn trong Google Sheet ("Vật lý", "Hóa học", "Sinh học").
+    /// </summary>
+    public static string NormalizeSubject(string sub)
+    {
+        if (string.IsNullOrWhiteSpace(sub)) return "";
+        string s = sub.Trim().ToLowerInvariant();
+        if (s.Contains("vật") || s.Contains("vat") || s.Contains("lý") || s.Contains("ly") || s.Contains("physic"))
+            return "Vật lý";
+        if (s.Contains("hóa") || s.Contains("hoá") || s.Contains("hoa") || s.Contains("chem"))
+            return "Hóa học";
+        if (s.Contains("sinh") || s.Contains("bio"))
+            return "Sinh học";
+        return sub.Trim();
+    }
+
+    /// <summary>
+    /// So khớp 2 tên môn học (chấp nhận cả tiếng Anh, tiếng Việt không dấu, có dấu).
+    /// </summary>
+    public static bool IsMatchingSubject(string mon1, string mon2)
+    {
+        if (string.IsNullOrWhiteSpace(mon1) || string.IsNullOrWhiteSpace(mon2)) return true;
+        string norm1 = NormalizeSubject(mon1);
+        string norm2 = NormalizeSubject(mon2);
+        return string.Equals(norm1, norm2, System.StringComparison.OrdinalIgnoreCase);
+    }
+
+    /// <summary>
+    /// So khớp chương giữa câu hỏi trong sheet và chương đang chọn trong session.
+    /// </summary>
+    public static bool IsMatchingChapter(string questionTopic, string sessionChapter)
+    {
+        if (string.IsNullOrWhiteSpace(sessionChapter)) return true;
+        string ch = sessionChapter.Trim();
+        if (ch.IndexOf("Tất cả", System.StringComparison.OrdinalIgnoreCase) >= 0 ||
+            ch.IndexOf("Tat ca", System.StringComparison.OrdinalIgnoreCase) >= 0 ||
+            ch.Equals("All", System.StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if (string.IsNullOrWhiteSpace(questionTopic)) return true;
+        string topic = questionTopic.Trim();
+
+        var mSession = System.Text.RegularExpressions.Regex.Match(ch, @"(?:Chương|Chuong|Chapter)\s*(\d+)", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+        var mTopic = System.Text.RegularExpressions.Regex.Match(topic, @"(?:Chương|Chuong|Chapter)\s*(\d+)", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+
+        if (mSession.Success && mTopic.Success)
+        {
+            return mSession.Groups[1].Value == mTopic.Groups[1].Value;
+        }
+
+        return topic.StartsWith(ch, System.StringComparison.OrdinalIgnoreCase) ||
+               ch.StartsWith(topic, System.StringComparison.OrdinalIgnoreCase);
+    }
+
+    /// <summary>
+    /// So khớp độ khó giữa câu hỏi và danh sách độ khó được chọn.
+    /// </summary>
+    public static bool IsMatchingDifficulty(string questionDiff, List<string> selectedDiffs)
+    {
+        if (selectedDiffs == null || selectedDiffs.Count == 0) return true;
+        foreach (var d in selectedDiffs)
+        {
+            if (string.IsNullOrWhiteSpace(d)) continue;
+            if (d.IndexOf("Tổng hợp", System.StringComparison.OrdinalIgnoreCase) >= 0 ||
+                d.IndexOf("Tong hop", System.StringComparison.OrdinalIgnoreCase) >= 0 ||
+                d.Equals("All", System.StringComparison.OrdinalIgnoreCase))
+                return true;
+
+            if (string.Equals(questionDiff?.Trim(), d?.Trim(), System.StringComparison.OrdinalIgnoreCase))
+                return true;
+
+            if (d.IndexOf("Dễ", System.StringComparison.OrdinalIgnoreCase) >= 0 && questionDiff.IndexOf("Dễ", System.StringComparison.OrdinalIgnoreCase) >= 0) return true;
+            if (d.IndexOf("Trung", System.StringComparison.OrdinalIgnoreCase) >= 0 && questionDiff.IndexOf("Trung", System.StringComparison.OrdinalIgnoreCase) >= 0) return true;
+            if (d.IndexOf("Khó", System.StringComparison.OrdinalIgnoreCase) >= 0 && questionDiff.IndexOf("Khó", System.StringComparison.OrdinalIgnoreCase) >= 0) return true;
+        }
+        return false;
+    }
 
 
     // =========================

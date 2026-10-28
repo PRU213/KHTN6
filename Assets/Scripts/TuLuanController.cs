@@ -760,9 +760,10 @@ public class TuLuanController : MonoBehaviour
 
                 if (chosen == null && sheetQuestions.Count > 0)
                 {
+                    string curSub = !string.IsNullOrEmpty(GameSession.Subject) ? GameSession.Subject : PlayerPrefs.GetString("SelectedSubject", "Sinh học");
                     string selDiff = PlayerPrefs.GetString("SelectedDifficulty", "Dễ");
                     List<TuLuanQuestionData> filtered = sheetQuestions.FindAll(q =>
-                        q.monId.IndexOf("Sinh", StringComparison.OrdinalIgnoreCase) >= 0);
+                        GameSession.IsMatchingSubject(q.monId, curSub));
 
                     if (filtered.Count == 0) filtered = sheetQuestions;
 
