@@ -13,6 +13,8 @@ public class BlobDrift : MonoBehaviour
 
     [Header("Va chạm giữa các cục")]
     public float radius = 120f;
+    public float wanderInterval;
+    float nextTurn;
 
     static readonly List<BlobDrift> all = new List<BlobDrift>();
     RectTransform rt;
@@ -32,6 +34,11 @@ public class BlobDrift : MonoBehaviour
 
     void Update()
     {
+        if (wanderInterval > 0f && Time.time >= nextTurn) {
+            nextTurn = Time.time + Random.Range(wanderInterval * .5f, wanderInterval * 1.5f);
+            float direction = Random.Range(0f, Mathf.PI * 2f);
+            vel = new Vector2(Mathf.Cos(direction), Mathf.Sin(direction)) * Random.Range(minSpeed, maxSpeed);
+        }
         Vector2 p = rt.anchoredPosition + vel * Time.deltaTime;
 
         // nảy khi chạm mép vùng bay

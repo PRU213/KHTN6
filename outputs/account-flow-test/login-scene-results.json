@@ -1,0 +1,24 @@
+[
+  {
+    "class": "GoogleSheetAPI",
+    "object": "LoginPanel",
+    "file": "Assets\\Scenes\\Login.prefab",
+    "line": 928,
+    "id": "5593897265972387804",
+    "instance": "3777495338191321505",
+    "active": "1",
+    "fields": "",
+    "overrides": []
+  },
+  {
+    "class": "LoginController",
+    "object": "LoginPanel",
+    "file": "Assets\\Scenes\\Login.prefab",
+    "line": 940,
+    "id": "1278017074155945626",
+    "instance": "3777495338191321505",
+    "active": "1",
+    "fields": "  usernameInput: {fileID: 7443864394974045159}\n  passwordInput: {fileID: 7067687480618247027}\n  studentButton: {fileID: 3067408367212332687}\n  teacherButton: {fileID: 4946593961037398087}\n  api: {fileID: 5593897265972387804}\n  errorText: {fileID: 9051883138833139082}\n  btnHienMK: {fileID: 8468008016524967753}\n  btnAnMK: {fileID: 6081900360501259456}",
+    "overrides": []
+  }
+]

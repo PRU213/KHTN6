@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 
 public class TimerDisplay : MonoBehaviour
 {
@@ -15,40 +14,6 @@ public class TimerDisplay : MonoBehaviour
             GameObject go = new GameObject("PersistentTimerCanvas");
             instance = go.AddComponent<TimerDisplay>();
             DontDestroyOnLoad(go);
-        }
-    }
-
-    void OnEnable()
-    {
-        SceneManager.sceneLoaded += OnSceneLoaded;
-    }
-
-    void OnDisable()
-    {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
-    }
-
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        AdjustPositionForScene(scene.name);
-    }
-
-    private void AdjustPositionForScene(string sceneName)
-    {
-        if (timerText != null)
-        {
-            RectTransform rt = timerText.rectTransform;
-            if (rt != null)
-            {
-                if (sceneName == "TuLuan")
-                {
-                    rt.anchoredPosition = new Vector2(220f, -50f);
-                }
-                else
-                {
-                    rt.anchoredPosition = new Vector2(0f, -50f);
-                }
-            }
         }
     }
 
@@ -90,8 +55,6 @@ public class TimerDisplay : MonoBehaviour
         rt.pivot = new Vector2(0.5f, 1);
         rt.anchoredPosition = new Vector2(0, -50); // O giua tren cung, cach le 50px
         rt.sizeDelta = new Vector2(130, 100);
-
-        AdjustPositionForScene(SceneManager.GetActiveScene().name);
     }
 
     void Update()
@@ -117,3 +80,4 @@ public class TimerDisplay : MonoBehaviour
         }
     }
 }
+

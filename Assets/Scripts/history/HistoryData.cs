@@ -8,6 +8,8 @@ public class HistoryItem
     public string result;
     public int score;
     public string time;
+    public string subject;
+    public string chapter;
 }
 
 [Serializable]
@@ -17,6 +19,7 @@ public class HistoryResponse
 
     public string username;
     public string fullName;
+    public string message;
 
     public int total;
     public int win;

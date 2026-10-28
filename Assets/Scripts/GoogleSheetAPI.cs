@@ -36,7 +36,6 @@ public class GoogleSheetAPI : MonoBehaviour
                 string[] cols = rows[i].Split(',');
                 if (cols.Length >= 5)
                 {
-                    string dbId = cols.Length > 0 ? cols[0].Trim() : "";
                     string dbUser = cols[1].Trim();
                     string dbPass = cols[2].Trim();
                     string dbRole = cols[4].Trim();
@@ -44,7 +43,6 @@ public class GoogleSheetAPI : MonoBehaviour
                     // Khớp username (không phân biệt hoa/thường) và password
                     if (dbUser.Equals(trimmedUser, StringComparison.OrdinalIgnoreCase) && dbPass == trimmedPass)
                     {
-                        if (!string.IsNullOrEmpty(dbId)) { PlayerPrefs.SetString("UserID", dbId); GameSession.UserId = dbId; }
                         PlayerPrefs.SetString("Username", dbUser);
                         string fullname = cols.Length > 3 ? cols[3].Trim() : "";
                         if (!string.IsNullOrEmpty(fullname)) PlayerPrefs.SetString("Fullname", fullname);

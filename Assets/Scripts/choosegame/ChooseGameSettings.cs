@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -21,8 +21,28 @@ public class ChooseGameSettings : MonoBehaviour
     public GameSelectScreen gameSelectScreen;
     public GameObject chooseGamePanel;
 
+    void OnEnable()
+    {
+        bool supportsEssay = GameSession.SelectedGame == "Planet" || GameSession.SelectedGame == "Football" || GameSession.SelectedGame == "Sheep" || GameSession.SelectedGame == "Cave";
+        if (!supportsEssay && multipleChoiceToggle != null) multipleChoiceToggle.isOn = true;
+        if (essayToggle != null) {
+            essayToggle.interactable = supportsEssay;
+            if (!supportsEssay) essayToggle.isOn = false;
+        }
+        if (multipleChoiceToggle != null && (essayToggle == null || !essayToggle.isOn)) multipleChoiceToggle.isOn = true;
+    }
+
     private void Awake()
     {
+        // The scene's two toggles may not share a ToggleGroup.
+        if (multipleChoiceToggle != null) multipleChoiceToggle.onValueChanged.AddListener(value => {
+            if (value && essayToggle != null) essayToggle.isOn = false;
+            EnsureQuestionType();
+        });
+        if (essayToggle != null) essayToggle.onValueChanged.AddListener(value => {
+            if (value && multipleChoiceToggle != null) multipleChoiceToggle.isOn = false;
+            EnsureQuestionType();
+        });
         if (startButton != null)
         {
             startButton.onClick.AddListener(StartGame);
@@ -32,30 +52,12 @@ public class ChooseGameSettings : MonoBehaviour
         {
             backButton.onClick.AddListener(BackToGameSelect);
         }
+    }
 
-        if (multipleChoiceToggle != null)
-        {
-            multipleChoiceToggle.onValueChanged.AddListener((isOn) =>
-            {
-                if (isOn)
-                {
-                    GameSession.QuestionType = "Trắc nghiệm";
-                    GameSession.questionSceneName = "bean_1_question";
-                }
-            });
-        }
-
-        if (essayToggle != null)
-        {
-            essayToggle.onValueChanged.AddListener((isOn) =>
-            {
-                if (isOn)
-                {
-                    GameSession.QuestionType = "Tự luận";
-                    GameSession.questionSceneName = "TuLuan";
-                }
-            });
-        }
+    void EnsureQuestionType()
+    {
+        if (multipleChoiceToggle != null && !multipleChoiceToggle.isOn && (essayToggle == null || !essayToggle.isOn))
+            multipleChoiceToggle.isOn = true;
     }
 
     public void StartGame()
@@ -90,19 +92,11 @@ public class ChooseGameSettings : MonoBehaviour
 
 
         // ============================
-        // 2. HÌNH THỨC LÀM BÀI
+        // 2. LƯU HÌNH THỨC ĐÃ CHỌN
         // ============================
 
-        if (essayToggle != null && essayToggle.isOn)
-        {
-            GameSession.QuestionType = "Tự luận";
-            GameSession.questionSceneName = "TuLuan";
-        }
-        else
-        {
-            GameSession.QuestionType = "Trắc nghiệm";
-            GameSession.questionSceneName = "bean_1_question";
-        }
+        bool supportsEssay = GameSession.SelectedGame == "Planet" || GameSession.SelectedGame == "Football" || GameSession.SelectedGame == "Sheep" || GameSession.SelectedGame == "Cave";
+        GameSession.QuestionType = supportsEssay && essayToggle != null && essayToggle.isOn ? "Tự luận" : "Trắc nghiệm";
 
 
         // ============================
@@ -150,7 +144,7 @@ public class ChooseGameSettings : MonoBehaviour
 
         if (gameSelectScreen != null)
         {
-            gameSelectScreen.gameObject.SetActive(true);
+            gameSelectScreen.ReturnToSelection();
         }
     }
 }

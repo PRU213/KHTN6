@@ -2177,7 +2177,7 @@ MonoBehaviour:
   bulletSpeed: 1500
   blobRadius: 110
   bulletParent: {fileID: 0}
-  roundTime: 10
+  roundTime: 20
   questionsPerGame: 5
   useDemoData: 1
   normalColor: {r: 1, g: 1, b: 1, a: 1}

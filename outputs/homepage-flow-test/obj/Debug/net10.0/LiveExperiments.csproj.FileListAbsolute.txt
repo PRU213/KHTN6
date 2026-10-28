@@ -1,0 +1,16 @@
+D:\PRU_Git\KHTN6\outputs\homepage-flow-test\bin\Debug\net10.0\LiveExperiments.exe
+D:\PRU_Git\KHTN6\outputs\homepage-flow-test\bin\Debug\net10.0\fixtures.json
+D:\PRU_Git\KHTN6\outputs\homepage-flow-test\bin\Debug\net10.0\LiveExperiments.deps.json
+D:\PRU_Git\KHTN6\outputs\homepage-flow-test\bin\Debug\net10.0\LiveExperiments.runtimeconfig.json
+D:\PRU_Git\KHTN6\outputs\homepage-flow-test\bin\Debug\net10.0\LiveExperiments.dll
+D:\PRU_Git\KHTN6\outputs\homepage-flow-test\bin\Debug\net10.0\LiveExperiments.pdb
+D:\PRU_Git\KHTN6\outputs\homepage-flow-test\obj\Debug\net10.0\LiveExperiments.GeneratedMSBuildEditorConfig.editorconfig
+D:\PRU_Git\KHTN6\outputs\homepage-flow-test\obj\Debug\net10.0\LiveExperiments.AssemblyInfoInputs.cache
+D:\PRU_Git\KHTN6\outputs\homepage-flow-test\obj\Debug\net10.0\LiveExperiments.AssemblyInfo.cs
+D:\PRU_Git\KHTN6\outputs\homepage-flow-test\obj\Debug\net10.0\LiveExperiments.csproj.CoreCompileInputs.cache
+D:\PRU_Git\KHTN6\outputs\homepage-flow-test\obj\Debug\net10.0\LiveExperiments.sourcelink.json
+D:\PRU_Git\KHTN6\outputs\homepage-flow-test\obj\Debug\net10.0\LiveExperiments.dll
+D:\PRU_Git\KHTN6\outputs\homepage-flow-test\obj\Debug\net10.0\refint\LiveExperiments.dll
+D:\PRU_Git\KHTN6\outputs\homepage-flow-test\obj\Debug\net10.0\LiveExperiments.pdb
+D:\PRU_Git\KHTN6\outputs\homepage-flow-test\obj\Debug\net10.0\LiveExperiments.genruntimeconfig.cache
+D:\PRU_Git\KHTN6\outputs\homepage-flow-test\obj\Debug\net10.0\ref\LiveExperiments.dll

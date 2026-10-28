@@ -1,0 +1,9 @@
+D:\PRU_Git\KHTN6\outputs\homepage-flow-test\build-bin\Unity.2D.Welcome.deps.json
+D:\PRU_Git\KHTN6\outputs\homepage-flow-test\build-bin\Unity.2D.Welcome.dll
+D:\PRU_Git\KHTN6\outputs\homepage-flow-test\build-bin\Unity.2D.Welcome.pdb
+D:\PRU_Git\KHTN6\outputs\homepage-flow-test\build-obj\Unity.2D.Welcome.csproj.AssemblyReference.cache
+D:\PRU_Git\KHTN6\outputs\homepage-flow-test\build-obj\Unity.2D.Welcome.GeneratedMSBuildEditorConfig.editorconfig
+D:\PRU_Git\KHTN6\outputs\homepage-flow-test\build-obj\Unity.2D.Welcome.csproj.CoreCompileInputs.cache
+D:\PRU_Git\KHTN6\outputs\homepage-flow-test\build-obj\Unity.2D.Welcome.sourcelink.json
+D:\PRU_Git\KHTN6\outputs\homepage-flow-test\build-obj\Unity.2D.Welcome.dll
+D:\PRU_Git\KHTN6\outputs\homepage-flow-test\build-obj\Unity.2D.Welcome.pdb

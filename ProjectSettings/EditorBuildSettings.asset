@@ -42,7 +42,7 @@ EditorBuildSettings:
     path: Assets/Scenes/HomePage.unity
     guid: 45788866c305da040971b248e2245198
   - enabled: 1
-    path: Assets/Scenes/GiaoVien.unity
+    path: Assets/Scenes/Biology/GiaoVien.unity
     guid: 7b59d151183059c438ed057bfa5d2de3
   - enabled: 1
     path: Assets/Scenes/Biology/ChonBai.unity

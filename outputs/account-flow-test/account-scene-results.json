@@ -1,0 +1,54 @@
+[
+  {
+    "class": "HomeMenuController",
+    "object": "HomeMenuController",
+    "file": "Assets/Scenes/HomePage.unity",
+    "line": 5155,
+    "id": "992832818",
+    "active": "1",
+    "fields": "  txtName: {fileID: 0}\n  txtRole: {fileID: 0}\n  homeCanvas: {fileID: 0}\n  physicsMap: {fileID: 0}\n  chemistryMap: {fileID: 0}\n  biologyMap: {fileID: 0}\n  btnPhysics: {fileID: 0}\n  btnChemistry: {fileID: 0}\n  btnBiology: {fileID: 0}\n  backPhysics: {fileID: 0}\n  backChemistry: {fileID: 0}\n  backBiology: {fileID: 0}\n  btnQuit: {fileID: 0}",
+    "overrides": []
+  },
+  {
+    "class": "HomeHistoryController",
+    "object": "UIManager",
+    "file": "Assets/Scenes/HomePage.unity",
+    "line": 9645,
+    "id": "1646039132",
+    "active": "0",
+    "fields": "  homePage: {fileID: 1725893607}\n  historyPage: {fileID: 1566936790}\n  rankPage: {fileID: 674234285}",
+    "overrides": []
+  },
+  {
+    "class": "HomeMenuController",
+    "object": "HomePage",
+    "file": "Assets/Scenes/HomePage.unity",
+    "line": 10337,
+    "id": "1725893612",
+    "active": "1",
+    "fields": "  txtName: {fileID: 0}\n  txtRole: {fileID: 0}\n  homeCanvas: {fileID: 1725893607}\n  physicsMap: {fileID: 2082637694}\n  chemistryMap: {fileID: 1057441488}\n  biologyMap: {fileID: 0}\n  btnPhysics: {fileID: 1451251368}\n  btnChemistry: {fileID: 1299963921}\n  btnBiology: {fileID: 1076779638}\n  backPhysics: {fileID: 905164448}\n  backChemistry: {fileID: 1651274537}\n  backBiology: {fileID: 0}\n  btnQuit: {fileID: 0}",
+    "overrides": []
+  },
+  {
+    "class": "RankManager",
+    "object": "RankManager",
+    "file": "Assets\\Prefabs\\chang\\Rank.prefab",
+    "line": 2234,
+    "id": "3940884869502787326",
+    "instance": "674234284",
+    "active": "1",
+    "fields": "  apiUrl: https://script.google.com/macros/s/AKfycbxxE2R2ZoitgM647aQqnebUcG90lhIlodU0DcyiaZuKkLaVWl6oopI-TkeNM8_KKDWhUw/exec\n  nameTexts:\n  scoreTexts:\n  topNameTexts:",
+    "overrides": []
+  },
+  {
+    "class": "HistoryManager",
+    "object": "HistoryManager",
+    "file": "Assets\\Prefabs\\chang\\History.prefab",
+    "line": 986,
+    "id": "189998765370196810",
+    "instance": "1566936789",
+    "active": "1",
+    "fields": "  baseUrl: https://script.google.com/macros/s/AKfycbxxE2R2ZoitgM647aQqnebUcG90lhIlodU0DcyiaZuKkLaVWl6oopI-TkeNM8_KKDWhUw/exec\n  txtFullname: {fileID: 0}\n  txtRole: {fileID: 0}\n  txtFullnameTMP: {fileID: 0}\n  txtRoleTMP: {fileID: 0}\n  studentNameText: {fileID: 462972297902686694}\n  totalText: {fileID: 183827949978509023}\n  winText: {fileID: 7855452316085676129}\n  loseText: {fileID: 5768497264806074676}\n  rateText: {fileID: 167236683290476837}\n  historyContent: {fileID: 8677159578908658629}\n  historyRowPrefab: {fileID: 7540497884832737928, guid: eed6107798742334abb1489e9e4e0ba0, type: 3}",
+    "overrides": []
+  }
+]

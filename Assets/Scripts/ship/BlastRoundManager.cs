@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+#if ENABLE_INPUT_SYSTEM
+using UnityEngine.InputSystem;
+#endif
 
 [System.Serializable]
 public class Question
@@ -14,6 +17,12 @@ public class Question
 
 public class BlastRoundManager : MonoBehaviour
 {
+    [Header("Đối kháng online")]
+    public bool enableOnlineDuel = true;
+    public bool OnlineControlled { get; set; }
+    public bool PlayWithBot { get; set; }
+    public System.Action<int, int> MatchFinished;
+    float botThinkAt;
     [Header("UI")]
     public TMP_Text questionText;
     public TMP_Text timerText;
@@ -44,7 +53,7 @@ public class BlastRoundManager : MonoBehaviour
     public RectTransform bulletParent;                    // để trống = tự lấy object cha
 
     [Header("Config")]
-    public float roundTime = 10f;
+    public float roundTime = 20f;
     public int questionsPerGame = 5;
     public bool useDemoData = true;
     public Color normalColor = Color.white;
@@ -79,11 +88,18 @@ public class BlastRoundManager : MonoBehaviour
             return;
         }
 
-        if (bulletParent == null) bulletParent = (RectTransform)transform.parent;
+        if (bulletParent == null) bulletParent = guns[0].parent as RectTransform;
         gunImages = new Image[2];
         for (int p = 0; p < 2; p++) gunImages[p] = guns[p].GetComponent<Image>();
 
-        if (useDemoData) StartGame(DemoQuestions());
+        if (enableOnlineDuel)
+        {
+            OnlineControlled = true;
+            var duel = GetComponent<PlanetDuelController>();
+            if (duel == null) duel = gameObject.AddComponent<PlanetDuelController>();
+            duel.Open(this);
+        }
+        else if (useDemoData) StartGame(DemoQuestions());
     }
 
     void OnDisable()
@@ -126,11 +142,13 @@ public class BlastRoundManager : MonoBehaviour
 
         for (int p = 0; p < 2; p++) { stunUntil[p] = 0f; nextFireTime[p] = 0f; }
         timeLeft = roundTime;
+        botThinkAt = Time.time + Random.Range(3f, 5f);
         roundActive = true;
     }
 
     void Update()
     {
+        if (OnlineControlled) return;
         UpdateGuns();        // tàu luôn lắc mũi, kể cả giữa các vòng
         if (!roundActive) return;
 
@@ -138,11 +156,37 @@ public class BlastRoundManager : MonoBehaviour
         timerText.text = Mathf.CeilToInt(Mathf.Max(0, timeLeft)).ToString();
         if (timeLeft <= 0) { EndRound(-1); return; }
 
-        for (int p = 0; p < 2; p++)
-            if (Input.GetKeyDown(fireKeys[p])) TryFire(p);
+        for (int p = 0; p < (PlayWithBot ? 0 : 2); p++)
+            if (Pressed(p)) TryFire(p);
+        if (PlayWithBot && Time.time >= botThinkAt)
+        {
+            botThinkAt = Time.time + Random.Range(1f, 2f);
+            int target = Random.value < .75f ? correctIndex : Random.Range(0, 4);
+            Vector2 aim = blobImages[target].rectTransform.position - guns[1].position;
+            if (Vector2.Angle(guns[1].up, aim) < 16f) TryFire(1);
+        }
 
         MoveBullets();
     }
+
+    public static bool Pressed(int player)
+    {
+#if ENABLE_INPUT_SYSTEM
+        var keyboard = Keyboard.current;
+        return keyboard != null && (player == 0 ? keyboard.aKey.wasPressedThisFrame || keyboard.spaceKey.wasPressedThisFrame : keyboard.lKey.wasPressedThisFrame);
+#else
+        return Input.GetKeyDown(player == 0 ? KeyCode.A : KeyCode.L) || (player == 0 && Input.GetKeyDown(KeyCode.Space));
+#endif
+    }
+
+    public void FireLocal() { if (!OnlineControlled && roundActive) TryFire(0); }
+    public void ChooseLocal(int answer)
+    {
+        if (OnlineControlled || !roundActive || timeLeft <= 0 || answer < 0 || answer >= 4 ||
+            blobShot[answer] || Time.time < stunUntil[0]) return;
+        OnBlobHit(0, answer);
+    }
+    public void StopMatch() { StopAllCoroutines(); ClearBullets(); roundActive = false; }
 
     void UpdateGuns()
     {
@@ -160,13 +204,14 @@ public class BlastRoundManager : MonoBehaviour
         if (Time.time < nextFireTime[p] || Time.time < stunUntil[p]) return;
         nextFireTime[p] = Time.time + fireCooldown;
 
-        Vector2 dir = guns[p].up;                                // hướng mũi tàu
-        Vector2 muzzle = guns[p].anchoredPosition + dir * gunLength;
+        Vector2 dir = ((Vector2)bulletParent.InverseTransformDirection(guns[p].up)).normalized;
+        Vector2 muzzle = (Vector2)bulletParent.InverseTransformPoint(guns[p].position) + dir * gunLength;
 
         var go = new GameObject("Bullet_P" + (p + 1), typeof(RectTransform), typeof(Image));
         var rt = (RectTransform)go.transform;
         rt.SetParent(bulletParent, false);
-        rt.anchorMin = rt.anchorMax = rt.pivot = new Vector2(0.5f, 0.5f);
+        rt.anchorMin = rt.anchorMax = bulletParent.pivot;
+        rt.pivot = new Vector2(0.5f, 0.5f);
         rt.sizeDelta = bulletSize;
         rt.anchoredPosition = muzzle;
 
@@ -189,7 +234,8 @@ public class BlastRoundManager : MonoBehaviour
             Vector2 pos = b.rt.anchoredPosition + b.dir * bulletSpeed * Time.deltaTime;
             b.rt.anchoredPosition = pos;
 
-            if (Mathf.Abs(pos.x) > 1100f || Mathf.Abs(pos.y) > 650f)
+            if (!new Rect(bulletParent.rect.xMin - 150f, bulletParent.rect.yMin - 150f,
+                bulletParent.rect.width + 300f, bulletParent.rect.height + 300f).Contains(pos))
             {
                 RemoveBullet(i);
                 continue;
@@ -198,7 +244,7 @@ public class BlastRoundManager : MonoBehaviour
             for (int k = 0; k < 4; k++)
             {
                 if (blobShot[k]) continue;   // hố đã bị bắn sai thì đạn xuyên qua
-                float d = Vector2.Distance(pos, blobImages[k].rectTransform.anchoredPosition);
+                float d = Vector2.Distance(pos, bulletParent.InverseTransformPoint(blobImages[k].rectTransform.position));
                 if (d < blobRadius)
                 {
                     int player = b.player;
@@ -222,6 +268,8 @@ public class BlastRoundManager : MonoBehaviour
         }
         else
         {
+            scores[player] -= 10;
+            scoreTexts[player].text = scores[player].ToString();
             blobShot[blob] = true;
             blobImages[blob].color = wrongColor;
             stunUntil[player] = Time.time + stunTime;
@@ -245,7 +293,9 @@ public class BlastRoundManager : MonoBehaviour
 
     void EndGame()
     {
+        roundActive = false;
         ClearBullets();
+        if (MatchFinished != null) { MatchFinished(scores[0], scores[1]); return; }
         resultPanel.SetActive(true);
         resultText.text =
             $"P1: {scores[0]}  -  P2: {scores[1]}\n" +

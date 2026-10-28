@@ -18,16 +18,16 @@ public class PlayerRank
 public class RankResponse
 {
     public bool success;
+    public string message;
+    public string rankVersion, weekStartsAt, weekEndsAt, weekStartLabel, weekEndLabel;
     public PlayerRank[] players;
 }
 
 public class RankManager : MonoBehaviour
 {
-    // THAY bằng URL Apps Script của bạn (giữ nguyên giá trị cũ trong file của bạn)
-    private const string DEFAULT_API_URL = "https://script.google.com/macros/s/AKfycbxLHvShuipgPg7x28IikDmzU7wHoE2e3ai9rhuoEnN50UsFUAWIPTG_nneHOxz-YmaY/exec";
-
-    [Header("API")]
-    [SerializeField] private string apiUrl;
+    [Header("Tuần xếp hạng (tự tạo nếu chưa gắn)")]
+    [SerializeField] private TMP_Text periodText;
+    float refreshAt;
 
     [Header("Bảng xếp hạng (thứ tự từ hàng 1 -> hàng 9)")]
     [SerializeField] private TMP_Text[] nameTexts;
@@ -38,25 +38,48 @@ public class RankManager : MonoBehaviour
 
     private void OnEnable()
     {
+        EnsurePeriodLabel();
+        PlanetHistorySync.Changed += LoadRank;
         LoadRank();
+    }
+    private void OnDisable() { PlanetHistorySync.Changed -= LoadRank; StopAllCoroutines(); }
+    private void Update() { if (Time.realtimeSinceStartup >= refreshAt) LoadRank(); }
+
+    private void EnsurePeriodLabel()
+    {
+        if (periodText != null || nameTexts == null || nameTexts.Length == 0 || nameTexts[0] == null) return;
+        var canvas = nameTexts[0].GetComponentInParent<Canvas>();
+        if (canvas == null) return;
+        var go = new GameObject("Weekly rank period", typeof(RectTransform), typeof(TextMeshProUGUI));
+        go.layer = canvas.gameObject.layer; go.transform.SetParent(canvas.transform, false);
+        var rect = go.GetComponent<RectTransform>();
+        rect.anchorMin = new Vector2(.535f, .005f); rect.anchorMax = new Vector2(.97f, .055f);
+        rect.offsetMin = rect.offsetMax = Vector2.zero;
+        periodText = go.GetComponent<TextMeshProUGUI>(); periodText.font = nameTexts[0].font;
+        periodText.fontSize = 25; periodText.enableAutoSizing = true; periodText.fontSizeMin = 16;
+        periodText.color = Color.white; periodText.alignment = TextAlignmentOptions.Center; periodText.raycastTarget = false;
+        go.AddComponent<UnityEngine.UI.Outline>().effectColor = new Color(.15f, .08f, .02f);
     }
 
     // Gắn hàm này vào nút "Làm mới" (OnClick) nếu cần
     public void LoadRank()
     {
+        if (!isActiveAndEnabled) return;
+        refreshAt = Time.realtimeSinceStartup + 60;
+        StopAllCoroutines();
+        if (periodText != null) periodText.text = "Đang tải bảng xếp hạng tuần…";
         StartCoroutine(GetRankData());
     }
 
     private IEnumerator GetRankData()
     {
-        string currentApi = string.IsNullOrWhiteSpace(apiUrl)
-            ? DEFAULT_API_URL
-            : apiUrl.Trim();
+        string currentApi = AppsScriptEndpoint.Url;
 
         string url = currentApi + "?action=getProgressRank";
 
         using (UnityWebRequest request = UnityWebRequest.Get(url))
         {
+            request.timeout = 35;
             request.certificateHandler = new BypassCertificate();
             yield return request.SendWebRequest();
 
@@ -64,20 +87,42 @@ public class RankManager : MonoBehaviour
             {
                 Debug.LogError("Lỗi tải bảng xếp hạng: " + request.error);
                 ClearRank();
+                if (periodText != null) periodText.text = "Không tải được xếp hạng. Bấm Làm mới để thử lại.";
                 yield break;
             }
 
             string json = request.downloadHandler.text;
-            RankResponse response = JsonUtility.FromJson<RankResponse>(json);
+            if (AppsScriptEndpoint.TryReadFailure(json, out var apiError)) {
+                ClearRank();
+                if (periodText != null) periodText.text = apiError;
+                Debug.LogError("Rank API: " + apiError);
+                yield break;
+            }
+            RankResponse response = null;
+            try { response = JsonUtility.FromJson<RankResponse>(json); }
+            catch (Exception) { Debug.LogError("API xếp hạng không trả JSON hợp lệ."); }
 
             if (response == null || !response.success || response.players == null)
             {
-                Debug.LogWarning("Dữ liệu bảng xếp hạng không hợp lệ: " + json);
+                Debug.LogWarning("Dữ liệu bảng xếp hạng không hợp lệ.");
                 ClearRank();
+                if (periodText != null) periodText.text = "API xếp hạng trả dữ liệu không hợp lệ.";
                 yield break;
             }
 
+            if (response.rankVersion != "weekly-v2") {
+                ClearRank();
+                if (periodText != null) periodText.text = "Cần cập nhật API xếp hạng tuần";
+                Debug.LogWarning("Apps Script chưa dùng bảng xếp hạng tổng điểm tuần (weekly-v2).");
+                yield break;
+            }
+            if (periodText != null) periodText.text = "Tuần " + response.weekStartLabel + " – " + response.weekEndLabel + " • Tổng điểm";
+            if (DateTimeOffset.TryParse(response.weekEndsAt, out var weekEnd))
+                refreshAt = Time.realtimeSinceStartup + Mathf.Clamp((float)(weekEnd - DateTimeOffset.UtcNow).TotalSeconds, 1, 60);
+
             DisplayRank(response.players);
+            if (response.players.Length == 0 && periodText != null)
+                periodText.text += " • Chưa có lượt hoàn thành trong tuần";
         }
     }
 
@@ -86,7 +131,7 @@ public class RankManager : MonoBehaviour
         ClearRank();
 
         // Sắp xếp điểm giảm dần (hàng 1 = điểm cao nhất)
-        Array.Sort(players, (a, b) => b.score.CompareTo(a.score));
+        Array.Sort(players, (a, b) => { int byScore = b.score.CompareTo(a.score); return byScore != 0 ? byScore : string.CompareOrdinal(a.userID, b.userID); });
 
         int count = Mathf.Min(players.Length, nameTexts.Length, scoreTexts.Length);
         for (int i = 0; i < count; i++)

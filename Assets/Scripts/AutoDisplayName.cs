@@ -22,9 +22,7 @@ public class AutoDisplayName : MonoBehaviour
     {
         if (!scene.isLoaded) return;
         
-        string fullName = !string.IsNullOrEmpty(GameSession.Fullname)
-            ? GameSession.Fullname
-            : PlayerPrefs.GetString("Fullname", "Người chơi");
+        string fullName = GameSettingsController.DisplayName;
         string role = !string.IsNullOrEmpty(GameSession.Role)
             ? GameSession.Role
             : PlayerPrefs.GetString("Role", "Student");
@@ -46,12 +44,18 @@ public class AutoDisplayName : MonoBehaviour
         }
     }
     
+    public static void Refresh()
+    {
+        for (int i = 0; i < SceneManager.sceneCount; i++) ApplyNameToScene(SceneManager.GetSceneAt(i));
+    }
+
     static void SetText(Transform t, string textVal)
     {
         // Hỗ trợ cả Text thường (Legacy)
         Text legacyText = t.GetComponent<Text>();
         if (legacyText != null)
         {
+            legacyText.supportRichText = false;
             legacyText.text = textVal;
         }
 
@@ -59,6 +63,7 @@ public class AutoDisplayName : MonoBehaviour
         TextMeshProUGUI tmpText = t.GetComponent<TextMeshProUGUI>();
         if (tmpText != null)
         {
+            tmpText.richText = false;
             tmpText.text = textVal;
         }
     }

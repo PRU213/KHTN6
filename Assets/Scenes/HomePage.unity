@@ -3844,7 +3844,7 @@ AudioSource:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 718031471}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
@@ -4357,6 +4357,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 673346805727208438, guid: c550514a0e0985740b692be981eb2d34, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -317
+      objectReference: {fileID: 0}
+    - target: {fileID: 673346805727208438, guid: c550514a0e0985740b692be981eb2d34, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 238.98
+      objectReference: {fileID: 0}
+    - target: {fileID: 4036369354902202741, guid: c550514a0e0985740b692be981eb2d34, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4231947786078273214, guid: c550514a0e0985740b692be981eb2d34, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -4437,11 +4449,47 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4506889544761803632, guid: c550514a0e0985740b692be981eb2d34, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 480.025
+      objectReference: {fileID: 0}
+    - target: {fileID: 4506889544761803632, guid: c550514a0e0985740b692be981eb2d34, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 573.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4506889544761803632, guid: c550514a0e0985740b692be981eb2d34, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 381
+      objectReference: {fileID: 0}
+    - target: {fileID: 4506889544761803632, guid: c550514a0e0985740b692be981eb2d34, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 236.27
+      objectReference: {fileID: 0}
     - target: {fileID: 5241053663029178907, guid: c550514a0e0985740b692be981eb2d34, type: 3}
       propertyPath: m_Name
       value: menu_game
       objectReference: {fileID: 0}
     - target: {fileID: 5241053663029178907, guid: c550514a0e0985740b692be981eb2d34, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5416814576701354280, guid: c550514a0e0985740b692be981eb2d34, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 580.5201
+      objectReference: {fileID: 0}
+    - target: {fileID: 5416814576701354280, guid: c550514a0e0985740b692be981eb2d34, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 568.2274
+      objectReference: {fileID: 0}
+    - target: {fileID: 5416814576701354280, guid: c550514a0e0985740b692be981eb2d34, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 24
+      objectReference: {fileID: 0}
+    - target: {fileID: 5416814576701354280, guid: c550514a0e0985740b692be981eb2d34, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -255.89
+      objectReference: {fileID: 0}
+    - target: {fileID: 6592258583756039082, guid: c550514a0e0985740b692be981eb2d34, type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
@@ -5872,8 +5920,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -590.29, y: -188.99}
-  m_SizeDelta: {x: 220.89, y: 377.9811}
+  m_AnchoredPosition: {x: -628, y: -192.61}
+  m_SizeDelta: {x: 218.6345, y: 267.4604}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1033501952
 MonoBehaviour:
@@ -5895,7 +5943,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 8257560166262218243, guid: 0742a90bbae377549abeb6b93a4109cc, type: 3}
+  m_Sprite: {fileID: 8443985717994842243, guid: aa0ffcf8636c6b44291440d70293c5f4, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -9125,10 +9173,6 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: ShowHome
       objectReference: {fileID: 0}
-    - target: {fileID: 189998765370196810, guid: 437e92ae4f479a645ab3439d72ff9992, type: 3}
-      propertyPath: studentNameText
-      value: 
-      objectReference: {fileID: 0}
     - target: {fileID: 462972297902686694, guid: 437e92ae4f479a645ab3439d72ff9992, type: 3}
       propertyPath: m_text
       value: 
@@ -9320,6 +9364,8 @@ MonoBehaviour:
   - gameName: Noborimasu
     button: {fileID: 1361549734}
     gamePanel: {fileID: 1134627925}
+  duelButton: {fileID: 539411969}
+  duelPanel: {fileID: 2100000001}
   backButton: {fileID: 0}
   chooseGamePanel: {fileID: 223015168}
 --- !u!224 &1598943558 stripped
@@ -12841,6 +12887,11 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!1 &2100000001 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1344931655737583826, guid: 4fef92cea87795e4cb7274c60d39d799, type: 3}
+  m_PrefabInstance: {fileID: 1436590572}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &2130082582 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3408463884266647851, guid: b5e085a130879704d95e64044eb8d513, type: 3}

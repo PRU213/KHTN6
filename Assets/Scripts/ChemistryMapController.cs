@@ -35,7 +35,7 @@ public class ChemistryMapController : MonoBehaviour
 
     void OpenTheory(int chapter)
     {
-        string id = "CH_CHM_0" + chapter;
+        string id = "CH_CHM_" + chapter.ToString("00");
 
         Debug.Log("Đang mở bài: " + id);
 
@@ -43,7 +43,9 @@ public class ChemistryMapController : MonoBehaviour
         GameSession.Subject = subjectName;
         GameSession.Chapter = "Chương " + chapter;
 
-        theoryPanel.Show(id);
+        System.Action next = null;
+        if(chapter < chapterButtons.Length) next = () => OpenTheory(chapter + 1);
+        theoryPanel.Show(id, next);
     }
 
     void CloseTheory()

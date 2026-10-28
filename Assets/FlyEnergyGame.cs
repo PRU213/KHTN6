@@ -184,6 +184,8 @@ public class FlyEnergyGame : MonoBehaviour
 
     int energy;
     int score;
+    string historyRunId, historyUsername;
+    bool historyQueued;
 
     int correctCount;
     int answeredCount;
@@ -1114,6 +1116,9 @@ public class FlyEnergyGame : MonoBehaviour
 
     void ResetRun()
     {
+        historyRunId = "practice-" + System.Guid.NewGuid().ToString("N");
+        historyUsername = string.IsNullOrWhiteSpace(GameSession.Username) ? PlayerPrefs.GetString("Username", "") : GameSession.Username;
+        historyQueued = false;
         energy =
             Mathf.Clamp(
                 startEnergy,
@@ -2242,6 +2247,15 @@ public class FlyEnergyGame : MonoBehaviour
 
     void Finish(string head)
     {
+        if (!historyQueued && (answeredCount > 0 || score > 0)) {
+            historyQueued = true;
+            PlanetHistorySync.Enqueue(new PlanetMatchRecord {
+                matchId = historyRunId, username = historyUsername, opponent = "Máy AI", mode = "Luyện tập",
+                subject = GameSession.Subject, chapter = GameSession.Chapter,
+                questionType = "multipleChoice", score = score, maxScore = 0,
+                result = answeredCount > 0 && correctCount * 2 >= answeredCount ? "THẮNG" : "THUA"
+            });
+        }
         state = State.Over;
         questionOpen = false;
         locked = true;

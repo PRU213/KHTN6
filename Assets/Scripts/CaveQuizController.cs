@@ -207,6 +207,17 @@ public class CaveQuizController : MonoBehaviour
     {
         StopAllCoroutines();
 
+        if (GameSession.QuestionType == "Tự luận")
+        {
+            canMove = false;
+            locked = true;
+            CleanUp();
+            var essay = GetComponent<FootballEssayController>();
+            if (essay == null) essay = gameObject.AddComponent<FootballEssayController>();
+            essay.Open(this);
+            return;
+        }
+
         StartCoroutine(
             Begin()
         );
@@ -1702,7 +1713,7 @@ public class CaveQuizController : MonoBehaviour
         )
         {
             Finish(
-                "Bạn đã tìm thấy kho báu! "
+                "Bạn đã tìm thấy kho báu! ", true
             );
 
             yield break;
@@ -2044,7 +2055,7 @@ public class CaveQuizController : MonoBehaviour
             )
             {
                 Finish(
-                    "Đường bị chặn hết rồi! "
+                    "Đường bị chặn hết rồi! ", false
                 );
 
 
@@ -2172,7 +2183,7 @@ public class CaveQuizController : MonoBehaviour
     // FINISH
     // =========================================================
 
-    void Finish(string head)
+    void Finish(string head, bool reachedTreasure)
     {
         canMove = false;
         locked = true;
@@ -2204,7 +2215,7 @@ public class CaveQuizController : MonoBehaviour
                 .SetActive(false);
         }
 
-        SaveHistory();
+        SaveHistory(reachedTreasure);
 
         onFinished?.Invoke();
     }
@@ -2472,7 +2483,7 @@ public class CaveQuizController : MonoBehaviour
     // SAVE HISTORY
     // =========================================================
 
-    void SaveHistory()
+    void SaveHistory(bool reachedTreasure)
     {
         if (historySaved)
             return;
@@ -2507,7 +2518,7 @@ public class CaveQuizController : MonoBehaviour
         }
 
         string result =
-            percent >= 50f
+            reachedTreasure
                 ? "THẮNG"
                 : "THUA";
 
