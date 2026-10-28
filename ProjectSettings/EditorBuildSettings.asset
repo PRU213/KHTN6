@@ -69,6 +69,9 @@ EditorBuildSettings:
     path: Assets/Scenes/Biology/PopupKetQua.unity
     guid: 7a8d5bda92514fc1a5eddf15dcf7bea1
   - enabled: 1
+    path: Assets/Scenes/Biology/PopupLoading.unity
+    guid: 8b9e6cda03424fd2b6feef26edf8cba2
+  - enabled: 1
     path: Assets/Scenes/GiaoVienTracNghiem.unity
     guid: f49c404f2a9ffb142bcbf9e98ecb0f92
   - enabled: 1

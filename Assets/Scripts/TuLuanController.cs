@@ -1238,7 +1238,7 @@ public class TuLuanController : MonoBehaviour
         }
 
         // 3. Tải ảnh hoàn tất -> Bắt đầu quá trình lưu bài và chấm AI: Hiển thị màn hình Loading
-        ShowLoading("AI đang chấm bài... Vui lòng chờ trong giây lát...");
+        ShowLoading("AI đang chấm bài...", "Vui lòng chờ trong giây lát...");
 
         bool sheetSuccess = false;
         EssaySubmissionSaveResponse sheetResp = null;
@@ -2168,9 +2168,28 @@ public class TuLuanController : MonoBehaviour
 
     /// <summary>
     /// Hiển thị màn hình loading kèm thông báo AI đang chấm bài cho người dùng biết.
+    /// Ưu tiên tải Scene riêng biệt PopupLoading.unity (Additive) để người dùng dễ dàng căn chỉnh và quản lý.
     /// </summary>
-    public void ShowLoading(string message = "AI đang chấm bài...")
+    public void ShowLoading(string message = "AI đang chấm bài...", string subMessage = "Vui lòng chờ trong giây lát...")
     {
+        // Phân tách nếu caller truyền gộp cả câu chính lẫn câu phụ vào message
+        if (!string.IsNullOrEmpty(message) && message.Contains("Vui lòng chờ trong giây lát"))
+        {
+            message = "AI đang chấm bài...";
+            if (string.IsNullOrEmpty(subMessage))
+            {
+                subMessage = "Vui lòng chờ trong giây lát...";
+            }
+        }
+
+        // 1. Ưu tiên mở Scene riêng PopupLoading.unity (LoadScene Additive) để người dùng dễ quản lý
+        if (Application.CanStreamedLevelBeLoaded("PopupLoading"))
+        {
+            PopupLoadingController.Show(message, !string.IsNullOrEmpty(subMessage) ? subMessage : "Vui lòng chờ trong giây lát...");
+            return;
+        }
+
+        // 2. Dự phòng in-scene nếu Scene PopupLoading chưa thêm vào Build Settings
         if (panelLoading == null)
         {
             Canvas canvas = GetComponentInParent<Canvas>();
@@ -2197,6 +2216,9 @@ public class TuLuanController : MonoBehaviour
     /// </summary>
     public void HideLoading()
     {
+        // 1. Đóng Scene PopupLoading nếu đang mở
+        PopupLoadingController.Hide();
+
         if (loadingAnimCoroutine != null)
         {
             StopCoroutine(loadingAnimCoroutine);

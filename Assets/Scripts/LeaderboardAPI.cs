@@ -26,7 +26,7 @@ public class LeaderboardAPI : MonoBehaviour
     public static LeaderboardAPI Instance { get; private set; }
     
     // YÊU CẦU: Dán link Web App URL của Google Apps Script vào đây (sau khi Deploy)
-    public string webAppUrl = "https://script.google.com/macros/s/AKfycbxxE2R2ZoitgM647aQqnebUcG90lhIlodU0DcyiaZuKkLaVWl6oopI-TkeNM8_KKDWhUw/exec";
+    public string webAppUrl = "https://script.google.com/macros/s/AKfycbxLHvShuipgPg7x28IikDmzU7wHoE2e3ai9rhuoEnN50UsFUAWIPTG_nneHOxz-YmaY/exec";
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     static void Initialize()

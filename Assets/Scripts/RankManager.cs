@@ -24,7 +24,7 @@ public class RankResponse
 public class RankManager : MonoBehaviour
 {
     // THAY bằng URL Apps Script của bạn (giữ nguyên giá trị cũ trong file của bạn)
-    private const string DEFAULT_API_URL = "https://script.google.com/macros/s/AKfycbxxE2R2ZoitgM647aQqnebUcG90lhIlodU0DcyiaZuKkLaVWl6oopI-TkeNM8_KKDWhUw/exec";
+    private const string DEFAULT_API_URL = "https://script.google.com/macros/s/AKfycbxLHvShuipgPg7x28IikDmzU7wHoE2e3ai9rhuoEnN50UsFUAWIPTG_nneHOxz-YmaY/exec";
 
     [Header("API")]
     [SerializeField] private string apiUrl;
