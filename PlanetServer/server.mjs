@@ -7,6 +7,8 @@ import { createChat } from './chat.mjs';
 import { createEssayGrader, validateEssayImage } from './essay.mjs';
 import { createEssaySource, createEssayRecorder } from './essay-source.mjs';
 import { FootballPractice } from './football.mjs';
+import { EssayTutor } from './tutor.mjs';
+import { TutorAuth } from './tutor-auth.mjs';
 
 const envPath = fileURLToPath(new URL('./.env', import.meta.url));
 if (existsSync(envPath)) process.loadEnvFile(envPath);
@@ -130,11 +132,21 @@ export class Arena {
     if (m.questionType !== 'essay' || m.index >= m.questions.length) return;
     m.essayHistory ??= [[], []];
     const q = m.questions[m.index];
-    for (let seat = 0; seat < 2; seat++) m.essayHistory[seat][m.index] = {
+    for (let seat = 0; seat < 2; seat++) {
+      m.essayHistory[seat][m.index] = {
       round: m.index + 1, text: q.text, difficulty: q.difficulty, sampleAnswer: q.sampleAnswer,
+      subject: q.subject,
       earned: m.reviews[seat]?.score ?? 0, feedback: m.reviews[seat]?.feedback || 'Bạn chưa có bài được chấm ở câu này.',
       transcription: m.reviews[seat]?.transcription || '', suggestedAnswer: m.reviews[seat]?.suggestedAnswer || ''
-    };
+      };
+      const player = m.players[seat];
+      if (player && ['Physics', 'Chemistry'].includes(q.subject) && (m.reviews[seat]?.score ?? 0) < 10) {
+        try { this.registerTutor?.({ sourceId: `planet:${m.id}:${seat}:${m.index + 1}`, username: player.username || player.name,
+          subject: q.subject, chapter: q.topic || '', question: q.text, reference: q.sampleAnswer,
+          studentAnswer: m.reviews[seat]?.transcription || '', score: m.reviews[seat]?.score ?? 0 }); }
+        catch { console.warn('Không lưu được mục học lại Planet; sẽ thử lại khi tải kết quả.'); }
+      }
+    }
   }
   endRound(m) { this.saveEssayReview(m); m.phase = 'reveal'; m.revealUntil = this.now() + (m.questionType === 'essay' ? 30000 : 1500); m.bullets = []; }
   choose(m, seat, answer, round) {
@@ -248,14 +260,24 @@ export class Arena {
     const now = this.now(), m = p.match;
     if (!m) return { token: p.token, state: p.state, waited: (now - p.joined) / 1000, waitLimit: this.waitMs / 1000 };
     const q = m.questions[Math.min(m.index, m.questions.length - 1)];
+    const needsTutor = m.questionType === 'essay' && ['Physics', 'Chemistry'].includes(q.subject) && (m.reviews[p.seat]?.score ?? 0) < 10;
+    const reviewQuestions = m.questionType === 'essay' && m.phase === 'finished' ? (m.essayHistory?.[p.seat] || []).filter(Boolean).map(entry => {
+      if (!['Physics', 'Chemistry'].includes(entry.subject) || entry.earned >= 10) return entry;
+      let tutorId = '', tutorError = '';
+      try { tutorId = this.registerTutor?.({ sourceId: `planet:${m.id}:${p.seat}:${entry.round}`, username: p.username || p.name,
+        subject: entry.subject, question: entry.text, reference: entry.sampleAnswer, studentAnswer: entry.transcription, score: entry.earned }) || ''; }
+      catch { tutorError = 'Chưa lưu được mục học lại. Hãy thử lại.'; }
+      return { ...entry, needsTutor: true, tutorId, tutorError, feedback: '', sampleAnswer: '', suggestedAnswer: '' };
+    }) : [];
     return { token: p.token, matchId: m.id, finishedAt: m.finishedAt ? new Date(m.finishedAt).toISOString() : '', maxScore: m.questions.length * (m.questionType === 'essay' ? 10 : 10 + m.roundMs / 1000), state: m.phase, seat: p.seat, bot: m.bot, names: m.names,
+      subject: q.subject, needsTutor,
       questionType: m.questionType, submissions: m.submissions,
-      reviewQuestions: m.questionType === 'essay' && m.phase === 'finished' ? (m.essayHistory?.[p.seat] || []).filter(Boolean) : [],
+      reviewQuestions,
       difficulty: q.difficulty || '', duration: m.roundMs / 1000, revealRemaining: m.phase === 'reveal' ? Math.max(0, (m.revealUntil - now) / 1000) : 0,
       transcription: ['reveal', 'finished'].includes(m.phase) ? (m.reviews[p.seat]?.transcription || '') : '',
-      suggestedAnswer: ['reveal', 'finished'].includes(m.phase) ? (m.reviews[p.seat]?.suggestedAnswer || '') : '',
-      sampleAnswer: m.questionType === 'essay' && ['reveal', 'finished'].includes(m.phase) ? q.sampleAnswer : '',
-      feedback: m.questionType === 'essay' && ['reveal', 'finished'].includes(m.phase) ? (m.reviews[p.seat]?.feedback || (m.submissions[p.seat] === 1 ? 'AI chưa chấm xong trong thời gian cho phép; bài này chưa được cộng điểm.' : 'Bạn chưa có bài được chấm ở câu này.')) : '',
+      suggestedAnswer: !needsTutor && ['reveal', 'finished'].includes(m.phase) ? (m.reviews[p.seat]?.suggestedAnswer || '') : '',
+      sampleAnswer: !needsTutor && m.questionType === 'essay' && ['reveal', 'finished'].includes(m.phase) ? q.sampleAnswer : '',
+      feedback: !needsTutor && m.questionType === 'essay' && ['reveal', 'finished'].includes(m.phase) ? (m.reviews[p.seat]?.feedback || (m.submissions[p.seat] === 1 ? 'AI chưa chấm xong trong thời gian cho phép; bài này chưa được cộng điểm.' : 'Bạn chưa có bài được chấm ở câu này.')) : '',
       earned: m.reviews[p.seat]?.score ?? 0,
       countdown: Math.max(0, (m.starts - now) / 1000), remaining: Math.max(0, (m.deadline - now) / 1000),
       round: Math.min(m.index + 1, m.questions.length), total: m.questions.length, text: q.text, options: q.options,
@@ -265,15 +287,18 @@ export class Arena {
   }
 }
 
-export function createServer(arena = new Arena(), chat = createChat(), { essaySource = createEssaySource(), football = new FootballPractice({ source: essaySource }) } = {}) {
+export function createServer(arena = new Arena(), chat = createChat(), { essaySource = createEssaySource(), football = new FootballPractice({ source: essaySource }), tutor = new EssayTutor(), tutorAuth = new TutorAuth() } = {}) {
+  arena.registerTutor = record => tutor.register(record);
+  football.registerTutor = record => tutor.register(record);
+  football.isTutorComplete = (id, username) => tutor.get(id, username).status === 'completed';
   const server = http.createServer(async (req, res) => {
     res.setHeader('Content-Type', 'application/json; charset=utf-8');
     res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
     res.setHeader('Cache-Control', 'no-store');
     if (req.method === 'OPTIONS') { res.writeHead(204); res.end(); return; }
-    if (req.url === '/health') { res.end(JSON.stringify({ ok: true, essayQuestions: essaySource.status?.() })); return; }
+    if (req.url === '/health') { res.end(JSON.stringify({ ok: true, tutorVersion: 2, mandatoryPracticeTutor: true, essayQuestions: essaySource.status?.() })); return; }
     try {
       if (req.method !== 'POST') { res.writeHead(405); res.end('{}'); return; }
       const chunks = []; let size = 0;
@@ -284,6 +309,17 @@ export function createServer(arena = new Arena(), chat = createChat(), { essaySo
       }
       const raw = Buffer.concat(chunks).toString('utf8');
       const body = JSON.parse(raw || '{}');
+      if (req.url.startsWith('/tutor/')) {
+        if (req.url === '/tutor/login') { res.end(JSON.stringify(await tutorAuth.login(body, req.socket.remoteAddress))); return; }
+        tutorAuth.authorize(req.headers.authorization, body, req.url);
+        let result;
+        if (req.url === '/tutor/list') result = tutor.list(body.username);
+        else if (req.url === '/tutor/state') result = tutor.view(tutor.get(body.id, body.username), true);
+        else if (req.url === '/tutor/start') result = await tutor.start(body);
+        else if (req.url === '/tutor/answer') result = await tutor.answer(body);
+        else { res.writeHead(404); res.end('{}'); return; }
+        res.end(JSON.stringify(result)); return;
+      }
       if (req.url.startsWith('/football/')) {
         let result;
         if (req.url === '/football/start') result = await football.start(body);
@@ -337,7 +373,7 @@ export function createServer(arena = new Arena(), chat = createChat(), { essaySo
       if (body.fire && p.match) arena.fire(p.match, p.seat);
       if (p.match && body.answer !== undefined) arena.choose(p.match, p.seat, body.answer, body.round);
       res.end(JSON.stringify(arena.view(p)));
-    } catch (error) { res.writeHead(400); res.end(JSON.stringify({ error: error.message })); }
+    } catch (error) { res.writeHead(error.status || 400); res.end(JSON.stringify({ error: error.message })); }
   });
   const timer = setInterval(() => arena.tick(), 25);
   server.on('close', () => clearInterval(timer));
@@ -349,5 +385,6 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
   // Warm the real Sheet bank without delaying server startup. Later restarts
   // can reuse the validated snapshot while Google Sheets is slow.
   source().catch(() => console.warn('Chưa làm nóng được dữ liệu TuLuan; sẽ thử lại khi có yêu cầu.'));
-  createServer(undefined, undefined, { essaySource: source }).listen(Number(process.env.PORT || 8787), '0.0.0.0', () => console.log('Planet server ready on port ' + (process.env.PORT || 8787)));
+  const tutor = new EssayTutor({ directory: process.env.TUTOR_DATA_DIR || fileURLToPath(new URL('./data/tutor/', import.meta.url)) });
+  createServer(undefined, undefined, { essaySource: source, tutor }).listen(Number(process.env.PORT || 8787), '0.0.0.0', () => console.log('Planet server ready on port ' + (process.env.PORT || 8787)));
 }

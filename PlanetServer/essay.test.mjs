@@ -37,7 +37,7 @@ test('essay and multiple choice never share a matchmaking queue', () => {
   assert.throws(() => arena.join(request({ questionType: 'unknown' })));
 });
 
-test('both players submit once, AI owns scores, and reference is hidden until reveal', async () => {
+test('both players submit once; imperfect Physics/Chemistry work stays gated after reveal while Biology retains answers', async () => {
   let calls = 0;
   const { arena, p, q, m } = fixture(async () => { calls++; return { score: 8, feedback: 'Đúng ý chính.' }; });
   assert.equal(arena.view(p).sampleAnswer, '');
@@ -50,8 +50,9 @@ test('both players submit once, AI owns scores, and reference is hidden until re
   assert.equal(arena.view(p).sampleAnswer, '');
   await arena.submitEssay(q, 'Bài làm của bạn', 1);
   assert.equal(m.phase, 'reveal'); assert.deepEqual(m.scores, [8, 8]);
-  assert.ok(arena.view(p).sampleAnswer.length > 0);
-  assert.equal(arena.view(p).feedback, 'Đúng ý chính.');
+  const revealed = arena.view(p);
+  assert.equal(revealed.sampleAnswer.length > 0, m.questions[0].subject === 'Biology');
+  assert.equal(revealed.feedback, m.questions[0].subject === 'Biology' ? 'Đúng ý chính.' : '');
   assert.deepEqual(arena.view(p).reviewQuestions, []);
 });
 
@@ -69,7 +70,7 @@ test('post-match review retains each seat own answer and excludes future questio
   assert.equal(b[0].transcription, 'Bài riêng của B');
   assert.equal(a[1].transcription, 'Bài A câu 2');
   assert.equal(b[1].transcription, '');
-  assert.ok(a.every(entry => entry.sampleAnswer && entry.round <= 2));
+  assert.ok(a.every(entry => entry.round <= 2 && (entry.subject === 'Biology' ? !!entry.sampleAnswer : entry.needsTutor && !entry.sampleAnswer && !entry.suggestedAnswer)));
   assert.deepEqual(m.scores, [14, 7]);
 });
 
