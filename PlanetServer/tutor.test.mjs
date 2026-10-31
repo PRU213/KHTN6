@@ -130,20 +130,22 @@ test('real practice grading and timeout register remediation, hide answer leaks,
   assert.ok(practice.view(session).tutorId); assert.equal(tutor.list('practice-user').records.length, 2);
 });
 
-test('Planet scopes tutoring to Physics/Chemistry; Biology results and review chat data are unchanged', () => {
+test('Planet opts every subject into tutoring while practice Biology remains excluded', () => {
   const { tutor } = fixture(); const arena = new Arena(); arena.registerTutor = r => tutor.register(r);
   const body = { name: 'S', username: 'planet-user', questionType: 'essay', difficulties: ['Dễ'], guns: [{ x: -1, y: -1 }, { x: 1, y: -1 }], targets: [0,1,2,3].map(x => ({ x, y: 0 })) };
   const joined = arena.join(body); arena.join({ ...body, username: 'other' });
   const p = arena.players.get(joined.token), m = p.match;
   for (const subject of ['Biology', 'Physics', 'Chemistry']) {
+    m.reviewHistory = null; m.essayHistory = null;
     m.questions[0] = { ...m.questions[0], subject }; m.index = 0; m.phase = 'reveal';
     m.reviews[0] = { score: 4, feedback: 'FEEDBACK', suggestedAnswer: 'SOLUTION' };
     arena.saveEssayReview(m); m.phase = 'finished';
     const state = arena.view(p), entry = state.reviewQuestions[0];
-    assert.equal(state.feedback, subject === 'Biology' ? 'FEEDBACK' : '');
-    assert.equal(entry.suggestedAnswer, subject === 'Biology' ? 'SOLUTION' : '');
-    assert.equal(!!entry.tutorId, subject !== 'Biology');
+    assert.equal(state.feedback, '');
+    assert.equal(entry.suggestedAnswer, '');
+    assert.equal(!!entry.tutorId, true);
   }
+  assert.equal(tutor.register(record({ subject: 'Biology', sourceId: 'practice-biology' })), '');
 });
 
 test('HTTP tutor start/answer/history uses server-owned records and rejects made-up IDs', async t => {

@@ -11,6 +11,9 @@
   và câu kiểm tra lại. Sai hoặc **Em chưa biết**: giữ bước, giải thích, kiểm tra lại.
   Chỉ trả lời đúng mới qua bước. Không có nút bỏ qua hay xin lời giải toàn bộ.
 - Qua hết các bước mới mở lời giải tổng kết; điểm bài nộp ban đầu giữ nguyên.
+- Ngay trên màn hoàn thành, chọn **Câu tiếp theo** để tiếp tục lượt luyện tập đang
+  mở, hoặc **Xem tổng kết** nếu đó là câu cuối. Nếu mở một bản ghi cũ không còn
+  lượt luyện tập tương ứng, nút sẽ là **Về nhật ký**.
 - Trong luyện tập Football/Sheep/Cave, câu sai tự mở màn học lại. Nút chuyển câu
   bị khóa đến khi server xác nhận hoàn thành toàn bộ các bước; áp dụng cả câu cuối
   trước tổng kết. Đóng màn học lại không mở khóa, có thể mở lại để tiếp tục.

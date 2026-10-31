@@ -23,6 +23,7 @@ const shuffle = items => {
   }
   return copy;
 };
+const accountKey = value => String(value || '').trim().toLowerCase();
 const point = p => p && Number.isFinite(p.x) && Number.isFinite(p.y) && Math.abs(p.x) < 5000 && Math.abs(p.y) < 5000;
 export const essayDuration = difficulty => ({ 'Dễ': 60000, 'Trung bình': 120000, 'Khó': 240000 }[difficulty] || 60000);
 
@@ -32,7 +33,15 @@ export class Arena {
     this.now = now; this.waitMs = waitMs; this.players = new Map(); this.matches = new Map(); this.gradeEssay = gradeEssay;
     this.essayBank = essayQuestions; this.recordEssay = recordEssay;
   }
+  assertReady(username) {
+    const reviews = this.pendingReviews?.(username) || [];
+    if (reviews.length) {
+      const error = new Error('Em cần hoàn thành học lại từng bước các câu sai trước khi tìm trận mới.');
+      Object.assign(error, { reviewRequired: true, reviewPending: reviews.length }); throw error;
+    }
+  }
   join(body) {
+    this.assertReady(body.username || body.name);
     const now = this.now();
     if (body.questionType !== undefined && !['essay', 'multipleChoice'].includes(body.questionType)) throw new Error('Hình thức làm bài không hợp lệ.');
     const questionType = body.questionType || 'multipleChoice';
@@ -58,6 +67,9 @@ export class Arena {
   }
   createMatch(p, other = null) {
     if (p.state !== 'searching' || (other && other.state !== 'searching')) return;
+    for (const player of [p, other].filter(Boolean)) {
+      if (this.pendingReviews?.(player.username || player.name).length) { player.state = 'reviewRequired'; return; }
+    }
     const start = this.now() + 4000;
     const essay = p.questionType === 'essay';
     const m = { id: randomUUID(), players: [p, other], names: [p.name, other?.name || 'Máy Planet'],
@@ -70,7 +82,7 @@ export class Arena {
       questions: shuffle(p.questions).map(q => {
         if (essay) return { ...q, options: [], correct: -1 };
         const order = shuffle([0, 1, 2, 3]);
-        return { subject: q.subject, text: q.text, options: order.map(i => q.options[i]), correct: order.indexOf(q.correct) };
+        return { ...q, options: order.map(i => q.options[i]), correct: order.indexOf(q.correct) };
       }) };
     if (essay) { m.roundMs = essayDuration(m.questions[0].difficulty); m.deadline = start + m.roundMs; }
     const xs = p.layout.targets.map(t => t.x), ys = p.layout.targets.map(t => t.y);
@@ -83,7 +95,7 @@ export class Arena {
   playWithBot(p) {
     // A human match may have been created just before the click arrived.
     // Never replace an existing match or create a second one for this ticket.
-    if (p.state === 'searching' && !p.match) this.createMatch(p);
+    if (p.state === 'searching' && !p.match) { this.assertReady(p.username || p.name); this.createMatch(p); }
     return this.view(p);
   }
   angles(m, now) {
@@ -128,32 +140,60 @@ export class Arena {
     const dx = -Math.sin(a), dy = Math.cos(a), g = m.layout.guns[seat];
     m.bullets.push({ id: ++m.nextBullet, player: seat, x: g.x + dx * 90, y: g.y + dy * 90, dx, dy });
   }
-  saveEssayReview(m) {
-    if (m.questionType !== 'essay' || m.index >= m.questions.length) return;
-    m.essayHistory ??= [[], []];
-    const q = m.questions[m.index];
-    for (let seat = 0; seat < 2; seat++) {
-      m.essayHistory[seat][m.index] = {
-      round: m.index + 1, text: q.text, difficulty: q.difficulty, sampleAnswer: q.sampleAnswer,
-      subject: q.subject,
-      earned: m.reviews[seat]?.score ?? 0, feedback: m.reviews[seat]?.feedback || 'Bạn chưa có bài được chấm ở câu này.',
-      transcription: m.reviews[seat]?.transcription || '', suggestedAnswer: m.reviews[seat]?.suggestedAnswer || ''
-      };
-      const player = m.players[seat];
-      if (player && ['Physics', 'Chemistry'].includes(q.subject) && (m.reviews[seat]?.score ?? 0) < 10) {
-        try { this.registerTutor?.({ sourceId: `planet:${m.id}:${seat}:${m.index + 1}`, username: player.username || player.name,
-          subject: q.subject, chapter: q.topic || '', question: q.text, reference: q.sampleAnswer,
-          studentAnswer: m.reviews[seat]?.transcription || '', score: m.reviews[seat]?.score ?? 0 }); }
-        catch { console.warn('Không lưu được mục học lại Planet; sẽ thử lại khi tải kết quả.'); }
-      }
-    }
+  // Clicks and projectile hits contribute to the same personal answer history.
+  rememberChoice(m, seat, answer) {
+    m.choices ??= [[], []]; m.choices[seat].push(answer);
   }
-  endRound(m) { this.saveEssayReview(m); m.phase = 'reveal'; m.revealUntil = this.now() + (m.questionType === 'essay' ? 30000 : 1500); m.bullets = []; }
+  registerReview(m, seat, entry) {
+    entry.sourceId ||= `planet:${m.id}:${seat}:${entry.round}`;
+    if (!entry.needsTutor || !m.players[seat]) return;
+    const player = m.players[seat], username = player.username || player.name;
+    try {
+      entry.tutorId = this.registerTutor?.({ source: 'planet', sourceId: entry.sourceId, username,
+        subject: entry.subject, chapter: entry.difficulty || '', question: entry.text + (entry.options?.length ? '\n' + entry.options.map((o, i) => `${'ABCD'[i]}. ${o}`).join('\n') : ''),
+        reference: entry.sampleAnswer, studentAnswer: entry.transcription, score: entry.earned, review: entry }) || '';
+      entry.tutorError = entry.tutorId ? '' : 'Chưa lưu được mục học lại. Hãy thử lại.';
+      entry.tutorCompleted = !!entry.tutorId && !!this.isTutorComplete?.(entry.tutorId, username);
+    } catch { entry.tutorError = 'Chưa lưu được mục học lại. Hãy thử lại.'; entry.tutorCompleted = false; }
+  }
+  saveRoundReview(m) {
+    if (m.index >= m.questions.length || !['playing', 'reveal'].includes(m.phase)) return;
+    const essay = m.questionType === 'essay', q = m.questions[m.index];
+    m.reviewHistory ??= [[], []];
+    // Finishing or polling an ended round must preserve its original answers.
+    for (let seat = 0; seat < 2; seat++) {
+      if (m.reviewHistory[seat][m.index]) continue;
+      const choices = [...(m.choices?.[seat] || [])], earned = essay ? m.reviews[seat]?.score ?? 0 : choices.includes(q.correct) ? 10 : 0;
+      const status = essay ? m.submissions[seat] === 1 && !m.reviews[seat] ? 'ungraded' : earned === 10 ? 'correct' : m.reviews[seat] ? 'wrong' : 'unanswered'
+        : choices.some(c => c !== q.correct) ? 'wrong' : choices.includes(q.correct) ? 'correct' : 'unanswered';
+      const entry = { round: m.index + 1, text: q.text, difficulty: q.difficulty || '', subject: q.subject, questionType: m.questionType,
+        options: essay ? [] : [...q.options], choices, correct: q.correct, status, earned,
+        needsTutor: ['wrong', 'unanswered'].includes(status), tutorCompleted: false,
+        sampleAnswer: essay ? q.sampleAnswer : q.options[q.correct],
+        feedback: essay ? m.reviews[seat]?.feedback || (status === 'ungraded' ? 'AI chưa chấm xong. Câu này chưa được xác nhận sai.' : 'Bạn chưa nộp bài ở câu này.') : '',
+        transcription: essay ? m.reviews[seat]?.transcription || '' : choices.map(c => `${'ABCD'[c]}. ${q.options[c]}`).join(' → '),
+        suggestedAnswer: essay ? m.reviews[seat]?.suggestedAnswer || '' : '' };
+      m.reviewHistory[seat][m.index] = entry;
+      this.registerReview(m, seat, entry);
+    }
+    if (essay) m.essayHistory = m.reviewHistory;
+  }
+  saveEssayReview(m) { this.saveRoundReview(m); }
+  reviewView(m, seat) {
+    return (m.reviewHistory?.[seat] || m.essayHistory?.[seat] || []).filter(Boolean).map(entry => {
+      this.registerReview(m, seat, entry);
+      const result = { ...entry };
+      if (entry.needsTutor && !entry.tutorCompleted) Object.assign(result, { sampleAnswer: '', feedback: '', suggestedAnswer: '', correct: -1 });
+      return result;
+    });
+  }
+  endRound(m) { this.saveRoundReview(m); m.phase = 'reveal'; m.revealUntil = this.now() + (m.questionType === 'essay' ? 30000 : 1500); m.bullets = []; }
   choose(m, seat, answer, round) {
     if (m.questionType === 'essay') return;
     const now = this.now();
     if (m.phase !== 'playing' || now >= m.deadline || round !== m.index + 1 ||
         !Number.isInteger(answer) || answer < 0 || answer > 3 || m.shot[answer] || now < m.stun[seat]) return;
+    this.rememberChoice(m, seat, answer);
     if (answer === m.questions[m.index].correct) {
       m.scores[seat] += 10 + Math.round((m.deadline - now) / 1000);
       this.endRound(m);
@@ -187,7 +227,7 @@ export class Arena {
       throw new Error('AI chưa chấm được bài. Bạn thử nộp lại khi còn thời gian nhé.');
     }
   }
-  finish(m, winner, reason = '') { this.saveEssayReview(m); m.phase = 'finished'; m.winner = winner; m.reason = reason; m.finishedAt = this.now(); m.bullets = []; }
+  finish(m, winner, reason = '') { this.saveRoundReview(m); m.phase = 'finished'; m.winner = winner; m.reason = reason; m.finishedAt = this.now(); m.bullets = []; }
   leave(p) {
     if (p.match && p.match.phase !== 'finished') this.finish(p.match, 1 - p.seat, 'Đối thủ đã rời trận.');
     p.state = 'cancelled'; this.players.delete(p.token);
@@ -200,7 +240,14 @@ export class Arena {
       if (p.match?.phase === 'finished' && now - p.match.finishedAt > 300000) this.players.delete(p.token);
     }
     for (const m of this.matches.values()) {
-      if (m.phase === 'finished') { if (now - m.finishedAt > 300000) this.matches.delete(m.id); continue; }
+      if (m.phase === 'finished') {
+        if (now - m.finishedAt > 300000) {
+          m.players.forEach((p, seat) => { if (p) this.reviewView(m, seat); });
+          const unsaved = m.reviewHistory?.some(entries => entries.some(e => e?.needsTutor && !e.tutorId));
+          if (!unsaved) this.matches.delete(m.id);
+        }
+        continue;
+      }
       const dt = Math.min(.1, Math.max(0, (now - m.lastTick) / 1000)); m.lastTick = now;
       if (m.phase === 'countdown' && now >= m.starts) m.phase = 'playing';
       if (m.phase === 'reveal' && now >= m.revealUntil) {
@@ -208,7 +255,7 @@ export class Arena {
         if (m.index >= m.questions.length) { this.finish(m, m.scores[0] === m.scores[1] ? -1 : m.scores[0] > m.scores[1] ? 0 : 1); continue; }
         if (m.questionType === 'essay') m.roundMs = essayDuration(m.questions[m.index].difficulty);
         m.phase = 'playing'; m.deadline = now + m.roundMs; m.shot.fill(false); m.stun.fill(0);
-        m.submissions = [0, 0]; m.reviews = [null, null];
+        m.submissions = [0, 0]; m.reviews = [null, null]; m.choices = [[], []];
         m.botNext = now + 3000 + Math.random() * 2000;
       }
       if (m.phase !== 'playing') continue;
@@ -247,6 +294,7 @@ export class Arena {
         }
         if (hit >= 0) {
           m.bullets.splice(i, 1);
+          this.rememberChoice(m, b.player, hit);
           if (hit === m.questions[m.index].correct) {
             m.scores[b.player] += 10 + Math.round((m.deadline - now) / 1000); this.endRound(m); break;
           }
@@ -258,21 +306,19 @@ export class Arena {
   }
   view(p) {
     const now = this.now(), m = p.match;
-    if (!m) return { token: p.token, state: p.state, waited: (now - p.joined) / 1000, waitLimit: this.waitMs / 1000 };
+    if (!m) {
+      const reviewQuestions = p.state === 'reviewRequired' ? this.pendingReviews?.(p.username || p.name) || [] : [];
+      return { duelReviewVersion: 1, token: p.token, state: p.state, waited: (now - p.joined) / 1000, waitLimit: this.waitMs / 1000,
+        ...(p.state === 'reviewRequired' ? { reviewRequired: true, reviewPending: reviewQuestions.length, error: 'Em cần hoàn thành học lại trước khi tìm trận mới.' } : {}) };
+    }
     const q = m.questions[Math.min(m.index, m.questions.length - 1)];
-    const needsTutor = m.questionType === 'essay' && ['Physics', 'Chemistry'].includes(q.subject) && (m.reviews[p.seat]?.score ?? 0) < 10;
-    const reviewQuestions = m.questionType === 'essay' && m.phase === 'finished' ? (m.essayHistory?.[p.seat] || []).filter(Boolean).map(entry => {
-      if (!['Physics', 'Chemistry'].includes(entry.subject) || entry.earned >= 10) return entry;
-      let tutorId = '', tutorError = '';
-      try { tutorId = this.registerTutor?.({ sourceId: `planet:${m.id}:${p.seat}:${entry.round}`, username: p.username || p.name,
-        subject: entry.subject, question: entry.text, reference: entry.sampleAnswer, studentAnswer: entry.transcription, score: entry.earned }) || ''; }
-      catch { tutorError = 'Chưa lưu được mục học lại. Hãy thử lại.'; }
-      return { ...entry, needsTutor: true, tutorId, tutorError, feedback: '', sampleAnswer: '', suggestedAnswer: '' };
-    }) : [];
-    return { token: p.token, matchId: m.id, finishedAt: m.finishedAt ? new Date(m.finishedAt).toISOString() : '', maxScore: m.questions.length * (m.questionType === 'essay' ? 10 : 10 + m.roundMs / 1000), state: m.phase, seat: p.seat, bot: m.bot, names: m.names,
+    const reviewQuestions = m.phase === 'finished' ? this.reviewView(m, p.seat) : [];
+    const currentReview = m.reviewHistory?.[p.seat]?.[Math.min(m.index, m.questions.length - 1)];
+    const needsTutor = m.questionType === 'essay' ? (m.reviews[p.seat]?.score ?? 0) < 10 : !!currentReview?.needsTutor && !currentReview.tutorCompleted;
+    return { duelReviewVersion: 1, token: p.token, matchId: m.id, finishedAt: m.finishedAt ? new Date(m.finishedAt).toISOString() : '', maxScore: m.questions.length * (m.questionType === 'essay' ? 10 : 10 + m.roundMs / 1000), state: m.phase, seat: p.seat, bot: m.bot, names: m.names,
       subject: q.subject, needsTutor,
       questionType: m.questionType, submissions: m.submissions,
-      reviewQuestions,
+      reviewQuestions, reviewPending: reviewQuestions.filter(e => e.needsTutor && !e.tutorCompleted).length,
       difficulty: q.difficulty || '', duration: m.roundMs / 1000, revealRemaining: m.phase === 'reveal' ? Math.max(0, (m.revealUntil - now) / 1000) : 0,
       transcription: ['reveal', 'finished'].includes(m.phase) ? (m.reviews[p.seat]?.transcription || '') : '',
       suggestedAnswer: !needsTutor && ['reveal', 'finished'].includes(m.phase) ? (m.reviews[p.seat]?.suggestedAnswer || '') : '',
@@ -281,7 +327,7 @@ export class Arena {
       earned: m.reviews[p.seat]?.score ?? 0,
       countdown: Math.max(0, (m.starts - now) / 1000), remaining: Math.max(0, (m.deadline - now) / 1000),
       round: Math.min(m.index + 1, m.questions.length), total: m.questions.length, text: q.text, options: q.options,
-      correct: m.phase === 'reveal' || m.phase === 'finished' ? q.correct : -1,
+      correct: !needsTutor && (m.phase === 'reveal' || m.phase === 'finished') ? q.correct : -1,
       scores: m.scores, angles: this.angles(m, now), targets: this.targets(m, now), shot: m.shot,
       stunned: m.stun.map(t => now < t), bullets: m.bullets, winner: m.winner, reason: m.reason };
   }
@@ -289,6 +335,21 @@ export class Arena {
 
 export function createServer(arena = new Arena(), chat = createChat(), { essaySource = createEssaySource(), football = new FootballPractice({ source: essaySource }), tutor = new EssayTutor(), tutorAuth = new TutorAuth() } = {}) {
   arena.registerTutor = record => tutor.register(record);
+  arena.isTutorComplete = (id, username) => tutor.get(id, username).status === 'completed';
+  const savedReviews = username => [...tutor.records.values()].filter(r => r.source === 'planet' && accountKey(r.username) === accountKey(username)).map(r => ({
+    ...(r.review || {}), sourceId: r.sourceId || r.review?.sourceId || '', round: r.review?.round || 0, text: r.review?.text || r.question, subject: r.subject,
+    needsTutor: true, tutorId: r.id, tutorCompleted: r.status === 'completed', tutorError: '',
+    ...(r.status !== 'completed' ? { sampleAnswer: '', suggestedAnswer: '', feedback: '', correct: -1 } : {})
+  }));
+  arena.pendingReviews = username => {
+    // Retry failed durable registrations before applying the gate; no client completion flags.
+    const unsaved = [];
+    for (const m of arena.matches.values()) if (m.phase === 'finished') m.players.forEach((p, seat) => {
+      if (p && accountKey(p.username || p.name) === accountKey(username))
+        unsaved.push(...arena.reviewView(m, seat).filter(e => e.needsTutor && !e.tutorCompleted && !e.tutorId));
+    });
+    return [...savedReviews(username).filter(e => !e.tutorCompleted), ...unsaved];
+  };
   football.registerTutor = record => tutor.register(record);
   football.isTutorComplete = (id, username) => tutor.get(id, username).status === 'completed';
   const server = http.createServer(async (req, res) => {
@@ -298,7 +359,7 @@ export function createServer(arena = new Arena(), chat = createChat(), { essaySo
     res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
     res.setHeader('Cache-Control', 'no-store');
     if (req.method === 'OPTIONS') { res.writeHead(204); res.end(); return; }
-    if (req.url === '/health') { res.end(JSON.stringify({ ok: true, tutorVersion: 2, mandatoryPracticeTutor: true, essayQuestions: essaySource.status?.() })); return; }
+    if (req.url === '/health') { res.end(JSON.stringify({ ok: true, tutorVersion: 2, mandatoryPracticeTutor: true, duelReviewVersion: 1, essayQuestions: essaySource.status?.() })); return; }
     try {
       if (req.method !== 'POST') { res.writeHead(405); res.end('{}'); return; }
       const chunks = []; let size = 0;
@@ -319,6 +380,37 @@ export function createServer(arena = new Arena(), chat = createChat(), { essaySo
         else if (req.url === '/tutor/answer') result = await tutor.answer(body);
         else { res.writeHead(404); res.end('{}'); return; }
         res.end(JSON.stringify(result)); return;
+      }
+      if (req.url === '/review/pending' || req.url === '/review/local') {
+        tutorAuth.authorize(req.headers.authorization, body, req.url);
+        let reviewQuestions;
+        if (req.url === '/review/local') {
+          if (typeof body.matchId !== 'string' || !/^local-[a-f0-9-]{32,36}$/i.test(body.matchId) || !Array.isArray(body.reviewQuestions) || body.reviewQuestions.length < 1 || body.reviewQuestions.length > 15)
+            throw new Error('Dữ liệu trận luyện lại chưa hợp lệ.');
+          const seen = new Set();
+          // Validate the complete batch before registering any lesson.
+          const entries = body.reviewQuestions.map(e => {
+            if (!e || !Number.isInteger(e.round) || e.round < 1 || e.round > 15 || seen.has(e.round) || !Array.isArray(e.options) || e.options.length !== 4 || !Array.isArray(e.choices) || e.choices.length > 4 || e.choices.some(c => !Number.isInteger(c) || c < 0 || c > 3))
+              throw new Error('Dữ liệu câu trả lời chưa hợp lệ.');
+            seen.add(e.round);
+            const q = bank.find(q => q.text === e.text && q.subject === e.subject && [...q.options].sort().every((o, i) => o === [...e.options].sort()[i]));
+            if (!q) throw new Error('Câu hỏi không thuộc ngân hàng đối kháng.');
+            const correct = e.options.indexOf(q.options[q.correct]), status = e.choices.some(c => c !== correct) ? 'wrong' : e.choices.includes(correct) ? 'correct' : 'unanswered';
+            return { round: e.round, text: q.text, subject: q.subject, difficulty: q.difficulty, options: [...e.options], choices: [...e.choices],
+              correct, status, questionType: 'multipleChoice', earned: e.choices.includes(correct) ? 10 : 0, needsTutor: status !== 'correct',
+              sampleAnswer: q.options[q.correct], transcription: e.choices.map(c => `${'ABCD'[c]}. ${e.options[c]}`).join(' → '), feedback: '', suggestedAnswer: '' };
+          });
+          const localMatch = { id: body.matchId, players: [{ username: body.username }], reviewHistory: [entries] };
+          reviewQuestions = arena.reviewView(localMatch, 0);
+          if (reviewQuestions.some(e => e.needsTutor && !e.tutorId)) {
+            const error = new Error('Chưa lưu được nhật ký học lại. Hãy thử lại; bài cần sửa vẫn được giữ trên thiết bị.');
+            error.status = 503; throw error;
+          }
+        } else {
+          const pending = arena.pendingReviews(body.username);
+          reviewQuestions = [...savedReviews(body.username), ...pending.filter(e => !e.tutorId)];
+        }
+        res.end(JSON.stringify({ state: 'finished', reviewQuestions, reviewPending: reviewQuestions.filter(e => e.needsTutor && !e.tutorCompleted).length })); return;
       }
       if (req.url.startsWith('/football/')) {
         let result;
@@ -356,6 +448,7 @@ export function createServer(arena = new Arena(), chat = createChat(), { essaySo
       }
       if (req.url === '/join') {
         if (arena.players.size > 2000) throw new Error('Máy chủ đang đầy.');
+        arena.assertReady(body.username || body.name);
         if (body.questionType === 'essay') arena.essayBank = await essaySource();
         res.end(JSON.stringify(arena.join(body))); return;
       }
@@ -373,7 +466,7 @@ export function createServer(arena = new Arena(), chat = createChat(), { essaySo
       if (body.fire && p.match) arena.fire(p.match, p.seat);
       if (p.match && body.answer !== undefined) arena.choose(p.match, p.seat, body.answer, body.round);
       res.end(JSON.stringify(arena.view(p)));
-    } catch (error) { res.writeHead(error.status || 400); res.end(JSON.stringify({ error: error.message })); }
+    } catch (error) { res.writeHead(error.status || 400); res.end(JSON.stringify({ error: error.message, ...(error.reviewRequired ? { reviewRequired: true, reviewPending: error.reviewPending } : {}) })); }
   });
   const timer = setInterval(() => arena.tick(), 25);
   server.on('close', () => clearInterval(timer));
