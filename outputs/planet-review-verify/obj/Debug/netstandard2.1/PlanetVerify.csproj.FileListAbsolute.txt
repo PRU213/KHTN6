@@ -1,0 +1,9 @@
+D:\PRU_Git\KHTN6\outputs\planet-review-verify\obj\Debug\netstandard2.1\PlanetVerify.csproj.AssemblyReference.cache
+D:\PRU_Git\KHTN6\outputs\planet-review-verify\obj\Debug\netstandard2.1\PlanetVerify.GeneratedMSBuildEditorConfig.editorconfig
+D:\PRU_Git\KHTN6\outputs\planet-review-verify\obj\Debug\netstandard2.1\PlanetVerify.csproj.CoreCompileInputs.cache
+D:\PRU_Git\KHTN6\outputs\planet-review-verify\obj\Debug\netstandard2.1\PlanetVerify.sourcelink.json
+D:\PRU_Git\KHTN6\outputs\planet-review-verify\bin\Debug\netstandard2.1\PlanetVerify.deps.json
+D:\PRU_Git\KHTN6\outputs\planet-review-verify\bin\Debug\netstandard2.1\PlanetVerify.dll
+D:\PRU_Git\KHTN6\outputs\planet-review-verify\bin\Debug\netstandard2.1\PlanetVerify.pdb
+D:\PRU_Git\KHTN6\outputs\planet-review-verify\obj\Debug\netstandard2.1\PlanetVerify.dll
+D:\PRU_Git\KHTN6\outputs\planet-review-verify\obj\Debug\netstandard2.1\PlanetVerify.pdb
