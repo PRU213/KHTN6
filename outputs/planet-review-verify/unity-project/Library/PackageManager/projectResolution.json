@@ -1,0 +1,12 @@
+{
+  "context": {
+    "projectPath": "D:/PRU_Git/KHTN6/outputs/planet-review-verify/unity-project/Packages",
+    "unityVersion": "6000.6.0f1"
+  },
+  "inputs": [
+    "D:\\PRU_Git\\KHTN6\\outputs\\planet-review-verify\\unity-project\\Packages\\manifest.json",
+    "D:\\PRU_Git\\KHTN6\\outputs\\planet-review-verify\\unity-project\\Packages\\packages-lock.json",
+    "C:\\Program Files\\Unity\\Hub\\Editor\\6000.6.0f1\\Editor\\Data\\Resources\\PackageManager\\BuiltInPackages\\BuiltInPackagesCombined.sha1"
+  ],
+  "outputs": {}
+}

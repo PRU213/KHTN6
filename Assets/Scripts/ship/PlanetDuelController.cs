@@ -27,11 +27,16 @@ public class PlanetDuelController : MonoBehaviour
         public float[] angles; public Vector2[] targets; public bool[] shot, stunned; public Shot[] bullets;
         public string questionType, sampleAnswer, feedback; public int[] submissions; public int earned;
         public string difficulty, transcription, suggestedAnswer; public float duration, revealRemaining;
+        public string subject; public bool needsTutor;
+        public bool reviewRequired; public int reviewPending, duelReviewVersion;
     }
     [Serializable] public class ReviewQuestion {
         public int round, earned;
         public string text, difficulty, sampleAnswer, feedback, transcription, suggestedAnswer;
+        public string subject, tutorId, tutorError, status, questionType, sourceId; public bool needsTutor, tutorCompleted, answeredCorrectly;
+        public string[] options; public int[] choices;
     }
+    [Serializable] public class LocalReviewBatch { public string username, matchId; public ReviewQuestion[] reviewQuestions; }
     [Serializable] public class Bank { public BankQuestion[] questions; }
     [Serializable] public class BankQuestion {
         public string subject, difficulty, text; public string[] options; public int correct;
@@ -77,7 +82,12 @@ public class PlanetDuelController : MonoBehaviour
     string historyMatchId, matchUsername;
     RectTransform exitConfirmation;
     RectTransform reviewPicker;
+    TMP_Text reviewRetryStatus;
+    bool refreshingReview;
     Button askAfterMatch;
+    readonly List<ReviewQuestion> localReviews = new List<ReviewQuestion>();
+    LocalReviewBatch pendingLocalReview;
+    bool checkedReviews, localHistoryQueued;
 
     public void Open(BlastRoundManager manager)
     {
@@ -98,6 +108,7 @@ public class PlanetDuelController : MonoBehaviour
         }
         hints = root.GetComponentsInChildren<TMP_Text>(true);
         game.MatchFinished = LocalFinished;
+        game.RoundReviewed = LocalRoundReviewed;
         BeginSearch();
     }
 
@@ -151,7 +162,7 @@ public class PlanetDuelController : MonoBehaviour
         MakeButton("Stay", exitCard, new Vector2(.07f, .08f), new Vector2(.47f, .28f), "Ở lại", () => exitConfirmation.gameObject.SetActive(false));
         MakeButton("Leave", exitCard, new Vector2(.53f, .08f), new Vector2(.93f, .28f), "Thoát game", ReturnToMenu);
         exitConfirmation.gameObject.SetActive(false);
-        askAfterMatch = MakeButton("AskAfterMatch", card, new Vector2(.2f, .215f), new Vector2(.8f, .295f), "Xem lại câu / Hỏi AI thêm", OpenReviewPicker);
+        askAfterMatch = MakeButton("AskAfterMatch", card, new Vector2(.2f, .215f), new Vector2(.8f, .295f), "Xem câu sai / Học lại từng bước", OpenReviewPicker);
         askAfterMatch.gameObject.SetActive(false);
     }
 
@@ -375,11 +386,15 @@ public class PlanetDuelController : MonoBehaviour
         essayResults.gameObject.SetActive(reveal);
         if (reveal && shownResultRound != state.round) {
             shownResultRound = state.round;
-            resultBody.text = "KẾT QUẢ CÂU " + state.round + " • " + state.earned + "/10 ĐIỂM\n\n"
-                + state.text + "\n\nNHẬN XÉT CỦA AI\n" + state.feedback
+            bool ungraded = submission == 1;
+            bool guided = state.needsTutor && !ungraded;
+            resultBody.text = "KẾT QUẢ CÂU " + state.round + (ungraded ? " • CHỜ KIỂM TRA\n\n" : " • " + state.earned + "/10 ĐIỂM\n\n")
+                + (ungraded ? state.text + "\n\nAI chưa chấm xong bài này, chưa xác nhận đúng hoặc sai.\nBài chưa được cộng điểm trong trận." :
+                guided ? state.text + "\n\nCâu này cần học lại. Sau trận, chọn Xem câu sai / Học lại từng bước để cùng thầy làm từng bước. Lời giải tổng kết mở sau khi hoàn thành.\n\nBÀI LÀM AI ĐỌC ĐƯỢC\n" + state.transcription :
+                state.text + "\n\nNHẬN XÉT CỦA AI\n" + state.feedback
                 + "\n\nNỘI DUNG BÀI LÀM AI ĐỌC ĐƯỢC\n" + (string.IsNullOrEmpty(state.transcription) ? "Chưa có bài được chấm." : state.transcription)
                 + "\n\nĐÁP ÁN THAM KHẢO\n" + state.sampleAnswer
-                + (string.IsNullOrEmpty(state.suggestedAnswer) ? "" : "\n\nBÀI GIẢI GỢI Ý CỦA AI\n" + state.suggestedAnswer);
+                + (string.IsNullOrEmpty(state.suggestedAnswer) ? "" : "\n\nBÀI GIẢI GỢI Ý CỦA AI\n" + state.suggestedAnswer));
             Canvas.ForceUpdateCanvases(); LayoutRebuilder.ForceRebuildLayoutImmediate(resultScroll.content); resultScroll.verticalNormalizedPosition = 1;
         }
         if (newRound && editable) { essayInput.Select(); essayInput.ActivateInputField(); }
@@ -453,9 +468,10 @@ public class PlanetDuelController : MonoBehaviour
     void ButtonText(Button button, string text) { button.GetComponentInChildren<TMP_Text>().text = text; }
     void Screen(string state, string title, string message, string action)
     {
-        if (askAfterMatch != null) askAfterMatch.gameObject.SetActive(essayMode && state == "finished" && latest != null && latest.reviewQuestions != null && latest.reviewQuestions.Length > 0);
+        bool showReviews = (state == "finished" || state == "reviewRequired") && latest != null && latest.reviewQuestions != null && latest.reviewQuestions.Length > 0;
+        if (askAfterMatch != null) askAfterMatch.gameObject.SetActive(showReviews);
         var detailRect = detail.rectTransform;
-        detailRect.anchorMin = new Vector2(.08f, essayMode && state == "finished" ? .34f : .25f);
+        detailRect.anchorMin = new Vector2(.08f, showReviews ? .34f : .25f);
         mode = state; overlay.gameObject.SetActive(true); overlay.SetAsLastSibling();
         heading.text = title; detail.text = message; badge.text = essayMode ? "PLANET • TỰ LUẬN • AI CHẤM BÀI" : "PLANET • ĐỐI KHÁNG";
         primary.gameObject.SetActive(!string.IsNullOrEmpty(action)); ButtonText(primary, action);
@@ -465,12 +481,19 @@ public class PlanetDuelController : MonoBehaviour
 
     void BeginSearch()
     {
+        matchUsername = EssayTutorUI.CurrentUsername;
+        if (RestoreLocalReviews()) return;
+        if (PlayerPrefs.GetInt(RemoteReviewKey, 0) > 0) {
+            latest = new State { state = "reviewRequired", reviewPending = PlayerPrefs.GetInt(RemoteReviewKey) };
+            Screen("reviewRequired", "TIẾP TỤC HỌC LẠI ĐỐI KHÁNG", "Còn câu cần sửa trên máy chủ. Kết nối nhật ký để tiếp tục và cập nhật tiến độ.", "Học lại từng bước");
+            return;
+        }
         var chat = GetComponent<ScienceChatController>(); if (chat != null) chat.ClearReviews();
         if (reviewPicker != null) { Destroy(reviewPicker.gameObject); reviewPicker = null; }
         foreach (var drift in root.GetComponentsInChildren<BlobDrift>(true)) drift.enabled = false;
         StopConnection(); game.StopMatch(); ClearProjectiles(); game.resultPanel.SetActive(false);
         local = false; pendingFire = false; pendingBot = false; pendingAnswer = -1; latest = null; game.OnlineControlled = true;
-        historyMatchId = null;
+        historyMatchId = null; checkedReviews = false; localReviews.Clear(); pendingLocalReview = null;
         matchUsername = string.IsNullOrWhiteSpace(GameSession.Username) ? PlayerPrefs.GetString("Username", "") : GameSession.Username;
         essayRound = -1; shownResultRound = -1; ClearEssayImage(); CloseCamera(); essayPanel.gameObject.SetActive(false);
         foreach (var image in game.blobImages) image.gameObject.SetActive(!essayMode);
@@ -500,7 +523,20 @@ public class PlanetDuelController : MonoBehaviour
         State response = null; string error = null;
         yield return Request("/join", JsonUtility.ToJson(body), (s, e) => { response = s; error = e; });
         if (version != generation) yield break;
-        if (error != null || response == null) { ConnectionError(error); yield break; }
+        if (error != null || response == null) {
+            if (response != null && response.reviewRequired) {
+                latest = response; checkedReviews = false;
+                RememberRemoteReviews(response.reviewPending);
+                Screen("reviewRequired", "CÒN CÂU CẦN HỌC LẠI", error, "Học lại từng bước");
+                yield break;
+            }
+            ConnectionError(error); yield break;
+        }
+        if (response.duelReviewVersion < 1) {
+            token = response.token; StopConnection();
+            Screen("updateRequired", "CẦN CẬP NHẬT MÁY CHỦ", "Máy chủ chưa hỗ trợ sửa câu sai sau đối kháng. Hãy cập nhật PlanetServer rồi kết nối lại.", "Kết nối lại");
+            yield break;
+        }
         token = response.token; lastGood = Time.realtimeSinceStartup; Apply(response);
         while (version == generation && !string.IsNullOrEmpty(token)) {
             yield return new WaitForSecondsRealtime(.08f);
@@ -509,6 +545,12 @@ public class PlanetDuelController : MonoBehaviour
             bool switchingToBot = pendingBot;
             yield return Request(switchingToBot ? "/bot" : "/poll", JsonUtility.ToJson(new Command { token = token, fire = fire, answer = answer, round = round }), (s, e) => { response = s; error = e; });
             if (version != generation) yield break;
+            if (response != null && response.reviewRequired) {
+                latest = response; pendingBot = false;
+                RememberRemoteReviews(response.reviewPending);
+                Screen("reviewRequired", "CÒN CÂU CẦN HỌC LẠI", error ?? response.error ?? "Hoàn thành các bước học lại trước trận mới.", "Học lại từng bước");
+                yield break;
+            }
             if (switchingToBot) {
                 pendingBot = false;
                 if (error != null || response == null || response.state == "searching") {
@@ -542,7 +584,7 @@ public class PlanetDuelController : MonoBehaviour
             State state = null;
             try { state = JsonUtility.FromJson<State>(request.downloadHandler.text); } catch (Exception) { }
             if (path == "/bot" && request.responseCode == 404) done(null, "Máy chủ đang chạy bản cũ, chưa có nút chơi máy ngay. Hãy tắt server cũ rồi chạy lại npm start trong PlanetServer.");
-            else if (request.result != UnityWebRequest.Result.Success) done(null, state != null && !string.IsNullOrEmpty(state.error) ? state.error : "Không kết nối được máy chủ.");
+            else if (request.result != UnityWebRequest.Result.Success) done(state, state != null && !string.IsNullOrEmpty(state.error) ? state.error : "Không kết nối được máy chủ.");
             else done(state, state == null ? "Phản hồi máy chủ không hợp lệ." : state.error);
         }
     }
@@ -550,6 +592,11 @@ public class PlanetDuelController : MonoBehaviour
     void Apply(State state)
     {
         latest = state;
+        if (state.state == "reviewRequired") {
+            RememberRemoteReviews(state.reviewPending);
+            Screen("reviewRequired", "CÒN CÂU CẦN HỌC LẠI", state.error ?? "Hoàn thành các bước học lại trước trận mới.", "Học lại từng bước");
+            return;
+        }
         if (state.state != "searching") pendingBot = false;
         if (essayMode) ApplyEssay(state);
         if (state.state == "searching") {
@@ -596,6 +643,11 @@ public class PlanetDuelController : MonoBehaviour
             string outcome = state.winner < 0 ? "HÒA NHAU!" : state.winner == state.seat ? "BẠN CHIẾN THẮNG!" : "CỐ GẮNG Ở TRẬN SAU!";
             Screen("finished", outcome, you + ": " + state.scores[state.seat] + "   —   " + opponent + ": " + state.scores[1 - state.seat] + "\n" + state.reason, "Tìm trận mới");
             badge.text = state.bot ? "KẾT QUẢ • ĐẤU VỚI MÁY" : "KẾT QUẢ • ĐẤU ONLINE";
+            UpdateReviewGate();
+            RememberRemoteReviews(state.reviewPending);
+            if (!checkedReviews && state.reviewQuestions != null && state.reviewQuestions.Length > 0) {
+                checkedReviews = true; OpenReviewPicker();
+            }
         }
     }
 
@@ -655,6 +707,8 @@ public class PlanetDuelController : MonoBehaviour
     }
     void Primary()
     {
+        if (mode == "reviewRequired") { OpenReviewPicker(); return; }
+        if (mode == "finished" && HasPendingReviews()) { OpenReviewPicker(); return; }
         if (mode == "searching") {
             if (pendingBot) return;
             pendingBot = true;
@@ -671,8 +725,10 @@ public class PlanetDuelController : MonoBehaviour
     }
     void StartLocalBot()
     {
+        if (PlayerPrefs.GetInt(RemoteReviewKey, 0) > 0) { BeginSearch(); return; }
+        if (HasPendingReviews() || RestoreLocalReviews()) { OpenReviewPicker(); return; }
         StopConnection();
-        historyMatchId = null;
+        historyMatchId = "local-" + Guid.NewGuid().ToString("N"); localReviews.Clear(); localHistoryQueued = false;
         var bank = JsonUtility.FromJson<Bank>(Resources.Load<TextAsset>("PlanetDuelQuestions").text);
         var questions = new List<Question>();
         foreach (string subject in new[] { "Physics", "Chemistry", "Biology" }) {
@@ -682,7 +738,7 @@ public class PlanetDuelController : MonoBehaviour
             if (pool.Count < 5) { Screen("error", "CHƯA ĐỦ CÂU HỎI", "Mỗi môn cần ít nhất 5 câu hỏi.", null); return; }
             for (int i = 0; i < 5; i++) {
                 int j = UnityEngine.Random.Range(i, pool.Count); var q = pool[j]; pool[j] = pool[i]; pool[i] = q;
-                questions.Add(new Question { text = q.text, options = q.options, correct = q.correct });
+                questions.Add(new Question { text = q.text, subject = q.subject, difficulty = q.difficulty, options = q.options, correct = q.correct });
             }
         }
         for (int i = 0; i < questions.Count; i++) { int j = UnityEngine.Random.Range(i, questions.Count); var q = questions[i]; questions[i] = questions[j]; questions[j] = q; }
@@ -709,16 +765,82 @@ public class PlanetDuelController : MonoBehaviour
     }
     void LocalFinished(int p1, int p2)
     {
-        if (string.IsNullOrEmpty(historyMatchId)) {
-            historyMatchId = "local-" + Guid.NewGuid().ToString("N");
+        if (!localHistoryQueued) {
+            localHistoryQueued = true;
+            if (string.IsNullOrEmpty(historyMatchId)) historyMatchId = "local-" + Guid.NewGuid().ToString("N");
             PlanetHistorySync.Enqueue(new PlanetMatchRecord {
                 matchId = historyMatchId, username = matchUsername, opponent = "Máy Planet",
                 result = p1 == p2 ? "HÒA" : p1 > p2 ? "THẮNG" : "THUA", score = p1,
                 maxScore = game.questionsPerGame * (10 + Mathf.RoundToInt(game.roundTime)), questionType = "multipleChoice"
             });
         }
+        SaveLocalReviews();
+        latest = new State { state = "finished", matchId = historyMatchId, reviewQuestions = localReviews.ToArray() };
         shoot.gameObject.SetActive(false);
         Screen("finished", p1 == p2 ? "HÒA NHAU!" : p1 > p2 ? "BẠN CHIẾN THẮNG!" : "CỐ GẮNG Ở TRẬN SAU!", "Bạn: " + p1 + "   —   Máy Planet: " + p2, "Tìm trận mới");
+        UpdateReviewGate();
+        OpenReviewPicker();
+    }
+    void LocalRoundReviewed(int round, Question question, int[] choices, bool answeredCorrectly)
+    {
+        bool wrong = !answeredCorrectly;
+        foreach (int choice in choices) if (choice != question.correct) wrong = true;
+        localReviews.Add(new ReviewQuestion { round = round, text = question.text, subject = question.subject, difficulty = question.difficulty,
+            options = question.options, choices = choices, answeredCorrectly = answeredCorrectly, questionType = "multipleChoice",
+            status = choices.Length == 0 ? "unanswered" : wrong ? "wrong" : "correct", earned = answeredCorrectly ? 10 : 0,
+            needsTutor = wrong, transcription = ChoicesText(question.options, choices) });
+        SaveLocalReviews();
+    }
+    string LocalReviewKey => "Planet.PendingReview." + (matchUsername ?? EssayTutorUI.CurrentUsername).Trim().ToLowerInvariant();
+    string RemoteReviewKey => "Planet.PendingRemoteReview." + (matchUsername ?? EssayTutorUI.CurrentUsername).Trim().ToLowerInvariant();
+    void RememberRemoteReviews(int count, bool allowClear = false)
+    {
+        if (count > 0) PlayerPrefs.SetInt(RemoteReviewKey, count); else if (allowClear) PlayerPrefs.DeleteKey(RemoteReviewKey);
+        PlayerPrefs.Save();
+    }
+    void SaveLocalReviews()
+    {
+        if (string.IsNullOrEmpty(historyMatchId)) return;
+        bool needsReview = false;
+        foreach (var entry in localReviews) if (entry.needsTutor) { needsReview = true; break; }
+        if (!needsReview) return;
+        pendingLocalReview = new LocalReviewBatch { username = matchUsername, matchId = historyMatchId, reviewQuestions = localReviews.ToArray() };
+        PlayerPrefs.SetString(LocalReviewKey, JsonUtility.ToJson(pendingLocalReview)); PlayerPrefs.Save();
+    }
+    bool RestoreLocalReviews()
+    {
+        string saved = PlayerPrefs.GetString(LocalReviewKey, "");
+        if (string.IsNullOrEmpty(saved)) return false;
+        try { pendingLocalReview = JsonUtility.FromJson<LocalReviewBatch>(saved); } catch (ArgumentException) { pendingLocalReview = null; }
+        if (pendingLocalReview == null || pendingLocalReview.reviewQuestions == null || pendingLocalReview.reviewQuestions.Length == 0) return false;
+        historyMatchId = pendingLocalReview.matchId; local = true; checkedReviews = false;
+        latest = new State { state = "finished", matchId = historyMatchId, reviewQuestions = pendingLocalReview.reviewQuestions };
+        Screen("finished", "TIẾP TỤC SỬA BÀI ĐỐI KHÁNG", "Các câu đã chơi được giữ trên thiết bị. Kết nối để lưu nhật ký và học lại từng bước.", "Lưu bài / Học lại");
+        UpdateReviewGate(); return true;
+    }
+    bool HasPendingReviews()
+    {
+        if (pendingLocalReview != null && pendingLocalReview.reviewQuestions != null && pendingLocalReview.reviewQuestions.Length > 0) return true;
+        if (latest?.reviewQuestions != null) foreach (var entry in latest.reviewQuestions)
+            if (entry.needsTutor && !entry.tutorCompleted) return true;
+        return latest != null && latest.reviewPending > 0;
+    }
+    void UpdateReviewGate()
+    {
+        if (primary == null || (mode != "finished" && mode != "reviewRequired")) return;
+        bool pending = HasPendingReviews();
+        ButtonText(primary, pending ? "Học lại các câu chưa hoàn thành" : "Tìm trận mới");
+        const string notice = "\nCần hoàn thành học lại trước khi tìm trận mới. Điểm trận ban đầu giữ nguyên.";
+        detail.text = detail.text.Replace(notice, "");
+        if (pending) detail.text += notice;
+    }
+    static string ChoicesText(string[] options, int[] choices)
+    {
+        if (choices == null || choices.Length == 0) return "Chưa trả lời";
+        var values = new List<string>();
+        foreach (int choice in choices) if (options != null && choice >= 0 && choice < options.Length)
+            values.Add(((char)('A' + choice)) + ". " + options[choice]);
+        return string.Join(" → ", values);
     }
     void ReturnToMenu()
     {
@@ -730,24 +852,121 @@ public class PlanetDuelController : MonoBehaviour
     }
     void OpenReviewPicker()
     {
-        if (!essayMode || latest == null || latest.state != "finished" || latest.reviewQuestions == null) return;
+        if (latest == null || latest.reviewQuestions == null) { LoadSavedReviews(); return; }
         if (reviewPicker != null) Destroy(reviewPicker.gameObject);
         reviewPicker = Box("ReviewQuestions", root, Vector2.zero, Vector2.one, new Color(.035f, .02f, .09f, .99f));
-        Label("Title", reviewPicker, new Vector2(.1f, .86f), new Vector2(.8f, .97f), 34).text = "CHỌN CÂU ĐỂ HỎI AI THÊM";
+        int pendingCount = 0;
+        foreach (var entry in latest.reviewQuestions) if (entry.needsTutor && !entry.tutorCompleted) pendingCount++;
+        Label("Title", reviewPicker, new Vector2(.06f, .88f), new Vector2(.8f, .98f), 34).text = "XEM LẠI SAU TRẬN • " + pendingCount + " CÂU CẦN SỬA";
         MakeButton("Close", reviewPicker, new Vector2(.82f, .87f), new Vector2(.96f, .96f), "Đóng", () => reviewPicker.gameObject.SetActive(false));
+        MakeButton("ReloadReview", reviewPicker, new Vector2(.05f, .79f), new Vector2(.35f, .86f), "Cập nhật tiến độ", () => { if (!refreshingReview) StartCoroutine(RefreshReviews()); });
+        reviewRetryStatus = Label("RetryStatus", reviewPicker, new Vector2(.37f, .79f), new Vector2(.95f, .86f), 21);
+        reviewRetryStatus.text = pendingLocalReview != null ? "Câu đấu máy đang lưu trên thiết bị. Bấm học lại để đồng bộ." : "Đúng từng bước mới được đi tiếp • Điểm trận giữ nguyên";
+        var viewport = Box("ReviewViewport", reviewPicker, new Vector2(.05f, .09f), new Vector2(.95f, .77f), new Color(.05f, .06f, .15f));
+        viewport.gameObject.AddComponent<RectMask2D>();
+        var scroll = viewport.gameObject.AddComponent<ScrollRect>(); scroll.viewport = viewport; scroll.horizontal = false; scroll.movementType = ScrollRect.MovementType.Clamped;
+        var content = Box("ReviewContent", viewport, new Vector2(0, 1), Vector2.one, Color.clear); content.pivot = new Vector2(.5f, 1);
+        var layout = content.gameObject.AddComponent<VerticalLayoutGroup>(); layout.padding = new RectOffset(12, 12, 12, 12);
+        layout.spacing = 12; layout.childControlHeight = layout.childControlWidth = true; layout.childForceExpandHeight = false;
+        content.gameObject.AddComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.PreferredSize; scroll.content = content;
         foreach (var entry in latest.reviewQuestions) {
             var questionReview = entry;
-            int index = entry.round - 1, column = index % 3, row = index / 3;
-            float left = .07f + column * .30f, top = .78f - row * .23f;
-            MakeButton("Question" + entry.round, reviewPicker, new Vector2(left, top - .18f), new Vector2(left + .27f, top),
-                "Câu " + entry.round + " • " + entry.earned + "/10\n" + entry.difficulty,
-                () => ScienceChatController.ForReview(this).OpenReview(latest.matchId + ":" + questionReview.round,
-                    "Câu " + questionReview.round + " • " + questionReview.text,
-                    "Đề: " + questionReview.text + "\nĐiểm: " + questionReview.earned + "/10\nBài làm học sinh (AI đọc): " + questionReview.transcription
-                        + "\nNhận xét: " + questionReview.feedback + "\nĐáp án tham khảo: " + questionReview.sampleAnswer + "\nGiải thích: " + questionReview.suggestedAnswer,
-                    new Color(.085f, .04f, .19f)));
+            bool ungraded = entry.status == "ungraded";
+            string status = entry.tutorCompleted ? "ĐÃ SỬA XONG" : ungraded ? "CHỜ KIỂM TRA" : entry.status == "unanswered" ? "CHƯA TRẢ LỜI" : entry.needsTutor ? "CẦN SỬA" : "ĐÚNG";
+            string answer = entry.questionType == "multipleChoice" ? ChoicesText(entry.options, entry.choices) : entry.transcription;
+            var row = MakeButton("Question" + entry.round, content, Vector2.zero, Vector2.one,
+                "Câu " + entry.round + " • " + status + " • " + entry.difficulty + "\n" + entry.text + "\nBài làm: " + answer
+                    + (ungraded ? "\nAI chưa chấm xong; chưa xác nhận đúng hoặc sai." : entry.needsTutor ? "\n" + (entry.tutorCompleted ? "Xem tổng kết từng bước" : "Bấm để giải lại từng bước") : "\nBấm để xem lại"),
+                () => OpenQuestionReview(questionReview));
+            row.gameObject.AddComponent<LayoutElement>().preferredHeight = 170;
+            row.GetComponentInChildren<TMP_Text>().overflowMode = TextOverflowModes.Ellipsis;
+            row.GetComponent<Image>().color = ungraded ? new Color(.28f, .25f, .12f) : entry.tutorCompleted || !entry.needsTutor ? new Color(.08f, .30f, .27f) : new Color(.35f, .16f, .27f);
+            if (!string.IsNullOrEmpty(entry.tutorError)) reviewRetryStatus.text = entry.tutorError;
         }
+        Label("Footer", reviewPicker, new Vector2(.05f, .015f), new Vector2(.95f, .08f), 22).text = "Có thể về trang chủ và tiếp tục từ Nhật ký học lại. Cần sửa xong trước trận mới.";
         reviewPicker.SetAsLastSibling();
+    }
+    void OpenQuestionReview(ReviewQuestion entry)
+    {
+        if (entry.status == "ungraded") { reviewRetryStatus.text = "Câu này chưa được AI chấm xong, chưa xác nhận đúng hoặc sai."; return; }
+        if (entry.needsTutor) {
+            if (!string.IsNullOrEmpty(entry.tutorId)) EssayTutorUI.Open(entry.tutorId);
+            else LoadSavedReviews();
+            return;
+        }
+        ScienceChatController.ForReview(this).OpenReview(latest.matchId + ":" + entry.round,
+            "Câu " + entry.round + " • " + entry.text,
+            "Đề: " + entry.text + "\nBài làm học sinh: " + (entry.questionType == "multipleChoice" ? ChoicesText(entry.options, entry.choices) : entry.transcription)
+                + "\nNhận xét: " + entry.feedback + "\nĐáp án tham khảo: " + entry.sampleAnswer + "\nGiải thích: " + entry.suggestedAnswer,
+            new Color(.085f, .04f, .19f));
+    }
+    void LoadSavedReviews()
+    {
+        var batch = pendingLocalReview;
+        string account = matchUsername;
+        EssayTutorUI.LoadPlanetReviews(batch, (entries, pending) => {
+            if (this == null || !gameObject.activeInHierarchy || !string.Equals(account, EssayTutorUI.CurrentUsername, StringComparison.OrdinalIgnoreCase)) return;
+            if (batch != null) {
+                foreach (var entry in entries) if (entry.needsTutor && string.IsNullOrEmpty(entry.tutorId)) {
+                    OpenReviewPicker(); reviewRetryStatus.text = "Chưa lưu được nhật ký. Bài vẫn giữ trên thiết bị; hãy thử lại."; return;
+                }
+                PlayerPrefs.DeleteKey(LocalReviewKey); PlayerPrefs.Save(); pendingLocalReview = null;
+            }
+            if (latest == null) latest = new State { state = "finished" };
+            // Pending endpoint contains every Planet lesson, including completed ones.
+            // Preserve correct questions of this match when refreshing from the journal.
+            if (batch != null || latest.reviewQuestions == null || latest.reviewQuestions.Length == 0) latest.reviewQuestions = entries;
+            else {
+                var merged = new List<ReviewQuestion>(latest.reviewQuestions);
+                foreach (var entry in entries) {
+                    int index = merged.FindIndex(r => (!string.IsNullOrEmpty(r.sourceId) && r.sourceId == entry.sourceId)
+                        || (!string.IsNullOrEmpty(r.tutorId) && r.tutorId == entry.tutorId));
+                    if (index >= 0) {
+                        merged[index].tutorId = entry.tutorId;
+                        merged[index].tutorCompleted = entry.tutorCompleted;
+                        merged[index].tutorError = entry.tutorError;
+                    } else if (entry.needsTutor && !entry.tutorCompleted) merged.Add(entry);
+                }
+                latest.reviewQuestions = merged.ToArray();
+            }
+            latest.reviewPending = pending; latest.reviewRequired = pending > 0;
+            RememberRemoteReviews(pending, batch == null);
+            if (mode == "reviewRequired" && pending == 0) {
+                heading.text = "ĐÃ HOÀN THÀNH SỬA BÀI"; detail.text = "Em có thể bắt đầu trận đối kháng mới.";
+            }
+            mode = "finished"; UpdateReviewGate();
+            OpenReviewPicker();
+        });
+    }
+    public bool MatchesTutorial(string id)
+    {
+        if (string.IsNullOrEmpty(id) || latest?.reviewQuestions == null || (mode != "finished" && mode != "reviewRequired")) return false;
+        foreach (var entry in latest.reviewQuestions) if (entry.tutorId == id) return true;
+        return false;
+    }
+    public void ContinueTutorial(string id)
+    {
+        if (!MatchesTutorial(id)) return;
+        // Refresh from server rather than trusting a client completion flag.
+        LoadSavedReviews();
+    }
+    IEnumerator RefreshReviews()
+    {
+        if (pendingLocalReview != null || string.IsNullOrEmpty(token)) { LoadSavedReviews(); yield break; }
+        refreshingReview = true;
+        if (reviewRetryStatus != null) reviewRetryStatus.text = "Đang tải lại và lưu nhật ký…";
+        State response = null; string error = null;
+        yield return Request("/poll", JsonUtility.ToJson(new Command { token = token }), (s, e) => { response = s; error = e; });
+        refreshingReview = false;
+        if (error != null || response == null || response.state != "finished") {
+            LoadSavedReviews();
+            yield break;
+        }
+        latest = response; RememberRemoteReviews(response.reviewPending);
+        if (response.reviewPending == 0 && PlayerPrefs.GetInt(RemoteReviewKey, 0) > 0) { LoadSavedReviews(); yield break; }
+        UpdateReviewGate(); OpenReviewPicker();
+        if (response.reviewQuestions != null) foreach (var entry in response.reviewQuestions)
+            if (entry.needsTutor && string.IsNullOrEmpty(entry.tutorId) && reviewRetryStatus != null) reviewRetryStatus.text = "Chưa lưu được nhật ký. Hãy thử lại.";
     }
     void StopConnection()
     {
@@ -768,10 +987,11 @@ public class PlanetDuelController : MonoBehaviour
     }
     void OnDisable()
     {
+        refreshingReview = false;
         if (reviewPicker != null) reviewPicker.gameObject.SetActive(false);
         if (exitConfirmation != null) exitConfirmation.gameObject.SetActive(false);
         StopConnection(); ClearProjectiles();
-        if (game != null) { game.StopMatch(); game.MatchFinished = null; game.OnlineControlled = true; }
+        if (game != null) { game.StopMatch(); game.MatchFinished = null; game.RoundReviewed = null; game.OnlineControlled = true; }
         foreach (var animation in previouslyEnabled) if (animation != null) animation.enabled = true;
         if (overlay != null) overlay.gameObject.SetActive(false);
         if (hud != null) hud.gameObject.SetActive(false);

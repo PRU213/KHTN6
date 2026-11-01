@@ -80,6 +80,8 @@ namespace KHTN6.Teacher
 
             if (view.screen == TeacherScreen.Progress)
             {
+                EssayTutorUI.AttachHistoryButton(view.transform, () => selectedStudent == null ? "" :
+                    string.IsNullOrWhiteSpace(selectedStudent.Username) ? selectedStudent.UserID : selectedStudent.Username, true);
                 var search = view.Input("StudentSearch");
                 if (search != null) search.onValueChanged.AddListener(_ => RenderStudents());
                 Listen("ClassFilter", _ => RenderStudents());

@@ -1,0 +1,542 @@
+[
+  {
+    "subject": "Physics",
+    "difficulty": "Dễ",
+    "text": "Đơn vị đo chiều dài trong hệ SI là gì?",
+    "options": [
+      "Mét",
+      "Kilôgam",
+      "Giây",
+      "Lít"
+    ],
+    "correct": 0
+  },
+  {
+    "subject": "Physics",
+    "difficulty": "Dễ",
+    "text": "Dụng cụ nào dùng để đo khối lượng?",
+    "options": [
+      "Thước",
+      "Cân",
+      "Nhiệt kế",
+      "Đồng hồ"
+    ],
+    "correct": 1
+  },
+  {
+    "subject": "Physics",
+    "difficulty": "Dễ",
+    "text": "Đơn vị đo thời gian trong hệ SI là gì?",
+    "options": [
+      "Phút",
+      "Giờ",
+      "Ngày",
+      "Giây"
+    ],
+    "correct": 3
+  },
+  {
+    "subject": "Physics",
+    "difficulty": "Trung bình",
+    "text": "Một mét bằng bao nhiêu centimét?",
+    "options": [
+      "10",
+      "100",
+      "1000",
+      "0,1"
+    ],
+    "correct": 1
+  },
+  {
+    "subject": "Physics",
+    "difficulty": "Trung bình",
+    "text": "Đơn vị đo lực là gì?",
+    "options": [
+      "Newton",
+      "Mét",
+      "Giây",
+      "Kilôgam"
+    ],
+    "correct": 0
+  },
+  {
+    "subject": "Physics",
+    "difficulty": "Khó",
+    "text": "Vật có khối lượng 2 kg có trọng lượng gần bằng bao nhiêu?",
+    "options": [
+      "2 N",
+      "200 N",
+      "20 N",
+      "0,2 N"
+    ],
+    "correct": 2
+  },
+  {
+    "subject": "Physics",
+    "difficulty": "Khó",
+    "text": "Một lò xo giãn 2 cm khi treo 100 g. Trong giới hạn đàn hồi, treo 200 g thì giãn bao nhiêu?",
+    "options": [
+      "1 cm",
+      "2 cm",
+      "4 cm",
+      "8 cm"
+    ],
+    "correct": 2
+  },
+  {
+    "subject": "Chemistry",
+    "difficulty": "Dễ",
+    "text": "Chất nào ở thể khí trong điều kiện thường?",
+    "options": [
+      "Sắt",
+      "Nước",
+      "Oxygen",
+      "Muối ăn"
+    ],
+    "correct": 2
+  },
+  {
+    "subject": "Chemistry",
+    "difficulty": "Dễ",
+    "text": "Nước đá chuyển thành nước lỏng gọi là gì?",
+    "options": [
+      "Đông đặc",
+      "Nóng chảy",
+      "Ngưng tụ",
+      "Bay hơi"
+    ],
+    "correct": 1
+  },
+  {
+    "subject": "Chemistry",
+    "difficulty": "Dễ",
+    "text": "Khí nào cần thiết cho sự cháy?",
+    "options": [
+      "Oxygen",
+      "Nitrogen",
+      "Carbon dioxide",
+      "Helium"
+    ],
+    "correct": 0
+  },
+  {
+    "subject": "Chemistry",
+    "difficulty": "Trung bình",
+    "text": "Tách cát khỏi nước bằng phương pháp nào?",
+    "options": [
+      "Lọc",
+      "Cô cạn",
+      "Dùng nam châm",
+      "Đông lạnh"
+    ],
+    "correct": 0
+  },
+  {
+    "subject": "Chemistry",
+    "difficulty": "Trung bình",
+    "text": "Thành phần chiếm khoảng 78% thể tích không khí là khí nào?",
+    "options": [
+      "Oxygen",
+      "Nitrogen",
+      "Carbon dioxide",
+      "Hydrogen"
+    ],
+    "correct": 1
+  },
+  {
+    "subject": "Chemistry",
+    "difficulty": "Khó",
+    "text": "Thu muối ăn từ dung dịch muối bằng phương pháp nào?",
+    "options": [
+      "Lọc",
+      "Chiết",
+      "Cô cạn",
+      "Dùng nam châm"
+    ],
+    "correct": 2
+  },
+  {
+    "subject": "Chemistry",
+    "difficulty": "Khó",
+    "text": "Hỗn hợp nào sau đây là dung dịch?",
+    "options": [
+      "Dầu ăn và nước",
+      "Cát và nước",
+      "Muối tan hoàn toàn trong nước",
+      "Bột mì và nước"
+    ],
+    "correct": 2
+  },
+  {
+    "subject": "Biology",
+    "difficulty": "Dễ",
+    "text": "Đơn vị cấu tạo cơ bản của cơ thể sống là gì?",
+    "options": [
+      "Cơ quan",
+      "Mô",
+      "Tế bào",
+      "Hệ cơ quan"
+    ],
+    "correct": 2
+  },
+  {
+    "subject": "Biology",
+    "difficulty": "Dễ",
+    "text": "Bộ phận nào của cây thường hấp thụ nước từ đất?",
+    "options": [
+      "Hoa",
+      "Rễ",
+      "Quả",
+      "Lá"
+    ],
+    "correct": 1
+  },
+  {
+    "subject": "Biology",
+    "difficulty": "Dễ",
+    "text": "Sinh vật nào sau đây là thực vật?",
+    "options": [
+      "Con mèo",
+      "Cây lúa",
+      "Nấm rơm",
+      "Vi khuẩn"
+    ],
+    "correct": 1
+  },
+  {
+    "subject": "Biology",
+    "difficulty": "Trung bình",
+    "text": "Bào quan nào thực hiện quang hợp ở tế bào thực vật?",
+    "options": [
+      "Nhân",
+      "Không bào",
+      "Lục lạp",
+      "Màng tế bào"
+    ],
+    "correct": 2
+  },
+  {
+    "subject": "Biology",
+    "difficulty": "Trung bình",
+    "text": "Cơ thể nào sau đây là cơ thể đơn bào?",
+    "options": [
+      "Cây phượng",
+      "Con cá",
+      "Trùng roi",
+      "Con chim"
+    ],
+    "correct": 2
+  },
+  {
+    "subject": "Biology",
+    "difficulty": "Khó",
+    "text": "Thứ tự tổ chức cơ thể đa bào từ nhỏ đến lớn là gì?",
+    "options": [
+      "Tế bào → mô → cơ quan → hệ cơ quan → cơ thể",
+      "Mô → tế bào → cơ quan → cơ thể",
+      "Cơ quan → mô → tế bào → cơ thể",
+      "Tế bào → cơ quan → mô → cơ thể"
+    ],
+    "correct": 0
+  },
+  {
+    "subject": "Biology",
+    "difficulty": "Khó",
+    "text": "Đặc điểm nào phân biệt tế bào vi khuẩn với tế bào động vật?",
+    "options": [
+      "Có màng tế bào",
+      "Có chất tế bào",
+      "Chưa có nhân hoàn chỉnh",
+      "Có vật chất di truyền"
+    ],
+    "correct": 2
+  },
+  {
+    "subject": "Physics",
+    "difficulty": "Dễ",
+    "text": "Dụng cụ nào dùng để đo nhiệt độ?",
+    "options": [
+      "Nhiệt kế",
+      "Cân",
+      "Thước",
+      "Lực kế"
+    ],
+    "correct": 0
+  },
+  {
+    "subject": "Physics",
+    "difficulty": "Dễ",
+    "text": "Đơn vị đo khối lượng trong hệ SI là gì?",
+    "options": [
+      "Mét",
+      "Giây",
+      "Kilôgam",
+      "Newton"
+    ],
+    "correct": 2
+  },
+  {
+    "subject": "Physics",
+    "difficulty": "Trung bình",
+    "text": "2500 g bằng bao nhiêu kg?",
+    "options": [
+      "25",
+      "2,5",
+      "0,25",
+      "250"
+    ],
+    "correct": 1
+  },
+  {
+    "subject": "Physics",
+    "difficulty": "Trung bình",
+    "text": "Lực nào giữ vật trên mặt đất?",
+    "options": [
+      "Lực hút của Trái Đất",
+      "Lực đẩy của nước",
+      "Lực đàn hồi",
+      "Lực kéo của dây"
+    ],
+    "correct": 0
+  },
+  {
+    "subject": "Physics",
+    "difficulty": "Trung bình",
+    "text": "Lò xo bị kéo giãn tạo ra lực gì?",
+    "options": [
+      "Lực ma sát",
+      "Lực đàn hồi",
+      "Lực từ",
+      "Lực đẩy Archimedes"
+    ],
+    "correct": 1
+  },
+  {
+    "subject": "Physics",
+    "difficulty": "Khó",
+    "text": "Một vật có trọng lượng gần 50 N trên Trái Đất. Khối lượng của vật gần bao nhiêu?",
+    "options": [
+      "0,5 kg",
+      "50 kg",
+      "5 kg",
+      "500 kg"
+    ],
+    "correct": 2
+  },
+  {
+    "subject": "Physics",
+    "difficulty": "Khó",
+    "text": "Khi phanh xe đạp, dạng năng lượng nào tăng lên ở má phanh?",
+    "options": [
+      "Nhiệt năng",
+      "Quang năng",
+      "Hóa năng",
+      "Năng lượng hạt nhân"
+    ],
+    "correct": 0
+  },
+  {
+    "subject": "Physics",
+    "difficulty": "Khó",
+    "text": "Kéo vật trượt đều trên sàn ngang, lực kéo cân bằng với lực nào theo phương ngang?",
+    "options": [
+      "Trọng lực",
+      "Lực ma sát trượt",
+      "Lực nâng của sàn",
+      "Lực hút nam châm"
+    ],
+    "correct": 1
+  },
+  {
+    "subject": "Chemistry",
+    "difficulty": "Dễ",
+    "text": "Nước lỏng chuyển thành hơi nước gọi là gì?",
+    "options": [
+      "Đông đặc",
+      "Ngưng tụ",
+      "Hóa hơi",
+      "Nóng chảy"
+    ],
+    "correct": 2
+  },
+  {
+    "subject": "Chemistry",
+    "difficulty": "Dễ",
+    "text": "Chất nào tan tốt trong nước ở điều kiện thường?",
+    "options": [
+      "Cát",
+      "Muối ăn",
+      "Dầu ăn",
+      "Sỏi"
+    ],
+    "correct": 1
+  },
+  {
+    "subject": "Chemistry",
+    "difficulty": "Trung bình",
+    "text": "Hơi nước chuyển thành giọt nước gọi là gì?",
+    "options": [
+      "Ngưng tụ",
+      "Nóng chảy",
+      "Đông đặc",
+      "Sôi"
+    ],
+    "correct": 0
+  },
+  {
+    "subject": "Chemistry",
+    "difficulty": "Trung bình",
+    "text": "Vật liệu nào sau đây dẫn điện tốt?",
+    "options": [
+      "Nhựa",
+      "Cao su",
+      "Đồng",
+      "Thủy tinh"
+    ],
+    "correct": 2
+  },
+  {
+    "subject": "Chemistry",
+    "difficulty": "Trung bình",
+    "text": "Không khí là gì?",
+    "options": [
+      "Một chất tinh khiết",
+      "Hỗn hợp nhiều chất khí",
+      "Chỉ có oxygen",
+      "Chỉ có nitrogen"
+    ],
+    "correct": 1
+  },
+  {
+    "subject": "Chemistry",
+    "difficulty": "Khó",
+    "text": "Tách mạt sắt khỏi hỗn hợp mạt sắt và cát bằng cách nào?",
+    "options": [
+      "Dùng nam châm",
+      "Lọc qua giấy",
+      "Cô cạn",
+      "Để lắng trong dầu"
+    ],
+    "correct": 0
+  },
+  {
+    "subject": "Chemistry",
+    "difficulty": "Khó",
+    "text": "Tách dầu ăn ra khỏi nước bằng dụng cụ nào phù hợp nhất?",
+    "options": [
+      "Phễu chiết",
+      "Nam châm",
+      "Rây khô",
+      "Cân"
+    ],
+    "correct": 0
+  },
+  {
+    "subject": "Chemistry",
+    "difficulty": "Khó",
+    "text": "Vì sao không dùng nước để dập đám cháy xăng?",
+    "options": [
+      "Xăng nổi trên nước và có thể lan rộng",
+      "Nước làm xăng đông đặc",
+      "Xăng tan hoàn toàn trong nước",
+      "Nước biến thành xăng"
+    ],
+    "correct": 0
+  },
+  {
+    "subject": "Biology",
+    "difficulty": "Dễ",
+    "text": "Dụng cụ nào dùng quan sát tế bào nhỏ?",
+    "options": [
+      "Kính hiển vi",
+      "Nhiệt kế",
+      "Ống nhòm",
+      "Cân"
+    ],
+    "correct": 0
+  },
+  {
+    "subject": "Biology",
+    "difficulty": "Dễ",
+    "text": "Cơ quan nào giúp cá hô hấp trong nước?",
+    "options": [
+      "Phổi",
+      "Mang",
+      "Vây",
+      "Đuôi"
+    ],
+    "correct": 1
+  },
+  {
+    "subject": "Biology",
+    "difficulty": "Trung bình",
+    "text": "Nhóm động vật nào có lông vũ?",
+    "options": [
+      "Cá",
+      "Bò sát",
+      "Chim",
+      "Lưỡng cư"
+    ],
+    "correct": 2
+  },
+  {
+    "subject": "Biology",
+    "difficulty": "Trung bình",
+    "text": "Nấm không được xếp vào giới Thực vật chủ yếu vì sao?",
+    "options": [
+      "Không có diệp lục để quang hợp",
+      "Không có tế bào",
+      "Không cần dinh dưỡng",
+      "Không sinh sản"
+    ],
+    "correct": 0
+  },
+  {
+    "subject": "Biology",
+    "difficulty": "Trung bình",
+    "text": "Cấu trúc nào kiểm soát chất đi vào và ra khỏi tế bào?",
+    "options": [
+      "Màng tế bào",
+      "Nhân",
+      "Lục lạp",
+      "Nhiễm sắc thể"
+    ],
+    "correct": 0
+  },
+  {
+    "subject": "Biology",
+    "difficulty": "Khó",
+    "text": "Tập hợp các tế bào có cấu tạo giống nhau, cùng thực hiện một chức năng gọi là gì?",
+    "options": [
+      "Mô",
+      "Cơ quan",
+      "Cơ thể",
+      "Quần xã"
+    ],
+    "correct": 0
+  },
+  {
+    "subject": "Biology",
+    "difficulty": "Khó",
+    "text": "Vì sao virus phải sống trong tế bào vật chủ để nhân lên?",
+    "options": [
+      "Virus chưa có cấu tạo tế bào hoàn chỉnh",
+      "Virus có nhiều lục lạp",
+      "Virus tự quang hợp",
+      "Virus là động vật đa bào"
+    ],
+    "correct": 0
+  },
+  {
+    "subject": "Biology",
+    "difficulty": "Khó",
+    "text": "Trong chuỗi cỏ → châu chấu → ếch → rắn, sinh vật sản xuất là gì?",
+    "options": [
+      "Ếch",
+      "Rắn",
+      "Châu chấu",
+      "Cỏ"
+    ],
+    "correct": 3
+  }
+]
