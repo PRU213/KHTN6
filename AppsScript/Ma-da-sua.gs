@@ -488,6 +488,7 @@ function doPost(e) {
       } catch (parseError) {}
     }
     var action = String(p.action || "").trim();
+    if (action === "tutorJournalLoad" || action === "tutorJournalSave") return tutorJournalApi_(p);
 
     if (action === "savePlanetMatch") return planetSaveMatch_(p);
 

@@ -36,7 +36,8 @@ export function createTutorAI({ key = process.env.GEMINI_API_KEY, model = proces
 }
 
 export class EssayTutor {
-  constructor({ ai = createTutorAI(), copyAI = createCopyAI(), directory = null, now = Date.now } = {}) {
+  constructor({ ai = createTutorAI(), copyAI = createCopyAI(), directory = null, now = Date.now, store = null } = {}) {
+    this.store = store; this.dirty = new Map(); this.loaded = !store; this.loading = null; this.flushing = null;
     this.copyAI = copyAI;
     this.ai = ai; this.directory = directory; this.now = now; this.records = new Map(); this.busy = new Set(); this.rates = new Map();
     if (directory) {
@@ -51,6 +52,31 @@ export class EssayTutor {
       }
     }
   }
+  async ensureLoaded() {
+    if (this.loaded) return;
+    if (!this.loading) this.loading = (async () => {
+      const remote = await this.store.load();
+      const remoteIds = new Set(remote.map(r => r.id));
+      // Recover existing local files once when enabling Sheet storage. Remote rows win.
+      for (const r of this.records.values()) if (!remoteIds.has(r.id)) this.dirty.set(r.id, r);
+      for (const r of remote) this.records.set(r.id, r);
+      this.loaded = true;
+    })().finally(() => { this.loading = null; });
+    await this.loading;
+    await this.flush();
+  }
+  async flush() {
+    if (!this.store) return;
+    if (this.flushing) { await this.flushing; if (!this.dirty.size) return; }
+    this.flushing = (async () => {
+      while (this.dirty.size) {
+        const snapshot = [...this.dirty.values()];
+        await this.store.save(snapshot);
+        for (const record of snapshot) if (this.dirty.get(record.id) === record) this.dirty.delete(record.id);
+      }
+    })();
+    try { await this.flushing; } finally { this.flushing = null; }
+  }
   save(record) {
     if (this.directory) {
       const file = join(this.directory, record.id + '.json'), temporary = file + '.tmp';
@@ -58,6 +84,7 @@ export class EssayTutor {
       catch { try { unlinkSync(temporary); } catch {} fail('Chưa lưu được nhật ký học lại. Tiến trình chưa chuyển, hãy thử lại.'); }
     }
     this.records.set(record.id, record);
+    if (this.store) this.dirty.set(record.id, record);
     return record;
   }
   register({ sourceId, username, subject, chapter = '', question, reference, studentAnswer = '', score = 0, finalScore = score, source = 'practice', review = null }) {
