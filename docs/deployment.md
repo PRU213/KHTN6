@@ -51,3 +51,12 @@ thành công. Hướng dẫn hành vi, API và kiểm thử: `PlanetServer/DUEL-
 Thiết bị cũng ghi nhớ nghĩa vụ học lại của các trận máy chủ; chỉ xóa cổng đã
 ghi nhớ sau khi tải lại tiến độ toàn tài khoản có xác thực, kể cả khi học sinh
 đã hoàn thành trên thiết bị khác.
+
+## Chép phạt — 02/11/2026
+
+Thay đổi ở workspace, chưa deploy. Cập nhật Unity và PlanetServer cùng nhau;
+`/health` phải trả `copyPenaltyVersion: 2`. Giữ Gemini và `TUTOR_DATA_DIR` trên
+ổ bền. Tự luận điểm cuối ≤ 6: học lại rồi chép phạt ngay trước câu tiếp theo.
+Trắc nghiệm/đối kháng học lại và chép phạt từng câu sai sau lượt; bỏ điều kiện sai 3 lần. Lượt mới
+cần xác minh nhật ký qua mạng, gồm cả đấu máy và game trắc nghiệm chạy cục bộ.
+Quy tắc, API nộp ảnh và hướng dẫn kiểm tra: [COPY-PENALTY.md](../PlanetServer/COPY-PENALTY.md).

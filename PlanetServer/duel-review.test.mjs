@@ -14,7 +14,7 @@ const ai = { plan: async () => ({ steps: [1, 2, 3].map(n => ({ question: 'Bướ
   checkQuestion: 'Thử lại ' + n, checkExpected: 'đúng' })), solution: 'Lời giải cuối cùng' }), evaluate: async ({ answer }) => ({ correct: answer === 'đúng' }) };
 function fixture(t, options = {}) {
   let now = 1000;
-  const tutor = new EssayTutor({ ai, ...options });
+  const tutor = new EssayTutor({ ai, copyAI: { prepare: async () => ({kind:'theory',content:'Đáp án'}), check: async () => ({handwritten:true,uncertain:false,count:5,redoCorrect:true,questionCopied:true,feedback:'Đủ'}) }, ...options });
   const arena = new Arena({ now: () => now, recordEssay: async () => {}, gradeEssay: async (_q, answer) => ({ score: 4, feedback: 'Lời giải riêng', transcription: answer }) });
   const tutorAuth = new TutorAuth({ authenticate: async username => ({ username, teacher: username === 'teacher' }) });
   const server = createServer(arena, undefined, { tutor, tutorAuth });
@@ -29,6 +29,12 @@ function fixture(t, options = {}) {
 async function complete(tutor, id, username = 'alice') {
   await tutor.start({ id, username });
   for (let revision = 0; revision < 3; revision++) await tutor.answer({ id, username, revision, requestId: 'answer-' + revision, answer: 'đúng' });
+  await completeCopy(tutor,id,username);
+}
+
+async function completeCopy(tutor,id,username='alice') {
+  await tutor.prepareCopy({id,username});
+  await tutor.submitCopy({id,username,requestId:'copy',images:[{mimeType:'image/jpeg',base64:Buffer.from([255,216,255,1]).toString('base64')}]});
 }
 
 test('MC click history remains personal, wrong-then-correct still needs steps, initial scores never change', async t => {
@@ -49,6 +55,8 @@ test('MC click history remains personal, wrong-then-correct still needs steps, i
   assert.equal(state.step, 0); assert.equal(state.checking, true); assert.equal(state.solution, '');
   for (let i = 0; i < 3; i++) state = await tutor.answer({ id, username: 'alice', revision: state.revision, requestId: 'correct-step-' + i, answer: 'đúng' });
   assert.equal(state.status, 'completed'); assert.equal(state.solution, 'Lời giải cuối cùng');
+  assert.equal(arena.view(p).reviewPending, 1);
+  await completeCopy(tutor,id);
   assert.equal(arena.view(p).reviewPending, 0); assert.equal(arena.view(p).reviewQuestions[0].tutorCompleted, true);
   assert.deepEqual(m.scores, scores); assert.equal(m.winner, 0);
   assert.equal(arena.join(request()).state, 'searching');
@@ -100,11 +108,11 @@ test('pending Planet obligations and completion survive restart without live mat
   t.after(() => rmSync(directory, { recursive: true, force: true }));
   const first = fixture(t, { directory }), { p, m } = first.start();
   first.arena.finish(m, 0); const id = first.arena.view(p).reviewQuestions[0].tutorId;
-  const restored = new EssayTutor({ ai, directory });
+  const restored = new EssayTutor({ ai, copyAI: { prepare: async () => ({kind:'theory',content:'Đáp án'}), check: async () => ({handwritten:true,uncertain:false,count:5,redoCorrect:true,questionCopied:true,feedback:'Đủ'}) }, directory });
   const arena = new Arena(), server = createServer(arena, undefined, { tutor: restored }); t.after(() => server.close());
   assert.throws(() => arena.join(request()), e => e.reviewRequired);
   await complete(restored, id);
-  const final = new EssayTutor({ ai, directory }); assert.equal(final.get(id, 'alice').status, 'completed');
+  const final = new EssayTutor({ ai, copyAI: { prepare: async () => ({kind:'theory',content:'Đáp án'}), check: async () => ({handwritten:true,uncertain:false,count:5,redoCorrect:true,questionCopied:true,feedback:'Đủ'}) }, directory }); assert.equal(final.get(id, 'alice').status, 'completed');
   assert.equal(arena.join(request()).state, 'searching');
 });
 

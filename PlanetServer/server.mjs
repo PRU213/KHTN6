@@ -9,6 +9,7 @@ import { createEssaySource, createEssayRecorder } from './essay-source.mjs';
 import { FootballPractice } from './football.mjs';
 import { EssayTutor } from './tutor.mjs';
 import { TutorAuth } from './tutor-auth.mjs';
+import { createQuizReviewSource, registerQuizReviews } from './quiz-review.mjs';
 
 const envPath = fileURLToPath(new URL('./.env', import.meta.url));
 if (existsSync(envPath)) process.loadEnvFile(envPath);
@@ -34,6 +35,7 @@ export class Arena {
     this.essayBank = essayQuestions; this.recordEssay = recordEssay;
   }
   assertReady(username) {
+    this.assertPenaltyReady?.(username);
     const reviews = this.pendingReviews?.(username) || [];
     if (reviews.length) {
       const error = new Error('Em cần hoàn thành học lại từng bước các câu sai trước khi tìm trận mới.');
@@ -333,12 +335,13 @@ export class Arena {
   }
 }
 
-export function createServer(arena = new Arena(), chat = createChat(), { essaySource = createEssaySource(), football = new FootballPractice({ source: essaySource }), tutor = new EssayTutor(), tutorAuth = new TutorAuth() } = {}) {
+export function createServer(arena = new Arena(), chat = createChat(), { essaySource = createEssaySource(), football = new FootballPractice({ source: essaySource }), tutor = new EssayTutor(), tutorAuth = new TutorAuth(), quizSource = createQuizReviewSource() } = {}) {
+  arena.assertPenaltyReady = username => tutor.assertCanPlay(username);
   arena.registerTutor = record => tutor.register(record);
-  arena.isTutorComplete = (id, username) => tutor.get(id, username).status === 'completed';
+  arena.isTutorComplete = (id, username) => tutor.isComplete(id, username);
   const savedReviews = username => [...tutor.records.values()].filter(r => r.source === 'planet' && accountKey(r.username) === accountKey(username)).map(r => ({
     ...(r.review || {}), sourceId: r.sourceId || r.review?.sourceId || '', round: r.review?.round || 0, text: r.review?.text || r.question, subject: r.subject,
-    needsTutor: true, tutorId: r.id, tutorCompleted: r.status === 'completed', tutorError: '',
+    needsTutor: true, tutorId: r.id, tutorCompleted: tutor.isComplete(r.id, username), tutorError: '',
     ...(r.status !== 'completed' ? { sampleAnswer: '', suggestedAnswer: '', feedback: '', correct: -1 } : {})
   }));
   arena.pendingReviews = username => {
@@ -351,7 +354,7 @@ export function createServer(arena = new Arena(), chat = createChat(), { essaySo
     return [...savedReviews(username).filter(e => !e.tutorCompleted), ...unsaved];
   };
   football.registerTutor = record => tutor.register(record);
-  football.isTutorComplete = (id, username) => tutor.get(id, username).status === 'completed';
+  football.isTutorComplete = (id, username) => tutor.isComplete(id, username);
   const server = http.createServer(async (req, res) => {
     res.setHeader('Content-Type', 'application/json; charset=utf-8');
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -359,13 +362,13 @@ export function createServer(arena = new Arena(), chat = createChat(), { essaySo
     res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
     res.setHeader('Cache-Control', 'no-store');
     if (req.method === 'OPTIONS') { res.writeHead(204); res.end(); return; }
-    if (req.url === '/health') { res.end(JSON.stringify({ ok: true, tutorVersion: 2, mandatoryPracticeTutor: true, duelReviewVersion: 1, essayQuestions: essaySource.status?.() })); return; }
+    if (req.url === '/health') { res.end(JSON.stringify({ ok: true, copyPenaltyVersion: 2, tutorVersion: 2, mandatoryPracticeTutor: true, duelReviewVersion: 1, essayQuestions: essaySource.status?.() })); return; }
     try {
       if (req.method !== 'POST') { res.writeHead(405); res.end('{}'); return; }
       const chunks = []; let size = 0;
       for await (const chunk of req) {
         size += chunk.length;
-        if (size > (req.url === '/essay' || req.url === '/football/submit' ? 3000000 : 100000)) throw new Error('Yêu cầu quá lớn.');
+        if (size > (req.url === '/tutor/copy-submit' ? 17500000 : req.url === '/tutor/quiz-review' ? 1000000 : req.url === '/essay' || req.url === '/football/submit' ? 3000000 : 100000)) throw new Error('Yêu cầu quá lớn.');
         chunks.push(chunk);
       }
       const raw = Buffer.concat(chunks).toString('utf8');
@@ -375,9 +378,20 @@ export function createServer(arena = new Arena(), chat = createChat(), { essaySo
         tutorAuth.authorize(req.headers.authorization, body, req.url);
         let result;
         if (req.url === '/tutor/list') result = tutor.list(body.username);
+        else if (req.url === '/tutor/quiz-review') result = await registerQuizReviews(tutor, body, quizSource);
         else if (req.url === '/tutor/state') result = tutor.view(tutor.get(body.id, body.username), true);
         else if (req.url === '/tutor/start') result = await tutor.start(body);
         else if (req.url === '/tutor/answer') result = await tutor.answer(body);
+        else if (req.url === '/tutor/copy-start' || req.url === '/tutor/copy-submit') {
+          football.cleanup();
+          const lesson = tutor.get(body.id, body.username);
+          if ([...football.sessions.values()].some(s => accountKey(s.username) === accountKey(body.username) && s.phase !== 'finished'
+            && !(s.phase === 'review' && lesson.sourceId === `practice:${s.token}:${s.index}`)))
+            throw new Error('Hãy hoàn thành câu đang làm trước khi chép phạt câu khác.');
+          if ([...arena.players.values()].some(p => accountKey(p.username || p.name) === accountKey(body.username) && p.match && p.match.phase !== 'finished'))
+            throw new Error('Hãy hoàn thành trận đối kháng hiện tại trước khi chép phạt.');
+          result = req.url === '/tutor/copy-start' ? await tutor.prepareCopy(body) : await tutor.submitCopy(body);
+        }
         else { res.writeHead(404); res.end('{}'); return; }
         res.end(JSON.stringify(result)); return;
       }
@@ -414,7 +428,7 @@ export function createServer(arena = new Arena(), chat = createChat(), { essaySo
       }
       if (req.url.startsWith('/football/')) {
         let result;
-        if (req.url === '/football/start') result = await football.start(body);
+        if (req.url === '/football/start') { tutor.assertCanPlay(body.username || body.name); result = await football.start(body); }
         else if (req.url === '/football/leave') { football.sessions.delete(body.token); result = { success: true }; }
         else {
           const session = football.get(body.token);
@@ -447,6 +461,7 @@ export function createServer(arena = new Arena(), chat = createChat(), { essaySo
         return;
       }
       if (req.url === '/join') {
+        tutor.assertCanPlay(body.username || body.name);
         if (arena.players.size > 2000) throw new Error('Máy chủ đang đầy.');
         arena.assertReady(body.username || body.name);
         if (body.questionType === 'essay') arena.essayBank = await essaySource();

@@ -77,7 +77,7 @@ export class FootballPractice {
     let tutorId = '', tutorError = '', tutorCompleted = false;
     if (needsTutor) {
       try { tutorId = this.registerTutor({ sourceId: `practice:${s.token}:${s.index}`, username: s.username, subject: s.subject,
-        chapter: s.chapter, question: q.text, reference: q.sampleAnswer, studentAnswer: s.review?.transcription || '', score: s.review?.rawScore ?? s.review?.score ?? 0 });
+        chapter: s.chapter, question: q.text, reference: q.sampleAnswer, studentAnswer: s.review?.transcription || '', score: s.review?.rawScore ?? s.review?.score ?? 0, finalScore: s.review?.score ?? 0 });
         tutorCompleted = !!tutorId && this.isTutorComplete(tutorId, s.username) === true; }
       catch { tutorError = 'Chưa lưu được mục học lại. Hãy giữ màn kết quả và thử lại.'; }
     }
@@ -141,7 +141,7 @@ export class FootballPractice {
     this.checkRound(s, body.round); this.expire(s);
     if (s.phase !== 'review') return this.view(s);
     const state = this.view(s);
-    if (state.needsTutor && !state.tutorCompleted) return { ...state, error: state.tutorError || 'Em cần hoàn thành học lại từng bước của câu này trước khi chuyển câu tiếp theo.' };
+    if (state.needsTutor && !state.tutorCompleted) return { ...state, error: state.tutorError || 'Em cần hoàn thành học lại và chép phạt (nếu có) của câu này trước khi chuyển câu tiếp theo.' };
     if (s.index === 4) { s.phase = 'finished'; return this.view(s); }
     s.index++; s.review = null; s.hints = []; s.hintPending = false; s.phase = 'answering';
     s.deadline = this.now() + duration(s.questions[s.index].difficulty) * 1000;

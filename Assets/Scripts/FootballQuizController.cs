@@ -85,6 +85,7 @@ public class FootballQuizController : MonoBehaviour
     public UnityEvent onCorrect;
     public UnityEvent onWrong;
     public UnityEvent onFinished;
+    string quizReviewBatchId;
 
 
     // =========================================================
@@ -151,6 +152,7 @@ public class FootballQuizController : MonoBehaviour
 
     void OnEnable()
     {
+        quizReviewBatchId = System.Guid.NewGuid().ToString("N");
         StopAllCoroutines();
         if (GameSession.QuestionType == "Tự luận") {
             var essay = GetComponent<FootballEssayController>();
@@ -804,8 +806,8 @@ public class FootballQuizController : MonoBehaviour
             );
 
 
-        bool isCorrect =
-            chosen == correctIndex;
+        bool isCorrect = chosen == correctIndex;
+        if (!isCorrect) EssayTutorUI.RememberQuizMistake(quizReviewBatchId, "Football", q, chosen);
 
 
         // =====================================================
@@ -996,6 +998,7 @@ public class FootballQuizController : MonoBehaviour
 
 
         onFinished?.Invoke();
+        EssayTutorUI.FinishQuizReviews();
     }
 
 
@@ -1044,6 +1047,7 @@ public class FootballQuizController : MonoBehaviour
 
 
         onFinished?.Invoke();
+        EssayTutorUI.FinishQuizReviews();
     }
 
 
