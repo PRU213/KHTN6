@@ -20,6 +20,7 @@ public sealed class EssayTutorUI : MonoBehaviour
     }
     [Serializable] public class Penalty { public string status, kind, content, feedback, createdAt, completedAt, redoQuestion, redoSolution; public int required, count; public bool redoPassed; }
     [Serializable] public class CopyImage { public string base64, mimeType; }
+    [Serializable] class CopyDraft { public string id, username; public CopyImage[] images; }
     [Serializable] public class QuizMistake { public string id; public int chosen; }
     [Serializable] public class QuizBatch { public string id, game, subject; public List<QuizMistake> questions = new List<QuizMistake>(); }
     [Serializable] class QuizJournal { public List<QuizBatch> batches = new List<QuizBatch>(); }
@@ -334,12 +335,13 @@ public sealed class EssayTutorUI : MonoBehaviour
             + (p.required > 0 ? "Đã đạt " + p.count + "/" + p.required + " bản chép đầy đủ.\nMẪU PHẢI CHÉP TAY:\n" + p.content : "Nội dung chép sẽ mở ngay sau khi học lại xong câu này.")
             + (p.required > 0 ? "\nPHẦN RIÊNG: Chép lại đề và lời giải hoàn chỉnh 1 lần (ngoài " + p.required + " lần chép ở trên).\nĐỀ: " + p.redoQuestion + "\nLỜI GIẢI: " + p.redoSolution + "\nPhần làm lại: " + (p.redoPassed ? "Đạt" : "Chưa đạt") : "")
             + "\n" + p.feedback + (string.IsNullOrEmpty(p.completedAt) ? "" : "\nHoàn thành: " + LocalDate(p.completedAt)));
-        if (teacher || p.status == "completed" || record.status != "completed") return;
+        if (p.status == "completed") { DeleteCopyDraft(record.id); return; }
+        if (teacher || record.status != "completed") return;
         if (string.IsNullOrEmpty(p.content)) {
             CopyButton("Mở nội dung chép phạt", () => StartCoroutine(Load("copy-start", new Request { id = record.id, username = username })));
             return;
         }
-        if (copyRecordId != record.id) { ClearCopyImages(); copyRecordId = record.id; }
+        if (copyRecordId != record.id) { ClearCopyImages(); copyRecordId = record.id; RestoreCopyDraft(record.id); }
         Paragraph("Viết tay rồi nộp toàn bộ các trang cùng một lần (tối đa 6 ảnh). Khi nộp bổ sung, gửi lại đủ các trang; hệ thống không cộng giữa các lần nộp.\nĐã chọn " + copyImages.Count + " ảnh.");
         foreach (var texture in copyTextures) {
             var holder = new GameObject("Trang chép tay", typeof(RectTransform), typeof(LayoutElement)); holder.transform.SetParent(content, false);
@@ -350,7 +352,7 @@ public sealed class EssayTutorUI : MonoBehaviour
         }
         CopyButton("Thêm ảnh từ máy", () => StartCoroutine(PickCopyImage()));
         CopyButton("Chụp ảnh bằng camera", () => StartCoroutine(OpenCopyCamera()));
-        CopyButton("Xóa các ảnh đã chọn", () => { ClearCopyImages(); Render(current); });
+        CopyButton("Xóa các ảnh đã chọn", () => { DeleteCopyDraft(current.id); ClearCopyImages(); Render(current); });
         CopyButton("Gửi toàn bộ ảnh để AI kiểm tra", () => {
             if (copyImages.Count == 0) { status.text = "Hãy chọn hoặc chụp ảnh bài chép tay."; return; }
             if (retryCopy == null) retryCopy = new Request { id = current.id, username = username, requestId = Guid.NewGuid().ToString("N"), images = copyImages.ToArray() };
@@ -362,6 +364,41 @@ public sealed class EssayTutorUI : MonoBehaviour
         foreach (var texture in copyTextures) if (texture != null) Destroy(texture);
         copyTextures.Clear(); copyImages.Clear(); retryCopy = null;
     }
+    string CopyDraftPath(string id)
+    {
+        using (var sha = System.Security.Cryptography.SHA256.Create()) {
+            var key = BitConverter.ToString(sha.ComputeHash(Encoding.UTF8.GetBytes(username.Trim().ToLowerInvariant() + "|" + id))).Replace("-", "");
+            return System.IO.Path.Combine(Application.persistentDataPath, "CopyDrafts", key + ".json");
+        }
+    }
+    void SaveCopyDraft()
+    {
+        try {
+            var path = CopyDraftPath(current.id); System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(path));
+            System.IO.File.WriteAllText(path + ".tmp", JsonUtility.ToJson(new CopyDraft { id = current.id, username = username, images = copyImages.ToArray() }));
+            if (System.IO.File.Exists(path)) System.IO.File.Replace(path + ".tmp", path, null); else System.IO.File.Move(path + ".tmp", path);
+        } catch (Exception) { Debug.LogWarning("Chưa lưu được bản nháp ảnh chép phạt trên thiết bị; giữ ảnh gốc trước khi thoát."); }
+    }
+    void RestoreCopyDraft(string id)
+    {
+        try {
+            var path = CopyDraftPath(id); if (!System.IO.File.Exists(path)) return;
+            var draft = JsonUtility.FromJson<CopyDraft>(System.IO.File.ReadAllText(path));
+            if (draft == null || draft.id != id || !string.Equals(draft.username, username, StringComparison.OrdinalIgnoreCase) || draft.images == null || draft.images.Length > 6) return;
+            foreach (var photo in draft.images) {
+                var bytes = Convert.FromBase64String(photo.base64); if (bytes.Length > 2 * 1024 * 1024) throw new FormatException();
+                var texture = new Texture2D(2, 2);
+                if (!texture.LoadImage(bytes)) { Destroy(texture); throw new FormatException(); }
+                copyImages.Add(photo); copyTextures.Add(texture);
+            }
+        } catch (Exception) { ClearCopyImages(); Debug.LogWarning("Chưa đọc được bản nháp chép phạt. Có thể chọn lại ảnh gốc."); }
+    }
+    void DeleteCopyDraft(string id)
+    {
+        if (teacher) return;
+        try { var path = CopyDraftPath(id); if (System.IO.File.Exists(path)) System.IO.File.Delete(path); }
+        catch (Exception) { Debug.LogWarning("Chưa xóa được bản nháp ảnh đã hoàn thành."); }
+    }
     void AddCopyImage(byte[] bytes)
     {
         if (copyImages.Count >= 6) { status.text = "Tối đa 6 ảnh trong một bài nộp."; return; }
@@ -369,6 +406,7 @@ public sealed class EssayTutorUI : MonoBehaviour
         var texture = new Texture2D(2, 2);
         if (!texture.LoadImage(bytes)) { Destroy(texture); status.text = "Không đọc được ảnh."; return; }
         copyTextures.Add(texture); copyImages.Add(new CopyImage { base64 = Convert.ToBase64String(bytes), mimeType = "image/jpeg" }); retryCopy = null;
+        SaveCopyDraft();
         Render(current);
     }
     IEnumerator PickCopyImage()

@@ -9,6 +9,7 @@ import { createEssaySource, createEssayRecorder } from './essay-source.mjs';
 import { FootballPractice } from './football.mjs';
 import { EssayTutor } from './tutor.mjs';
 import { TutorAuth } from './tutor-auth.mjs';
+import { createTutorSheetStore } from './tutor-sheet-store.mjs';
 import { createQuizReviewSource, registerQuizReviews } from './quiz-review.mjs';
 
 const envPath = fileURLToPath(new URL('./.env', import.meta.url));
@@ -356,13 +357,15 @@ export function createServer(arena = new Arena(), chat = createChat(), { essaySo
   football.registerTutor = record => tutor.register(record);
   football.isTutorComplete = (id, username) => tutor.isComplete(id, username);
   const server = http.createServer(async (req, res) => {
+    const send = async result => { await tutor.flush(); res.end(JSON.stringify(result)); };
+    const loadJournal = async () => { await tutor.ensureLoaded(); await tutor.flush(); };
     res.setHeader('Content-Type', 'application/json; charset=utf-8');
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
     res.setHeader('Cache-Control', 'no-store');
     if (req.method === 'OPTIONS') { res.writeHead(204); res.end(); return; }
-    if (req.url === '/health') { res.end(JSON.stringify({ ok: true, copyPenaltyVersion: 2, tutorVersion: 2, mandatoryPracticeTutor: true, duelReviewVersion: 1, essayQuestions: essaySource.status?.() })); return; }
+    if (req.url === '/health') { res.end(JSON.stringify({ ok: true, copyPenaltyVersion: 2, journalVersion: 1, journalStorage: tutor.store?.kind || 'local', journalReady: tutor.loaded, tutorVersion: 2, mandatoryPracticeTutor: true, duelReviewVersion: 1, essayQuestions: essaySource.status?.() })); return; }
     try {
       if (req.method !== 'POST') { res.writeHead(405); res.end('{}'); return; }
       const chunks = []; let size = 0;
@@ -376,6 +379,7 @@ export function createServer(arena = new Arena(), chat = createChat(), { essaySo
       if (req.url.startsWith('/tutor/')) {
         if (req.url === '/tutor/login') { res.end(JSON.stringify(await tutorAuth.login(body, req.socket.remoteAddress))); return; }
         tutorAuth.authorize(req.headers.authorization, body, req.url);
+        await loadJournal();
         let result;
         if (req.url === '/tutor/list') result = tutor.list(body.username);
         else if (req.url === '/tutor/quiz-review') result = await registerQuizReviews(tutor, body, quizSource);
@@ -393,10 +397,11 @@ export function createServer(arena = new Arena(), chat = createChat(), { essaySo
           result = req.url === '/tutor/copy-start' ? await tutor.prepareCopy(body) : await tutor.submitCopy(body);
         }
         else { res.writeHead(404); res.end('{}'); return; }
-        res.end(JSON.stringify(result)); return;
+        await send(result); return;
       }
       if (req.url === '/review/pending' || req.url === '/review/local') {
         tutorAuth.authorize(req.headers.authorization, body, req.url);
+        await loadJournal();
         let reviewQuestions;
         if (req.url === '/review/local') {
           if (typeof body.matchId !== 'string' || !/^local-[a-f0-9-]{32,36}$/i.test(body.matchId) || !Array.isArray(body.reviewQuestions) || body.reviewQuestions.length < 1 || body.reviewQuestions.length > 15)
@@ -424,9 +429,10 @@ export function createServer(arena = new Arena(), chat = createChat(), { essaySo
           const pending = arena.pendingReviews(body.username);
           reviewQuestions = [...savedReviews(body.username), ...pending.filter(e => !e.tutorId)];
         }
-        res.end(JSON.stringify({ state: 'finished', reviewQuestions, reviewPending: reviewQuestions.filter(e => e.needsTutor && !e.tutorCompleted).length })); return;
+        await send({ state: 'finished', reviewQuestions, reviewPending: reviewQuestions.filter(e => e.needsTutor && !e.tutorCompleted).length }); return;
       }
       if (req.url.startsWith('/football/')) {
+        await loadJournal();
         let result;
         if (req.url === '/football/start') { tutor.assertCanPlay(body.username || body.name); result = await football.start(body); }
         else if (req.url === '/football/leave') { football.sessions.delete(body.token); result = { success: true }; }
@@ -440,7 +446,7 @@ export function createServer(arena = new Arena(), chat = createChat(), { essaySo
           else if (req.url === '/football/next') result = football.next(session, body);
           else { res.writeHead(404); res.end('{}'); return; }
         }
-        res.end(JSON.stringify(result)); return;
+        await send(result); return;
       }
       if (req.url === '/chat') {
         if (body.clientId !== undefined && (typeof body.clientId !== 'string' || !/^[a-zA-Z0-9-]{16,64}$/.test(body.clientId))) {
@@ -461,26 +467,28 @@ export function createServer(arena = new Arena(), chat = createChat(), { essaySo
         return;
       }
       if (req.url === '/join') {
+        await loadJournal();
         tutor.assertCanPlay(body.username || body.name);
         if (arena.players.size > 2000) throw new Error('Máy chủ đang đầy.');
         arena.assertReady(body.username || body.name);
         if (body.questionType === 'essay') arena.essayBank = await essaySource();
-        res.end(JSON.stringify(arena.join(body))); return;
+        await send(arena.join(body)); return;
       }
       const p = arena.players.get(body.token);
       if (!p) { res.writeHead(401); res.end(JSON.stringify({ error: 'Phiên đã hết hạn. Hãy tìm trận lại.' })); return; }
+      await loadJournal();
       p.seen = arena.now(); arena.tick();
       if (req.url === '/leave') { arena.leave(p); res.end('{}'); return; }
-      if (req.url === '/bot') { res.end(JSON.stringify(arena.playWithBot(p))); return; }
+      if (req.url === '/bot') { await send(arena.playWithBot(p)); return; }
       if (req.url === '/essay') {
         const image = validateEssayImage(body.imageBase64, body.mimeType);
-        res.end(JSON.stringify(await arena.submitEssay(p, body.text || '', body.round, image))); return;
+        await send(await arena.submitEssay(p, body.text || '', body.round, image)); return;
       }
       if (req.url !== '/poll') { res.writeHead(404); res.end('{}'); return; }
       if (body.playWithBot === true) arena.playWithBot(p);
       if (body.fire && p.match) arena.fire(p.match, p.seat);
       if (p.match && body.answer !== undefined) arena.choose(p.match, p.seat, body.answer, body.round);
-      res.end(JSON.stringify(arena.view(p)));
+      await send(arena.view(p));
     } catch (error) { res.writeHead(error.status || 400); res.end(JSON.stringify({ error: error.message, ...(error.reviewRequired ? { reviewRequired: true, reviewPending: error.reviewPending } : {}) })); }
   });
   const timer = setInterval(() => arena.tick(), 25);
@@ -493,6 +501,10 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
   // Warm the real Sheet bank without delaying server startup. Later restarts
   // can reuse the validated snapshot while Google Sheets is slow.
   source().catch(() => console.warn('Chưa làm nóng được dữ liệu TuLuan; sẽ thử lại khi có yêu cầu.'));
-  const tutor = new EssayTutor({ directory: process.env.TUTOR_DATA_DIR || fileURLToPath(new URL('./data/tutor/', import.meta.url)) });
+  const journalMode = process.env.TUTOR_STORAGE || 'local';
+  if (!['local', 'googleSheets'].includes(journalMode)) throw new Error('TUTOR_STORAGE không hợp lệ.');
+  const tutor = new EssayTutor({ store: journalMode === 'googleSheets' ? createTutorSheetStore() : null, directory: process.env.TUTOR_DATA_DIR || fileURLToPath(new URL('./data/tutor/', import.meta.url)) });
+  // Validate durable storage before marking the new deployment healthy.
+  await tutor.ensureLoaded();
   createServer(undefined, undefined, { essaySource: source, tutor }).listen(Number(process.env.PORT || 8787), '0.0.0.0', () => console.log('Planet server ready on port ' + (process.env.PORT || 8787)));
 }

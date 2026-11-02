@@ -60,3 +60,16 @@ Thay đổi ở workspace, chưa deploy. Cập nhật Unity và PlanetServer cù
 Trắc nghiệm/đối kháng học lại và chép phạt từng câu sai sau lượt; bỏ điều kiện sai 3 lần. Lượt mới
 cần xác minh nhật ký qua mạng, gồm cả đấu máy và game trắc nghiệm chạy cục bộ.
 Quy tắc, API nộp ảnh và hướng dẫn kiểm tra: [COPY-PENALTY.md](../PlanetServer/COPY-PENALTY.md).
+
+## Nhật ký bền vững trên Google Sheet — 02/11/2026
+
+Mã mới ở workspace, chưa deploy. Cập nhật Apps Script trước, rồi backend Render.
+Thêm `AppsScript/TutorJournal.gs` cạnh file chính `Mã.gs`, nối hai action nhật ký
+vào doPost duy nhất, chạy setup và cập nhật deployment cũ. Backend bật
+`TUTOR_STORAGE=googleSheets`, dùng `APPS_SCRIPT_URL` và `APPS_SCRIPT_SECRET` hiện có.
+`/health` phải báo `journalStorage: "googleSheets"`, `journalReady: true`.
+Backend đọc Sheet lúc khởi động và đợi xác nhận ghi trước khi trả thành công.
+Không cần nâng gói Render. Tab nhật ký không được publish/chia sẻ công khai;
+có thể dùng Sheet riêng tư qua Script Property `TUTOR_SPREADSHEET_ID`.
+Các bước dán code, thiết lập và kiểm tra restart:
+[TUTOR-JOURNAL-SETUP.md](../AppsScript/TUTOR-JOURNAL-SETUP.md).

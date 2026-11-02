@@ -46,8 +46,14 @@ public static class CopyPenaltySmokeTests
             Require(!((Button)Field(ui, "continueButton")).gameObject.activeSelf, "Copying must block tutorial continuation.");
             record.penalty = new EssayTutorUI.Penalty { status = "copying", kind = "calculation", content = "P = 10m; P: trọng lượng (N); m: khối lượng (kg).", required = 10, count = 7, feedback = "Đã đọc được 7 bản chép đúng. Còn thiếu 3 bản." };
             Render(ui, record);
+            typeof(EssayTutorUI).GetField("username", Flags).SetValue(ui, "copy-draft-fixture");
             var sample = new Texture2D(320, 180); var pixels = new Color[320 * 180]; Array.Fill(pixels, Color.white); sample.SetPixels(pixels); sample.Apply();
             typeof(EssayTutorUI).GetMethod("AddCopyImage", Flags).Invoke(ui, new object[] { sample.EncodeToJPG() }); UnityEngine.Object.Destroy(sample);
+            typeof(EssayTutorUI).GetMethod("ClearCopyImages", Flags).Invoke(ui, null);
+            typeof(EssayTutorUI).GetMethod("RestoreCopyDraft", Flags).Invoke(ui, new object[] { record.id });
+            Require(((System.Collections.ICollection)Field(ui, "copyImages")).Count == 1, "Selected photos must survive clearing runtime state and reopening the saved draft.");
+            typeof(EssayTutorUI).GetMethod("DeleteCopyDraft", Flags).Invoke(ui, new object[] { record.id });
+            Render(ui, record);
             Require(ui.GetComponentsInChildren<RawImage>().Length == 1, "A selected copy page must render a preview.");
             Require(Array.Exists(ui.GetComponentsInChildren<Button>(), b => b.name == "Gửi toàn bộ ảnh để AI kiểm tra"), "Student upload control missing.");
             Canvas.ForceUpdateCanvases();
