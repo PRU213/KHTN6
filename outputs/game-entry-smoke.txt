@@ -1,0 +1,1 @@
+PASS: penalty preserves learning answers but blocks continuation until copying passes; copy template/count/feedback, photo preview, upload controls, teacher read-only and completed status render offline.

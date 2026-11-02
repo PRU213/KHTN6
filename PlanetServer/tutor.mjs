@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto';
 import { mkdirSync, readdirSync, readFileSync, writeFileSync, renameSync, unlinkSync } from 'node:fs';
 import { join } from 'node:path';
+import { createCopyAI, validateCopyImages } from './copy-penalty.mjs';
 
 const subjects = new Set(['Physics', 'Chemistry', 'Biology']);
 const accountKey = value => String(value || '').trim().toLowerCase();
@@ -35,7 +36,8 @@ export function createTutorAI({ key = process.env.GEMINI_API_KEY, model = proces
 }
 
 export class EssayTutor {
-  constructor({ ai = createTutorAI(), directory = null, now = Date.now } = {}) {
+  constructor({ ai = createTutorAI(), copyAI = createCopyAI(), directory = null, now = Date.now } = {}) {
+    this.copyAI = copyAI;
     this.ai = ai; this.directory = directory; this.now = now; this.records = new Map(); this.busy = new Set(); this.rates = new Map();
     if (directory) {
       mkdirSync(directory, { recursive: true });
@@ -43,6 +45,8 @@ export class EssayTutor {
         // Fail startup on damaged journal files, rather than silently losing a pupil's work.
         const record = JSON.parse(readFileSync(join(directory, file), 'utf8'));
         if (record.version !== 1 || record.id + '.json' !== file || !subjects.has(record.subject) || !Array.isArray(record.events)) fail('Nhật ký học lại không hợp lệ: ' + file);
+        // Remove the obsolete three-mistakes rule. Current questions are re-registered with their final score.
+        if (record.penalty && record.penalty.ruleVersion !== 2) delete record.penalty;
         this.records.set(record.id, record);
       }
     }
@@ -56,16 +60,35 @@ export class EssayTutor {
     this.records.set(record.id, record);
     return record;
   }
-  register({ sourceId, username, subject, chapter = '', question, reference, studentAnswer = '', score = 0, source = 'practice', review = null }) {
-    if (!subjects.has(subject) || (subject === 'Biology' && source !== 'planet') || (score >= 10 && !(source === 'planet' && review?.needsTutor === true)) || !text(username, 100)) return '';
+  register({ sourceId, username, subject, chapter = '', question, reference, studentAnswer = '', score = 0, finalScore = score, source = 'practice', review = null }) {
+    if (!subjects.has(subject) || (subject === 'Biology' && !['planet', 'quiz'].includes(source)) || (score >= 10 && !(source === 'planet' && review?.needsTutor === true)) || !text(username, 100)) return '';
     if (!text(sourceId, 200) || !text(question, 12000) || !text(reference, 12000)) fail('Thiếu dữ liệu câu hỏi học lại.');
     username = accountKey(username);
     const id = createHash('sha256').update(username + '\0' + sourceId).digest('hex').slice(0, 40);
-    if (!this.records.has(id)) this.save({ version: 1, id, username, subject, chapter, question, reference, studentAnswer, score, source, sourceId, review: review ? structuredClone(review) : null,
+    if (!this.records.has(id)) this.save({ version: 1, id, username, subject, chapter, question, reference, studentAnswer, score, finalScore, source, sourceId, review: review ? structuredClone(review) : null,
       createdAt: this.now(), updatedAt: this.now(), status: 'pending', step: 0, checking: false, revision: 0, events: [], plan: null });
     else if (source === 'planet' && this.records.get(id).source !== 'planet')
       this.save({ ...this.records.get(id), source, sourceId, review: review ? structuredClone(review) : null });
+    const r = structuredClone(this.records.get(id));
+    r.finalScore = finalScore;
+    const required = ['planet', 'quiz'].includes(source) || finalScore <= 6;
+    if (required && r.penalty?.ruleVersion !== 2) r.penalty = { ruleVersion: 2, status: 'deferred', count: 0, required: 0, content: '', kind: '', redoPassed: false, submissions: [], createdAt: new Date(this.now()).toISOString() };
+    if (!required && r.penalty?.ruleVersion !== 2) delete r.penalty;
+    if (JSON.stringify(r) !== JSON.stringify(this.records.get(id))) this.save(r);
     return id;
+  }
+  isComplete(id, username) {
+    const r = this.get(id, username);
+    return r.status === 'completed' && (!r.penalty || r.penalty.status === 'completed');
+  }
+  previousLesson(r) {
+    const group = r.sourceId.slice(0, r.sourceId.lastIndexOf(':'));
+    const previous = [...this.records.values()].filter(p => p.username === r.username && p.id !== r.id && p.sourceId.slice(0, p.sourceId.lastIndexOf(':')) === group
+      && Number(p.sourceId.split(':').at(-1)) < Number(r.sourceId.split(':').at(-1)) && !this.isComplete(p.id, p.username));
+    return previous.sort((a, b) => Number(a.sourceId.split(':').at(-1)) - Number(b.sourceId.split(':').at(-1)))[0];
+  }
+  assertLessonReady(r) {
+    if (this.previousLesson(r)) fail('Hoàn thành học lại và chép phạt câu trước rồi mới chuyển câu tiếp theo.');
   }
   get(id, username) {
     const r = this.records.get(id);
@@ -75,8 +98,10 @@ export class EssayTutor {
   view(r, includeEvents = false) {
     const step = r.plan?.steps[r.step];
     const guidance = r.guidance?.step === r.step ? r.guidance : null;
-    return { id: r.id, username: r.username, subject: r.subject, chapter: r.chapter, question: r.question, score: r.score,
-      studentAnswer: r.studentAnswer || '', source: r.source || 'practice', questionType: r.review?.questionType || 'essay',
+    return { id: r.id, username: r.username, subject: r.subject, chapter: r.chapter, question: r.question, score: r.score, finalScore: r.finalScore ?? r.score,
+      studentAnswer: r.studentAnswer || '', source: r.source || 'practice', sourceId: r.sourceId, blockedBy: this.previousLesson(r)?.id || '', questionType: r.review?.questionType || 'essay',
+      penalty: r.penalty ? { ...r.penalty, submissions: undefined } : null,
+      wrongAttempts: r.wrongAttempts || 0,
       status: r.status, step: r.step, total: r.plan?.steps.length || 0, checking: r.checking, revision: r.revision,
       createdAt: new Date(r.createdAt).toISOString(), updatedAt: new Date(r.updatedAt).toISOString(),
       prompt: step ? (r.checking ? guidance?.checkQuestion || step.checkQuestion : step.question) : '',
@@ -86,6 +111,48 @@ export class EssayTutor {
   list(username) {
     if (!text(username, 100)) fail('Hãy chọn hoặc đăng nhập tài khoản học sinh.');
     return { records: [...this.records.values()].filter(r => accountKey(r.username) === accountKey(username)).sort((a, b) => b.updatedAt - a.updatedAt).map(r => this.view(r)) };
+  }
+  pendingPenalties(username) {
+    return this.list(username).records.filter(r => r.penalty && r.penalty.status !== 'completed');
+  }
+  assertCanPlay(username) {
+    const count = this.pendingPenalties(username).length;
+    if (count) throw Object.assign(new Error('Em còn nhiệm vụ chép phạt. Mở Nhật ký học lại để hoàn thành trước khi chơi lượt mới.'), { reviewRequired: true, reviewPending: count });
+  }
+  async prepareCopy(body) {
+    return this.locked(body.id, body.username, async existing => {
+      this.assertLessonReady(existing);
+      if (existing.status !== 'completed' || !existing.penalty) fail('Hãy hoàn thành học lại từng bước trước.');
+      if (existing.penalty.content) return this.view(existing, true);
+      this.rate(body.username);
+      const result = await this.copyAI.prepare(existing);
+      if (!result || !['theory', 'calculation'].includes(result.kind) || !text(result.content, 6000)) fail('Chưa xác định được nội dung cần chép. Hãy thử lại.');
+      const r = structuredClone(existing);
+      Object.assign(r.penalty, { kind: result.kind, content: result.content, redoQuestion: r.question, redoSolution: r.plan.solution, required: result.kind === 'calculation' ? 10 : 5, status: 'copying' });
+      r.updatedAt = this.now(); this.save(r); return this.view(r, true);
+    });
+  }
+  async submitCopy(body) {
+    return this.locked(body.id, body.username, async existing => {
+      this.assertLessonReady(existing);
+      if (existing.status !== 'completed' || !existing.penalty?.content) fail('Hãy mở nhiệm vụ chép phạt trước khi nộp.');
+      if (!text(body.requestId, 64)) fail('Thiếu mã lần nộp.');
+      if (existing.penalty.status === 'completed' || existing.penalty.submissions?.some(s => s.requestId === body.requestId)) return this.view(existing, true);
+      if (existing.penalty.submissions?.length >= 100) fail('Đã đạt giới hạn nộp ảnh; hãy nhờ giáo viên kiểm tra.');
+      const images = validateCopyImages(body.images);
+      const batch = images.map(i => i.hash).sort().join(':');
+      if (existing.penalty.submissions?.some(s => s.batch === batch)) return this.view(existing, true);
+      this.rate(body.username);
+      const result = await this.copyAI.check(existing.penalty, images);
+      if (!result || typeof result.redoCorrect !== 'boolean' || typeof result.questionCopied !== 'boolean' || typeof result.handwritten !== 'boolean' || typeof result.uncertain !== 'boolean' || !Number.isInteger(result.count) || result.count < 0 || result.count > 100 || !text(result.feedback, 800)) fail('Kết quả kiểm tra ảnh chưa hợp lệ. Tiến độ giữ nguyên.');
+      const r = structuredClone(existing), p = r.penalty;
+      // Each submission is the ENTIRE set of pages. Never add counts across batches.
+      const count = result.handwritten && !result.uncertain ? Math.min(result.count, p.required) : 0;
+      p.count = count; p.redoPassed = result.handwritten && !result.uncertain && result.redoCorrect && result.questionCopied; p.feedback = result.feedback;
+      (p.submissions ||= []).push({ requestId: body.requestId, batch, count, feedback: result.feedback, at: this.now() });
+      if (p.count >= p.required && p.redoPassed) { p.status = 'completed'; p.completedAt = new Date(this.now()).toISOString(); }
+      r.updatedAt = this.now(); this.save(r); return this.view(r, true);
+    });
   }
   async locked(id, username, action) {
     const r = this.get(id, username);
@@ -103,6 +170,7 @@ export class EssayTutor {
   }
   async start(body) {
     return this.locked(body.id, body.username, async existing => {
+      this.assertLessonReady(existing);
       if (existing.plan) return this.view(existing, true);
       this.rate(body.username);
       const plan = await this.ai.plan(existing);
@@ -115,6 +183,7 @@ export class EssayTutor {
   }
   async answer(body) {
     return this.locked(body.id, body.username, async existing => {
+      this.assertLessonReady(existing);
       if (!text(body.requestId, 64)) fail('Thiếu mã lần trả lời.');
       // Retrying a committed request returns the current state without another AI call/event.
       if (existing.events.some(e => e.requestId === body.requestId)) return this.view(existing, true);

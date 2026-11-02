@@ -92,7 +92,9 @@ public class PlanetDuelController : MonoBehaviour
     public void Open(BlastRoundManager manager)
     {
         game = manager; root = game.guns[0].parent as RectTransform;
-        essayMode = GameSession.QuestionType == "Tự luận";
+        // Temporarily keep new Planet matches multiple-choice, including stale sessions.
+        GameSession.QuestionType = "Trắc nghiệm";
+        essayMode = false;
         root.localScale = Vector3.one;
         if (overlay == null) BuildScreens();
         animations.Clear(); previouslyEnabled.Clear();
@@ -481,6 +483,10 @@ public class PlanetDuelController : MonoBehaviour
 
     void BeginSearch()
     {
+        EssayTutorUI.CheckBeforePlay(() => { if (this != null && isActiveAndEnabled) BeginSearchAfterCheck(); });
+    }
+    void BeginSearchAfterCheck()
+    {
         matchUsername = EssayTutorUI.CurrentUsername;
         if (RestoreLocalReviews()) return;
         if (PlayerPrefs.GetInt(RemoteReviewKey, 0) > 0) {
@@ -724,6 +730,10 @@ public class PlanetDuelController : MonoBehaviour
         exitConfirmation.gameObject.SetActive(true); exitConfirmation.SetAsLastSibling();
     }
     void StartLocalBot()
+    {
+        EssayTutorUI.CheckBeforePlay(() => { if (this != null && isActiveAndEnabled) StartLocalBotAfterCheck(); });
+    }
+    void StartLocalBotAfterCheck()
     {
         if (PlayerPrefs.GetInt(RemoteReviewKey, 0) > 0) { BeginSearch(); return; }
         if (HasPendingReviews() || RestoreLocalReviews()) { OpenReviewPicker(); return; }

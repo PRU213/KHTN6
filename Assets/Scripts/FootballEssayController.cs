@@ -275,6 +275,11 @@ public class FootballEssayController : MonoBehaviour
     }
     void StartPractice()
     {
+        EssayTutorUI.CheckBeforePlay(() => { if (this != null && isActiveAndEnabled) StartPracticeAfterCheck(); });
+    }
+    public bool IsAttemptInProgress => isActiveAndEnabled && latest != null && latest.state != "finished";
+    void StartPracticeAfterCheck()
+    {
         var chat = GetComponent<ScienceChatController>(); if (chat != null) chat.ClearReviews();
         historyQueued = false; autoTutorKey = null;
         practiceUsername = string.IsNullOrWhiteSpace(GameSession.Username) ? PlayerPrefs.GetString("Username", "") : GameSession.Username;
@@ -344,12 +349,12 @@ public class FootballEssayController : MonoBehaviour
                 + "\n\nGợi ý đã dùng: " + (state.hints == null ? 0 : state.hints.Length) + "/2 • Tổng mức trừ: " + state.hintPenalty + " điểm\nHọc lại không thay đổi điểm bài nộp.";
             next.GetComponentInChildren<TMP_Text>().text = state.state == "finished" ? "Luyện tập lại" : state.round == 5 ? "Xem tổng kết" : "Câu tiếp theo";
             next.interactable = !commandBusy && !TutorRequired;
-            if (TutorRequired) next.GetComponentInChildren<TMP_Text>().text = "Hoàn thành học lại trước";
+            if (TutorRequired) next.GetComponentInChildren<TMP_Text>().text = "Hoàn thành học lại / chép phạt";
             tutorButton.GetComponentInChildren<TMP_Text>().text = state.needsTutor || state.rawScore < 10
                 ? state.tutorCompleted ? "Xem lại quá trình học" : "Học lại từng bước (bắt buộc)" : "Hỏi AI thêm";
             resultNotice.text = TutorRequired ? !state.tutorSupported ? "Máy chủ chưa cập nhật chức năng học lại. Cần cập nhật PlanetServer trên Render."
-                : !string.IsNullOrEmpty(state.tutorError) ? state.tutorError : "Hoàn thành tất cả các bước học lại mới được chuyển câu tiếp theo."
-                : state.tutorCompleted ? "Đã hoàn thành học lại. Em có thể chuyển câu tiếp theo." : "";
+                : !string.IsNullOrEmpty(state.tutorError) ? state.tutorError : "Hoàn thành học lại; nếu điểm sau trừ gợi ý ≤ 6, chép phạt đạt mới được chuyển câu."
+                : state.tutorCompleted ? "Đã hoàn thành học lại và nhiệm vụ chép phạt (nếu có). Em có thể chuyển câu tiếp theo." : "";
             if (changed || previous != state.state) { Canvas.ForceUpdateCanvases(); LayoutRebuilder.ForceRebuildLayoutImmediate(results.content); results.verticalNormalizedPosition = 1; }
             string tutorialKey = state.token + ":" + state.round;
             if (TutorRequired && !string.IsNullOrEmpty(state.tutorId) && autoTutorKey != tutorialKey) { autoTutorKey = tutorialKey; OpenTutor(); }
@@ -363,7 +368,7 @@ public class FootballEssayController : MonoBehaviour
     }
     void Next() {
         if (commandBusy || latest == null) return;
-        if (TutorRequired) { ShowResultNotice("Em cần hoàn thành học lại từng bước trước khi chuyển câu."); OpenTutor(); return; }
+        if (TutorRequired) { ShowResultNotice("Em cần hoàn thành học lại và chép phạt (nếu có) trước khi chuyển câu."); OpenTutor(); return; }
         if (latest.state == "finished") StartPractice(); else StartCoroutine(CommandRoutine("next", new Command { token = token, round = round }));
     }
     public bool MatchesTutorial(string id) => isActiveAndEnabled && !string.IsNullOrEmpty(token) && latest != null &&

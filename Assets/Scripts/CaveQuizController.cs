@@ -103,6 +103,7 @@ public class CaveQuizController : MonoBehaviour
     public UnityEvent onCorrect;
     public UnityEvent onWrong;
     public UnityEvent onFinished;
+    string quizReviewBatchId;
 
 
     // =========================================================
@@ -205,6 +206,7 @@ public class CaveQuizController : MonoBehaviour
 
     void OnEnable()
     {
+        quizReviewBatchId = System.Guid.NewGuid().ToString("N");
         StopAllCoroutines();
 
         if (GameSession.QuestionType == "Tự luận")
@@ -1896,8 +1898,8 @@ public class CaveQuizController : MonoBehaviour
             );
 
 
-        bool isCorrect =
-            chosen == correctIndex;
+        bool isCorrect = chosen == correctIndex;
+        if (!isCorrect) EssayTutorUI.RememberQuizMistake(quizReviewBatchId, "Cave", q, chosen);
 
 
         SetButtonColor(
@@ -2218,6 +2220,7 @@ public class CaveQuizController : MonoBehaviour
         SaveHistory(reachedTreasure);
 
         onFinished?.Invoke();
+        EssayTutorUI.FinishQuizReviews();
     }
 
 

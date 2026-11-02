@@ -6,9 +6,9 @@ import { EssayTutor } from './tutor.mjs';
 const ai = { plan: async () => ({ steps: [1,2,3].map(n => ({ question: 'Bước ' + n, expected: 'đúng', explanation: 'Kiến thức ' + n,
   checkQuestion: 'Kiểm tra ' + n, checkExpected: 'đúng' })), solution: 'Lời giải tổng kết' }), evaluate: async ({ answer }) => ({ correct: answer === 'đúng' }) };
 function fixture(subject, game, score = 4) {
-  const tutor = new EssayTutor({ ai });
+  const tutor = new EssayTutor({ ai, copyAI: { prepare: async () => ({kind:'theory',content:'Đáp án'}), check: async () => ({handwritten:true,uncertain:false,count:5,redoCorrect:true,questionCopied:true,feedback:'Đủ'}) } });
   const practice = new FootballPractice({ source: async () => Array.from({length:5}, (_,i) => ({ id:'q'+i, subject, topic:'Chương 1', difficulty:'Dễ', text:'Đề '+i, sampleAnswer:'Tham khảo' })),
-    grade: async () => ({score, feedback:'Nhận xét'}), registerTutor: r => tutor.register(r), isTutorComplete: (id, username) => tutor.get(id, username).status === 'completed' });
+    grade: async () => ({score, feedback:'Nhận xét'}), registerTutor: r => tutor.register(r), isTutorComplete: (id, username) => tutor.isComplete(id, username) });
   return { tutor, practice, start: () => practice.start({ subject, game, username:'student', chapter:'Chương 1', difficulties:['Dễ'] }) };
 }
 for (const subject of ['Physics','Chemistry']) for (const game of ['Football','Sheep','Cave']) test(`${game} ${subject}: cannot advance until all tutorial steps are mastered`, async () => {
@@ -22,6 +22,10 @@ for (const subject of ['Physics','Chemistry']) for (const game of ['Football','S
   await tutor.answer({...body, revision:0, requestId:'wrong', answer:'sai'});
   assert.equal(practice.next(s, {round:1}).round, 1);
   for (let revision=1; revision<=3; revision++) await tutor.answer({...body, revision, requestId:'right'+revision, answer:'đúng'});
+  assert.equal(practice.view(s).tutorCompleted, false);
+  assert.equal(practice.next(s,{round:1}).round,1);
+  await tutor.prepareCopy(body);
+  await tutor.submitCopy({...body,requestId:'copy',images:[{mimeType:'image/jpeg',base64:Buffer.from([255,216,255,1]).toString('base64')}]});
   assert.equal(practice.view(s).tutorCompleted, true);
   assert.equal(practice.next(s, {round:1}).round, 2);
   assert.equal(s.score, 4);
