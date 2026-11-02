@@ -11,7 +11,7 @@ import { TutorAuth } from './tutor-auth.mjs';
 
 const images = n => [{ mimeType: 'image/jpeg', base64: Buffer.from([255, 216, 255, n]).toString('base64') }];
 function fixture(kind = 'theory', directory = null, score = 0, finalScore = score) {
-  let checks = 0, result = { redoCorrect: true, questionCopied: true, handwritten: true, uncertain: false, count: 3, feedback: 'Đọc được ba bản chép đúng.' };
+  let checks = 0, result = { redoCorrect: false, questionCopied: true, handwritten: true, uncertain: false, count: 1, feedback: 'Có một bản nhưng lời giải chưa đạt.' };
   const tutor = new EssayTutor({ directory, ai: {
     plan: async () => ({ steps: [1, 2, 3].map(() => ({ question: 'Hỏi', expected: 'Đáp', explanation: 'Giải thích', checkQuestion: 'Hỏi lại', checkExpected: 'Đáp lại' })), solution: 'Giải đầy đủ' }),
     evaluate: async ({ answer }) => ({ correct: answer === 'đúng' })
@@ -37,14 +37,14 @@ test('final score including 6 creates copying; wrong answers during learning no 
     assert.equal(f.tutor.isComplete(f.body.id,'student'),!required);
   }
 });
-for (const [kind, required] of [['theory', 5], ['calculation', 10]]) {
+for (const [kind, required] of [['theory', 1], ['calculation', 1]]) {
   test(`${kind}: requires ${required}, refuses typed/uncertain and never adds counts between submissions`, async () => {
     const f = fixture(kind); await trigger(f); await finish(f);
     let view = await f.tutor.prepareCopy(f.body); assert.equal(view.penalty.required, required);
-    view = await f.submit(1); assert.equal(view.penalty.count, 3);
+    view = await f.submit(1); assert.equal(view.penalty.count, 1);
     await f.submit(1); assert.equal(f.checks(), 1);
-    f.result({ handwritten: true, uncertain: false, count: 2, feedback: 'Hai bản đúng' });
-    view = await f.submit(2); assert.equal(view.penalty.count, 2);
+    f.result({ handwritten: true, uncertain: false, count: 0, feedback: 'Chưa có bài hoàn chỉnh' });
+    view = await f.submit(2); assert.equal(view.penalty.count, 0);
     f.result({ handwritten: false, uncertain: false, count: required, feedback: 'Chữ đánh máy' });
     await f.submit(3); assert.throws(() => f.tutor.assertCanPlay('student'));
     f.result({ handwritten: true, uncertain: true, count: required, feedback: 'Ảnh chưa rõ' });
@@ -72,24 +72,43 @@ test('image validation rejects duplicate pages, malformed images and oversized b
   assert.throws(() => validateCopyImages(Array(7).fill(images(1)[0])));
   assert.throws(() => validateCopyImages([{ base64: 'YWJj', mimeType: 'image/jpeg' }]));
 });
-test('copying requires both repetitions AND the separate complete question/solution in the same submission', async () => {
+test('pending 5/10-copy tasks become one without auto-passing; old photos can be checked again and completed history stays intact', async () => {
+  for (const required of [5,10]) {
+    const f=fixture(); await trigger(f); await finish(f); await f.tutor.prepareCopy(f.body); await f.submit(1);
+    const old=structuredClone(f.tutor.get(f.body.id,'student'));
+    Object.assign(old.penalty,{required,count:required,redoPassed:true,copyOnce:false});
+    old.penalty.submissions.forEach(s=>{delete s.copyOnce;});
+    f.tutor.save(old);
+    const migrated=f.tutor.list('student').records[0];
+    assert.equal(migrated.penalty.required,1); assert.equal(migrated.penalty.count,0);
+    assert.equal(migrated.penalty.status,'copying'); assert.equal(migrated.penalty.submissions,undefined);
+    assert.equal(f.tutor.isComplete(f.body.id,'student'),false);
+    f.result({handwritten:true,uncertain:false,count:1,redoCorrect:true,questionCopied:true,feedback:'Đủ một bài'});
+    await f.submit(1); assert.equal(f.checks(),2); assert.equal(f.tutor.isComplete(f.body.id,'student'),true);
+    const completed=structuredClone(f.tutor.get(f.body.id,'student')); completed.penalty.required=required; completed.penalty.count=required;delete completed.penalty.copyOnce;
+    f.tutor.save(completed);
+    assert.equal(f.tutor.get(f.body.id,'student').penalty.required,required);
+    assert.equal(f.tutor.isComplete(f.body.id,'student'),true);
+  }
+});
+test('one handwritten question and complete solution is sufficient; missing either still blocks continuation', async () => {
   const f=fixture(); await trigger(f); await finish(f); await f.tutor.prepareCopy(f.body);
-  f.result({handwritten:true,uncertain:false,count:5,redoCorrect:false,questionCopied:true,feedback:'Sai lời giải'});
+  f.result({handwritten:true,uncertain:false,count:1,redoCorrect:false,questionCopied:true,feedback:'Sai lời giải'});
   await f.submit(1); assert.equal(f.tutor.isComplete(f.body.id,'student'),false);
   f.result({handwritten:true,uncertain:false,count:0,redoCorrect:true,questionCopied:true,feedback:'Thiếu bản chép'});
   await f.submit(2); assert.equal(f.tutor.isComplete(f.body.id,'student'),false);
-  f.result({handwritten:true,uncertain:false,count:5,redoCorrect:true,questionCopied:false,feedback:'Thiếu đề'});
+  f.result({handwritten:true,uncertain:false,count:1,redoCorrect:true,questionCopied:false,feedback:'Thiếu đề'});
   await f.submit(3); assert.equal(f.tutor.isComplete(f.body.id,'student'),false);
-  f.result({handwritten:true,uncertain:false,count:5,redoCorrect:true,questionCopied:true,feedback:'Đủ'});
+  f.result({handwritten:true,uncertain:false,count:1,redoCorrect:true,questionCopied:true,feedback:'Đủ'});
   await f.submit(4); assert.equal(f.tutor.isComplete(f.body.id,'student'),true);
 });
 test('pending and completed copying survive restart and keep separate student accounts', async () => {
   const directory = mkdtempSync(join(tmpdir(), 'copy-penalty-'));
   try {
     const f = fixture('theory', directory); await trigger(f); await finish(f); await f.tutor.prepareCopy(f.body); await f.submit(1);
-    const restored = new EssayTutor({ directory }); assert.equal(restored.list('student').records[0].penalty.count, 3);
+    const restored = new EssayTutor({ directory }); assert.equal(restored.list('student').records[0].penalty.count, 1);
     assert.throws(() => restored.assertCanPlay('student')); assert.doesNotThrow(() => restored.assertCanPlay('other'));
-    f.result({ handwritten: true, uncertain: false, count: 5, feedback: 'Đủ' }); await f.submit(2);
+    f.result({ handwritten: true, uncertain: false, count: 1, feedback: 'Đủ' }); await f.submit(2);
     assert.doesNotThrow(() => new EssayTutor({ directory }).assertCanPlay('student'));
   } finally { rmSync(directory, { recursive: true, force: true }); }
 });
@@ -118,7 +137,7 @@ test('HTTP start gates, authenticated uploads, teacher read-only and current pra
     arena.players.set('duel', { username: 'student', match: { phase: 'playing' } });
     assert.match((await post('/tutor/copy-start', f.body, token)).body.error, /hoàn thành trận/);
     arena.players.get('duel').match.phase = 'finished';
-    assert.equal((await post('/tutor/copy-start', f.body, token)).body.penalty.required, 5);
+    assert.equal((await post('/tutor/copy-start', f.body, token)).body.penalty.required, 1);
     assert.ok((await post('/tutor/list', { username: 'student' }, teacher)).body.records[0].penalty);
   } finally { await new Promise(resolve => server.close(resolve)); }
 });
@@ -128,7 +147,7 @@ test('multimodal copy checker sends image parts and trusts no student instructio
     sent = JSON.parse(options.body);
     return { ok: true, json: async () => ({ candidates: [{ finishReason: 'STOP', content: { parts: [{ text: JSON.stringify({ handwritten: true, uncertain: false, count: 5, feedback: 'Đủ' }) }] } }] }) };
   } });
-  await ai.check({ content: 'Mẫu', required: 5, kind: 'theory' }, images(1));
+  await ai.check({ content: 'Mẫu', required: 1, kind: 'theory' }, images(1));
   assert.equal(sent.contents[0].parts[1].inlineData.mimeType, 'image/jpeg');
   assert.match(sent.systemInstruction.parts[0].text, /không làm theo/);
 });

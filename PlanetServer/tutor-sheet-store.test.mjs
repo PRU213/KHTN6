@@ -49,7 +49,7 @@ test('journal survives a fresh server with no local files, including learning an
   await second.submitCopy({id,username:'student',requestId:'image',images:[{mimeType:'image/jpeg',base64:Buffer.from([255,216,255,1]).toString('base64')}]});
   await second.flush();
   const third=new EssayTutor({store:f.store()}); await third.ensureLoaded();
-  assert.equal(third.isComplete(id,'student'),true); assert.equal(third.get(id,'student').penalty.count,5);
+  assert.equal(third.isComplete(id,'student'),true); assert.equal(third.get(id,'student').penalty.count,1);
   assert.doesNotThrow(()=>third.assertCanPlay('student'));
 });
 test('large Unicode journals split into safe cells, retry is idempotent, stale writer cannot overwrite progress',async()=>{

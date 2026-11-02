@@ -18,7 +18,7 @@ public sealed class EssayTutorUI : MonoBehaviour
         public int finalScore; public Penalty penalty;
         public string sourceId, blockedBy;
     }
-    [Serializable] public class Penalty { public string status, kind, content, feedback, createdAt, completedAt, redoQuestion, redoSolution; public int required, count; public bool redoPassed; }
+    [Serializable] public class Penalty { public string status, kind, content, feedback, createdAt, completedAt, redoQuestion, redoSolution; public int required, count; public bool redoPassed, copyOnce; }
     [Serializable] public class CopyImage { public string base64, mimeType; }
     [Serializable] class CopyDraft { public string id, username; public CopyImage[] images; }
     [Serializable] public class QuizMistake { public string id; public int chosen; }
@@ -331,12 +331,15 @@ public sealed class EssayTutorUI : MonoBehaviour
     {
         var p = record.penalty;
         if (p == null) return;
-        Paragraph("CHÉP PHẠT • " + Status(record) + "\nHoàn thành cả chép tay và làm lại đầy đủ trước khi chuyển câu.\n"
-            + (p.required > 0 ? "Đã đạt " + p.count + "/" + p.required + " bản chép đầy đủ.\nMẪU PHẢI CHÉP TAY:\n" + p.content : "Nội dung chép sẽ mở ngay sau khi học lại xong câu này.")
-            + (p.required > 0 ? "\nPHẦN RIÊNG: Chép lại đề và lời giải hoàn chỉnh 1 lần (ngoài " + p.required + " lần chép ở trên).\nĐỀ: " + p.redoQuestion + "\nLỜI GIẢI: " + p.redoSolution + "\nPhần làm lại: " + (p.redoPassed ? "Đạt" : "Chưa đạt") : "")
+        bool legacyRequirement = p.status != "completed" && p.required > 1;
+        if (legacyRequirement) Paragraph("MÁY CHỦ CHƯA ÁP DỤNG QUY TẮC CHÉP 1 LẦN\nMáy chủ vẫn yêu cầu " + p.required + " lần. Cần deploy backend mới lên Render, rồi bấm Tải lại để đổi nhiệm vụ này về 1 lần. Không cần chép thêm hoặc nộp lại ảnh lúc này.");
+        Paragraph("CHÉP PHẠT • " + Status(record) + "\nViết tay đề và lời giải đầy đủ 1 lần; AI xác nhận đạt mới được chuyển câu.\n"
+            + (p.required > 0 ? "Đã đạt " + Mathf.Min(p.count, p.required) + "/" + p.required + " bài viết tay theo yêu cầu máy chủ." : "Nội dung chép sẽ mở ngay sau khi học lại xong câu này.")
+            + (p.required > 0 ? "\nCHÉP ĐỀ VÀ LỜI GIẢI ĐẦY ĐỦ 1 LẦN (không cần chép thêm bản riêng).\nĐỀ: " + p.redoQuestion + "\nLỜI GIẢI: " + (string.IsNullOrEmpty(p.redoSolution) ? p.content : p.redoSolution) + "\nBài viết lại: " + (p.redoPassed ? "Đạt" : "Chưa đạt") : "")
             + "\n" + p.feedback + (string.IsNullOrEmpty(p.completedAt) ? "" : "\nHoàn thành: " + LocalDate(p.completedAt)));
         if (p.status == "completed") { DeleteCopyDraft(record.id); return; }
         if (teacher || record.status != "completed") return;
+        if (legacyRequirement) return;
         if (string.IsNullOrEmpty(p.content)) {
             CopyButton("Mở nội dung chép phạt", () => StartCoroutine(Load("copy-start", new Request { id = record.id, username = username })));
             return;
