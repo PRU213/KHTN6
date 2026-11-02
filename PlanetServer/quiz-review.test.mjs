@@ -61,7 +61,7 @@ test('HTTP practice allows copying current reviewed question, but blocks next at
     assert.equal(review.earned,6); assert.equal(review.rawScore,9);
     const body=await learn(tutor,review.tutorId);
     assert.equal((await post('/football/next',{token:started.token,round:1})).round,1);
-    assert.equal((await post('/tutor/copy-start',body)).penalty.required,5);
+    assert.equal((await post('/tutor/copy-start',body)).penalty.required,1);
     await post('/tutor/copy-submit',{...body,requestId:'photo',images:[{mimeType:'image/jpeg',base64:Buffer.from([255,216,255,2]).toString('base64')}]});
     assert.equal((await post('/football/next',{token:started.token,round:1})).round,2);
     assert.equal(session.score,6);

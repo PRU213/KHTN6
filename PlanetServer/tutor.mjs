@@ -117,12 +117,23 @@ export class EssayTutor {
   assertLessonReady(r) {
     if (this.previousLesson(r)) fail('Hoàn thành học lại và chép phạt câu trước rồi mới chuyển câu tiếp theo.');
   }
+  singleCopyRecord(record) {
+    const p = record.penalty;
+    if (!p || p.status === 'completed' || !p.content || (p.copyOnce === true && p.required === 1)) return record;
+    const r = structuredClone(record);
+    Object.assign(r.penalty, { copyOnce: true, required: 1, count: 0, redoPassed: false,
+      content: p.redoSolution || r.plan?.solution || p.content,
+      redoQuestion: p.redoQuestion || r.question, redoSolution: p.redoSolution || r.plan?.solution || p.content,
+      feedback: 'Yêu cầu đã đổi: viết tay đề và lời giải đầy đủ 1 lần. Có thể gửi lại ảnh đã viết để kiểm tra theo yêu cầu mới.' });
+    this.save(r); return r;
+  }
   get(id, username) {
     const r = this.records.get(id);
     if (!r || !text(username, 100) || accountKey(r.username) !== accountKey(username)) fail('Không tìm thấy mục học lại của học sinh này.');
-    return r;
+    return this.singleCopyRecord(r);
   }
   view(r, includeEvents = false) {
+    r = this.singleCopyRecord(r);
     const step = r.plan?.steps[r.step];
     const guidance = r.guidance?.step === r.step ? r.guidance : null;
     return { id: r.id, username: r.username, subject: r.subject, chapter: r.chapter, question: r.question, score: r.score, finalScore: r.finalScore ?? r.score,
@@ -155,7 +166,7 @@ export class EssayTutor {
       const result = await this.copyAI.prepare(existing);
       if (!result || !['theory', 'calculation'].includes(result.kind) || !text(result.content, 6000)) fail('Chưa xác định được nội dung cần chép. Hãy thử lại.');
       const r = structuredClone(existing);
-      Object.assign(r.penalty, { kind: result.kind, content: result.content, redoQuestion: r.question, redoSolution: r.plan.solution, required: result.kind === 'calculation' ? 10 : 5, status: 'copying' });
+      Object.assign(r.penalty, { copyOnce: true, kind: result.kind, content: result.content, redoQuestion: r.question, redoSolution: r.plan.solution, required: 1, status: 'copying' });
       r.updatedAt = this.now(); this.save(r); return this.view(r, true);
     });
   }
@@ -164,11 +175,11 @@ export class EssayTutor {
       this.assertLessonReady(existing);
       if (existing.status !== 'completed' || !existing.penalty?.content) fail('Hãy mở nhiệm vụ chép phạt trước khi nộp.');
       if (!text(body.requestId, 64)) fail('Thiếu mã lần nộp.');
-      if (existing.penalty.status === 'completed' || existing.penalty.submissions?.some(s => s.requestId === body.requestId)) return this.view(existing, true);
-      if (existing.penalty.submissions?.length >= 100) fail('Đã đạt giới hạn nộp ảnh; hãy nhờ giáo viên kiểm tra.');
+      if (existing.penalty.status === 'completed' || existing.penalty.submissions?.some(s => s.copyOnce === true && s.requestId === body.requestId)) return this.view(existing, true);
+      if (existing.penalty.submissions?.filter(s => s.copyOnce === true).length >= 100) fail('Đã đạt giới hạn nộp ảnh; hãy nhờ giáo viên kiểm tra.');
       const images = validateCopyImages(body.images);
       const batch = images.map(i => i.hash).sort().join(':');
-      if (existing.penalty.submissions?.some(s => s.batch === batch)) return this.view(existing, true);
+      if (existing.penalty.submissions?.some(s => s.copyOnce === true && s.batch === batch)) return this.view(existing, true);
       this.rate(body.username);
       const result = await this.copyAI.check(existing.penalty, images);
       if (!result || typeof result.redoCorrect !== 'boolean' || typeof result.questionCopied !== 'boolean' || typeof result.handwritten !== 'boolean' || typeof result.uncertain !== 'boolean' || !Number.isInteger(result.count) || result.count < 0 || result.count > 100 || !text(result.feedback, 800)) fail('Kết quả kiểm tra ảnh chưa hợp lệ. Tiến độ giữ nguyên.');
@@ -176,7 +187,7 @@ export class EssayTutor {
       // Each submission is the ENTIRE set of pages. Never add counts across batches.
       const count = result.handwritten && !result.uncertain ? Math.min(result.count, p.required) : 0;
       p.count = count; p.redoPassed = result.handwritten && !result.uncertain && result.redoCorrect && result.questionCopied; p.feedback = result.feedback;
-      (p.submissions ||= []).push({ requestId: body.requestId, batch, count, feedback: result.feedback, at: this.now() });
+      (p.submissions ||= []).push({ copyOnce: true, requestId: body.requestId, batch, count, feedback: result.feedback, at: this.now() });
       if (p.count >= p.required && p.redoPassed) { p.status = 'completed'; p.completedAt = new Date(this.now()).toISOString(); }
       r.updatedAt = this.now(); this.save(r); return this.view(r, true);
     });

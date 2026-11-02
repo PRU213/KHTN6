@@ -44,8 +44,14 @@ public static class CopyPenaltySmokeTests
             record.status = "completed"; record.step = 3; record.solution = "P = 10m = 20 N.";
             Render(ui, record);
             Require(!((Button)Field(ui, "continueButton")).gameObject.activeSelf, "Copying must block tutorial continuation.");
-            record.penalty = new EssayTutorUI.Penalty { status = "copying", kind = "calculation", content = "P = 10m; P: trọng lượng (N); m: khối lượng (kg).", required = 10, count = 7, feedback = "Đã đọc được 7 bản chép đúng. Còn thiếu 3 bản." };
+            record.penalty = new EssayTutorUI.Penalty { status = "copying", kind = "calculation", content = "P = 10m; P: trọng lượng (N); m: khối lượng (kg).", required = 1, count = 0, feedback = "Chưa đọc đủ đề và lời giải viết tay 1 lần." };
             Render(ui, record);
+            Require(Array.Exists(ui.GetComponentsInChildren<TMP_Text>(), t => t.text.Contains("0/1 bài viết tay")), "Copying must display a single required handwritten answer.");
+            record.penalty.required = 10; record.penalty.count = 1; record.penalty.redoPassed = true; Render(ui, record);
+            Require(Array.Exists(ui.GetComponentsInChildren<TMP_Text>(), t => t.text.Contains("1/10 bài viết tay")), "Legacy server requirements must not be displayed as 1/1.");
+            Require(Array.Exists(ui.GetComponentsInChildren<TMP_Text>(), t => t.text.Contains("MÁY CHỦ CHƯA ÁP DỤNG")), "Legacy server must show a deployment message.");
+            Require(!((Button)Field(ui, "continueButton")).gameObject.activeSelf, "Legacy server obligations must not be bypassed by the display.");
+            record.penalty.required = 1; record.penalty.count = 0; record.penalty.redoPassed = false; Render(ui, record);
             typeof(EssayTutorUI).GetField("username", Flags).SetValue(ui, "copy-draft-fixture");
             var sample = new Texture2D(320, 180); var pixels = new Color[320 * 180]; Array.Fill(pixels, Color.white); sample.SetPixels(pixels); sample.Apply();
             typeof(EssayTutorUI).GetMethod("AddCopyImage", Flags).Invoke(ui, new object[] { sample.EncodeToJPG() }); UnityEngine.Object.Destroy(sample);
@@ -66,8 +72,10 @@ public static class CopyPenaltySmokeTests
             Directory.CreateDirectory("outputs"); File.WriteAllBytes("outputs/copy-penalty-preview.png", screenshot.EncodeToPNG());
             typeof(EssayTutorUI).GetField("teacher", Flags).SetValue(ui, true); Render(ui, record);
             Require(!Array.Exists(ui.GetComponentsInChildren<Button>(), b => b.name == "Gửi toàn bộ ảnh để AI kiểm tra"), "Teacher must not upload on behalf of a student.");
-            record.penalty.status = "completed"; record.penalty.count = 10; Render(ui, record);
+            record.penalty.status = "completed"; record.penalty.count = 1; Render(ui, record);
             Require(((TMP_Text)Field(ui, "status")).text.Contains("Đã chép phạt xong"), "Completed copying status missing.");
+            typeof(EssayTutorUI).GetField("teacher", Flags).SetValue(ui, false); Render(ui, record);
+            Require(((Button)Field(ui, "continueButton")).gameObject.activeSelf, "One accepted handwritten answer must unlock continuation.");
             File.WriteAllText("outputs/copy-penalty-smoke.txt", "PASS: penalty preserves learning answers but blocks continuation until copying passes; copy template/count/feedback, photo preview, upload controls, teacher read-only and completed status render offline.\n");
         } catch (Exception error) { Debug.LogException(error); exit = 1; }
         SessionState.SetBool(Key, false); EditorApplication.update -= Tick; EditorApplication.Exit(exit);

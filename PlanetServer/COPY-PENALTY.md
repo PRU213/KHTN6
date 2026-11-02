@@ -15,16 +15,20 @@
 
 ## Bài viết tay bắt buộc
 
-- Lý thuyết: chép đáp án chuẩn **5 lần**.
-- Tính toán: chép công thức và ý nghĩa ký hiệu **10 lần**.
-- **Cả hai loại** đều phải có phần riêng chép lại **đề và lời giải/đáp án đầy đủ
-  1 lần**, ngoài 5/10 bản chép ở trên. Mẫu mở sau khi hoàn thành học lại.
+- **Lý thuyết và tính toán đều chỉ viết tay đề và lời giải/đáp án đầy đủ 1 lần**.
+  Bài tính có công thức, thay số, đơn vị và kết luận phù hợp. Không cần chép lặp
+  công thức/đáp án hoặc viết thêm một bài riêng. Mẫu mở sau khi học lại hoàn tất.
+- Nhiệm vụ cũ đang chờ 5/10 lần được đổi về 1 khi tải lại hoặc gửi ảnh. Lịch sử
+  bài đã hoàn thành giữ nguyên. Không tự cho qua bài đang chờ; ảnh cũ được phép
+  gửi kiểm tra lại theo yêu cầu mới, kể cả đã gửi và bị từ chối ở quy tắc cũ.
 - Nộp toàn bộ các trang trong cùng một lần, tối đa 6 ảnh JPG/PNG, mỗi ảnh 2 MB;
   có thể chọn từ máy hoặc chụp webcam. AI phải xác nhận viết tay, đủ số bản đúng,
   đã chép đủ đề và phần giải lại đúng/đầy đủ trong **cùng một bộ ảnh**. Không cộng
   giữa các lần nộp; không ghép phần chép đạt ở lần trước với lời giải ở lần sau.
-- Ảnh trùng byte trong một bộ bị từ chối. AI loại trang/vùng lặp, chữ đánh máy,
-  nội dung thiếu/sai và ảnh không rõ. AI có thể nhận nhầm chữ và không chứng minh
+- Ảnh trùng byte trong một bộ bị từ chối. AI không tính nhiều lần từ ảnh chồng lấn,
+  nhưng không loại một bài hoàn chỉnh chỉ vì cùng nét chữ hoặc cùng trang xuất
+  hiện ở nhiều ảnh. AI loại chữ đánh máy, nội dung thiếu/sai và ảnh không rõ;
+  chấp nhận cách diễn đạt tương đương/viết tắt hiểu rõ. AI vẫn có thể nhận nhầm và không chứng minh
   được ai tự viết. Lỗi dịch vụ/JSON không hợp lệ giữ nguyên tiến độ.
 
 ## Dữ liệu và các cổng kiểm tra
