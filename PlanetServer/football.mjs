@@ -67,7 +67,7 @@ export class FootballPractice {
   cleanup() { for (const [token, s] of this.sessions) if (this.now() - s.seen > 1800000) this.sessions.delete(token); }
   expire(s) {
     if (s.pausedAt == null && s.phase === 'answering' && !s.gradePending && this.now() >= s.deadline) {
-      s.phase = 'review'; s.review = { score: 0, feedback: 'Hết giờ, bạn chưa nộp bài.', transcription: '', suggestedAnswer: '' };
+      s.phase = 'review'; s.review = { timedOut: true, score: 0, feedback: 'Hết giờ, bạn chưa nộp bài.', transcription: '', suggestedAnswer: '' };
     }
   }
   view(s) {
@@ -99,6 +99,12 @@ export class FootballPractice {
   }
   async submit(s, body) {
     this.checkRound(s, body.round); this.expire(s);
+    // Allow the frozen deadline snapshot to arrive after a concurrent state poll.
+    // Never reopen a graded answer or accept submissions indefinitely after expiry.
+    if (s.phase === 'review' && s.review?.timedOut && this.now() <= s.deadline + 15000) {
+      const hasAnswer = (typeof body.text === 'string' && body.text.trim()) || body.imageBase64;
+      if (hasAnswer) { s.phase = 'answering'; s.review = null; }
+    }
     if (s.pausedAt != null || s.phase !== 'answering' || s.gradePending) return this.view(s);
     const text = body.text || ''; const image = validateEssayImage(body.imageBase64, body.mimeType);
     if (typeof text !== 'string' || text.length > 2000 || (!text.trim() && !image)) throw new Error('Nhập câu trả lời hoặc chọn ảnh trước khi nộp bài.');

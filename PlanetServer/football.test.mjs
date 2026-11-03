@@ -10,6 +10,40 @@ const bank = ['Physics', 'Chemistry'].flatMap(subject => [1, 10].flatMap(chapter
 })))));
 const body = (extra = {}) => ({ subject: 'Vật lý', chapter: 'Chương 1', difficulties: ['Dễ'], username: 'student', ...extra });
 const review = { score: 8, readable: true, feedback: 'Đúng ý chính', transcription: 'Bài học sinh', suggestedAnswer: 'Bài mẫu' };
+for (const game of ['Football', 'Sheep', 'Cave']) for (const subject of ['Vật lý', 'Hóa học']) {
+  for (const photo of [false, true]) test(`${game} ${subject} grades deadline ${photo ? 'photo' : 'text'} once despite expiry polling`, async () => {
+    let calls = 0, finish;
+    const { practice, advance } = fixture({ grade: async (_q, text, image) => {
+      calls++; assert.equal(text, photo ? '' : 'Bài đang nhập'); assert.equal(!!image, photo);
+      return new Promise(resolve => { finish = resolve; });
+    } });
+    const state = await practice.start(body({ game, subject }));
+    advance(60000);
+    const s = practice.get(state.token); // HTTP route expires before calling submit.
+    assert.equal(practice.view(s).state, 'review');
+    const submission = { round: 1, text: photo ? '' : 'Bài đang nhập', ...(photo ? {
+      imageBase64: Buffer.from([137,80,78,71,13,10,26,10]).toString('base64'), mimeType: 'image/png'
+    } : {}) };
+    const pending = practice.submit(s, submission);
+    assert.equal((await practice.submit(s, submission)).state, 'grading');
+    finish(review);
+    const result = await pending;
+    assert.equal(result.earned, 8); assert.equal(result.score, 8);
+    await practice.submit(s, submission);
+    assert.equal(calls, 1); assert.equal(s.score, 8);
+  });
+}
+
+test('empty deadline submissions stay zero and submissions outside network grace cannot reopen the question', async () => {
+  let calls = 0;
+  const { practice, advance } = fixture({ grade: async () => { calls++; return review; } });
+  const state = await practice.start(body()), s = practice.get(state.token);
+  advance(60000);
+  assert.equal((await practice.submit(s, { round: 1, text: '' })).earned, 0);
+  advance(15001);
+  assert.equal((await practice.submit(s, { round: 1, text: 'Quá hạn' })).earned, 0);
+  assert.equal(calls, 0); assert.equal(s.phase, 'review');
+});
 function fixture(extra = {}) {
   let now = 1000;
   // These scoring/timer tests simulate an already completed tutorial. The actual

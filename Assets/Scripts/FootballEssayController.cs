@@ -35,6 +35,7 @@ public class FootballEssayController : MonoBehaviour
     TMP_Text resultNotice;
     Button tutorButton;
     string autoTutorKey;
+    int autoSubmittedRound = -1;
     TMP_InputField input;
     RawImage preview, cameraPreview;
     Button submit, hintButton, next, retry, hintNext, capture;
@@ -260,6 +261,7 @@ public class FootballEssayController : MonoBehaviour
     void Update()
     {
         if (overlay == null || !overlay.activeSelf) return;
+        TrySubmitAtDeadline();
         Fit(); bool editable = Editable(); input.interactable = editable; submit.interactable = editable; hintButton.interactable = editable && !hintBusy;
         if (next != null) next.interactable = !commandBusy && !TutorRequired;
         if (tutorButton != null) tutorButton.interactable = !commandBusy;
@@ -308,7 +310,10 @@ public class FootballEssayController : MonoBehaviour
             if (version != generation) yield break;
             if (expected != revision) continue;
             if (error != null) { notice = error; if (Time.realtimeSinceStartup - receivedAt > 15) { Error(error); yield break; } continue; }
-            if (state != null) Apply(state);
+            if (state != null) {
+                if (state.round == round && state.state == "review" && state.remaining <= 0 && TrySubmitAtDeadline(true)) continue;
+                Apply(state);
+            }
         }
     }
     IEnumerator Request(string path, Command body, Action<State, string> done)
@@ -337,7 +342,7 @@ public class FootballEssayController : MonoBehaviour
                 result = state.score >= 25 ? "THẮNG" : "THUA"
             });
         }
-        if (changed) { round = state.round; EssayInputState.Clear(input); notice = null; ClearPhoto(); hintPanel.gameObject.SetActive(false); }
+        if (changed) { round = state.round; autoSubmittedRound = -1; EssayInputState.Clear(input); notice = null; ClearPhoto(); hintPanel.gameObject.SetActive(false); }
         question.text = state.difficulty + " • " + state.text;
         if (state.state == "review" || state.state == "finished") {
             resultPanel.gameObject.SetActive(true); resultPanel.SetAsLastSibling(); hintPanel.gameObject.SetActive(false);
@@ -365,6 +370,16 @@ public class FootballEssayController : MonoBehaviour
         if (!Editable()) return;
         if (string.IsNullOrWhiteSpace(input.text) && string.IsNullOrEmpty(imageBase64)) { notice = "Hãy nhập bài hoặc đính kèm ảnh trước khi nộp."; return; }
         StartCoroutine(CommandRoutine("submit", new Command { token = token, round = round, text = input.text.Trim(), imageBase64 = imageBase64, mimeType = string.IsNullOrEmpty(imageBase64) ? null : "image/jpeg" }));
+    }
+    bool TrySubmitAtDeadline(bool serverExpired = false)
+    {
+        if (latest == null || latest.state != "answering" || latest.paused || exitPending || commandBusy ||
+            (!serverExpired && Remaining() > 0) || autoSubmittedRound == round || string.IsNullOrEmpty(token)) return false;
+        autoSubmittedRound = round;
+        if (string.IsNullOrWhiteSpace(input.text) && string.IsNullOrEmpty(imageBase64)) return false;
+        StartCoroutine(CommandRoutine("submit", new Command { token = token, round = round, text = input.text.Trim(),
+            imageBase64 = imageBase64, mimeType = string.IsNullOrEmpty(imageBase64) ? null : "image/jpeg" }));
+        return true;
     }
     void Next() {
         if (commandBusy || latest == null) return;
