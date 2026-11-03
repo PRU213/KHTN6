@@ -37,6 +37,7 @@ public static class CopyPenaltySmokeTests
         try {
             var ui = (EssayTutorUI)typeof(EssayTutorUI).GetMethod("Get", BindingFlags.NonPublic | BindingFlags.Static).Invoke(null, null);
             VerifyGameEntry(ui);
+            VerifyQuizReviewList(ui);
             var record = new EssayTutorUI.Record { id = "copy-fixture", username = "student", subject = "Physics", question = "Một vật có khối lượng 2 kg. Tính trọng lượng.", status = "learning", total = 3,
                 penalty = new EssayTutorUI.Penalty { status = "deferred", count = 0 } };
             Render(ui, record);
@@ -99,6 +100,30 @@ public static class CopyPenaltySmokeTests
         complete.Invoke(ui, new object[] { new[] { new EssayTutorUI.Record { id = "pending", status = "completed", penalty = new EssayTutorUI.Penalty { status = "copying" } } } });
         Require(!questionsOpened && page.gameObject.activeSelf, "Actual pending copying must show remediation and block a new game.");
         ui.gameObject.SetActive(false); ui.gameObject.SetActive(true);
+    }
+    static void VerifyQuizReviewList(EssayTutorUI ui)
+    {
+        var scope = typeof(EssayTutorUI).GetField("quizReviewBatches", Flags);
+        scope.SetValue(ui, new System.Collections.Generic.HashSet<string> { "current-batch" });
+        var records = new[] {
+            new EssayTutorUI.Record { id = "second", sourceId = "quiz:current-batch:2", question = "QUIZ SECOND", status = "pending", blockedBy = "first" },
+            new EssayTutorUI.Record { id = "first", sourceId = "quiz:current-batch:1", question = "QUIZ FIRST", status = "completed", penalty = new EssayTutorUI.Penalty { status = "copying" } },
+            new EssayTutorUI.Record { id = "essay", sourceId = "practice:old:0", question = "UNRELATED ESSAY", status = "pending" },
+            new EssayTutorUI.Record { id = "old-quiz", sourceId = "quiz:old-batch:1", question = "UNRELATED QUIZ", status = "pending" }
+        };
+        var renderList = typeof(EssayTutorUI).GetMethod("RenderList", Flags);
+        renderList.Invoke(ui, new object[] { records });
+        Require(((TMP_Text)Field(ui, "title")).text.Contains("CÂU SAI TRẮC NGHIỆM"), "Quiz results need a dedicated heading.");
+        var texts = ui.GetComponentsInChildren<TMP_Text>();
+        Require(!Array.Exists(texts, t => t.text.Contains("UNRELATED")), "Current quiz list must exclude essays and older batches.");
+        Require((bool)Field(ui, "quizReviewPending"), "Unfinished copying must still block quiz completion.");
+        Require(Array.Exists(ui.GetComponentsInChildren<Button>(), b => b.name == "Học lại / Tiếp tục"), "Finished tutoring with pending copying must remain resumable.");
+        Require(Array.Exists(ui.GetComponentsInChildren<Button>(), b => !b.interactable && b.GetComponentInChildren<TMP_Text>().text.Contains("câu trước")), "Later wrong questions must respect the existing mastery gate.");
+        records[0].status = "completed"; records[0].blockedBy = null; records[1].penalty.status = "completed";
+        renderList.Invoke(ui, new object[] { records });
+        Require(!(bool)Field(ui, "quizReviewPending"), "Completed wrong questions must release the quiz gate.");
+        Require(Array.Exists(ui.GetComponentsInChildren<Button>(), b => b.name == "Về trang chủ"), "Completed quiz reviews need a home action.");
+        scope.SetValue(ui, null);
     }
 }
 #endif
