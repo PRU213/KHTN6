@@ -20,6 +20,45 @@ function fixture(options = {}) {
   return { tutor, id, body, answer, calls: () => calls };
 }
 
+test('invalid learning plan is retried once within one shared time budget before saving', async () => {
+  let calls = 0; const signals = [];
+  const { tutor, id, body } = fixture({ ai: { plan: async (_record, options) => {
+    signals.push(options.signal);
+    return ++calls === 1 ? { steps: [], solution: '' } : plan();
+  } } });
+  const result = await tutor.start(body);
+  assert.equal(result.status, 'learning'); assert.equal(calls, 2);
+  assert.equal(signals[0], signals[1]);
+  assert.deepEqual(tutor.get(id, 'student').plan, plan());
+  await tutor.start(body); assert.equal(calls, 2);
+});
+
+test('repeated malformed plans report the exact field and remain retryable without saving invalid state', async () => {
+  let calls = 0;
+  const { tutor, id, body } = fixture({ ai: { plan: async () => {
+    calls++; const value = plan(); delete value.steps[1].checkExpected; return value;
+  } } });
+  await assert.rejects(tutor.start(body), /bước 2, mục checkExpected/);
+  assert.equal(calls, 2); assert.ok(!tutor.get(id, 'student').plan);
+  assert.equal(tutor.busy.has(id), false);
+  tutor.ai.plan = async () => plan();
+  assert.equal((await tutor.start(body)).status, 'learning');
+});
+
+test('plan adapter supplies required schema without changing evaluation requests', async () => {
+  let payload;
+  const ai = createTutorAI({ key: 'test', fetchImpl: async (_url, options) => {
+    payload = JSON.parse(options.body);
+    return { ok: true, json: async () => ({ candidates: [{ finishReason: 'STOP', content: { parts: [{ text: JSON.stringify(plan()) }] } }] }) };
+  } });
+  await ai.plan(record());
+  const schema = payload.generationConfig.responseSchema;
+  assert.deepEqual(schema.required, ['steps', 'solution']);
+  assert.equal(schema.properties.steps.minItems, 3); assert.equal(schema.properties.steps.maxItems, 8);
+  assert.deepEqual(schema.properties.steps.items.required, ['question', 'expected', 'explanation', 'checkQuestion', 'checkExpected']);
+  await ai.evaluate({ answer: 'đúng' }); assert.equal(payload.generationConfig.responseSchema, undefined);
+});
+
 test('only Physics/Chemistry imperfect knowledge scores create records, registration is idempotent', () => {
   const { tutor, id } = fixture();
   assert.equal(tutor.register(record()), id);
