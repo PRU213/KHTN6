@@ -47,7 +47,13 @@ public sealed class EssayTutorUI : MonoBehaviour
     RectTransform page, content;
     TMP_Text title, status;
     TMP_InputField input;
-    Button send, unknown, refresh, continueButton;
+    Button send, unknown, refresh, continueButton, homeButton;
+    string finishingLesson;
+    HashSet<string> quizReviewBatches;
+    bool quizReviewPending;
+    static bool LessonComplete(Record r) => r.status == "completed" && (r.penalty == null || r.penalty.status == "completed");
+    bool InQuizReview(Record r) => quizReviewBatches != null && r != null &&
+        (r.sourceId ?? "").StartsWith("quiz:") && quizReviewBatches.Contains(r.sourceId.Split(':')[1]);
     ScrollRect scroll;
     UnityWebRequest pending;
     Record current;
@@ -94,14 +100,14 @@ public sealed class EssayTutorUI : MonoBehaviour
     public static void Open(string id)
     {
         var ui = Get(); ui.Cancel(); ui.teacher = false; ui.username = CurrentUsername;
-        ui.planetReviewLoaded = null;
+        ui.planetReviewLoaded = null; ui.quizReviewBatches = null;
         ui.playAllowed = null;
         ui.current = new Record { id = id }; ui.listMode = false; ui.Clear(); ui.retryAnswer = null; ui.gameObject.SetActive(true);
         ui.StartCoroutine(ui.Load("start", new Request { id = id, username = ui.username }));
     }
     public static void OpenHistory(string account, bool readOnly = false)
     {
-        var ui = Get(); ui.Cancel(); ui.username = account; ui.teacher = readOnly; ui.current = null; ui.listMode = true; ui.Clear(); ui.retryAnswer = null;
+        var ui = Get(); ui.Cancel(); ui.quizReviewBatches = null; ui.username = account; ui.teacher = readOnly; ui.current = null; ui.listMode = true; ui.Clear(); ui.retryAnswer = null;
         ui.planetReviewLoaded = null;
         ui.playAllowed = null;
         ui.gameObject.SetActive(true); ui.StartCoroutine(ui.Load("list", new Request { username = account }));
@@ -119,6 +125,7 @@ public sealed class EssayTutorUI : MonoBehaviour
     void BeginPlayCheck(Action allowed)
     {
         var ui = this;
+        ui.quizReviewBatches = null;
         ui.Cancel(); ui.teacher = false; ui.username = CurrentUsername; ui.playAccount = ui.username;
         ui.playAllowed = allowed; ui.planetReviewLoaded = null; ui.current = null; ui.listMode = true;
         ui.Clear(); ui.gameObject.SetActive(true);
@@ -147,6 +154,9 @@ public sealed class EssayTutorUI : MonoBehaviour
             approvedLaunchDepth++;
             try { allowed?.Invoke(); } finally { approvedLaunchDepth--; }
         } else {
+            var quizPending = Array.FindAll(records, r => (r.sourceId ?? "").StartsWith("quiz:") && !LessonComplete(r));
+            if (quizPending.Length > 0 && !Array.Exists(records, r => !(r.sourceId ?? "").StartsWith("quiz:") && r.penalty != null && r.penalty.status != "completed"))
+                quizReviewBatches = new HashSet<string>(Array.ConvertAll(quizPending, r => r.sourceId.Split(':')[1]));
             SetPlayGateVisible(false); RenderList(records);
             if (blocked) status.text = "Tài khoản còn nhiệm vụ chưa hoàn thành. Xử lý bài cũ trước khi mở lượt mới.";
         }
@@ -168,6 +178,8 @@ public sealed class EssayTutorUI : MonoBehaviour
     {
         if (ReadQuizJournal().batches.Count == 0) return;
         var ui = Get(); ui.Cancel(); ui.playAllowed = null; ui.teacher = false; ui.username = CurrentUsername;
+        ui.quizReviewBatches = new HashSet<string>(ReadQuizJournal().batches.ConvertAll(b => b.id));
+        ui.quizReviewPending = true;
         ui.current = null; ui.listMode = true; ui.planetReviewLoaded = null; ui.Clear(); ui.gameObject.SetActive(true); ui.LoadHistoryOrQuiz();
     }
     void LoadHistoryOrQuiz()
@@ -177,7 +189,7 @@ public sealed class EssayTutorUI : MonoBehaviour
     }
     public static void LoadPlanetReviews(PlanetDuelController.LocalReviewBatch batch, Action<PlanetDuelController.ReviewQuestion[], int> done)
     {
-        var ui = Get(); ui.Cancel(); ui.teacher = false; ui.username = CurrentUsername;
+        var ui = Get(); ui.Cancel(); ui.quizReviewBatches = null; ui.teacher = false; ui.username = CurrentUsername;
         ui.current = null; ui.listMode = true; ui.Clear(); ui.retryAnswer = null; ui.planetReviewLoaded = done;
         ui.gameObject.SetActive(true); ui.title.text = "CÂU SAI ĐỐI KHÁNG • HỌC LẠI TỪNG BƯỚC";
         ui.StartCoroutine(ui.Load(batch == null ? "/review/pending" : "/review/local", new Request {
@@ -202,9 +214,18 @@ public sealed class EssayTutorUI : MonoBehaviour
         Box(transform, "Shade", 0, 0, 1, 1, new Color(.02f, .06f, .12f, .97f));
         page = Box(transform, "Tutor", .025f, .025f, .975f, .975f, new Color(.035f, .14f, .23f));
         title = Label(Box(page, "Title", .03f, .88f, .68f, .97f, Color.clear), "HỌC LẠI TỪNG BƯỚC", 36, Color.white);
-        ButtonAt(page, "Đóng", .85f, .90f, .97f, .97f, () => gameObject.SetActive(false));
+        ButtonAt(page, "Đóng", .85f, .90f, .97f, .97f, () => {
+            if (quizReviewBatches != null && quizReviewPending) {
+                if (!busy) ShowQuizReviewList();
+                return;
+            }
+            gameObject.SetActive(false);
+        });
         refresh = ButtonAt(page, "Tải lại", .70f, .90f, .83f, .97f, Reload);
-        ButtonAt(page, "Nhật ký", .03f, .80f, .18f, .87f, () => OpenHistory(username, teacher));
+        ButtonAt(page, "Nhật ký", .03f, .80f, .18f, .87f, () => {
+            if (quizReviewBatches != null && !teacher) { if (!busy) ShowQuizReviewList(); }
+            else OpenHistory(username, teacher);
+        });
         status = Label(Box(page, "Status", .20f, .80f, .97f, .87f, Color.clear), "", 23, Color.white);
         var viewport = Box(page, "Viewport", .03f, .22f, .97f, .78f, Paper);
         viewport.gameObject.AddComponent<RectMask2D>();
@@ -224,6 +245,8 @@ public sealed class EssayTutorUI : MonoBehaviour
         unknown = ButtonAt(page, "Em chưa biết", .71f, .07f, .97f, .125f, () => Answer("Em chưa biết"));
         continueButton = ButtonAt(page, "Câu tiếp theo", .32f, .08f, .68f, .18f, ContinueAfterLearning);
         continueButton.gameObject.SetActive(false);
+        homeButton = ButtonAt(page, "Về trang chủ", .53f, .08f, .85f, .18f, ReturnHome);
+        homeButton.gameObject.SetActive(false);
         Label(Box(page, "Footer", .03f, .01f, .97f, .055f, Color.clear), "Điểm bài nộp giữ nguyên • Hoàn thành học lại và chép phạt (nếu có) mới được chuyển câu", 21, Color.white);
         SceneManager.sceneLoaded += SceneLoaded;
     }
@@ -452,23 +475,45 @@ public sealed class EssayTutorUI : MonoBehaviour
     void ReleaseCopyControls() { playAllowed = null; CloseCopyCameraPanel(); copyPicker?.Cancel(); copyPicker = null; }
     void RenderList(Record[] records)
     {
+        if (quizReviewBatches != null && !teacher) {
+            records = Array.FindAll(records ?? new Record[0], InQuizReview);
+            Array.Sort(records, (a, b) => {
+                int batch = string.CompareOrdinal(a.sourceId.Split(':')[1], b.sourceId.Split(':')[1]);
+                int.TryParse(a.sourceId.Split(':')[2], out var ai); int.TryParse(b.sourceId.Split(':')[2], out var bi);
+                return batch != 0 ? batch : ai.CompareTo(bi);
+            });
+            quizReviewPending = Array.Exists(records, r => !LessonComplete(r));
+        }
         SetPlayGateVisible(false);
         CloseCopyCameraPanel();
         listMode = true; Clear(); title.text = "NHẬT KÝ HỌC LẠI • " + username;
+        if (quizReviewBatches != null && !teacher) title.text = "CÂU SAI TRẮC NGHIỆM • HỌC LẠI";
         status.text = teacher ? "Chọn mục để xem các bước và từng lần trả lời của học sinh." : "Chọn câu để tiếp tục đúng bước đã lưu.";
+        if (quizReviewBatches != null && !teacher) status.text = quizReviewPending
+            ? "Hoàn thành lần lượt các câu sai và chép phạt (nếu có) trước khi chơi tiếp. Bài đang học được lưu để tiếp tục."
+            : "Đã hoàn thành tất cả bài học lại của lượt trắc nghiệm.";
         if (records == null || records.Length == 0) Paragraph("Chưa có câu cần học lại trên máy chủ này.");
         foreach (var item in records ?? new Record[0]) {
             var r = item;
             Paragraph(Subject(r.subject) + " • " + r.chapter + " • " + Status(r) + " • " + r.step + "/" + r.total + " bước\n"
                 + r.question + "\nĐiểm ban đầu: " + r.score + "/10 • Cập nhật: " + LocalDate(r.updatedAt));
-            var button = ButtonAt(content, teacher ? "Xem quá trình" : r.status == "completed" ? "Xem tổng kết" : "Học lại / Tiếp tục", 0, 0, 1, 1,
+            var button = ButtonAt(content, teacher ? "Xem quá trình" : (quizReviewBatches != null ? LessonComplete(r) : r.status == "completed") ? "Xem lại bài đã hoàn thành" : "Học lại / Tiếp tục", 0, 0, 1, 1,
                 () => { if (!busy) { retryAnswer = null; StartCoroutine(Load(teacher ? "state" : "start", new Request { id = r.id, username = username })); } });
             if (!teacher && !string.IsNullOrEmpty(r.blockedBy)) {
                 button.interactable = false; button.GetComponentInChildren<TMP_Text>().text = "Hoàn thành học lại và chép phạt câu trước";
             }
             var element = button.gameObject.AddComponent<LayoutElement>(); element.preferredHeight = 58;
         }
+        if (quizReviewBatches != null && !teacher && !quizReviewPending) {
+            var home = ButtonAt(content, "Về trang chủ", 0, 0, 1, 1, ReturnHome);
+            home.gameObject.AddComponent<LayoutElement>().preferredHeight = 58;
+        }
         SetControls(); StartCoroutine(ScrollTo(1));
+    }
+    void ShowQuizReviewList()
+    {
+        current = null; listMode = true;
+        StartCoroutine(Load("list", new Request { username = username }));
     }
     static string LocalDate(string value) => DateTime.TryParse(value, out var date) ? date.ToLocalTime().ToString("dd/MM/yyyy HH:mm") : value;
     IEnumerator ScrollTo(float position) { yield return null; Canvas.ForceUpdateCanvases(); LayoutRebuilder.ForceRebuildLayoutImmediate(content); scroll.verticalNormalizedPosition = position; }
@@ -483,11 +528,22 @@ public sealed class EssayTutorUI : MonoBehaviour
         send.interactable = unknown.interactable = editable; refresh.interactable = !busy;
         bool completed = !teacher && !listMode && current != null && current.status == "completed" && (current.penalty == null || current.penalty.status == "completed");
         continueButton.gameObject.SetActive(completed);
+        homeButton.gameObject.SetActive(false);
         if (completed) {
             var practice = FindPracticeForCurrentLesson();
             var duel = FindDuelForCurrentLesson();
-            continueButton.GetComponentInChildren<TMP_Text>().text = practice != null ? practice.TutorialContinuationLabel : duel != null ? "Về các câu sau trận" : "Về nhật ký";
+            bool practiceLesson = (current.sourceId ?? "").StartsWith("practice:");
+            homeButton.gameObject.SetActive(practice != null && !practice.IsLastTutorialQuestion);
+            homeButton.interactable = !busy;
+            var rect = (RectTransform)continueButton.transform;
+            rect.anchorMin = new Vector2(practice != null && !practice.IsLastTutorialQuestion ? .15f : .32f, .08f);
+            rect.anchorMax = new Vector2(practice != null && !practice.IsLastTutorialQuestion ? .47f : .68f, .18f);
+            continueButton.GetComponentInChildren<TMP_Text>().text = InQuizReview(current) ? "Về danh sách câu sai" : practice != null ? practice.TutorialContinuationLabel : duel != null ? "Về các câu sau trận" : practiceLesson ? "Về trang chủ" : "Về nhật ký";
             continueButton.interactable = !busy && (practice == null || practice.CanContinueTutorial(current.id));
+            if (!busy && practice != null && practice.IsLastTutorialQuestion && practice.CanContinueTutorial(current.id) && finishingLesson != current.id) {
+                finishingLesson = current.id;
+                StartCoroutine(FinishPracticeAfterLearning(current.id));
+            }
         }
     }
     PlanetDuelController FindDuelForCurrentLesson()
@@ -501,20 +557,35 @@ public sealed class EssayTutorUI : MonoBehaviour
     {
         if (current == null) return null;
         foreach (var practice in FindObjectsByType<FootballEssayController>(FindObjectsInactive.Exclude))
-            if (practice.MatchesTutorial(current.id)) return practice;
+            if (practice.BindTutorial(current.id, current.sourceId)) return practice;
         return null;
     }
     void ContinueAfterLearning()
     {
         if (busy || teacher || listMode || current == null || current.status != "completed" || (current.penalty != null && current.penalty.status != "completed") || !gameObject.activeInHierarchy) return;
+        if (InQuizReview(current)) { ShowQuizReviewList(); return; }
         var practice = FindPracticeForCurrentLesson();
         if (practice == null) {
             var duel = FindDuelForCurrentLesson();
             if (duel != null) { gameObject.SetActive(false); duel.ContinueTutorial(current.id); }
+            else if ((current.sourceId ?? "").StartsWith("practice:")) ReturnHome();
             else OpenHistory(username, false);
             return;
         }
         if (practice.ContinueTutorial(current.id)) gameObject.SetActive(false);
+    }
+    IEnumerator FinishPracticeAfterLearning(string id)
+    {
+        yield return null;
+        if (current == null || current.id != id || busy || !gameObject.activeInHierarchy) yield break;
+        finishingLesson = null;
+        ContinueAfterLearning();
+    }
+    void ReturnHome()
+    {
+        if (busy) return;
+        gameObject.SetActive(false);
+        SceneManager.LoadScene("HomePage");
     }
     void Reload()
     {

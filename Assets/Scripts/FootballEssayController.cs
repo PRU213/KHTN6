@@ -265,8 +265,8 @@ public class FootballEssayController : MonoBehaviour
         Fit(); bool editable = Editable(); input.interactable = editable; submit.interactable = editable; hintButton.interactable = editable && !hintBusy;
         if (next != null) next.interactable = !commandBusy && !TutorRequired;
         if (tutorButton != null) tutorButton.interactable = !commandBusy;
-        if (latest != null) scoreboard.text = "Câu " + latest.round + "/5 • " + latest.score + "/50\n" + (latest.state == "answering" ? Mathf.CeilToInt(Remaining()) + " giây" : latest.state == "grading" || commandBusy ? "Đang xử lý…" : "Đã nộp bài");
-        status.text = commandBusy ? "Đang xử lý…" : !string.IsNullOrEmpty(notice) ? notice : editable ? "Nhập chữ hoặc chọn ảnh để làm bài." : "Đang lấy trạng thái…";
+        if (latest != null) scoreboard.text = "Câu " + latest.round + "/5 • " + latest.score + "/50\n" + (latest.state == "answering" ? Mathf.CeilToInt(Remaining()) + " giây" : latest.state == "grading" || commandBusy ? "Đang chấm điểm…" : "Đã nộp bài");
+        status.text = commandBusy ? "Đang chấm điểm…" : !string.IsNullOrEmpty(notice) ? notice : editable ? "Nhập chữ hoặc chọn ảnh để làm bài." : "Đang lấy trạng thái…";
         if (!editable) { StopCamera(); CancelPicker(); if (photoPanel != null) photoPanel.gameObject.SetActive(false); }
         if (webcam != null && webcam.width > 16) {
             cameraPreview.rectTransform.localEulerAngles = new Vector3(0, 0, -webcam.videoRotationAngle);
@@ -389,6 +389,15 @@ public class FootballEssayController : MonoBehaviour
     public bool MatchesTutorial(string id) => isActiveAndEnabled && !string.IsNullOrEmpty(token) && latest != null &&
         latest.state == "review" && !string.IsNullOrEmpty(id) && latest.tutorId == id;
     public bool CanContinueTutorial(string id) => MatchesTutorial(id) && !commandBusy && !exitPending;
+    public bool BindTutorial(string id, string sourceId)
+    {
+        if (MatchesTutorial(id)) return true;
+        if (!isActiveAndEnabled || latest == null || latest.state != "review" || string.IsNullOrEmpty(token) ||
+            sourceId != "practice:" + token + ":" + (latest.round - 1)) return false;
+        latest.tutorId = id;
+        return true;
+    }
+    public bool IsLastTutorialQuestion => latest != null && latest.round == 5;
     public string TutorialContinuationLabel => latest != null && latest.round == 5 ? "Xem tổng kết" : "Câu tiếp theo";
     public bool ContinueTutorial(string id)
     {
