@@ -2,15 +2,54 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { FootballPractice, createFootballHint, sameChapter } from './football.mjs';
 import { createServer } from './server.mjs';
+import { EssayTutor } from './tutor.mjs';
+import { TutorAuth } from './tutor-auth.mjs';
 
 const bank = ['Physics', 'Chemistry'].flatMap(subject => [1, 10].flatMap(chapter => ['Dễ', 'Trung bình', 'Khó'].flatMap(difficulty => Array.from({ length: 6 }, (_, i) => ({
   id: `${subject}:${chapter}:${difficulty}:${i}`, subject, topic: `Chương ${chapter}: Chủ đề`, difficulty, text: `Câu ${i}`, sampleAnswer: 'Đáp án tham khảo', rubric: 'Các ý chính', maxPoints: 10
 })))));
 const body = (extra = {}) => ({ subject: 'Vật lý', chapter: 'Chương 1', difficulties: ['Dễ'], username: 'student', ...extra });
 const review = { score: 8, readable: true, feedback: 'Đúng ý chính', transcription: 'Bài học sinh', suggestedAnswer: 'Bài mẫu' };
+for (const game of ['Football', 'Sheep', 'Cave']) for (const subject of ['Vật lý', 'Hóa học']) {
+  for (const photo of [false, true]) test(`${game} ${subject} grades deadline ${photo ? 'photo' : 'text'} once despite expiry polling`, async () => {
+    let calls = 0, finish;
+    const { practice, advance } = fixture({ grade: async (_q, text, image) => {
+      calls++; assert.equal(text, photo ? '' : 'Bài đang nhập'); assert.equal(!!image, photo);
+      return new Promise(resolve => { finish = resolve; });
+    } });
+    const state = await practice.start(body({ game, subject }));
+    advance(60000);
+    const s = practice.get(state.token); // HTTP route expires before calling submit.
+    assert.equal(practice.view(s).state, 'review');
+    const submission = { round: 1, text: photo ? '' : 'Bài đang nhập', ...(photo ? {
+      imageBase64: Buffer.from([137,80,78,71,13,10,26,10]).toString('base64'), mimeType: 'image/png'
+    } : {}) };
+    const pending = practice.submit(s, submission);
+    assert.equal((await practice.submit(s, submission)).state, 'grading');
+    finish(review);
+    const result = await pending;
+    assert.equal(result.earned, 8); assert.equal(result.score, 8);
+    await practice.submit(s, submission);
+    assert.equal(calls, 1); assert.equal(s.score, 8);
+  });
+}
+
+test('empty deadline submissions stay zero and submissions outside network grace cannot reopen the question', async () => {
+  let calls = 0;
+  const { practice, advance } = fixture({ grade: async () => { calls++; return review; } });
+  const state = await practice.start(body()), s = practice.get(state.token);
+  advance(60000);
+  assert.equal((await practice.submit(s, { round: 1, text: '' })).earned, 0);
+  advance(15001);
+  assert.equal((await practice.submit(s, { round: 1, text: 'Quá hạn' })).earned, 0);
+  assert.equal(calls, 0); assert.equal(s.phase, 'review');
+});
 function fixture(extra = {}) {
   let now = 1000;
-  const practice = new FootballPractice({ source: async () => bank, grade: async () => review, hint: async (_q, level) => `Hướng làm ${level}`, record: async () => {}, now: () => now, ...extra });
+  // These scoring/timer tests simulate an already completed tutorial. The actual
+  // mastery gate is exercised with real EssayTutor state in practice-tutor-gate.test.mjs.
+  const practice = new FootballPractice({ source: async () => bank, grade: async () => review, hint: async (_q, level) => `Hướng làm ${level}`, record: async () => {},
+    registerTutor: () => 'completed-fixture', isTutorComplete: () => true, now: () => now, ...extra });
   return { practice, advance: ms => { now += ms; } };
 }
 
@@ -81,7 +120,7 @@ test('Cave keeps its hints and graded results separate from Football and Sheep',
   await practice.getHint(cave, { round: 1, level: 1 });
   const result = await practice.submit(cave, { round: 1, text: 'Bài làm Đào hang' });
   assert.equal(result.game, 'Cave'); assert.equal(result.earned, 7);
-  assert.equal(result.sampleAnswer, 'Đáp án tham khảo'); assert.equal(result.suggestedAnswer, 'Bài mẫu');
+  assert.equal(result.needsTutor, true); assert.equal(result.sampleAnswer, ''); assert.equal(result.suggestedAnswer, '');
   for (const state of states.slice(0, 2)) {
     const untouched = practice.view(practice.get(state.token));
     assert.equal(untouched.score, 0); assert.equal(untouched.state, 'answering'); assert.deepEqual(untouched.hints, []);
@@ -183,11 +222,11 @@ test('duplicate submissions score only once and finished practice totals at most
   assert.equal(calls, 5); assert.equal(s.phase, 'finished'); assert.equal(practice.view(s).score, 50);
 });
 
-test('timeout reveals the solution and next question receives its own deadline', async () => {
+test('timeout queues guided learning without revealing solution and next question receives its own deadline', async () => {
   const { practice, advance } = fixture();
   const state = await practice.start(body()), s = practice.get(state.token);
   advance(60000); const expired = practice.view(s);
-  assert.equal(expired.state, 'review'); assert.equal(expired.earned, 0); assert.equal(expired.sampleAnswer, 'Đáp án tham khảo');
+  assert.equal(expired.state, 'review'); assert.equal(expired.earned, 0); assert.equal(expired.sampleAnswer, ''); assert.equal(expired.needsTutor, true);
   const next = practice.next(s, { round: 1 }); assert.equal(next.round, 2); assert.equal(next.remaining, 60);
   await assert.rejects(practice.submit(s, { round: 1, text: 'Bài cũ' }), /thay đổi/);
 });
@@ -211,7 +250,7 @@ for (const game of ['Football', 'Sheep', 'Cave']) test(`${game} grades a readabl
   const image = Buffer.from([137,80,78,71,13,10,26,10]).toString('base64');
   const result = await practice.submit(s, { round: 1, text: '', imageBase64: image, mimeType: 'image/png' });
   assert.equal(result.state, 'review'); assert.equal(result.earned, 0); assert.equal(result.error, undefined);
-  assert.match(result.feedback, /không liên quan/); assert.match(result.transcription, /Mono-Processor/);
+  assert.equal(result.feedback, ''); assert.equal(result.needsTutor, true); assert.match(result.transcription, /Mono-Processor/);
   assert.equal(practice.next(s, { round: 1 }).round, 2);
 });
 
@@ -228,10 +267,13 @@ test('hint provider uses the trusted reference without publishing it as a respon
 
 for (const game of ['Football', 'Sheep', 'Cave']) test(`${game} HTTP start, hint, submit, next and leave work independently of duel tickets`, async () => {
   const { practice } = fixture();
-  const server = createServer(undefined, undefined, { football: practice });
+  const tutor = new EssayTutor({ ai: { plan: async () => ({steps:[1,2,3].map(n=>({question:'Bước '+n,expected:'đúng',explanation:'Kiến thức',checkQuestion:'Kiểm tra',checkExpected:'đúng'})),solution:'Tổng kết'}), evaluate:async()=>({correct:true}) } });
+  const tutorAuth = new TutorAuth({authenticate:async()=>({username:'student',teacher:false})});
+  const access = await tutorAuth.login({username:'student',password:'fixture'},'test');
+  const server = createServer(undefined, undefined, { football: practice, tutor, tutorAuth });
   await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
   async function post(path, data) {
-    const response = await fetch(`http://127.0.0.1:${server.address().port}/football/${path}`, { method: 'POST', body: JSON.stringify(data) });
+    const response = await fetch(`http://127.0.0.1:${server.address().port}/${path.startsWith('tutor/')?'':'football/'}${path}`, { method: 'POST', headers:{Authorization:'Bearer '+access.token}, body: JSON.stringify(data) });
     assert.equal(response.status, 200); return response.json();
   }
   try {
@@ -240,6 +282,9 @@ for (const game of ['Football', 'Sheep', 'Cave']) test(`${game} HTTP start, hint
     await post('hint', { token: state.token, round: 1, level: 1 });
     const result = await post('submit', { token: state.token, round: 1, text: 'Bài làm', score: 999 });
     assert.equal(result.score, 7); assert.equal(result.state, 'review');
+    const blocked = await post('next',{token:state.token,round:1,tutorCompleted:true}); assert.equal(blocked.round,1); assert.match(blocked.error,/học lại/);
+    const lesson = {id:result.tutorId,username:'student'}; await post('tutor/start',lesson);
+    for(let revision=0;revision<3;revision++) await post('tutor/answer',{...lesson,revision,requestId:'http-'+revision,answer:'đúng'});
     assert.equal((await post('next', { token: state.token, round: 1 })).round, 2);
     await post('leave', { token: state.token }); assert.equal(practice.sessions.size, 0);
   } finally { server.closeAllConnections(); await new Promise(resolve => server.close(resolve)); }

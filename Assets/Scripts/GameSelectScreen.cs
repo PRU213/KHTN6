@@ -206,6 +206,11 @@ public class GameSelectScreen : MonoBehaviour
     /// </summary>
     public void OpenSelectedGame()
     {
+        EssayTutorUI.CheckBeforePlay(() => { if (this != null && chooseGamePanel != null && chooseGamePanel.activeInHierarchy) OpenSelectedGameAfterCheck(); });
+    }
+
+    void OpenSelectedGameAfterCheck()
+    {
         GameObject selectedGame =
             GetSelectedGamePanel();
 

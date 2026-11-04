@@ -10,6 +10,7 @@ using UnityEngine.InputSystem;
 [System.Serializable]
 public class Question
 {
+    public string subject, difficulty;
     public string text;
     public string[] options;   // đúng 4 đáp án
     public int correct;        // vị trí đáp án đúng (0-3)
@@ -22,6 +23,8 @@ public class BlastRoundManager : MonoBehaviour
     public bool OnlineControlled { get; set; }
     public bool PlayWithBot { get; set; }
     public System.Action<int, int> MatchFinished;
+    public System.Action<int, Question, int[], bool> RoundReviewed;
+    readonly List<int> localChoices = new List<int>();
     float botThinkAt;
     [Header("UI")]
     public TMP_Text questionText;
@@ -130,6 +133,7 @@ public class BlastRoundManager : MonoBehaviour
         if (qIndex >= questions.Count) { EndGame(); return; }
 
         var q = questions[qIndex];
+        localChoices.Clear();
         questionText.text = q.text;
         correctIndex = q.correct;
 
@@ -259,6 +263,7 @@ public class BlastRoundManager : MonoBehaviour
 
     void OnBlobHit(int player, int blob)
     {
+        if (player == 0) localChoices.Add(blob);
         if (blob == correctIndex)
         {
             int pts = 10 + Mathf.RoundToInt(timeLeft);   // bắn sớm thì điểm cao hơn
@@ -278,6 +283,7 @@ public class BlastRoundManager : MonoBehaviour
 
     void EndRound(int winner)
     {
+        RoundReviewed?.Invoke(qIndex + 1, questions[qIndex], localChoices.ToArray(), winner == 0);
         roundActive = false;
         ClearBullets();
         blobImages[correctIndex].color = correctColor;
@@ -325,7 +331,7 @@ public class BlastRoundManager : MonoBehaviour
             int j = Random.Range(0, i + 1);
             (idx[i], idx[j]) = (idx[j], idx[i]);
         }
-        var n = new Question { text = q.text, options = new string[4] };
+        var n = new Question { text = q.text, subject = q.subject, difficulty = q.difficulty, options = new string[4] };
         for (int i = 0; i < 4; i++)
         {
             n.options[i] = q.options[idx[i]];

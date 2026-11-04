@@ -20,6 +20,7 @@ public class FootballEssayController : MonoBehaviour
     [Serializable] class State {
         public string token, state, error, text, subject, chapter, difficulty, feedback, transcription, sampleAnswer, suggestedAnswer;
         public string[] hints; public int round, total, score, maxScore, earned, rawScore, hintPenalty; public float remaining, duration; public bool hintPending, paused;
+        public string tutorId, tutorError; public bool needsTutor, tutorCompleted, tutorSupported;
     }
     TMP_FontAsset fallbackFont;
     bool sheepSkin, caveSkin;
@@ -31,6 +32,10 @@ public class FootballEssayController : MonoBehaviour
     GameObject hostPanel, overlay;
     RectTransform page, resultPanel, hintPanel, photoPanel, cameraPanel, errorPanel;
     TMP_Text question, scoreboard, context, status, resultText, hintText, errorText, cameraText, photoHint;
+    TMP_Text resultNotice;
+    Button tutorButton;
+    string autoTutorKey;
+    int autoSubmittedRound = -1;
     TMP_InputField input;
     RawImage preview, cameraPreview;
     Button submit, hintButton, next, retry, hintNext, capture;
@@ -159,7 +164,7 @@ public class FootballEssayController : MonoBehaviour
     {
         resultPanel = Modal("Results", .08f, .18f, .92f, .97f);
         Text(resultPanel, "KẾT QUẢ TỰ LUẬN", 34, .08f, .025f, .92f, .11f, Color.white);
-        var view = Box("Viewport", resultPanel, .05f, .13f, .95f, .69f, ParchmentSkin ? new Color(1, .97f, .89f) : new Color(.94f, .98f, 1)); view.gameObject.AddComponent<RectMask2D>();
+        var view = Box("Viewport", resultPanel, .05f, .13f, .95f, .62f, ParchmentSkin ? new Color(1, .97f, .89f) : new Color(.94f, .98f, 1)); view.gameObject.AddComponent<RectMask2D>();
         results = view.gameObject.AddComponent<ScrollRect>(); results.horizontal = false; results.viewport = view; results.movementType = ScrollRect.MovementType.Clamped;
         var content = Box("Content", view, 0, 0, 1, 0, Color.clear); content.anchorMin = new Vector2(0, 1); content.anchorMax = Vector2.one; content.pivot = new Vector2(.5f, 1);
         content.GetComponent<Image>().raycastTarget = false;
@@ -167,16 +172,31 @@ public class FootballEssayController : MonoBehaviour
         content.gameObject.AddComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.PreferredSize;
         resultText = Text(content, "", 26, 0, 0, 1, 1, Ink); resultText.enableAutoSizing = false; resultText.alignment = TextAlignmentOptions.TopLeft;
         results.content = content;
-        Click("AskMore", resultPanel, .22f, .71f, .78f, .81f, "Hỏi AI thêm", () => {
-            if (latest == null || (latest.state != "review" && latest.state != "finished")) return;
-            ScienceChatController.ForReview(this).OpenReview(token + ":" + round, "Câu " + round + " • " + latest.text,
-                resultText.text, ParchmentSkin ? new Color(.24f, .12f, .055f) : new Color(.015f, .105f, .29f));
-        });
+        resultNotice = Text(resultPanel, "", 23, .05f, .63f, .95f, .70f, new Color(1, .91f, .57f));
+        tutorButton = Click("AskMore", resultPanel, .22f, .71f, .78f, .81f, "Học lại từng bước", OpenTutor);
         Click("ExitPractice", resultPanel, .05f, .84f, .48f, .96f, "Thoát luyện tập", Close,
             ParchmentSkin ? new Color(.55f, .22f, .08f) : new Color(.15f, .27f, .44f));
         next = Click("Next", resultPanel, .52f, .84f, .95f, .96f, "Câu tiếp theo", Next);
         resultPanel.gameObject.SetActive(false);
     }
+    bool TutorRequired => latest != null && (latest.state == "review" || latest.state == "finished") &&
+        (latest.needsTutor || latest.rawScore < 10) && !latest.tutorCompleted;
+    void OpenTutor()
+    {
+            if (latest == null || (latest.state != "review" && latest.state != "finished")) return;
+            if (latest.needsTutor || latest.rawScore < 10) {
+                if (!string.IsNullOrEmpty(latest.tutorId)) EssayTutorUI.Open(latest.tutorId);
+                else {
+                    ShowResultNotice(!latest.tutorSupported ? "Máy chủ chưa cập nhật chức năng học lại. Chưa thể chuyển câu. Cần cập nhật PlanetServer trên Render."
+                        : "Chưa tải được mục học lại. Đang thử lại; em chưa thể chuyển câu.");
+                    if (!commandBusy) StartCoroutine(CommandRoutine("state", new Command { token = token }));
+                }
+                return;
+            }
+            ScienceChatController.ForReview(this).OpenReview(token + ":" + round, "Câu " + round + " • " + latest.text,
+                resultText.text, ParchmentSkin ? new Color(.24f, .12f, .055f) : new Color(.015f, .105f, .29f));
+    }
+    void ShowResultNotice(string message) { notice = message; if (resultNotice != null) resultNotice.text = message; }
     void BuildHints()
     {
         hintPanel = Modal("AIHints", .14f, .24f, .86f, .81f);
@@ -241,9 +261,12 @@ public class FootballEssayController : MonoBehaviour
     void Update()
     {
         if (overlay == null || !overlay.activeSelf) return;
+        TrySubmitAtDeadline();
         Fit(); bool editable = Editable(); input.interactable = editable; submit.interactable = editable; hintButton.interactable = editable && !hintBusy;
-        if (latest != null) scoreboard.text = "Câu " + latest.round + "/5 • " + latest.score + "/50\n" + (latest.state == "answering" ? Mathf.CeilToInt(Remaining()) + " giây" : latest.state == "grading" || commandBusy ? "Đang xử lý…" : "Đã nộp bài");
-        status.text = commandBusy ? "Đang xử lý…" : !string.IsNullOrEmpty(notice) ? notice : editable ? "Nhập chữ hoặc chọn ảnh để làm bài." : "Đang lấy trạng thái…";
+        if (next != null) next.interactable = !commandBusy && !TutorRequired;
+        if (tutorButton != null) tutorButton.interactable = !commandBusy;
+        if (latest != null) scoreboard.text = "Câu " + latest.round + "/5 • " + latest.score + "/50\n" + (latest.state == "answering" ? Mathf.CeilToInt(Remaining()) + " giây" : latest.state == "grading" || commandBusy ? "Đang chấm điểm…" : "Đã nộp bài");
+        status.text = commandBusy ? "Đang chấm điểm…" : !string.IsNullOrEmpty(notice) ? notice : editable ? "Nhập chữ hoặc chọn ảnh để làm bài." : "Đang lấy trạng thái…";
         if (!editable) { StopCamera(); CancelPicker(); if (photoPanel != null) photoPanel.gameObject.SetActive(false); }
         if (webcam != null && webcam.width > 16) {
             cameraPreview.rectTransform.localEulerAngles = new Vector3(0, 0, -webcam.videoRotationAngle);
@@ -254,8 +277,13 @@ public class FootballEssayController : MonoBehaviour
     }
     void StartPractice()
     {
+        EssayTutorUI.CheckBeforePlay(() => { if (this != null && isActiveAndEnabled) StartPracticeAfterCheck(); });
+    }
+    public bool IsAttemptInProgress => isActiveAndEnabled && latest != null && latest.state != "finished";
+    void StartPracticeAfterCheck()
+    {
         var chat = GetComponent<ScienceChatController>(); if (chat != null) chat.ClearReviews();
-        historyQueued = false;
+        historyQueued = false; autoTutorKey = null;
         practiceUsername = string.IsNullOrWhiteSpace(GameSession.Username) ? PlayerPrefs.GetString("Username", "") : GameSession.Username;
         ReleaseSession(); generation++; revision++; StopAllCoroutines(); AbortRequests(); latest = null; round = -1; commandBusy = true; hintBusy = false;
         notice = "Đang tải 5 câu đúng môn và chương…"; question.text = notice; ClearPhoto(); StopCamera(); CancelPicker();
@@ -282,7 +310,10 @@ public class FootballEssayController : MonoBehaviour
             if (version != generation) yield break;
             if (expected != revision) continue;
             if (error != null) { notice = error; if (Time.realtimeSinceStartup - receivedAt > 15) { Error(error); yield break; } continue; }
-            if (state != null) Apply(state);
+            if (state != null) {
+                if (state.round == round && state.state == "review" && state.remaining <= 0 && TrySubmitAtDeadline(true)) continue;
+                Apply(state);
+            }
         }
     }
     IEnumerator Request(string path, Command body, Action<State, string> done)
@@ -311,17 +342,27 @@ public class FootballEssayController : MonoBehaviour
                 result = state.score >= 25 ? "THẮNG" : "THUA"
             });
         }
-        if (changed) { round = state.round; EssayInputState.Clear(input); notice = null; ClearPhoto(); hintPanel.gameObject.SetActive(false); }
+        if (changed) { round = state.round; autoSubmittedRound = -1; EssayInputState.Clear(input); notice = null; ClearPhoto(); hintPanel.gameObject.SetActive(false); }
         question.text = state.difficulty + " • " + state.text;
         if (state.state == "review" || state.state == "finished") {
             resultPanel.gameObject.SetActive(true); resultPanel.SetAsLastSibling(); hintPanel.gameObject.SetActive(false);
             resultText.text = (state.state == "finished" ? "HOÀN THÀNH: " + state.score + "/50 ĐIỂM\n\n" : "CÂU " + state.round + ": " + state.earned + "/10 ĐIỂM\n\n")
                 + "Điểm bài làm: " + state.rawScore + "/10\nTrừ gợi ý: " + state.hintPenalty + " điểm\nĐiểm nhận: " + state.earned + "/10 (tối thiểu 0)\n\n"
-                + state.text + "\n\nNHẬN XÉT CỦA AI\n" + state.feedback + "\n\nBÀI LÀM AI ĐỌC ĐƯỢC\n" + state.transcription
-                + "\n\nĐÁP ÁN THAM KHẢO\n" + state.sampleAnswer + "\n\nBÀI GIẢI GỢI Ý CỦA AI\n" + state.suggestedAnswer
-                + "\n\nGợi ý đã dùng: " + (state.hints == null ? 0 : state.hints.Length) + "/2 • Tổng mức trừ: " + state.hintPenalty + " điểm\nHỏi AI thêm sau khi nộp: miễn phí.";
+                + state.text + "\n\nBÀI LÀM AI ĐỌC ĐƯỢC\n" + state.transcription
+                + (state.needsTutor || state.rawScore < 10 ? "\n\nBài làm còn ý chưa đúng hoặc chưa đầy đủ. Chọn Học lại từng bước để thầy AI dẫn dắt em. Em cần trả lời đúng từng bước trước khi xem lời giải tổng kết. Có thể tiếp tục từ Nhật ký học lại Lí / Hóa.\n" + state.tutorError
+                    : "\n\nNHẬN XÉT CỦA AI\n" + state.feedback + "\n\nĐÁP ÁN THAM KHẢO\n" + state.sampleAnswer + "\n\nBÀI GIẢI GỢI Ý CỦA AI\n" + state.suggestedAnswer)
+                + "\n\nGợi ý đã dùng: " + (state.hints == null ? 0 : state.hints.Length) + "/2 • Tổng mức trừ: " + state.hintPenalty + " điểm\nHọc lại không thay đổi điểm bài nộp.";
             next.GetComponentInChildren<TMP_Text>().text = state.state == "finished" ? "Luyện tập lại" : state.round == 5 ? "Xem tổng kết" : "Câu tiếp theo";
+            next.interactable = !commandBusy && !TutorRequired;
+            if (TutorRequired) next.GetComponentInChildren<TMP_Text>().text = "Hoàn thành học lại / chép phạt";
+            tutorButton.GetComponentInChildren<TMP_Text>().text = state.needsTutor || state.rawScore < 10
+                ? state.tutorCompleted ? "Xem lại quá trình học" : "Học lại từng bước (bắt buộc)" : "Hỏi AI thêm";
+            resultNotice.text = TutorRequired ? !state.tutorSupported ? "Máy chủ chưa cập nhật chức năng học lại. Cần cập nhật PlanetServer trên Render."
+                : !string.IsNullOrEmpty(state.tutorError) ? state.tutorError : "Hoàn thành học lại; nếu điểm sau trừ gợi ý ≤ 6, chép phạt đạt mới được chuyển câu."
+                : state.tutorCompleted ? "Đã hoàn thành học lại và nhiệm vụ chép phạt (nếu có). Em có thể chuyển câu tiếp theo." : "";
             if (changed || previous != state.state) { Canvas.ForceUpdateCanvases(); LayoutRebuilder.ForceRebuildLayoutImmediate(results.content); results.verticalNormalizedPosition = 1; }
+            string tutorialKey = state.token + ":" + state.round;
+            if (TutorRequired && !string.IsNullOrEmpty(state.tutorId) && autoTutorKey != tutorialKey) { autoTutorKey = tutorialKey; OpenTutor(); }
         } else { resultPanel.gameObject.SetActive(false); if (changed && !commandBusy) { input.Select(); input.ActivateInputField(); } }
     }
     void Submit()
@@ -330,14 +371,49 @@ public class FootballEssayController : MonoBehaviour
         if (string.IsNullOrWhiteSpace(input.text) && string.IsNullOrEmpty(imageBase64)) { notice = "Hãy nhập bài hoặc đính kèm ảnh trước khi nộp."; return; }
         StartCoroutine(CommandRoutine("submit", new Command { token = token, round = round, text = input.text.Trim(), imageBase64 = imageBase64, mimeType = string.IsNullOrEmpty(imageBase64) ? null : "image/jpeg" }));
     }
-    void Next() { if (commandBusy || latest == null) return; if (latest.state == "finished") StartPractice(); else StartCoroutine(CommandRoutine("next", new Command { token = token, round = round })); }
+    bool TrySubmitAtDeadline(bool serverExpired = false)
+    {
+        if (latest == null || latest.state != "answering" || latest.paused || exitPending || commandBusy ||
+            (!serverExpired && Remaining() > 0) || autoSubmittedRound == round || string.IsNullOrEmpty(token)) return false;
+        autoSubmittedRound = round;
+        if (string.IsNullOrWhiteSpace(input.text) && string.IsNullOrEmpty(imageBase64)) return false;
+        StartCoroutine(CommandRoutine("submit", new Command { token = token, round = round, text = input.text.Trim(),
+            imageBase64 = imageBase64, mimeType = string.IsNullOrEmpty(imageBase64) ? null : "image/jpeg" }));
+        return true;
+    }
+    void Next() {
+        if (commandBusy || latest == null) return;
+        if (TutorRequired) { ShowResultNotice("Em cần hoàn thành học lại và chép phạt (nếu có) trước khi chuyển câu."); OpenTutor(); return; }
+        if (latest.state == "finished") StartPractice(); else StartCoroutine(CommandRoutine("next", new Command { token = token, round = round }));
+    }
+    public bool MatchesTutorial(string id) => isActiveAndEnabled && !string.IsNullOrEmpty(token) && latest != null &&
+        latest.state == "review" && !string.IsNullOrEmpty(id) && latest.tutorId == id;
+    public bool CanContinueTutorial(string id) => MatchesTutorial(id) && !commandBusy && !exitPending;
+    public bool BindTutorial(string id, string sourceId)
+    {
+        if (MatchesTutorial(id)) return true;
+        if (!isActiveAndEnabled || latest == null || latest.state != "review" || string.IsNullOrEmpty(token) ||
+            sourceId != "practice:" + token + ":" + (latest.round - 1)) return false;
+        latest.tutorId = id;
+        return true;
+    }
+    public bool IsLastTutorialQuestion => latest != null && latest.round == 5;
+    public string TutorialContinuationLabel => latest != null && latest.round == 5 ? "Xem tổng kết" : "Câu tiếp theo";
+    public bool ContinueTutorial(string id)
+    {
+        if (!CanContinueTutorial(id)) return false;
+        // Polling may still contain the pre-completion snapshot. Ask the server
+        // directly; its mastery gate remains authoritative before advancing.
+        StartCoroutine(CommandRoutine("next", new Command { token = token, round = round }));
+        return true;
+    }
     IEnumerator CommandRoutine(string path, Command body)
     {
         commandBusy = true; revision++; int version = generation; State state = null; string error = null; notice = null;
         yield return Request(path, body, (s, e) => { state = s; error = e; });
         if (version != generation) yield break; commandBusy = false;
         if (state != null && !string.IsNullOrEmpty(state.state)) Apply(state);
-        if (error != null) notice = error;
+        if (error != null) ShowResultNotice(error);
     }
     void ShowHints()
     {

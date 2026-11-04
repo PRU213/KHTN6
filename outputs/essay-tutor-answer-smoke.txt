@@ -1,0 +1,1 @@
+PASS: answer click and typing after repeated AI responses and lost runtime focus callbacks; password click/typing/reopen; mandatory next-question gate for Football/Sheep/Cave; teacher/completed input remains locked.

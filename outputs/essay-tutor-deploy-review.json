@@ -1,0 +1,17 @@
+{
+  "repository": "PRU213/KHTN6",
+  "branch": "main",
+  "parent": "9aa2d87bb5476f58fa592df2362d75235ee0c903",
+  "files": [
+    ".gitignore",
+    "PlanetServer/server.mjs",
+    "PlanetServer/football.mjs",
+    "PlanetServer/tutor.mjs",
+    "PlanetServer/tutor-auth.mjs",
+    "PlanetServer/tutor.test.mjs",
+    "PlanetServer/practice-tutor-gate.test.mjs",
+    "PlanetServer/football.test.mjs",
+    "PlanetServer/essay.test.mjs",
+    "PlanetServer/ESSAY-TUTOR.md"
+  ]
+}

@@ -12,6 +12,7 @@ public class HomeHistoryController : MonoBehaviour
         if (homePage == null) homePage = GameObject.Find("HomePage");
         if (historyPage == null) historyPage = GameObject.Find("History");
         if (rankPage == null) rankPage = GameObject.Find("Rank");
+        EssayTutorUI.AttachHistoryButton(historyPage == null ? null : historyPage.transform, () => EssayTutorUI.CurrentUsername, false);
 
         ShowHome();
     }

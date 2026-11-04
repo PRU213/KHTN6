@@ -1,0 +1,1 @@
+PASS: completion button click advances real practice HTTP client to displayed question 2 despite stale cached mastery; last question shows final summary; hidden before completion and for teacher; old history does not advance unrelated practice.

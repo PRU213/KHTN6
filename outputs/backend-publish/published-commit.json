@@ -1,0 +1,19 @@
+{
+  "repository": "PRU213/KHTN6",
+  "branch": "main",
+  "previous": "c0b0dd3f843ed63fe00d2eb94cc972a7ce745447",
+  "sha": "17bc09a946692642417873cd54f3f89e83e8c9b8",
+  "url": "https://github.com/PRU213/KHTN6/commit/17bc09a946692642417873cd54f3f89e83e8c9b8",
+  "files": [
+    "PlanetServer/server.mjs",
+    "PlanetServer/tutor.mjs",
+    "PlanetServer/duel-review.test.mjs",
+    "PlanetServer/tutor-guidance.test.mjs",
+    "PlanetServer/tutor.test.mjs",
+    "PlanetServer/essay.test.mjs",
+    "PlanetServer/DUEL-REVIEW.md",
+    "PlanetServer/ESSAY-TUTOR.md"
+  ],
+  "relatedTests": "79/79 passed",
+  "secretScan": "passed"
+}

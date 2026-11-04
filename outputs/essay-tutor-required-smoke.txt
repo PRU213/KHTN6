@@ -1,0 +1,1 @@
+PASS: mandatory next-question gate and visible legacy-server errors for Football/Sheep/Cave; runtime UI, editable answer, scroll layout, inherited JSON fields, authentication cancel/reopen and token reset on sign-in.

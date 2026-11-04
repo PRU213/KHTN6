@@ -21,15 +21,65 @@ public class ChooseGameSettings : MonoBehaviour
     public GameSelectScreen gameSelectScreen;
     public GameObject chooseGamePanel;
 
+    readonly Dictionary<RectTransform, Vector2> originalPositions = new Dictionary<RectTransform, Vector2>();
+    readonly Dictionary<GameObject, bool> originalVisibility = new Dictionary<GameObject, bool>();
+
     void OnEnable()
     {
-        bool supportsEssay = GameSession.SelectedGame == "Planet" || GameSession.SelectedGame == "Football" || GameSession.SelectedGame == "Sheep" || GameSession.SelectedGame == "Cave";
+        RestoreLayout();
+        bool supportsEssay = GameSession.SelectedGame == "Football" || GameSession.SelectedGame == "Sheep" || GameSession.SelectedGame == "Cave";
         if (!supportsEssay && multipleChoiceToggle != null) multipleChoiceToggle.isOn = true;
         if (essayToggle != null) {
+            // Temporarily hide Planet essays; restore the option for practice games.
+            essayToggle.gameObject.SetActive(GameSession.SelectedGame != "Planet");
             essayToggle.interactable = supportsEssay;
             if (!supportsEssay) essayToggle.isOn = false;
         }
         if (multipleChoiceToggle != null && (essayToggle == null || !essayToggle.isOn)) multipleChoiceToggle.isOn = true;
+        if (GameSession.SelectedGame == "Planet") ApplyDuelLayout();
+    }
+
+    void ApplyDuelLayout()
+    {
+        // These titles are direct children of the shared settings panel in HomePage.
+        SetDuelVisibility(transform.Find("title2"));
+        if (multipleChoiceToggle != null) SetDuelVisibility(multipleChoiceToggle.transform);
+        if (essayToggle != null) SetDuelVisibility(essayToggle.transform);
+        MoveForDuel(transform.Find("title1"), -100f);
+        if (easyToggle != null) MoveForDuel(easyToggle.transform, -100f);
+        if (mediumToggle != null) MoveForDuel(mediumToggle.transform, -100f);
+        if (hardToggle != null) MoveForDuel(hardToggle.transform, -100f);
+        if (startButton != null) MoveForDuel(startButton.transform, 160f);
+    }
+
+    void SetDuelVisibility(Transform target)
+    {
+        if (target == null) return;
+        originalVisibility[target.gameObject] = target.gameObject.activeSelf;
+        target.gameObject.SetActive(false);
+    }
+
+    void MoveForDuel(Transform target, float offsetY)
+    {
+        var rect = target as RectTransform;
+        if (rect == null) return;
+        originalPositions[rect] = rect.anchoredPosition;
+        rect.anchoredPosition += new Vector2(0f, offsetY);
+    }
+
+    void OnDisable()
+    {
+        RestoreLayout();
+    }
+
+    void RestoreLayout()
+    {
+        foreach (var entry in originalPositions)
+            if (entry.Key != null) entry.Key.anchoredPosition = entry.Value;
+        foreach (var entry in originalVisibility)
+            if (entry.Key != null) entry.Key.SetActive(entry.Value);
+        originalPositions.Clear();
+        originalVisibility.Clear();
     }
 
     private void Awake()
@@ -95,7 +145,7 @@ public class ChooseGameSettings : MonoBehaviour
         // 2. LƯU HÌNH THỨC ĐÃ CHỌN
         // ============================
 
-        bool supportsEssay = GameSession.SelectedGame == "Planet" || GameSession.SelectedGame == "Football" || GameSession.SelectedGame == "Sheep" || GameSession.SelectedGame == "Cave";
+        bool supportsEssay = GameSession.SelectedGame == "Football" || GameSession.SelectedGame == "Sheep" || GameSession.SelectedGame == "Cave";
         GameSession.QuestionType = supportsEssay && essayToggle != null && essayToggle.isOn ? "Tự luận" : "Trắc nghiệm";
 
 

@@ -1,0 +1,1 @@
+PASS: 15 scrollable questions; wrong/unanswered/correct/ungraded status and own choices; per-lesson completion; authenticated server refresh; missing-ID recovery; mandatory gate including cached remote offline fallback; shuffled local attempts; perfect local no gate; persistence; local authenticated sync.

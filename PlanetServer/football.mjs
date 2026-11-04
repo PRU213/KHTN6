@@ -35,7 +35,9 @@ export function createFootballHint({ key = process.env.GEMINI_API_KEY, model = p
 }
 
 export class FootballPractice {
-  constructor({ source = createEssaySource(), grade = createEssayGrader(), hint = createFootballHint(), record = createEssayRecorder(), now = Date.now, random = Math.random } = {}) {
+  constructor({ source = createEssaySource(), grade = createEssayGrader(), hint = createFootballHint(), record = createEssayRecorder(), now = Date.now, random = Math.random, registerTutor = () => '', isTutorComplete = () => false } = {}) {
+    this.registerTutor = registerTutor;
+    this.isTutorComplete = isTutorComplete;
     this.source = source; this.grade = grade; this.hint = hint; this.record = record; this.now = now; this.random = random; this.sessions = new Map();
   }
   async start(body) {
@@ -65,17 +67,26 @@ export class FootballPractice {
   cleanup() { for (const [token, s] of this.sessions) if (this.now() - s.seen > 1800000) this.sessions.delete(token); }
   expire(s) {
     if (s.pausedAt == null && s.phase === 'answering' && !s.gradePending && this.now() >= s.deadline) {
-      s.phase = 'review'; s.review = { score: 0, feedback: 'Hết giờ, bạn chưa nộp bài.', transcription: '', suggestedAnswer: '' };
+      s.phase = 'review'; s.review = { timedOut: true, score: 0, feedback: 'Hết giờ, bạn chưa nộp bài.', transcription: '', suggestedAnswer: '' };
     }
   }
   view(s) {
     this.expire(s);
     const q = s.questions[s.index]; const reveal = s.phase === 'review' || s.phase === 'finished';
+    const needsTutor = reveal && (s.review?.rawScore ?? s.review?.score ?? 0) < 10;
+    let tutorId = '', tutorError = '', tutorCompleted = false;
+    if (needsTutor) {
+      try { tutorId = this.registerTutor({ sourceId: `practice:${s.token}:${s.index}`, username: s.username, subject: s.subject,
+        chapter: s.chapter, question: q.text, reference: q.sampleAnswer, studentAnswer: s.review?.transcription || '', score: s.review?.rawScore ?? s.review?.score ?? 0, finalScore: s.review?.score ?? 0 });
+        tutorCompleted = !!tutorId && this.isTutorComplete(tutorId, s.username) === true; }
+      catch { tutorError = 'Chưa lưu được mục học lại. Hãy giữ màn kết quả và thử lại.'; }
+    }
     return { token: s.token, game: s.game, state: s.gradePending ? 'grading' : s.phase, subject: s.subject, chapter: s.chapter, round: s.index + 1, total: 5, score: s.score, maxScore: 50,
+      needsTutor, tutorId, tutorError, tutorCompleted, tutorSupported: true,
       text: q.text, difficulty: q.difficulty, duration: duration(q.difficulty), paused: s.pausedAt != null, remaining: Math.max(0, (s.deadline - (s.pausedAt ?? this.now())) / 1000), hints: s.hints, hintPending: s.hintPending,
-      earned: reveal ? s.review?.score || 0 : 0, feedback: reveal ? s.review?.feedback || '' : '', transcription: reveal ? s.review?.transcription || '' : '',
+      earned: reveal ? s.review?.score || 0 : 0, feedback: reveal && !needsTutor ? s.review?.feedback || '' : '', transcription: reveal ? s.review?.transcription || '' : '',
       rawScore: reveal ? s.review?.rawScore ?? s.review?.score ?? 0 : 0, hintPenalty: hintPenalty(s),
-      suggestedAnswer: reveal ? s.review?.suggestedAnswer || '' : '', sampleAnswer: reveal ? q.sampleAnswer : '' };
+      suggestedAnswer: reveal && !needsTutor ? s.review?.suggestedAnswer || '' : '', sampleAnswer: reveal && !needsTutor ? q.sampleAnswer : '' };
   }
   checkRound(s, round) { if (round !== s.index + 1) throw new Error('Câu hỏi đã thay đổi. Bạn tải lại trạng thái nhé.'); }
   pause(s) {
@@ -88,6 +99,12 @@ export class FootballPractice {
   }
   async submit(s, body) {
     this.checkRound(s, body.round); this.expire(s);
+    // Allow the frozen deadline snapshot to arrive after a concurrent state poll.
+    // Never reopen a graded answer or accept submissions indefinitely after expiry.
+    if (s.phase === 'review' && s.review?.timedOut && this.now() <= s.deadline + 15000) {
+      const hasAnswer = (typeof body.text === 'string' && body.text.trim()) || body.imageBase64;
+      if (hasAnswer) { s.phase = 'answering'; s.review = null; }
+    }
     if (s.pausedAt != null || s.phase !== 'answering' || s.gradePending) return this.view(s);
     const text = body.text || ''; const image = validateEssayImage(body.imageBase64, body.mimeType);
     if (typeof text !== 'string' || text.length > 2000 || (!text.trim() && !image)) throw new Error('Nhập câu trả lời hoặc chọn ảnh trước khi nộp bài.');
@@ -129,6 +146,8 @@ export class FootballPractice {
   next(s, body) {
     this.checkRound(s, body.round); this.expire(s);
     if (s.phase !== 'review') return this.view(s);
+    const state = this.view(s);
+    if (state.needsTutor && !state.tutorCompleted) return { ...state, error: state.tutorError || 'Em cần hoàn thành học lại và chép phạt (nếu có) của câu này trước khi chuyển câu tiếp theo.' };
     if (s.index === 4) { s.phase = 'finished'; return this.view(s); }
     s.index++; s.review = null; s.hints = []; s.hintPending = false; s.phase = 'answering';
     s.deadline = this.now() + duration(s.questions[s.index].difficulty) * 1000;
