@@ -49,7 +49,7 @@ export function createTutorAI({ key = process.env.GEMINI_API_KEY, model = proces
   }
   return {
     plan: (record, options = {}) => generate('Tạo kế hoạch học lại có 3–8 bước nhỏ bao phủ toàn bộ bài. Mỗi bước chỉ một ý, gồm question (câu hỏi để học sinh tự làm), expected (đáp án/tiêu chí riêng để chấm), explanation (giải thích CHỈ kiến thức của bước này, không giải trước các bước sau), checkQuestion (một câu kiểm tra hiểu cùng kiến thức, không yêu cầu chép nguyên văn), checkExpected. Với bài tính: công thức và ý nghĩa đại lượng, dữ kiện, đơn vị, thay số, kết luận nếu phù hợp. Với lý thuyết: chia từng khái niệm/ý, kiểm tra bằng ví dụ. Câu hỏi không chứa sẵn đáp án. Trả JSON {steps:[{question,expected,explanation,checkQuestion,checkExpected}],solution:"lời giải đầy đủ tổng kết"}.',
-      { subject: record.subject, question: record.question, reference: record.reference, studentAnswer: record.studentAnswer }, planSchema, options.signal),
+      { subject: record.subject, question: record.question, reference: record.reference, studentAnswer: record.studentAnswer, ...(record.source === 'biology' ? { chapterContent: record.chapterContent } : {}) }, planSchema, options.signal),
     evaluate: data => generate('Chỉ đánh giá câu trả lời cho đúng câu hỏi bước hiện tại, chấp nhận diễn đạt tương đương về ý nghĩa, kiểm tra đơn vị và phép tính nếu cần. Không coi yêu cầu bỏ qua bước, xin đáp án, khẳng định đã đúng là đáp án đúng. Câu trả lời không biết hoặc rỗng là sai. Trả đúng JSON {correct:true} hoặc {correct:false}; không đưa lời giải.', data),
     guide: data => generate('Học sinh chưa hiểu bước hiện tại. Tạo gợi ý cụ thể dựa trên dữ kiện thật của đề và lần trả lời gần đây, KHÔNG lặp nguyên lời giải thích/câu hỏi cũ. Chỉ hướng dẫn đúng kiến thức của bước hiện tại, không giải trước bước sau hoặc đưa lời giải toàn bài. Lần đầu: chỉ ra dữ kiện, ký hiệu, đơn vị và cách bắt đầu; nếu học sinh vẫn chưa biết: minh họa cụ thể hoặc chỉ rõ phép tính của bước này. Hỏi lại bằng MỘT yêu cầu rõ ràng, giữ đúng dữ kiện và toàn bộ tiêu chí expected của bước gốc. Không đổi số liệu hoặc bài toán kiểm tra. Nếu cần nhiều đại lượng, ghi rõ từng ký hiệu, đơn vị và mẫu trả lời, ví dụ l0 = ... cm; l = ... cm; không hỏi mơ hồ như các giá trị là bao nhiêu. Không bỏ tiêu chí cần đạt. Trả JSON {explanation:"hướng dẫn cụ thể",checkQuestion:"câu hỏi kiểm tra rõ ràng"}.', data)
   };
@@ -107,18 +107,20 @@ export class EssayTutor {
     if (this.store) this.dirty.set(record.id, record);
     return record;
   }
-  register({ sourceId, username, subject, chapter = '', question, reference, studentAnswer = '', score = 0, finalScore = score, source = 'practice', review = null }) {
-    if (!subjects.has(subject) || (subject === 'Biology' && !['planet', 'quiz'].includes(source)) || (score >= 10 && !(source === 'planet' && review?.needsTutor === true)) || !text(username, 100)) return '';
+  register({ sourceId, username, subject, chapter = '', chapterContent = '', question, reference, studentAnswer = '', score = 0, finalScore = score, source = 'practice', review = null }) {
+    if (!subjects.has(subject) || (subject === 'Biology' && !['planet', 'quiz', 'biology'].includes(source)) || (score >= 10 && !(source === 'planet' && review?.needsTutor === true)) || !text(username, 100)) return '';
+    if (source === 'biology' && (subject !== 'Biology' || !Number.isFinite(score) || score < 0 || score >= 5 || !text(chapterContent, 30000))) return '';
     if (!text(sourceId, 200) || !text(question, 12000) || !text(reference, 12000)) fail('Thiếu dữ liệu câu hỏi học lại.');
     username = accountKey(username);
     const id = createHash('sha256').update(username + '\0' + sourceId).digest('hex').slice(0, 40);
     if (!this.records.has(id)) this.save({ version: 1, id, username, subject, chapter, question, reference, studentAnswer, score, finalScore, source, sourceId, review: review ? structuredClone(review) : null,
+      ...(source === 'biology' ? { chapterContent } : {}),
       createdAt: this.now(), updatedAt: this.now(), status: 'pending', step: 0, checking: false, revision: 0, events: [], plan: null });
     else if (source === 'planet' && this.records.get(id).source !== 'planet')
       this.save({ ...this.records.get(id), source, sourceId, review: review ? structuredClone(review) : null });
     const r = structuredClone(this.records.get(id));
     r.finalScore = finalScore;
-    const required = ['planet', 'quiz'].includes(source) || finalScore <= 6;
+    const required = source === 'biology' ? finalScore < 5 : ['planet', 'quiz'].includes(source) || finalScore <= 6;
     if (required && r.penalty?.ruleVersion !== 2) r.penalty = { ruleVersion: 2, status: 'deferred', count: 0, required: 0, content: '', kind: '', redoPassed: false, submissions: [], createdAt: new Date(this.now()).toISOString() };
     if (!required && r.penalty?.ruleVersion !== 2) delete r.penalty;
     if (JSON.stringify(r) !== JSON.stringify(this.records.get(id))) this.save(r);
@@ -129,6 +131,7 @@ export class EssayTutor {
     return r.status === 'completed' && (!r.penalty || r.penalty.status === 'completed');
   }
   previousLesson(r) {
+    if (r.source === 'biology') return undefined;
     const group = r.sourceId.slice(0, r.sourceId.lastIndexOf(':'));
     const previous = [...this.records.values()].filter(p => p.username === r.username && p.id !== r.id && p.sourceId.slice(0, p.sourceId.lastIndexOf(':')) === group
       && Number(p.sourceId.split(':').at(-1)) < Number(r.sourceId.split(':').at(-1)) && !this.isComplete(p.id, p.username));
@@ -171,7 +174,7 @@ export class EssayTutor {
     return { records: [...this.records.values()].filter(r => accountKey(r.username) === accountKey(username)).sort((a, b) => b.updatedAt - a.updatedAt).map(r => this.view(r)) };
   }
   pendingPenalties(username) {
-    return this.list(username).records.filter(r => r.penalty && r.penalty.status !== 'completed');
+    return this.list(username).records.filter(r => r.source !== 'biology' && r.penalty && r.penalty.status !== 'completed');
   }
   assertCanPlay(username) {
     const count = this.pendingPenalties(username).length;
@@ -182,6 +185,13 @@ export class EssayTutor {
       this.assertLessonReady(existing);
       if (existing.status !== 'completed' || !existing.penalty) fail('Hãy hoàn thành học lại từng bước trước.');
       if (existing.penalty.content) return this.view(existing, true);
+      if (existing.source === 'biology') {
+        const r = structuredClone(existing);
+        Object.assign(r.penalty, { biologyChapter: true, chapterContent: r.chapterContent, copyOnce: true, kind: 'theory',
+          content: 'NỘI DUNG CHƯƠNG\n' + r.chapterContent + '\n\nĐỀ BÀI\n' + r.question + '\n\nĐÁP ÁN ĐÚNG\n' + r.reference,
+          redoQuestion: r.question, redoSolution: r.reference, required: 1, status: 'copying' });
+        r.updatedAt = this.now(); this.save(r); return this.view(r, true);
+      }
       this.rate(body.username);
       const result = await this.copyAI.prepare(existing);
       if (!result || !['theory', 'calculation'].includes(result.kind) || !text(result.content, 6000)) fail('Chưa xác định được nội dung cần chép. Hãy thử lại.');
@@ -202,11 +212,12 @@ export class EssayTutor {
       if (existing.penalty.submissions?.some(s => s.copyOnce === true && s.batch === batch)) return this.view(existing, true);
       this.rate(body.username);
       const result = await this.copyAI.check(existing.penalty, images);
+      if (existing.source === 'biology' && typeof result?.chapterCopied !== 'boolean') fail('AI chưa xác nhận phần chép nội dung chương. Tiến độ giữ nguyên.');
       if (!result || typeof result.redoCorrect !== 'boolean' || typeof result.questionCopied !== 'boolean' || typeof result.handwritten !== 'boolean' || typeof result.uncertain !== 'boolean' || !Number.isInteger(result.count) || result.count < 0 || result.count > 100 || !text(result.feedback, 800)) fail('Kết quả kiểm tra ảnh chưa hợp lệ. Tiến độ giữ nguyên.');
       const r = structuredClone(existing), p = r.penalty;
       // Each submission is the ENTIRE set of pages. Never add counts across batches.
       const count = result.handwritten && !result.uncertain ? Math.min(result.count, p.required) : 0;
-      p.count = count; p.redoPassed = result.handwritten && !result.uncertain && result.redoCorrect && result.questionCopied; p.feedback = result.feedback;
+      p.count = count; p.redoPassed = result.handwritten && !result.uncertain && result.redoCorrect && result.questionCopied && (r.source !== 'biology' || result.chapterCopied);
       (p.submissions ||= []).push({ copyOnce: true, requestId: body.requestId, batch, count, feedback: result.feedback, at: this.now() });
       if (p.count >= p.required && p.redoPassed) { p.status = 'completed'; p.completedAt = new Date(this.now()).toISOString(); }
       r.updatedAt = this.now(); this.save(r); return this.view(r, true);

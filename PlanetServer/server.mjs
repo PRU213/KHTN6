@@ -11,6 +11,7 @@ import { EssayTutor } from './tutor.mjs';
 import { TutorAuth } from './tutor-auth.mjs';
 import { createTutorSheetStore } from './tutor-sheet-store.mjs';
 import { createQuizReviewSource, registerQuizReviews } from './quiz-review.mjs';
+import { createBiologyTutorSource, startBiologyTutor } from './biology-tutor.mjs';
 
 const envPath = fileURLToPath(new URL('./.env', import.meta.url));
 if (existsSync(envPath)) process.loadEnvFile(envPath);
@@ -336,7 +337,7 @@ export class Arena {
   }
 }
 
-export function createServer(arena = new Arena(), chat = createChat(), { essaySource = createEssaySource(), football = new FootballPractice({ source: essaySource }), tutor = new EssayTutor(), tutorAuth = new TutorAuth(), quizSource = createQuizReviewSource() } = {}) {
+export function createServer(arena = new Arena(), chat = createChat(), { essaySource = createEssaySource(), football = new FootballPractice({ source: essaySource }), tutor = new EssayTutor(), tutorAuth = new TutorAuth(), quizSource = createQuizReviewSource(), biologySource = createBiologyTutorSource() } = {}) {
   arena.assertPenaltyReady = username => tutor.assertCanPlay(username);
   arena.registerTutor = record => tutor.register(record);
   arena.isTutorComplete = (id, username) => tutor.isComplete(id, username);
@@ -365,7 +366,7 @@ export function createServer(arena = new Arena(), chat = createChat(), { essaySo
     res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
     res.setHeader('Cache-Control', 'no-store');
     if (req.method === 'OPTIONS') { res.writeHead(204); res.end(); return; }
-    if (req.url === '/health') { res.end(JSON.stringify({ ok: true, copyPenaltyVersion: 2, journalVersion: 1, journalStorage: tutor.store?.kind || 'local', journalReady: tutor.loaded, tutorVersion: 2, mandatoryPracticeTutor: true, duelReviewVersion: 1, essayQuestions: essaySource.status?.() })); return; }
+    if (req.url === '/health') { res.end(JSON.stringify({ ok: true, copyPenaltyVersion: 2, biologyTutorVersion: 1, journalVersion: 1, journalStorage: tutor.store?.kind || 'local', journalReady: tutor.loaded, tutorVersion: 2, mandatoryPracticeTutor: true, duelReviewVersion: 1, essayQuestions: essaySource.status?.() })); return; }
     try {
       if (req.method !== 'POST') { res.writeHead(405); res.end('{}'); return; }
       const chunks = []; let size = 0;
@@ -382,6 +383,7 @@ export function createServer(arena = new Arena(), chat = createChat(), { essaySo
         await loadJournal();
         let result;
         if (req.url === '/tutor/list') result = tutor.list(body.username);
+        else if (req.url === '/tutor/biology-start') result = await startBiologyTutor(tutor, body, biologySource);
         else if (req.url === '/tutor/quiz-review') result = await registerQuizReviews(tutor, body, quizSource);
         else if (req.url === '/tutor/state') result = tutor.view(tutor.get(body.id, body.username), true);
         else if (req.url === '/tutor/start') result = await tutor.start(body);
