@@ -16,6 +16,9 @@ public class PopupLoadingController : MonoBehaviour
     /// </summary>
     public static string CurrentMessage = "AI đang chấm bài...";
     public static string CurrentSubMessage = "Vui lòng chờ trong giây lát...";
+    private static bool requestedVisible;
+    private static bool loading;
+    private static bool unloading;
 
     [Header("=== GIAO DIỆN TEXT ===")]
     [Tooltip("Dòng chữ thông báo chính: AI đang chấm bài...")]
@@ -61,6 +64,7 @@ public class PopupLoadingController : MonoBehaviour
 
     private void Start()
     {
+        if (!requestedVisible) { Hide(); return; }
         EnsureSpinnerGraphic();
         EnsureVietnameseFont();
         ApplyMessages(CurrentMessage, CurrentSubMessage);
@@ -70,7 +74,7 @@ public class PopupLoadingController : MonoBehaviour
     {
         if (spinner != null)
         {
-            spinner.Rotate(0f, 0f, -spinSpeed * Time.deltaTime);
+            spinner.Rotate(0f, 0f, -spinSpeed * Time.unscaledDeltaTime);
         }
     }
 
@@ -168,7 +172,7 @@ public class PopupLoadingController : MonoBehaviour
         }
 
         // 2. Tẩy sạch lỗi mã hoá ký tự / mojibake nếu có chuỗi lỗi truyền vào
-        if (!string.IsNullOrEmpty(subMsg) && (subMsg.Contains("Ã") || subMsg.Contains("Ä") || subMsg.Contains("chá»") || subMsg.Contains("lA") || subMsg.Contains("")))
+        if (!string.IsNullOrEmpty(subMsg) && (subMsg.Contains("Ã") || subMsg.Contains("Ä") || subMsg.Contains("chá»") || subMsg.Contains("lA")))
         {
             subMsg = "Vui lòng chờ trong giây lát...";
         }
@@ -189,6 +193,7 @@ public class PopupLoadingController : MonoBehaviour
     /// </summary>
     public static void Show(string message = "AI đang chấm bài...", string subMessage = "Vui lòng chờ trong giây lát...")
     {
+        requestedVisible = true;
         if (!string.IsNullOrEmpty(message) && message.Contains("Vui lòng chờ trong giây lát"))
         {
             message = "AI đang chấm bài...";
@@ -198,7 +203,7 @@ public class PopupLoadingController : MonoBehaviour
             }
         }
 
-        if (!string.IsNullOrEmpty(subMessage) && (subMessage.Contains("Ã") || subMessage.Contains("Ä") || subMessage.Contains("chá»") || subMessage.Contains("lA") || subMessage.Contains("")))
+        if (!string.IsNullOrEmpty(subMessage) && (subMessage.Contains("Ã") || subMessage.Contains("Ä") || subMessage.Contains("chá»") || subMessage.Contains("lA")))
         {
             subMessage = "Vui lòng chờ trong giây lát...";
         }
@@ -208,9 +213,15 @@ public class PopupLoadingController : MonoBehaviour
 
         if (Application.CanStreamedLevelBeLoaded("PopupLoading"))
         {
-            if (!SceneManager.GetSceneByName("PopupLoading").isLoaded)
+            if (!SceneManager.GetSceneByName("PopupLoading").isLoaded && !loading && !unloading)
             {
-                SceneManager.LoadScene("PopupLoading", LoadSceneMode.Additive);
+                loading = true;
+                var operation = SceneManager.LoadSceneAsync("PopupLoading", LoadSceneMode.Additive);
+                operation.completed += _ => {
+                    loading = false;
+                    if (!requestedVisible) Hide();
+                    else if (Instance != null) Instance.ApplyMessages(CurrentMessage, CurrentSubMessage);
+                };
             }
             else if (Instance != null)
             {
@@ -224,9 +235,15 @@ public class PopupLoadingController : MonoBehaviour
     /// </summary>
     public static void Hide()
     {
-        if (SceneManager.GetSceneByName("PopupLoading").isLoaded)
+        requestedVisible = false;
+        if (SceneManager.GetSceneByName("PopupLoading").isLoaded && !unloading)
         {
-            SceneManager.UnloadSceneAsync("PopupLoading");
+            unloading = true;
+            var operation = SceneManager.UnloadSceneAsync("PopupLoading");
+            operation.completed += _ => {
+                unloading = false;
+                if (requestedVisible) Show(CurrentMessage, CurrentSubMessage);
+            };
         }
     }
 }

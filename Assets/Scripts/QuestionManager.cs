@@ -12,8 +12,6 @@ using UnityEngine.Networking;
 /// </summary>
 public class QuestionManager : MonoBehaviour
 {
-    private const string SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/1DcJwlN_fUDdcaQ6IfnlkMJApgWuEUqMhyZv9Kn8vfWo/export?format=csv&gid=1463734910";
-
     [System.Serializable]
     public class Question
     {
@@ -23,60 +21,9 @@ public class QuestionManager : MonoBehaviour
         public string explanation;
     }
 
-    // === CÂU HỎI SINH HỌC DỰ PHÒNG (KÈM GIẢI THÍCH) ===
-    private Question[] questions = new Question[]
-    {
-        new Question {
-            questionText = "Hạt đậu cần những điều kiện gì để nảy mầm?",
-            answers = new string[] {
-                "A. Nước, nhiệt độ thích hợp, không khí",
-                "B. Chỉ cần ánh sáng mặt trời",
-                "C. Chỉ cần đất màu mỡ",
-                "D. Chỉ cần bón phân" },
-            correctIndex = 0,
-            explanation = "Hạt đậu cần có đủ nước, không khí và nhiệt độ thích hợp để nảy mầm."
-        },
-        new Question {
-            questionText = "Phần nào của hạt đậu sẽ mọc ra đầu tiên khi nảy mầm?",
-            answers = new string[] {
-                "A. Lá mầm",
-                "B. Rễ mầm",
-                "C. Thân mầm",
-                "D. Chồi non" },
-            correctIndex = 1,
-            explanation = "Rễ mầm sẽ mọc ra đầu tiên để hút nước và khoáng chất nuôi phôi phát triển."
-        },
-        new Question {
-            questionText = "Lá mầm của hạt đậu có chức năng chính là gì?",
-            answers = new string[] {
-                "A. Quang hợp tạo chất hữu cơ",
-                "B. Dự trữ chất dinh dưỡng nuôi phôi",
-                "C. Hút nước từ đất",
-                "D. Bảo vệ hạt khỏi côn trùng" },
-            correctIndex = 1,
-            explanation = "Lá mầm chứa chất dinh dưỡng dự trữ để nuôi phôi phát triển thành cây con."
-        },
-        new Question {
-            questionText = "Trong quá trình nảy mầm, nước có vai trò gì?",
-            answers = new string[] {
-                "A. Làm mềm vỏ hạt và kích hoạt enzym",
-                "B. Tạo màu sắc cho cây",
-                "C. Làm hạt cứng hơn",
-                "D. Giúp hạt bay đi xa" },
-            correctIndex = 0,
-            explanation = "Nước làm mềm vỏ hạt, giúp các enzym hoạt động chuyển hóa chất dinh dưỡng nuôi mầm."
-        },
-        new Question {
-            questionText = "Hạt đậu gồm những bộ phận chính nào?",
-            answers = new string[] {
-                "A. Vỏ hạt, phôi và chất dự trữ",
-                "B. Rễ, thân và lá",
-                "C. Hoa, quả và hạt",
-                "D. Biểu bì, vỏ và lõi" },
-            correctIndex = 0,
-            explanation = "Hạt gồm có vỏ hạt, phôi và chất dinh dưỡng dự trữ."
-        }
-    };
+    private Question[] questions = new Question[0];
+    private Button bankRetry;
+    private bool bankLoading;
 
     // === UI ===
     private Image questionBoard;
@@ -97,224 +44,66 @@ public class QuestionManager : MonoBehaviour
 
     void Start()
     {
-        if (GameData.Instance == null)
-        {
-            GameObject go = new GameObject("GameData");
-            go.AddComponent<GameData>();
-        }
-
+        if (GameData.Instance == null) new GameObject("GameData").AddComponent<GameData>();
+        FindUIElements(); SetupUIComponents(); UpdateHealthIcons();
         LoadDynamicQuestions();
-
-        // Nếu GameData chưa có câu hỏi (ví dụ chạy trực tiếp scene này), tự động tải từ Google Sheet
-        if (GameData.Instance.allQuestions == null || GameData.Instance.allQuestions.Count == 0)
-        {
-            StartCoroutine(FetchQuestionsFromSheet());
-        }
-
-        FindUIElements();
-        SetupUIComponents();
-        UpdateHealthIcons();
-        currentQuestion = Random.Range(0, questions.Length);
-        ShowQuestion();
+        if (questions.Length > 0) { currentQuestion = Random.Range(0, questions.Length); ShowQuestion(); }
+        else StartCoroutine(FetchQuestionsFromSheet());
     }
 
     private IEnumerator FetchQuestionsFromSheet()
     {
-        using (UnityWebRequest req = UnityWebRequest.Get(SHEET_CSV_URL))
+        if (bankLoading) yield break;
+        bankLoading = true;
+        ShowBankMessage("Đang tải đúng bộ câu hỏi Sinh học…", false);
+        string error = null;
+        using (var request = UnityWebRequest.Get(BiologyQuestionBank.CsvUrl))
         {
-            req.certificateHandler = new BypassCertificate();
-            yield return req.SendWebRequest();
-            if (req.result == UnityWebRequest.Result.Success)
-            {
-                ParseCSVAndPopulate(req.downloadHandler.text);
-            }
-            else
-            {
-                Debug.LogWarning("Không thể tải Google Sheet trực tiếp: " + req.error);
-            }
+            request.timeout = 25;
+            yield return request.SendWebRequest();
+            if (request.result != UnityWebRequest.Result.Success) error = "Chưa tải được câu hỏi từ Google Sheet. Hãy thử lại.";
+            else try {
+                GameData.Instance.allQuestions = BiologyQuestionBank.ParseCsv(request.downloadHandler.text);
+                LoadDynamicQuestions();
+            } catch (System.Exception ex) { error = ex.Message; }
         }
-    }
-
-    private void ParseCSVAndPopulate(string csvData)
-    {
-        List<string[]> rows = ParseCSVFully(csvData);
-        if (rows == null || rows.Count <= 1) return;
-
-        List<QuestionData> fetched = new List<QuestionData>();
-        for (int i = 1; i < rows.Count; i++)
-        {
-            string[] cols = rows[i];
-            if (cols.Length >= 11)
-            {
-                if (cols[1].Trim().Contains("Sinh"))
-                {
-                    QuestionData q = new QuestionData
-                    {
-                        id = cols[0],
-                        monId = cols[1],
-                        topic = cols[2],
-                        difficulty = cols[3],
-                        question = cols[4],
-                        optionA = cols[5],
-                        optionB = cols[6],
-                        optionC = cols[7],
-                        optionD = cols[8],
-                        correct = cols[9],
-                        explanation = cols[10],
-                        points = (cols.Length >= 12 && int.TryParse(cols[11], out int p)) ? p : 10
-                    };
-                    fetched.Add(q);
-                }
-            }
-        }
-
-        if (fetched.Count > 0)
-        {
-            if (GameData.Instance != null)
-                GameData.Instance.allQuestions = fetched;
-
-            LoadDynamicQuestions();
-
-            // Nếu người chơi chưa trả lời câu đầu tiên, cập nhật câu hỏi mới từ sheet
-            if (answerButtons != null && answerButtons.Length > 0 && answerButtons[0] != null && answerButtons[0].interactable)
-            {
-                currentQuestion = Random.Range(0, questions.Length);
-                ShowQuestion();
-            }
-        }
-    }
-
-    private List<string[]> ParseCSVFully(string csvData)
-    {
-        List<string[]> rows = new List<string[]>();
-        List<string> currentCols = new List<string>();
-        bool inQuotes = false;
-        string currentField = "";
-
-        for (int i = 0; i < csvData.Length; i++)
-        {
-            char c = csvData[i];
-
-            if (c == '\"')
-            {
-                if (inQuotes && i + 1 < csvData.Length && csvData[i + 1] == '\"')
-                {
-                    currentField += '\"';
-                    i++;
-                }
-                else
-                {
-                    inQuotes = !inQuotes;
-                }
-            }
-            else if (c == ',' && !inQuotes)
-            {
-                currentCols.Add(currentField);
-                currentField = "";
-            }
-            else if ((c == '\r' || c == '\n') && !inQuotes)
-            {
-                if (c == '\r' && i + 1 < csvData.Length && csvData[i + 1] == '\n')
-                {
-                    i++;
-                }
-
-                if (currentCols.Count > 0 || !string.IsNullOrEmpty(currentField))
-                {
-                    currentCols.Add(currentField);
-                    rows.Add(currentCols.ToArray());
-                }
-
-                currentCols.Clear();
-                currentField = "";
-            }
-            else
-            {
-                currentField += c;
-            }
-        }
-
-        if (currentCols.Count > 0 || !string.IsNullOrEmpty(currentField))
-        {
-            currentCols.Add(currentField);
-            rows.Add(currentCols.ToArray());
-        }
-
-        return rows;
+        bankLoading = false;
+        if (error != null) { ShowBankMessage(error, true); yield break; }
+        if (questions.Length == 0) { ShowBankMessage("Chưa có câu Sinh học đúng chương và độ khó đã chọn. Hãy quay lại chọn bài hoặc tải lại.", true); yield break; }
+        currentQuestion = Random.Range(0, questions.Length); ShowQuestion();
     }
 
     private void LoadDynamicQuestions()
     {
-        if (GameData.Instance != null && GameData.Instance.allQuestions != null && GameData.Instance.allQuestions.Count > 0)
-        {
-            string selChapter = PlayerPrefs.GetString("SelectedChapter", "Tất cả");
-            string selDiff = PlayerPrefs.GetString("SelectedDifficulty", "Tổng hợp");
+        var selected = BiologyQuestionBank.Select(GameData.Instance != null ? GameData.Instance.allQuestions : null,
+            PlayerPrefs.GetString("SelectedChapter", "Tất cả"), PlayerPrefs.GetString("SelectedDifficulty", "Tổng hợp"));
+        var mapped = new List<Question>();
+        foreach (var q in selected) mapped.Add(new Question {
+            questionText = q.question, answers = new[] { FormatOption("A.", q.optionA), FormatOption("B.", q.optionB), FormatOption("C.", q.optionC), FormatOption("D.", q.optionD) },
+            correctIndex = BiologyQuestionBank.CorrectIndex(q), explanation = q.explanation
+        });
+        questions = mapped.ToArray();
+    }
 
-            List<Question> dynamicQs = new List<Question>();
-
-            foreach (var q in GameData.Instance.allQuestions)
-            {
-                bool matchChapter = (selChapter == "Tất cả" || q.topic.Trim() == selChapter);
-                bool matchDiff = (selDiff == "Tổng hợp" || q.difficulty.Trim().ToLower() == selDiff.ToLower());
-
-                if (matchChapter && matchDiff)
-                {
-                    Question newQ = new Question();
-                    newQ.questionText = q.question;
-                    newQ.answers = new string[] {
-                        FormatOption("A.", q.optionA),
-                        FormatOption("B.", q.optionB),
-                        FormatOption("C.", q.optionC),
-                        FormatOption("D.", q.optionD)
-                    };
-                    newQ.explanation = q.explanation;
-                    
-                    string co = q.correct.Trim().ToUpper();
-                    if (co == "A") newQ.correctIndex = 0;
-                    else if (co == "B") newQ.correctIndex = 1;
-                    else if (co == "C") newQ.correctIndex = 2;
-                    else if (co == "D") newQ.correctIndex = 3;
-                    else newQ.correctIndex = 0;
-
-                    dynamicQs.Add(newQ);
-                }
-            }
-
-            // Nếu không có câu nào khớp với độ khó / chương cụ thể, lấy tất cả câu hỏi Sinh học
-            if (dynamicQs.Count == 0)
-            {
-                foreach (var q in GameData.Instance.allQuestions)
-                {
-                    Question newQ = new Question();
-                    newQ.questionText = q.question;
-                    newQ.answers = new string[] {
-                        FormatOption("A.", q.optionA),
-                        FormatOption("B.", q.optionB),
-                        FormatOption("C.", q.optionC),
-                        FormatOption("D.", q.optionD)
-                    };
-                    newQ.explanation = q.explanation;
-                    
-                    string co = q.correct.Trim().ToUpper();
-                    if (co == "A") newQ.correctIndex = 0;
-                    else if (co == "B") newQ.correctIndex = 1;
-                    else if (co == "C") newQ.correctIndex = 2;
-                    else if (co == "D") newQ.correctIndex = 3;
-                    else newQ.correctIndex = 0;
-
-                    dynamicQs.Add(newQ);
-                }
-            }
-
-            if (dynamicQs.Count > 0)
-            {
-                questions = dynamicQs.ToArray();
-            }
-            else
-            {
-                Debug.LogWarning("Không có câu hỏi nào trong GameData! Dùng mặc định.");
-            }
+    private void ShowBankMessage(string message, bool retry)
+    {
+        if (questionText != null) questionText.text = message;
+        if (feedbackText != null) feedbackText.text = "";
+        for (int i = 0; i < 4; i++) {
+            if (answerTexts[i] != null) answerTexts[i].text = "";
+            if (answerButtons[i] != null) answerButtons[i].interactable = false;
         }
+        if (bankRetry == null && questionBoard != null) {
+            var go = new GameObject("Biology bank retry", typeof(RectTransform), typeof(Image), typeof(Button));
+            go.transform.SetParent(questionBoard.transform, false);
+            var rect = go.GetComponent<RectTransform>(); rect.anchorMin = new Vector2(.3f, .2f); rect.anchorMax = new Vector2(.7f, .35f); rect.offsetMin = rect.offsetMax = Vector2.zero;
+            go.GetComponent<Image>().color = new Color(.15f, .38f, .22f);
+            bankRetry = go.GetComponent<Button>(); bankRetry.targetGraphic = go.GetComponent<Image>();
+            var label = CreateText("Text", go.transform, Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf"), Vector2.zero, Vector2.one, 24, Color.white, TextAnchor.MiddleCenter, FontStyle.Bold);
+            label.text = "Thử tải lại"; label.raycastTarget = false;
+            bankRetry.onClick.AddListener(() => StartCoroutine(FetchQuestionsFromSheet()));
+        }
+        if (bankRetry != null) bankRetry.gameObject.SetActive(retry);
     }
 
     private string FormatOption(string prefix, string opt)
@@ -555,6 +344,8 @@ public class QuestionManager : MonoBehaviour
 
     private void ShowQuestion()
     {
+        if (questions.Length == 0) return;
+        if (bankRetry != null) bankRetry.gameObject.SetActive(false);
         Question q = questions[currentQuestion];
         if (questionText != null) questionText.text = q.questionText;
         if (feedbackText != null) feedbackText.text = "";
@@ -575,6 +366,7 @@ public class QuestionManager : MonoBehaviour
 
     private void OnAnswerClicked(int index)
     {
+        if (bankLoading || questions.Length == 0 || index < 0 || index > 3) return;
         Question q = questions[currentQuestion];
         for (int i = 0; i < 4; i++)
             if (answerButtons[i] != null) answerButtons[i].interactable = false;

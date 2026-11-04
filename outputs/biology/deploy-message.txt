@@ -1,0 +1,5 @@
+Add Biology essay tutoring and chapter copying
+
+Verify the original graded submission and its owner against Sheets. Guide failed Biology essays below five points and require a complete handwritten chapter plus correct answer. Keep existing Physics, Chemistry, quiz, and game-entry rules unchanged.
+
+Validation: seven new backend tests pass; the full suite has the same 14 pre-existing Apps Script/history failures as the baseline.

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,21 +16,72 @@ public class ChemistryMapController : MonoBehaviour
     [Header("Môn (khớp cột monID trong sheet câu hỏi)")]
     public string subjectName = "Hóa học";
 
+    void Awake()
+    {
+        FindTheoryPanel();
+        AutoFindChapterButtons();
+    }
+
     void Start()
     {
-        for (int i = 0; i < chapterButtons.Length; i++)
-        {
-            int chapter = i + 1;
+        FindTheoryPanel();
+        AutoFindChapterButtons();
 
-            chapterButtons[i].onClick.AddListener(() =>
+        if (chapterButtons != null)
+        {
+            for (int i = 0; i < chapterButtons.Length; i++)
             {
-                OpenTheory(chapter);
-            });
+                int chapter = i + 1;
+                if (chapterButtons[i] != null)
+                {
+                    chapterButtons[i].onClick.RemoveAllListeners();
+                    chapterButtons[i].onClick.AddListener(() =>
+                    {
+                        OpenTheory(chapter);
+                    });
+                }
+            }
         }
 
         if (backTheoryButton != null)
         {
+            backTheoryButton.onClick.RemoveAllListeners();
             backTheoryButton.onClick.AddListener(CloseTheory);
+        }
+    }
+
+    void FindTheoryPanel()
+    {
+        if (theoryPanel == null)
+        {
+            var go = GameObject.Find("theory_chemistry");
+            if (go != null)
+                theoryPanel = go.GetComponent<TheoryPanel>();
+
+            if (theoryPanel == null)
+                theoryPanel = FindFirstObjectByType<TheoryPanel>(FindObjectsInactive.Include);
+        }
+    }
+
+    void AutoFindChapterButtons()
+    {
+        if (chapterButtons == null || chapterButtons.Length == 0)
+        {
+            var found = new List<Button>();
+            for (int i = 1; i <= 10; i++)
+            {
+                var t = transform.Find("chap" + i);
+                if (t == null) t = transform.Find("Chap" + i);
+                if (t != null)
+                {
+                    var btn = t.GetComponent<Button>();
+                    if (btn != null) found.Add(btn);
+                }
+            }
+            if (found.Count > 0)
+            {
+                chapterButtons = found.ToArray();
+            }
         }
     }
 
@@ -37,15 +89,26 @@ public class ChemistryMapController : MonoBehaviour
     {
         string id = "CH_CHM_" + chapter.ToString("00");
 
-        Debug.Log("Đang mở bài: " + id);
+        Debug.Log("[ChemistryMapController] Đang mở bài: " + id);
 
         // Báo cho game biết môn và chương người chơi vừa chọn
         GameSession.Subject = subjectName;
         GameSession.Chapter = "Chương " + chapter;
 
+        FindTheoryPanel();
+
         System.Action next = null;
-        if(chapter < chapterButtons.Length) next = () => OpenTheory(chapter + 1);
-        theoryPanel.Show(id, next);
+        if (chapterButtons != null && chapter < chapterButtons.Length)
+            next = () => OpenTheory(chapter + 1);
+
+        if (theoryPanel != null)
+        {
+            theoryPanel.Show(id, next);
+        }
+        else
+        {
+            Debug.LogError("[ChemistryMapController] Không tìm thấy theoryPanel (theory_chemistry)!");
+        }
     }
 
     void CloseTheory()

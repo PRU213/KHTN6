@@ -9,7 +9,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 /// <summary>Guided practice and Planet remediation. Server owns mastery and history.</summary>
-public sealed class EssayTutorUI : MonoBehaviour
+public sealed partial class EssayTutorUI : MonoBehaviour
 {
     [Serializable] public class Turn { public int step; public bool checking, correct; public string prompt, answer, explanation, at; }
     [Serializable] public class Record {
@@ -18,7 +18,7 @@ public sealed class EssayTutorUI : MonoBehaviour
         public int finalScore; public Penalty penalty;
         public string sourceId, blockedBy;
     }
-    [Serializable] public class Penalty { public string status, kind, content, feedback, createdAt, completedAt, redoQuestion, redoSolution; public int required, count; public bool redoPassed, copyOnce; }
+    [Serializable] public class Penalty { public string status, kind, content, feedback, createdAt, completedAt, redoQuestion, redoSolution, chapterContent; public int required, count; public bool redoPassed, copyOnce, biologyChapter; }
     [Serializable] public class CopyImage { public string base64, mimeType; }
     [Serializable] class CopyDraft { public string id, username; public CopyImage[] images; }
     [Serializable] public class QuizMistake { public string id; public int chosen; }
@@ -33,7 +33,7 @@ public sealed class EssayTutorUI : MonoBehaviour
     [Serializable] class Response : Record {
         public string error, token; public bool teacher; public Record[] records;
         public PlanetDuelController.ReviewQuestion[] reviewQuestions; public int reviewPending;
-        public int duelReviewVersion, copyPenaltyVersion;
+        public int duelReviewVersion, copyPenaltyVersion, biologyTutorVersion;
     }
     [Serializable] class Settings { public string serverUrl; }
     static EssayTutorUI instance;
@@ -324,7 +324,7 @@ public sealed class EssayTutorUI : MonoBehaviour
         SetPlayGateVisible(false);
         CloseCopyCameraPanel();
         current = record; listMode = false; Clear();
-        title.text = teacher ? "NHẬT KÝ HỌC LẠI • " + username : "CÙNG THẦY AI LÀM LẠI";
+        title.text = teacher ? "NHẬT KÝ HỌC LẠI • " + username : (record.sourceId ?? "").StartsWith("biology:") ? "AI HƯỚNG DẪN SINH HỌC" : "CÙNG THẦY AI LÀM LẠI";
         status.text = Status(record) + " • Đã qua " + record.step + "/" + record.total + " bước";
         Paragraph(Subject(record.subject) + " • " + record.chapter + "\n" + record.question + "\nĐiểm kiến thức: " + record.score + "/10 • Sau trừ gợi ý: " + record.finalScore + "/10");
         if (!string.IsNullOrEmpty(record.studentAnswer)) Paragraph("BÀI LÀM / LỰA CHỌN BAN ĐẦU\n" + record.studentAnswer);
@@ -356,10 +356,11 @@ public sealed class EssayTutorUI : MonoBehaviour
         if (p == null) return;
         bool legacyRequirement = p.status != "completed" && p.required > 1;
         if (legacyRequirement) Paragraph("MÁY CHỦ CHƯA ÁP DỤNG QUY TẮC CHÉP 1 LẦN\nMáy chủ vẫn yêu cầu " + p.required + " lần. Cần deploy backend mới lên Render, rồi bấm Tải lại để đổi nhiệm vụ này về 1 lần. Không cần chép thêm hoặc nộp lại ảnh lúc này.");
-        Paragraph("CHÉP PHẠT • " + Status(record) + "\nViết tay đề và lời giải đầy đủ 1 lần; AI xác nhận đạt mới được chuyển câu.\n"
+        Paragraph("CHÉP PHẠT • " + Status(record) + (p.biologyChapter ? "\nViết tay nội dung chương, đề bài và đáp án đúng 1 lần; AI xác nhận đủ cả các phần mới được chuyển câu.\n" : "\nViết tay đề và lời giải đầy đủ 1 lần; AI xác nhận đạt mới được chuyển câu.\n")
             + (p.required > 0 ? "Đã đạt " + Mathf.Min(p.count, p.required) + "/" + p.required + " bài viết tay theo yêu cầu máy chủ." : "Nội dung chép sẽ mở ngay sau khi học lại xong câu này.")
             + (p.required > 0 ? "\nCHÉP ĐỀ VÀ LỜI GIẢI ĐẦY ĐỦ 1 LẦN (không cần chép thêm bản riêng).\nĐỀ: " + p.redoQuestion + "\nLỜI GIẢI: " + (string.IsNullOrEmpty(p.redoSolution) ? p.content : p.redoSolution) + "\nBài viết lại: " + (p.redoPassed ? "Đạt" : "Chưa đạt") : "")
             + "\n" + p.feedback + (string.IsNullOrEmpty(p.completedAt) ? "" : "\nHoàn thành: " + LocalDate(p.completedAt)));
+        if (p.biologyChapter) Paragraph("NỘI DUNG CHƯƠNG CẦN CHÉP\n" + p.chapterContent);
         if (p.status == "completed") { DeleteCopyDraft(record.id); return; }
         if (teacher || record.status != "completed") return;
         if (legacyRequirement) return;
@@ -530,6 +531,12 @@ public sealed class EssayTutorUI : MonoBehaviour
         continueButton.gameObject.SetActive(completed);
         homeButton.gameObject.SetActive(false);
         if (completed) {
+            var biology = FindBiologyForCurrentLesson();
+            if (biology != null) {
+                continueButton.GetComponentInChildren<TMP_Text>().text = "Tiếp tục Sinh học";
+                continueButton.interactable = !busy && biology.CanContinueBiologyTutorial(current.id);
+                return;
+            }
             var practice = FindPracticeForCurrentLesson();
             var duel = FindDuelForCurrentLesson();
             bool practiceLesson = (current.sourceId ?? "").StartsWith("practice:");
@@ -563,6 +570,11 @@ public sealed class EssayTutorUI : MonoBehaviour
     void ContinueAfterLearning()
     {
         if (busy || teacher || listMode || current == null || current.status != "completed" || (current.penalty != null && current.penalty.status != "completed") || !gameObject.activeInHierarchy) return;
+        var biology = FindBiologyForCurrentLesson();
+        if (biology != null) {
+            if (biology.ContinueBiologyTutorial(current.id)) gameObject.SetActive(false);
+            return;
+        }
         if (InQuizReview(current)) { ShowQuizReviewList(); return; }
         var practice = FindPracticeForCurrentLesson();
         if (practice == null) {
@@ -590,6 +602,9 @@ public sealed class EssayTutorUI : MonoBehaviour
     void Reload()
     {
         if (busy) return;
+        if (deferredPath == "biology-start" && (current == null || string.IsNullOrEmpty(current.id))) {
+            StartCoroutine(Load(deferredPath, deferredBody)); return;
+        }
         if (planetReviewLoaded != null && deferredPath != null && deferredPath.StartsWith("/review/")) StartCoroutine(Load(deferredPath, deferredBody));
         else if (listMode || current == null) {
             if (teacher) StartCoroutine(Load("list", new Request { username = username })); else LoadHistoryOrQuiz();
@@ -609,7 +624,7 @@ public sealed class EssayTutorUI : MonoBehaviour
         if (!teacher && !string.Equals(body.username, CurrentUsername, StringComparison.OrdinalIgnoreCase)) { gameObject.SetActive(false); yield break; }
         deferredPath = path; deferredBody = body;
         bool planet = path.StartsWith("/review/");
-        if (planet || playAllowed != null || path == "quiz-review" || path.StartsWith("copy-")) {
+        if (planet || playAllowed != null || path == "quiz-review" || path == "biology-start" || path.StartsWith("copy-")) {
             busy = true; SetControls(); status.text = "Đang kiểm tra máy chủ học lại…";
             using (var health = UnityWebRequest.Get(url.TrimEnd('/') + "/health")) {
                 pending = health; health.timeout = 45;
@@ -623,6 +638,10 @@ public sealed class EssayTutorUI : MonoBehaviour
                 }
                 if (planet && capability.duelReviewVersion < 1) {
                     ShowReviewServiceError(ReviewServerUpdateMessage);
+                    yield break;
+                }
+                if (path == "biology-start" && capability.biologyTutorVersion < 1) {
+                    ShowReviewServiceError("Máy chủ chưa hỗ trợ hướng dẫn và chép phạt Sinh học. Bài cần học lại vẫn được giữ; bấm Tải lại sau khi dịch vụ được cập nhật.");
                     yield break;
                 }
                 if (!planet && capability.copyPenaltyVersion < 2) {
@@ -676,7 +695,8 @@ public sealed class EssayTutorUI : MonoBehaviour
         if (playAllowed != null) {
             busy = false; playGateMessage.text = message; return;
         }
-        busy = false; Clear(); status.text = "Chưa mở được phần học lại đối kháng";
+        busy = false; Clear(); status.text = deferredPath == "biology-start" || (current?.sourceId ?? "").StartsWith("biology:")
+            ? "Chưa mở được hướng dẫn Sinh học" : "Chưa mở được phần học lại đối kháng";
         Paragraph(message); SetControls();
     }
     void Cancel() { StopAllCoroutines(); pending?.Abort(); pending?.Dispose(); pending = null; busy = false; if (password != null) { password.interactable = true; password.text = ""; } }

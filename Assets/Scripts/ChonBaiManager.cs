@@ -27,7 +27,7 @@ public class ChonBaiManager : MonoBehaviour
     [Header("Settings")]
     public string monHocFilter = "Sinh học";
     public string webAppUrl = "https://script.google.com/macros/s/AKfycbxLHvShuipgPg7x28IikDmzU7wHoE2e3ai9rhuoEnN50UsFUAWIPTG_nneHOxz-YmaY/exec";
-    public string sheetCSVUrl = "https://docs.google.com/spreadsheets/d/1DcJwlN_fUDdcaQ6IfnlkMJApgWuEUqMhyZv9Kn8vfWo/export?format=csv&gid=1463734910";
+    public string sheetCSVUrl = BiologyQuestionBank.CsvUrl;
 
     [Header("Item Styling")]
     public Sprite itemSprite;
@@ -409,184 +409,75 @@ public class ChonBaiManager : MonoBehaviour
 
     private void InitDefaultData()
     {
-        chapters.Clear();
-        foreach (string ch in DefaultBiologyChapters)
-        {
-            if (!chapters.Contains(ch))
-            {
-                chapters.Add(ch);
-            }
-        }
-
-        if (allQuestions.Count == 0)
-        {
-            for (int i = 0; i < DefaultBiologyChapters.Length; i++)
-            {
-                string ch = DefaultBiologyChapters[i];
-                allQuestions.Add(new QuestionData
-                {
-                    id = $"BIO_DEF_{i+1}_1",
-                    monId = "Sinh học",
-                    topic = ch,
-                    difficulty = "Dễ",
-                    question = $"Câu hỏi luyện tập {ch} (Mức Dễ)",
-                    optionA = "Phương án A",
-                    optionB = "Phương án B",
-                    optionC = "Phương án C",
-                    optionD = "Phương án D",
-                    correct = "A",
-                    explanation = $"Giải thích chi tiết cho kiến thức {ch}.",
-                    points = 10
-                });
-                allQuestions.Add(new QuestionData
-                {
-                    id = $"BIO_DEF_{i+1}_2",
-                    monId = "Sinh học",
-                    topic = ch,
-                    difficulty = "Trung bình",
-                    question = $"Câu hỏi luyện tập {ch} (Mức Trung bình)",
-                    optionA = "Phương án A",
-                    optionB = "Phương án B",
-                    optionC = "Phương án C",
-                    optionD = "Phương án D",
-                    correct = "B",
-                    explanation = $"Giải thích chi tiết cho kiến thức {ch}.",
-                    points = 20
-                });
-                allQuestions.Add(new QuestionData
-                {
-                    id = $"BIO_DEF_{i+1}_3",
-                    monId = "Sinh học",
-                    topic = ch,
-                    difficulty = "Khó",
-                    question = $"Câu hỏi luyện tập {ch} (Mức Khó)",
-                    optionA = "Phương án A",
-                    optionB = "Phương án B",
-                    optionC = "Phương án C",
-                    optionD = "Phương án D",
-                    correct = "C",
-                    explanation = $"Giải thích chi tiết cho kiến thức {ch}.",
-                    points = 30
-                });
-            }
-        }
+        // Chapter labels may render immediately, but only real Sheet questions can enter a game.
+        chapters.Clear(); chapters.AddRange(DefaultBiologyChapters);
+        allQuestions.Clear();
     }
+
+    private bool biologyBankLoading;
+    private GameObject biologyBankNotice;
+    private Text biologyBankNoticeText;
+
+    private void ShowBiologyBankNotice(string message)
+    {
+        if (biologyBankNotice == null) {
+            var canvas = GetComponent<Canvas>() ?? GetComponentInParent<Canvas>();
+            if (canvas == null) return;
+            var shade = new GameObject("Biology question load notice", typeof(RectTransform), typeof(Image), typeof(Canvas), typeof(GraphicRaycaster));
+            shade.transform.SetParent(canvas.transform, false);
+            var rect = shade.GetComponent<RectTransform>(); rect.anchorMin = Vector2.zero; rect.anchorMax = Vector2.one; rect.offsetMin = rect.offsetMax = Vector2.zero;
+            shade.GetComponent<Image>().color = new Color(0, .03f, .02f, .93f);
+            var layer = shade.GetComponent<Canvas>(); layer.overrideSorting = true; layer.sortingOrder = 1300;
+            biologyBankNotice = shade;
+            var label = new GameObject("Message", typeof(RectTransform), typeof(Text)); label.transform.SetParent(shade.transform, false);
+            rect = label.GetComponent<RectTransform>(); rect.anchorMin = new Vector2(.18f, .45f); rect.anchorMax = new Vector2(.82f, .70f); rect.offsetMin = rect.offsetMax = Vector2.zero;
+            biologyBankNoticeText = label.GetComponent<Text>(); biologyBankNoticeText.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            biologyBankNoticeText.fontSize = 30; biologyBankNoticeText.color = Color.white; biologyBankNoticeText.alignment = TextAnchor.MiddleCenter;
+            biologyBankNoticeText.raycastTarget = false;
+            var close = new GameObject("Close", typeof(RectTransform), typeof(Image), typeof(Button)); close.transform.SetParent(shade.transform, false);
+            rect = close.GetComponent<RectTransform>(); rect.anchorMin = new Vector2(.36f, .28f); rect.anchorMax = new Vector2(.64f, .39f); rect.offsetMin = rect.offsetMax = Vector2.zero;
+            close.GetComponent<Image>().color = new Color(.15f, .38f, .22f);
+            var button = close.GetComponent<Button>(); button.targetGraphic = close.GetComponent<Image>(); button.onClick.AddListener(() => biologyBankNotice.SetActive(false));
+            var caption = new GameObject("Text", typeof(RectTransform), typeof(Text)); caption.transform.SetParent(close.transform, false);
+            rect = caption.GetComponent<RectTransform>(); rect.anchorMin = Vector2.zero; rect.anchorMax = Vector2.one; rect.offsetMin = rect.offsetMax = Vector2.zero;
+            var text = caption.GetComponent<Text>(); text.font = biologyBankNoticeText.font; text.fontSize = 28; text.text = "Quay lại chọn bài"; text.color = Color.white; text.alignment = TextAnchor.MiddleCenter; text.raycastTarget = false;
+        }
+        biologyBankNoticeText.text = message;
+        biologyBankNotice.SetActive(true);
+    }
+
 
     private IEnumerator LoadDataRoutine()
     {
-        bool loaded = false;
-
-        string apiUrl = $"{webAppUrl}?action=questions&subject={UnityWebRequest.EscapeURL("Sinh học")}";
-        using (UnityWebRequest req = UnityWebRequest.Get(apiUrl))
-        {
-            req.certificateHandler = new BypassCertificate();
-            req.timeout = 8;
-            yield return req.SendWebRequest();
-
-            if (req.result == UnityWebRequest.Result.Success && !string.IsNullOrEmpty(req.downloadHandler.text))
-            {
-                try
-                {
-                    QuestionList apiData = JsonUtility.FromJson<QuestionList>(req.downloadHandler.text);
-                    if (apiData != null && apiData.questions != null && apiData.questions.Length > 0)
-                    {
-                        allQuestions.Clear();
-                        chapters.Clear();
-
-                        foreach (var q in apiData.questions)
-                        {
-                            allQuestions.Add(q);
-                            string topic = q.topic != null ? q.topic.Trim() : "";
-                            if (!string.IsNullOrEmpty(topic) && !chapters.Contains(topic))
-                            {
-                                chapters.Add(topic);
-                            }
-                        }
-
-                        loaded = true;
-                        Debug.Log($"[ChonBaiManager] Tải thành công {allQuestions.Count} câu hỏi từ API ({chapters.Count} chương).");
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Debug.LogWarning("[ChonBaiManager] Phân tích JSON thất bại: " + ex.Message);
-                }
-            }
+        if (biologyBankLoading) yield break;
+        biologyBankLoading = true;
+        using (var request = UnityWebRequest.Get(string.IsNullOrWhiteSpace(sheetCSVUrl) ? BiologyQuestionBank.CsvUrl : sheetCSVUrl.Trim())) {
+            request.timeout = 25;
+            yield return request.SendWebRequest();
+            if (request.result == UnityWebRequest.Result.Success) {
+                try { ParseCSV(request.downloadHandler.text); }
+                catch (Exception ex) { Debug.LogWarning("[Biology] " + ex.Message); }
+            } else Debug.LogWarning("[Biology] Chưa tải được Questions từ Google Sheet; bấm Bắt đầu để thử lại.");
         }
-
-        if (!loaded && !string.IsNullOrEmpty(sheetCSVUrl))
-        {
-            using (UnityWebRequest req = UnityWebRequest.Get(sheetCSVUrl))
-            {
-                req.certificateHandler = new BypassCertificate();
-                req.timeout = 8;
-                yield return req.SendWebRequest();
-
-                if (req.result == UnityWebRequest.Result.Success && !string.IsNullOrEmpty(req.downloadHandler.text))
-                {
-                    ParseCSV(req.downloadHandler.text);
-                    if (allQuestions.Count > 0)
-                    {
-                        loaded = true;
-                    }
-                }
-            }
-        }
-
-        if (loaded)
-        {
+        biologyBankLoading = false;
+        if (allQuestions.Count > 0) {
             PopulateChapterList();
+            if (biologyBankNotice != null && BiologyQuestionBank.Select(allQuestions, selectedChapter, selectedDifficulty).Count > 0) biologyBankNotice.SetActive(false);
         }
+        if (biologyBankNotice != null && biologyBankNotice.activeSelf)
+            biologyBankNoticeText.text = allQuestions.Count == 0 ? "Chưa tải được câu hỏi Sinh học từ Sheet. Quay lại và bấm Bắt đầu để thử tải lại."
+                : "Sheet chưa có câu đúng chương và độ khó đã chọn. Hãy chọn chương hoặc độ khó khác.";
     }
 
     private void ParseCSV(string csvData)
     {
-        List<string[]> parsedRows = ParseCSVFully(csvData);
-        if (parsedRows == null || parsedRows.Count <= 1) return;
-
-        allQuestions.Clear();
+        var parsed = BiologyQuestionBank.ParseCsv(csvData);
+        allQuestions.Clear(); allQuestions.AddRange(parsed);
         chapters.Clear();
-
-        bool isFirstRow = true;
-        foreach (string[] cols in parsedRows)
-        {
-            if (isFirstRow)
-            {
-                isFirstRow = false;
-                continue;
-            }
-
-            if (cols.Length >= 11)
-            {
-                string mon = cols[1].Trim();
-                if (mon.IndexOf("Sinh", StringComparison.OrdinalIgnoreCase) >= 0)
-                {
-                    QuestionData q = new QuestionData
-                    {
-                        id = cols[0].Trim(),
-                        monId = mon,
-                        topic = cols[2].Trim(),
-                        difficulty = cols[3].Trim(),
-                        question = cols[4].Trim(),
-                        optionA = cols.Length > 5 ? cols[5].Trim() : "",
-                        optionB = cols.Length > 6 ? cols[6].Trim() : "",
-                        optionC = cols.Length > 7 ? cols[7].Trim() : "",
-                        optionD = cols.Length > 8 ? cols[8].Trim() : "",
-                        correct = cols.Length > 9 ? cols[9].Trim() : "A",
-                        explanation = cols.Length > 10 ? cols[10].Trim() : "",
-                        points = (cols.Length > 11 && int.TryParse(cols[11], out int p)) ? p : 10
-                    };
-
-                    allQuestions.Add(q);
-                    string chapterName = q.topic;
-                    if (!string.IsNullOrEmpty(chapterName) && !chapters.Contains(chapterName))
-                    {
-                        chapters.Add(chapterName);
-                    }
-                }
-            }
-        }
+        foreach (var q in parsed) if (!string.IsNullOrWhiteSpace(q.topic) && !chapters.Contains(q.topic)) chapters.Add(q.topic);
     }
+
+
 
     private List<string[]> ParseCSVFully(string csvData)
     {
@@ -888,6 +779,13 @@ public class ChonBaiManager : MonoBehaviour
 
     private void StartGame()
     {
+        if (TuLuanController.HasSavedBiologyTutor) {
+            GameSession.Subject = "Sinh học";
+            GameSession.QuestionType = "Tự luận";
+            GameSession.questionSceneName = "TuLuan";
+            SceneManager.LoadScene("TuLuan");
+            return;
+        }
         Debug.Log($"[ChonBaiManager] Người chơi bấm nút 'Bắt đầu'!");
 
         PlayerPrefs.SetString("SelectedChapter", selectedChapter);
@@ -898,6 +796,13 @@ public class ChonBaiManager : MonoBehaviour
             selectedQuestionType.IndexOf("Luận", StringComparison.OrdinalIgnoreCase) >= 0 ||
             selectedQuestionType.Equals("TuLuan", StringComparison.OrdinalIgnoreCase));
 
+        if (!isTuLuan && BiologyQuestionBank.Select(allQuestions, selectedChapter, selectedDifficulty).Count == 0) {
+            ShowBiologyBankNotice("Đang tải câu hỏi Sinh học từ Sheet. Nếu bộ lọc trống, hãy chọn chương hoặc độ khó khác.");
+            Debug.LogWarning("[Biology] Chưa có câu đúng chương và độ khó đã chọn. Đang tải lại dữ liệu; hãy chọn lại bài nếu bộ lọc trống.");
+            StartCoroutine(LoadDataRoutine());
+            return;
+        }
+        GameSession.Chapter = selectedChapter;
         GameSession.QuestionType = isTuLuan ? "Tự luận" : "Trắc nghiệm";
         GameSession.Subject = "Sinh học";
         GameSession.questionSceneName = isTuLuan ? "TuLuan" : "bean_1_question";

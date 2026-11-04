@@ -14,7 +14,7 @@ using UnityEngine.UI;
 /// Quản lý logic toàn bộ màn hình Tự Luận môn Sinh học.
 /// Đảm bảo không thay đổi layout/sprite có sẵn, tự động phát hiện và liên kết các UI component.
 /// </summary>
-public class TuLuanController : MonoBehaviour
+public partial class TuLuanController : MonoBehaviour
 {
     public static TuLuanController Instance { get; private set; }
 
@@ -80,6 +80,24 @@ public class TuLuanController : MonoBehaviour
     private Color initialAnhColor = Color.white;
     private TuLuanGradingResult lastGradingResult = null;
     private TuLuanSubmissionData lastSubmission = null;
+    private BiologyEssayGuide biologyGuide;
+    private string biologyTutorSubmissionId = "";
+    private string biologyTutorId = "";
+    private string biologyTutorAccount = "";
+    private bool biologyTutorPending;
+    private bool biologyTutorContinuing;
+    private string damageAppliedForSubmission = "";
+
+    [Serializable] private class BiologyTutorPending
+    {
+        public string submissionId, questionId;
+    }
+
+    private static string BiologyTutorPendingKey => "Biology.PendingEssayTutor." + EssayTutorUI.CurrentUsername.Trim().ToLowerInvariant();
+    public static bool HasSavedBiologyTutor => !string.IsNullOrWhiteSpace(EssayTutorUI.CurrentUsername) && PlayerPrefs.HasKey(BiologyTutorPendingKey);
+    public bool HasPendingBiologyTutor => biologyTutorPending &&
+        string.Equals(biologyTutorAccount, EssayTutorUI.CurrentUsername, StringComparison.OrdinalIgnoreCase);
+    public static bool RequiresBiologyRemediation(float score) => score < 5f;
 
     public TuLuanSubmissionData LastSubmission => lastSubmission;
     public string CurrentSubmissionId => currentSubmissionId;
@@ -216,7 +234,11 @@ public class TuLuanController : MonoBehaviour
         }
         if (popupKetQua != null && !isSubmitting) popupKetQua.SetActive(false);
 
+        biologyGuide = BiologyEssayGuide.Attach(canvas, GetPreferredFont());
+        RestorePendingBiologyTutor();
         StartCoroutine(LoadQuestionRoutine());
+        if (HasPendingBiologyTutor) OpenBiologyTutor();
+        else if (biologyGuide != null) biologyGuide.Show();
     }
 
     /// <summary>
@@ -370,6 +392,7 @@ public class TuLuanController : MonoBehaviour
     /// </summary>
     public void OnTamDungClicked()
     {
+        if (isSubmitting) return;
         if (SceneManager.GetSceneByName("TamDung").isLoaded) return;
         Time.timeScale = 0f;
         SceneManager.LoadScene("TamDung", LoadSceneMode.Additive);
@@ -760,9 +783,10 @@ public class TuLuanController : MonoBehaviour
 
                 if (chosen == null && sheetQuestions.Count > 0)
                 {
+                    string curSub = !string.IsNullOrEmpty(GameSession.Subject) ? GameSession.Subject : PlayerPrefs.GetString("SelectedSubject", "Sinh học");
                     string selDiff = PlayerPrefs.GetString("SelectedDifficulty", "Dễ");
                     List<TuLuanQuestionData> filtered = sheetQuestions.FindAll(q =>
-                        q.monId.IndexOf("Sinh", StringComparison.OrdinalIgnoreCase) >= 0);
+                        GameSession.IsMatchingSubject(q.monId, curSub));
 
                     if (filtered.Count == 0) filtered = sheetQuestions;
 
@@ -830,6 +854,8 @@ public class TuLuanController : MonoBehaviour
     /// </summary>
     public void LoadNextQuestion()
     {
+        if (isSubmitting) return;
+        if (HasPendingBiologyTutor && !biologyTutorContinuing) { OpenBiologyTutor(); return; }
         // 1. Reset câu trả lời văn bản
         if (inputCauTraLoi != null)
         {
@@ -858,7 +884,7 @@ public class TuLuanController : MonoBehaviour
 
         // 4. Thông báo và focus lại ô nhập
         int remHealth = GameData.Instance != null ? GameData.Instance.currentHealth : 0;
-        ShowNotification($"Chưa đạt! Bị trừ 1 tim (còn {remHealth} tim). Hãy hoàn thành câu hỏi mới này!");
+        ShowNotification($"Còn {remHealth} tim. Hãy hoàn thành câu hỏi mới này!");
 
         // User focuses manually to avoid layout cycle
     }
@@ -1069,6 +1095,7 @@ public class TuLuanController : MonoBehaviour
                 selectedTexture = tex;
                 selectedImagePath = path;
                 selectedImageBytes = fileBytes;
+                currentSubmissionId = "";
                 selectedImageMimeType = (ext == ".png") ? "image/png" : "image/jpeg";
                 uploadedDriveFileId = "";
                 uploadedDriveFileUrl = "";
@@ -1157,6 +1184,7 @@ public class TuLuanController : MonoBehaviour
     /// </summary>
     public void OnSubmitClicked()
     {
+        if (HasPendingBiologyTutor) { OpenBiologyTutor(); return; }
         if (isSubmitting)
         {
             Debug.LogWarning("[TuLuan] Đang trong quá trình nộp bài, vui lòng chờ...");
@@ -1179,209 +1207,57 @@ public class TuLuanController : MonoBehaviour
             currentSubmissionId = Guid.NewGuid().ToString();
         }
 
-        StartCoroutine(SubmitRoutine(answerText, hasImage));
+        BeginBiologySubmission(answerText, hasImage);
     }
 
     private IEnumerator SubmitRoutine(string answerText, bool hasImage)
     {
-        isSubmitting = true;
-        if (btnNopBai != null) btnNopBai.interactable = false;
-
-        string currentUserId = GetCurrentUserId();
-        string questionId = currentQuestion != null ? currentQuestion.id : "TL_DEFAULT";
-
-        // 1. Thu thập dữ liệu bài nộp
-        TuLuanSubmissionData submission = new TuLuanSubmissionData
-        {
-            submissionId = currentSubmissionId,
-            userId = currentUserId,
-            cauHoiId = questionId,
-            cauTraLoi = answerText,
-            anhBaiLamPath = selectedImagePath,
-            anhBaiLamBytes = selectedImageBytes,
+        var submission = new TuLuanSubmissionData {
+            submissionId = currentSubmissionId, userId = GetCurrentUserId(),
+            cauHoiId = currentQuestion.id, cauTraLoi = answerText,
+            anhBaiLamPath = selectedImagePath, anhBaiLamBytes = selectedImageBytes,
             thoiGianNop = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
         };
-
-        Debug.Log($"[TuLuan] Bắt đầu nộp bài: ID={submission.submissionId} | User={submission.userId} | Câu={submission.cauHoiId} | Chữ={answerText.Length} ký tự | Có ảnh={hasImage}");
-
-        // 2. Nếu có ảnh: kiểm tra xem ảnh đã được upload Drive ở lần bấm trước chưa
-        string fileUrlToSubmit = "";
-        if (hasImage)
-        {
-            if (string.IsNullOrEmpty(uploadedDriveFileUrl))
-            {
-                ShowNotification("Đang tải ảnh bài làm lên Google Drive...");
-
-                bool uploadSuccess = false;
-                EssayImageUploadResponse uploadResp = null;
-                string uploadError = "";
-
-                yield return UploadEssayImageRoutine(
-                    submission.submissionId,
-                    selectedImageBytes,
-                    selectedImageMimeType,
-                    (success, resp, err) =>
-                    {
-                        uploadSuccess = success;
-                        uploadResp = resp;
-                        uploadError = err;
-                    }
-                );
-
-                if (!uploadSuccess)
-                {
-                    // Thất bại khi upload ảnh: Giữ nguyên văn bản & ảnh đã chọn, giữ currentSubmissionId để retry
-                    isSubmitting = false;
-                    if (btnNopBai != null) btnNopBai.interactable = true;
+        lastSubmission = submission;
+        if (hasImage) {
+            ShowLoading("Đang tải ảnh bài làm...", "Giữ nguyên bài làm trong khi tải ảnh.");
+            if (string.IsNullOrEmpty(uploadedDriveFileUrl)) {
+                bool uploaded = false; EssayImageUploadResponse image = null; string uploadError = null;
+                yield return UploadEssayImageRoutine(submission.submissionId, selectedImageBytes, selectedImageMimeType,
+                    (ok, response, error) => { uploaded = ok; image = response; uploadError = error; });
+                if (!uploaded || image == null || string.IsNullOrWhiteSpace(image.fileUrl)) {
                     submission.uploadStatus = "Tải ảnh thất bại";
-                    lastSubmission = submission;
-
-                    string displayErr = !string.IsNullOrEmpty(uploadError) ? uploadError : "Lỗi server Drive";
-                    ShowNotification($"Tải ảnh thất bại: {displayErr}. Nhấn Nộp bài để thử lại!");
-                    Debug.LogError($"[TuLuan] Upload ảnh thất bại: {uploadError} (Submission ID: {currentSubmissionId})");
+                    ShowGradingFailure("Chưa tải được ảnh bài làm. Văn bản và ảnh vẫn được giữ để thử lại. " + uploadError);
                     yield break;
                 }
-
-                uploadedDriveFileId = (uploadResp != null) ? uploadResp.fileId : "";
-                uploadedDriveFileUrl = (uploadResp != null) ? uploadResp.fileUrl : "";
-                uploadedDriveFileName = (uploadResp != null) ? uploadResp.fileName : "";
+                uploadedDriveFileId = image.fileId; uploadedDriveFileUrl = image.fileUrl; uploadedDriveFileName = image.fileName;
             }
-
-            submission.driveFileId = uploadedDriveFileId;
-            submission.driveFileUrl = uploadedDriveFileUrl;
-            submission.driveFileName = uploadedDriveFileName;
-            submission.uploadStatus = "Đã tải lên Drive";
-            fileUrlToSubmit = uploadedDriveFileUrl;
-            Debug.Log($"[TuLuan] Ảnh Drive đã sẵn sàng: FileId={submission.driveFileId} | Url={submission.driveFileUrl}");
+            submission.driveFileId = uploadedDriveFileId; submission.driveFileUrl = uploadedDriveFileUrl; submission.driveFileName = uploadedDriveFileName;
         }
-        else
-        {
-            submission.uploadStatus = "Không có ảnh";
-            fileUrlToSubmit = "";
+        ShowLoading("AI đang chấm bài...", "Đang gửi bài và nhận điểm, nhận xét từ AI.");
+        bool saved = false; string saveError = null;
+        lastSaveResponseJson = null;
+        yield return SaveSubmissionToSheetRoutine(submission.submissionId, submission.userId, submission.cauHoiId, answerText,
+            hasImage ? uploadedDriveFileUrl : "", (ok, response, error) => { saved = ok; saveError = error; });
+        submission.isSavedToSheet = saved;
+        submission.uploadStatus = saved ? "Đã lưu Sheet" : "Chưa xác nhận lưu Sheet";
+        TuLuanGradingResult result; string state, gradingError;
+        if (BiologyGradingStatus.ReadJson(lastSaveResponseJson, submission.submissionId, out result, out state, out gradingError)) {
+            AcceptBiologyGrade(submission, result); yield break;
         }
-
-        // 3. Tải ảnh hoàn tất -> Bắt đầu quá trình lưu bài và chấm AI: Hiển thị màn hình Loading
-        ShowLoading("AI đang chấm bài...", "Vui lòng chờ trong giây lát...");
-
-        bool sheetSuccess = false;
-        EssaySubmissionSaveResponse sheetResp = null;
-        string sheetError = "";
-
-        yield return SaveSubmissionToSheetRoutine(
-            submission.submissionId,
-            submission.userId,
-            submission.cauHoiId,
-            submission.cauTraLoi,
-            fileUrlToSubmit,
-            (success, resp, err) =>
-            {
-                sheetSuccess = success;
-                sheetResp = resp;
-                sheetError = err;
-            }
-        );
-
-        if (!sheetSuccess)
-        {
-            // Thất bại khi lưu vào sheet: Ẩn loading, giữ nguyên bài làm và ảnh để retry
-            HideLoading();
-            isSubmitting = false;
-            if (btnNopBai != null) btnNopBai.interactable = true;
-            submission.uploadStatus = "Lưu Sheet thất bại";
-            lastSubmission = submission;
-
-            string displayErr = !string.IsNullOrEmpty(sheetError) ? sheetError : "Lỗi lưu dữ liệu Sheet";
-            ShowNotification($"Lưu bài nộp thất bại: {displayErr}. Nhấn Nộp bài để thử lại!");
-            Debug.LogError($"[TuLuan] Lưu Sheet thất bại: {sheetError} (Submission ID: {currentSubmissionId})");
-            yield break;
+        if (BiologyGradingStatus.Terminal(state)) {
+            submission.trangThaiCham = state;
+            ShowGradingFailure(gradingError); yield break;
         }
-
-        submission.isSavedToSheet = true;
-        submission.uploadStatus = "Đã lưu Sheet - Chờ AI chấm";
-        lastSubmission = submission;
-
-        Debug.Log($"[TuLuan] Lưu Google Sheets thành công! ID={submission.submissionId} | AlreadyExists={(sheetResp != null && sheetResp.alreadyExists)}");
-
-        // 4. Nhận kết quả chấm AI:
-        bool gradingDone = false;
-        TuLuanGradingResult realResult = null;
-        string gradingErrorMessage = "";
-
-        // Kiểm tra xem backend đã chấm xong và trả về kết quả trực tiếp trong phản hồi chưa
-        if (sheetResp != null && sheetResp.completed)
-        {
-            float finalScore = sheetResp.score;
-            string finalStatus = (finalScore >= 5.0f) ? "ĐẠT" : "CHƯA ĐẠT";
-
-            realResult = new TuLuanGradingResult
-            {
-                score = finalScore,
-                maxScore = 10f,
-                reviewText = sheetResp.feedback,
-                improvementSuggestion = sheetResp.improvements,
-                detailJson = sheetResp.criteria,
-                status = finalStatus,
-                isMock = false
-            };
-            gradingDone = true;
-            Debug.Log($"[TuLuan] Đã nhận kết quả AI trực tiếp từ backend: Điểm={finalScore} | {finalStatus}");
-        }
-        else
-        {
-            // Nếu chưa xong trực tiếp: Gửi request kích hoạt backend và polling Google Sheets
-            yield return RequestBackendGradingRoutine(submission.submissionId);
-
-            yield return PollGradingResultRoutine(
-                submission.submissionId,
-                (success, result, err) =>
-                {
-                    gradingDone = success;
-                    realResult = result;
-                    gradingErrorMessage = err;
-                }
-            );
-        }
-
-        // Ẩn màn hình loading khi AI chấm xong
-        HideLoading();
-
-        if (gradingDone && realResult != null)
-        {
-            // Nhận kết quả AI thực tế thành công
-            submission.diemAI = realResult.score;
-            submission.nhanXetAI = realResult.reviewText;
-            submission.goiYCaiThien = realResult.improvementSuggestion;
-            submission.chiTietCham = realResult.detailJson;
-            submission.ketQua = realResult.status;
-            submission.trangThaiCham = "Completed";
-            lastSubmission = submission;
-
-            // Giải phóng trạng thái nộp bài cho lượt kế tiếp
-            isSubmitting = false;
-            if (btnNopBai != null) btnNopBai.interactable = true;
-            currentSubmissionId = "";
-            uploadedDriveFileId = "";
-            uploadedDriveFileUrl = "";
-            uploadedDriveFileName = "";
-
-            ShowResultPopup(realResult);
-        }
-        else
-        {
-            // AI chấm chưa hoàn tất hoặc timeout: Giữ nguyên bài làm của học sinh để retry
-            isSubmitting = false;
-            if (btnNopBai != null) btnNopBai.interactable = true;
-
-            string idShort = submission.submissionId.Length > 8
-                ? submission.submissionId.Substring(0, 8)
-                : submission.submissionId;
-
-            string notice = !string.IsNullOrEmpty(gradingErrorMessage)
-                ? $"Bài làm đã lưu (Mã: {idShort}...). {gradingErrorMessage}"
-                : $"Bài làm đã lưu (Mã: {idShort}...). AI đang ở trạng thái Chờ chấm (Pending). Backend cần kích hoạt trigger tự động.";
-
-            ShowNotification(notice);
-            Debug.LogWarning($"[TuLuan] AI chưa chấm xong hoặc timeout: {notice} (ID: {submission.submissionId})");
+        // saveEssaySubmission already starts grading. A second POST used to trigger another grading attempt.
+        // A timed-out save may have persisted successfully, so read its status before inviting a retry.
+        bool done = false;
+        yield return PollGradingResultRoutine(submission.submissionId, (ok, grade, error) => { done = ok; result = grade; gradingError = error; });
+        if (done && result != null) {
+            submission.isSavedToSheet = true; AcceptBiologyGrade(submission, result);
+        } else {
+            string detail = gradingError ?? saveError ?? "Chưa nhận được kết quả chấm.";
+            ShowGradingFailure(detail);
         }
     }
 
@@ -1420,7 +1296,9 @@ public class TuLuanController : MonoBehaviour
         {
             req.certificateHandler = new BypassCertificate();
             req.timeout = 45; // Timeout 45s cho file upload
+            activeSubmissionRequest = req;
             yield return req.SendWebRequest();
+            activeSubmissionRequest = null;
 
             if (req.result != UnityWebRequest.Result.Success)
             {
@@ -1487,7 +1365,9 @@ public class TuLuanController : MonoBehaviour
         {
             req.certificateHandler = new BypassCertificate();
             req.timeout = 30; // Timeout 30s
+            activeSubmissionRequest = req;
             yield return req.SendWebRequest();
+            activeSubmissionRequest = null;
 
             if (req.result != UnityWebRequest.Result.Success)
             {
@@ -1496,7 +1376,7 @@ public class TuLuanController : MonoBehaviour
             }
 
             string responseText = req.downloadHandler.text;
-            Debug.Log($"[TuLuan] Backend saveEssaySubmission response: {responseText}");
+            lastSaveResponseJson = responseText;
 
             EssaySubmissionSaveResponse resp = null;
             try
@@ -1523,117 +1403,38 @@ public class TuLuanController : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Gửi request yêu cầu backend chấm bài theo SubmissionID nếu có action hỗ trợ.
-    /// Nếu backend bảo mật không mở trực tiếp action cho ANYONE_ANONYMOUS, request sẽ thất bại êm thấm và luồng chuyển sang polling.
-    /// </summary>
-    private IEnumerator RequestBackendGradingRoutine(string submissionId)
+    /// <summary>Read the Biology grading status immediately, with a bounded real-time deadline.</summary>
+    public IEnumerator PollGradingResultRoutine(string submissionId, Action<bool, TuLuanGradingResult, string> callback)
     {
         string cleanUrl = (backendApiUrl ?? "").Trim();
-        if (string.IsNullOrEmpty(cleanUrl)) yield break;
-
-        WWWForm form = new WWWForm();
-        form.AddField("action", "gradeEssaySubmission");
-        form.AddField("submissionId", submissionId);
-
-        using (UnityWebRequest req = UnityWebRequest.Post(cleanUrl, form))
-        {
-            req.certificateHandler = new BypassCertificate();
-            req.timeout = 10;
-            yield return req.SendWebRequest();
-
-            if (req.result == UnityWebRequest.Result.Success)
-            {
-                Debug.Log($"[TuLuan] Backend grade request response: {req.downloadHandler.text}");
+        string separator = cleanUrl.Contains("?") ? "&" : "?";
+        string statusUrl = cleanUrl + separator + "action=getEssayGradingStatus&submissionId=" + UnityWebRequest.EscapeURL(submissionId);
+        string query = UnityWebRequest.EscapeURL("select * where A = '" + submissionId.Replace("'", "") + "'");
+        string csvUrl = "https://docs.google.com/spreadsheets/d/1DcJwlN_fUDdcaQ6IfnlkMJApgWuEUqMhyZv9Kn8vfWo/gviz/tq?tqx=out:csv&headers=1&sheet=BaiNopTuLuan&tq=" + query;
+        float deadline = Time.realtimeSinceStartup + 25f;
+        string lastError = "Dịch vụ chấm chưa trả kết quả. Bài làm vẫn được giữ; hãy thử chấm lại sau ít phút.";
+        bool csvOnly = string.IsNullOrEmpty(cleanUrl);
+        while (Time.realtimeSinceStartup < deadline) {
+            string state = "Pending", error = null; TuLuanGradingResult result = null;
+            using (var request = UnityWebRequest.Get(csvOnly ? csvUrl : statusUrl)) {
+                activeSubmissionRequest = request;
+                request.timeout = Mathf.Max(1, Mathf.Min(8, Mathf.CeilToInt(deadline - Time.realtimeSinceStartup)));
+                yield return request.SendWebRequest();
+                activeSubmissionRequest = null;
+                if (request.result == UnityWebRequest.Result.Success) {
+                    bool done = csvOnly
+                        ? BiologyGradingStatus.ReadRows(ParseCSVRows(request.downloadHandler.text), submissionId, out result, out state, out error)
+                        : BiologyGradingStatus.ReadJson(request.downloadHandler.text, submissionId, out result, out state, out error);
+                    if (done) { callback?.Invoke(true, result, null); yield break; }
+                    if (BiologyGradingStatus.Terminal(state)) { callback?.Invoke(false, null, error); yield break; }
+                    // Older deployments may not expose getEssayGradingStatus; use Sheet column names instead.
+                    if (!csvOnly && (string.IsNullOrEmpty(state) || state == "Unknown")) { csvOnly = true; continue; }
+                } else { lastError = "Kết nối dịch vụ chấm bị gián đoạn. Bài làm vẫn được giữ để thử lại."; if (!csvOnly) { csvOnly = true; continue; } }
             }
-            else
-            {
-                Debug.Log($"[TuLuan] Backend grade request ignored or restricted: {req.error}");
-            }
+            float remaining = deadline - Time.realtimeSinceStartup;
+            if (remaining > 0) yield return new WaitForSecondsRealtime(Mathf.Min(2f, remaining));
         }
-    }
-
-    /// <summary>
-    /// Thăm dò (polling) kết quả chấm AI thực tế từ Google Sheet BaiNopTuLuan qua Google Visualization Query API.
-    /// Polling mỗi 2.5 giây trong tối đa 25 giây (10 lần).
-    /// </summary>
-    public IEnumerator PollGradingResultRoutine(
-        string submissionId,
-        Action<bool, TuLuanGradingResult, string> callback)
-    {
-        string spreadsheetId = "1DcJwlN_fUDdcaQ6IfnlkMJApgWuEUqMhyZv9Kn8vfWo";
-        string sheetName = "BaiNopTuLuan";
-        string escapedQuery = UnityWebRequest.EscapeURL($"select * where A = '{submissionId}'");
-        string gvizUrl = $"https://docs.google.com/spreadsheets/d/{spreadsheetId}/gviz/tq?tqx=out:csv&sheet={sheetName}&tq={escapedQuery}";
-
-        const int maxPollAttempts = 10;
-        const float pollInterval = 2.5f;
-
-        for (int attempt = 1; attempt <= maxPollAttempts; attempt++)
-        {
-            yield return new WaitForSeconds(pollInterval);
-
-            using (UnityWebRequest req = UnityWebRequest.Get(gvizUrl))
-            {
-                req.certificateHandler = new BypassCertificate();
-                req.timeout = 15;
-                yield return req.SendWebRequest();
-
-                if (req.result != UnityWebRequest.Result.Success)
-                {
-                    Debug.LogWarning($"[TuLuan Polling] Lần {attempt}/{maxPollAttempts} lỗi mạng: {req.error}");
-                    continue;
-                }
-
-                string csvText = req.downloadHandler.text;
-                List<string[]> rows = ParseCSVRows(csvText);
-
-                // rows[0] là header, rows[1] là dòng dữ liệu nếu tìm thấy
-                if (rows != null && rows.Count >= 2)
-                {
-                    string[] cols = rows[1];
-                    if (cols != null && cols.Length >= 11)
-                    {
-                        string diemAiStr = cols[5].Trim();
-                        string nhanXetAi = cols.Length > 6 ? cols[6].Trim() : "";
-                        string goiYCaiThien = cols.Length > 7 ? cols[7].Trim() : "";
-                        string chiTietCham = cols.Length > 8 ? cols[8].Trim() : "";
-                        string trangThaiCham = cols[10].Trim();
-
-                        bool isCompleted = trangThaiCham.Equals("Completed", StringComparison.OrdinalIgnoreCase);
-                        bool hasScore = float.TryParse(diemAiStr, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out float scoreVal);
-
-                        if (isCompleted || (hasScore && !string.IsNullOrEmpty(diemAiStr)))
-                        {
-                            float finalScore = hasScore ? scoreVal : 0f;
-                            string finalStatus = (finalScore >= 5.0f) ? "ĐẠT" : "CHƯA ĐẠT";
-
-                            TuLuanGradingResult result = new TuLuanGradingResult
-                            {
-                                score = finalScore,
-                                maxScore = 10f,
-                                reviewText = nhanXetAi,
-                                improvementSuggestion = goiYCaiThien,
-                                detailJson = chiTietCham,
-                                status = finalStatus,
-                                isMock = false
-                            };
-
-                            Debug.Log($"[TuLuan Polling] Đã nhận kết quả AI thành công ở lần thử {attempt}: Điểm={finalScore} | {finalStatus}");
-                            callback?.Invoke(true, result, null);
-                            yield break;
-                        }
-                        else
-                        {
-                            Debug.Log($"[TuLuan Polling] Lần {attempt}/{maxPollAttempts}: Trạng thái '{trangThaiCham}', điểm '{diemAiStr}'");
-                        }
-                    }
-                }
-            }
-        }
-
-        // Hết thời gian chờ (Timeout)
-        callback?.Invoke(false, null, "Hết thời gian chờ kết quả AI (Timeout). Trạng thái hiện tại: Chờ chấm (Pending).");
+        callback?.Invoke(false, null, lastError);
     }
 
     /// <summary>
@@ -1668,7 +1469,7 @@ public class TuLuanController : MonoBehaviour
     #region Popup Result & UI Management
     /// <summary>
     /// Hiển thị popup kết quả chấm thi.
-    /// Nếu điểm < 5: Tương đương trả lời sai (trừ 1 tim, phải làm tiếp câu khác hoặc chơi lại nếu hết tim).
+    /// Nếu điểm < 5: Trừ 1 tim và bắt buộc học lại, chép nội dung chương cùng đáp án đúng trước khi tiếp tục.
     /// Nếu điểm >= 5: Tương đương trả lời đúng (tiêu diệt quái vật và tiếp tục di chuyển).
     /// </summary>
     public void ShowResultPopup(TuLuanGradingResult result)
@@ -1684,11 +1485,17 @@ public class TuLuanController : MonoBehaviour
         }
 
         // XỬ LÝ LOGIC TIM VÀ TRẠNG THÁI:
-        if (result.score < 5.0f)
+        if (RequiresBiologyRemediation(result.score))
         {
-            bool alive = GameData.Instance.TakeDamage();
+            // Reopening the result must not remove another heart for the same submission.
+            if (string.IsNullOrEmpty(currentSubmissionId) || damageAppliedForSubmission != currentSubmissionId)
+            {
+                GameData.Instance.TakeDamage();
+                damageAppliedForSubmission = currentSubmissionId;
+            }
             UpdateHealthIcons();
             result.status = "CHƯA ĐẠT";
+            MarkBiologyTutorPending();
         }
         else
         {
@@ -1788,6 +1595,8 @@ public class TuLuanController : MonoBehaviour
             popupKetQua.SetActive(false);
         }
 
+        if (HasPendingBiologyTutor) { OpenBiologyTutor(); return; }
+
         bool passed = lastGradingResult != null && lastGradingResult.score >= 5.0f;
 
         if (passed)
@@ -1817,6 +1626,84 @@ public class TuLuanController : MonoBehaviour
                 LoadNextQuestion();
             }
         }
+    }
+
+    private void MarkBiologyTutorPending()
+    {
+        biologyTutorPending = true;
+        biologyTutorAccount = EssayTutorUI.CurrentUsername;
+        biologyTutorSubmissionId = currentSubmissionId;
+        biologyTutorId = "";
+        if (!string.IsNullOrWhiteSpace(biologyTutorAccount) && !string.IsNullOrWhiteSpace(biologyTutorSubmissionId))
+        {
+            PlayerPrefs.SetString(BiologyTutorPendingKey, JsonUtility.ToJson(new BiologyTutorPending {
+                submissionId = biologyTutorSubmissionId, questionId = currentQuestion != null ? currentQuestion.id : ""
+            }));
+            PlayerPrefs.Save();
+        }
+        if (biologyGuide != null) biologyGuide.SetRemediationAction(OpenBiologyTutor);
+    }
+
+    private void RestorePendingBiologyTutor()
+    {
+        string json = PlayerPrefs.GetString(BiologyTutorPendingKey, "");
+        if (string.IsNullOrEmpty(json)) return;
+        try
+        {
+            var saved = JsonUtility.FromJson<BiologyTutorPending>(json);
+            if (saved == null || string.IsNullOrWhiteSpace(saved.submissionId)) return;
+            biologyTutorSubmissionId = saved.submissionId;
+            biologyTutorAccount = EssayTutorUI.CurrentUsername;
+            biologyTutorPending = true;
+            if (!string.IsNullOrEmpty(saved.questionId)) PassedQuestionId = saved.questionId;
+            if (biologyGuide != null) biologyGuide.SetRemediationAction(OpenBiologyTutor);
+        }
+        catch (Exception) { ShowNotification("Chưa đọc được bài học lại đã lưu. Vui lòng mở Nhật ký học lại để kiểm tra."); }
+    }
+
+    public void OpenBiologyTutor()
+    {
+        if (!HasPendingBiologyTutor) return;
+        if (string.IsNullOrWhiteSpace(biologyTutorSubmissionId))
+        {
+            ShowNotification("Cần kết quả chấm từ bài nộp thật để AI lưu hướng dẫn và kiểm tra bài chép. Kết quả thử nghiệm không mở khóa câu mới.");
+            if (biologyGuide != null) biologyGuide.Show();
+            return;
+        }
+        if (popupKetQua != null) popupKetQua.SetActive(false);
+        var popupScene = SceneManager.GetSceneByName("PopupKetQua");
+        if (popupScene.isLoaded)
+            foreach (var root in popupScene.GetRootGameObjects()) root.SetActive(false);
+        EssayTutorUI.OpenBiology(biologyTutorSubmissionId);
+    }
+
+    public bool BindBiologyTutorial(string id, string sourceId)
+    {
+        if (!isActiveAndEnabled || !HasPendingBiologyTutor || string.IsNullOrWhiteSpace(id)
+            || sourceId != "biology:" + biologyTutorSubmissionId) return false;
+        biologyTutorId = id;
+        return true;
+    }
+
+    public bool MatchesBiologyTutorial(string id) => isActiveAndEnabled && HasPendingBiologyTutor &&
+        !string.IsNullOrWhiteSpace(id) && id == biologyTutorId;
+
+    public bool CanContinueBiologyTutorial(string id) => MatchesBiologyTutorial(id) && !isSubmitting && !biologyTutorContinuing;
+
+    // Called by EssayTutorUI only after its server record confirms both learning and handwriting are completed.
+    public bool ContinueBiologyTutorial(string id)
+    {
+        if (!CanContinueBiologyTutorial(id)) return false;
+        biologyTutorContinuing = true;
+        biologyTutorPending = false;
+        PlayerPrefs.DeleteKey(BiologyTutorPendingKey);
+        PlayerPrefs.Save();
+        biologyTutorSubmissionId = biologyTutorId = "";
+        if (biologyGuide != null) biologyGuide.SetRemediationAction(null);
+        if (GameData.Instance != null && GameData.Instance.currentHealth <= 0) RestartGame();
+        else LoadNextQuestion();
+        biologyTutorContinuing = false;
+        return true;
     }
 
     /// <summary>
@@ -2284,7 +2171,7 @@ public class TuLuanController : MonoBehaviour
                 spinnerT.Rotate(0, 0, -45f);
             }
 
-            yield return new WaitForSeconds(0.4f);
+            yield return new WaitForSecondsRealtime(0.4f);
         }
     }
 

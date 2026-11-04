@@ -16,6 +16,7 @@ public class GameMenuController : MonoBehaviour
     public void OpenFromPhysics()
     {
         currentSubject = "Physics";
+        GameSession.Subject = "Vật lý";
 
         if (theoryPhysics != null)
             theoryPhysics.SetActive(false);
@@ -31,6 +32,7 @@ public class GameMenuController : MonoBehaviour
     public void OpenFromChemistry()
     {
         currentSubject = "Chemistry";
+        GameSession.Subject = "Hóa học";
 
         if (theoryPhysics != null)
             theoryPhysics.SetActive(false);
