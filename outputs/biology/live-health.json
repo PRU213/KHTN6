@@ -1,0 +1,9 @@
+{
+  "checkedAt": "2026-11-04T04:58:02.765Z",
+  "http": 200,
+  "ok": true,
+  "biologyTutorVersion": 1,
+  "copyPenaltyVersion": 2,
+  "journalReady": true,
+  "journalStorage": "googleSheets"
+}

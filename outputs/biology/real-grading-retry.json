@@ -1,0 +1,13 @@
+{
+  "success": true,
+  "submissionId": "8915c6ee-da19-4085-924c-c83a117cf2aa",
+  "status": "Completed",
+  "gradingStatus": "Completed",
+  "completed": true,
+  "score": 6,
+  "feedback": "Em đã nêu được một phần định nghĩa tế bào và kể được 2 trong 3 thành phần chính của tế bào nhân thực.",
+  "improvements": "Em cần bổ sung đầy đủ định nghĩa tế bào là đơn vị cơ sở cấu tạo và chức năng của sự sống, đồng thời kể thêm thành phần 'tế bào chất'.",
+  "criteria": "[{\"name\":\"Định nghĩa đúng tế bào là đơn vị cơ sở của sự sống\",\"score\":2,\"maxScore\":4},{\"name\":\"Kể đúng 3 thành phần chính: Màng tế bào, Tế bào chất, Nhân tế bào\",\"score\":4,\"maxScore\":6}]",
+  "result": "Dat",
+  "passed": true
+}

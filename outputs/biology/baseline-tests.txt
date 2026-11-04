@@ -1,0 +1,491 @@
+✔ review chat keeps question context on every turn and bounds untrusted input (2.8896ms)
+✔ quota reports remaining seconds and resets at the window boundary (0.9784ms)
+✔ cancelled requests release the client for a new question (0.4533ms)
+✔ total deadline cancels a slow provider and releases busy state (35.501ms)
+Gemini request failed: timeout
+Gemini attempt 1: HTTP 503
+Gemini request failed: timeout
+Gemini attempt 1: HTTP 429
+Gemini attempt 1: HTTP 503
+✔ deadline also interrupts retry backoff (30.7884ms)
+✔ quota from Gemini is not retried immediately (1.141ms)
+Gemini attempt 2: HTTP 503
+✔ persistent provider overload is reported separately from API configuration errors (1005.9099ms)
+Gemini attempt 1: HTTP 429
+Gemini request failed: connection error (unknown)
+Gemini attempt 1: HTTP 500
+✔ route separates sessions on the same IP and aborts on disconnect (52.2322ms)
+✔ missing key returns an actionable error, never a fake answer (0.3092ms)
+✔ Gemini receives server key, trusted instruction and multi-turn context (0.5612ms)
+✔ invalid requests, provider errors, timeout and blocked content are handled (0.7848ms)
+✔ concurrent requests from the same client are limited (0.3768ms)
+✔ chat route works without a duel token and preserves errors (13.1784ms)
+✔ final score including 6 creates copying; wrong answers during learning no longer trigger copying (9.752ms)
+✔ theory: requires 1, refuses typed/uncertain and never adds counts between submissions (4.6561ms)
+✔ calculation: requires 1, refuses typed/uncertain and never adds counts between submissions (1.6375ms)
+✔ failed AI calls do not count as mistakes or complete copying; revision and ownership checks remain (1.8584ms)
+✔ image validation rejects duplicate pages, malformed images and oversized batches (0.5135ms)
+✔ pending 5/10-copy tasks become one without auto-passing; old photos can be checked again and completed history stays intact (2.3912ms)
+✔ one handwritten question and complete solution is sufficient; missing either still blocks continuation (1.2404ms)
+✔ pending and completed copying survive restart and keep separate student accounts (33.2718ms)
+✔ HTTP start gates, authenticated uploads, teacher read-only and current practice deferral (170.8975ms)
+✔ multimodal copy checker sends image parts and trusts no student instructions (0.9023ms)
+✔ MC click history remains personal, wrong-then-correct still needs steps, initial scores never change (13.6734ms)
+✔ bullet collisions register the same wrong-answer history as direct clicks (1.7091ms)
+✔ clean correct answers need no remediation; future and countdown rounds are excluded (1.3753ms)
+✔ Biology essays use identical step remediation; AI still grading is not labelled wrong (1.4629ms)
+✔ failed registration blocks new joins and retries; timeout cleanup retains unsaved history (1.5362ms)
+✔ pending Planet obligations and completion survive restart without live match sessions (30.4631ms)
+✔ authenticated local registration validates bank and ignores forged completion/reference flags (215.7064ms)
+✔ a pre-existing queue ticket cannot use automatic/manual bot matching to bypass pending lessons (1.2099ms)
+✔ upgrading old Planet metadata preserves the active lesson and its answers (0.9846ms)
+✔ expired in-memory bank serves immediately while one background refresh replaces it (6.451ms)
+✔ temporary network failure preserves the approved bank and backs off repeated refresh attempts (1.6011ms)
+✔ validated snapshot survives process/source recreation and contains no credentials (7.9399ms)
+✔ snapshot from another URL or credential never substitutes for that source (7.1089ms)
+✔ old or corrupt disk snapshots cannot provide fabricated questions (9.9548ms)
+✔ upstream authorization or schema errors invalidate the bank instead of silently continuing (6.6669ms)
+✔ valid empty latest bank removes old questions rather than filling from stale data (4.0591ms)
+✔ essay bank covers five distinct questions per subject at every difficulty (3.9718ms)
+✔ essay and multiple choice never share a matchmaking queue (0.7623ms)
+✔ both players submit once; imperfect work in every Planet subject stays gated after reveal (2.917ms)
+✔ post-match review retains each seat own answer and excludes future questions (2.2159ms)
+✔ deadline waits for an in-flight grade and late submissions are rejected (0.8792ms)
+✔ failed grading allows retry without awarding a fake score (1.0466ms)
+✔ old grading results cannot score a later round or a finished match (0.5965ms)
+✔ bot essay match completes and returns a winner (1.1402ms)
+✔ grader sends trusted reference separately from student instructions and validates JSON scores (1.5194ms)
+✔ every essay round uses the difficulty-specific time limit (1.3542ms)
+✔ unreadable photos can be replaced without awarding zero or consuming submission (1.9818ms)
+✔ photo validation rejects forged types, malformed base64 and oversized images (0.5482ms)
+✔ image grading sends inline bytes and Sheet rubric, normalizing to ten points (0.4291ms)
+✔ grader separates off-topic readable content from unreadable input and never awards off-topic points (0.7639ms)
+✔ readable off-topic photo completes a duel submission with zero and preserves its transcription (0.3589ms)
+✔ HTTP accepts photo-only submissions over the old 100KB body limit (83.5935ms)
+✔ production join loads the Sheet bank instead of silently using sample questions (15.0022ms)
+✔ illustrated questions do not block text questions from other subjects (0.7347ms)
+✔ source maps Sheet fields and rejects an old deployment or incomplete rubric (0.3538ms)
+✔ essay source reports the actual deployment error instead of asking to replace all Apps Script code (0.4629ms)
+✖ standalone TuLuan reader restores the corrected main script without replacing rank or legacy submission helpers (4.9403ms)
+✔ concurrent Sheet loads share a request and expire after a minute (0.9319ms)
+✔ Sheet timeout reports a Vietnamese error and releases pending requests for retry (31.6644ms)
+✔ Apps Script reads headers by name, excludes unapproved rows and preserves existing routes (4.446ms)
+✔ HTTP essay route grades the authenticated ticket and ignores client-supplied scores (8.932ms)
+✔ Football Vật lý grades deadline text once despite expiry polling (3.4307ms)
+✔ Football Vật lý grades deadline photo once despite expiry polling (0.8044ms)
+✔ Football Hóa học grades deadline text once despite expiry polling (0.6311ms)
+✔ Football Hóa học grades deadline photo once despite expiry polling (0.9082ms)
+✔ Sheep Vật lý grades deadline text once despite expiry polling (0.4992ms)
+✔ Sheep Vật lý grades deadline photo once despite expiry polling (0.524ms)
+✔ Sheep Hóa học grades deadline text once despite expiry polling (0.6336ms)
+✔ Sheep Hóa học grades deadline photo once despite expiry polling (7.5113ms)
+✔ Cave Vật lý grades deadline text once despite expiry polling (0.4184ms)
+✔ Cave Vật lý grades deadline photo once despite expiry polling (0.4719ms)
+✔ Cave Hóa học grades deadline text once despite expiry polling (0.2754ms)
+✔ Cave Hóa học grades deadline photo once despite expiry polling (0.2971ms)
+✔ empty deadline submissions stay zero and submissions outside network grace cannot reopen the question (0.3051ms)
+✔ Football selects exactly five questions by subject, chapter and difficulty without answer leakage (0.9829ms)
+✔ chapter matching never mistakes chapter 1 for chapter 10 and accepts legacy chapter IDs (0.7054ms)
+✔ exit confirmation pauses the server deadline and resumes exactly once (0.3758ms)
+✔ Sheep uses the same five-question rules for both subjects and all difficulties (1.1411ms)
+✔ Cave uses the same five-question rules for both subjects and all difficulties (0.9422ms)
+✔ Football and Sheep sessions keep hints, points and progress separate (1.6419ms)
+✔ Cave keeps its hints and graded results separate from Football and Sheep (6.0876ms)
+✔ Sheep can submit a photo and finish five questions for a maximum of fifty points (0.966ms)
+✔ Cave can submit a photo and finish five questions for a maximum of fifty points (1.2338ms)
+✔ insufficient questions and missing lesson selection fail instead of borrowing other chapters (0.4901ms)
+✔ two hints are cached, sequential and deduct one plus two points without revealing the reference (1.1475ms)
+✔ Football applies hint costs to final points and recorded results, resetting each question (1.2303ms)
+✔ Sheep applies hint costs to final points and recorded results, resetting each question (0.9516ms)
+✔ Cave applies hint costs to final points and recorded results, resetting each question (0.8099ms)
+✔ failed or empty hints are free, while low scores and timeouts never become negative (0.6772ms)
+✔ failed hints do not consume allowance and late hint results do not enter the next question (0.8602ms)
+✔ duplicate submissions score only once and finished practice totals at most fifty (0.8724ms)
+✔ timeout queues guided learning without revealing solution and next question receives its own deadline (0.7239ms)
+✔ unreadable images and provider errors allow resubmission with a twenty-second grace period (0.8502ms)
+✔ Football grades a readable off-topic photo as zero instead of requesting another image (0.5294ms)
+✔ Sheep grades a readable off-topic photo as zero instead of requesting another image (0.4686ms)
+✔ Cave grades a readable off-topic photo as zero instead of requesting another image (0.3778ms)
+✔ hint provider uses the trusted reference without publishing it as a response field (0.6434ms)
+✔ Football HTTP start, hint, submit, next and leave work independently of duel tickets (151.3995ms)
+✔ Sheep HTTP start, hint, submit, next and leave work independently of duel tickets (107.6266ms)
+✔ Cave HTTP start, hint, submit, next and leave work independently of duel tickets (109.4422ms)
+✖ finished Planet match writes compatible history and raises the same user rank without duplicate names (5.343ms)
+✖ Code.gs: practice history round-trips subject/chapter while old rows remain blank (1.793ms)
+✔ Ma-da-sua.gs: practice history round-trips subject/chapter while old rows remain blank (3.0947ms)
+✖ lesson metadata preserves other columns and follows named headers instead of fixed indexes (1.6946ms)
+✖ corrected user main script routes match saves through POST and restores essay GET (5.8167ms)
+✖ retries are idempotent per player, including both human seats in the same match (1.6408ms)
+✖ essay, draw and signed duel points add to the weekly total without normalization (1.6167ms)
+✖ invalid records never append and named extra columns are preserved (1.7373ms)
+✖ rank works from match history without a progress sheet and preserves old practice rows (2.6391ms)
+✔ server exposes stable match identity and the actual maximum including speed bonus (5.1978ms)
+✔ weekly boundary is Monday midnight Vietnam, even across a year change (1.8719ms)
+✔ rank includes the week start, excludes previous week, future and undated rows, and keeps all history (1.9341ms)
+✖ new week resets the ranking by filtering, without deleting historical results (1.8134ms)
+✖ duplicate match rows and ID aliases never inflate the weekly sum; progress is not added twice (1.3939ms)
+✖ completed essay and multiple-choice practice add once through the same persistent result API (1.482ms)
+✖ offline retry keeps the completion week instead of assigning points to the upload week (1.6502ms)
+✔ Sheet date values and explicit Vietnamese strings are parsed without US date ambiguity (1.5655ms)
+✖ Code.gs: screenshot layout round-trips and ranks (1.6199ms)
+✔ Ma-da-sua.gs: screenshot layout round-trips and ranks (2.6014ms)
+✔ Code.gs practice routes read all ten chapters independently and preserve other GET routes (13.6991ms)
+✔ Ma-da-sua.gs practice routes read all ten chapters independently and preserve other GET routes (5.4807ms)
+✔ unapproved lessons cannot be accessed by list or by guessed ID (3.2837ms)
+✔ detail joins only the selected lesson, orders steps and supplies Unity-compatible config and images (3.3901ms)
+✔ invalid subjects, chapters, duplicate IDs and malformed scoped config report explicit failures (3.3947ms)
+✔ missing headers or steps and duplicate step order are not silently accepted (3.6902ms)
+✔ image URL conversion preserves resource keys, refuses local paths and does not fetch or change permissions (3.4931ms)
+✔ Football Physics: cannot advance until all tutorial steps are mastered (10.5047ms)
+✔ Sheep Physics: cannot advance until all tutorial steps are mastered (1.9323ms)
+✔ Cave Physics: cannot advance until all tutorial steps are mastered (1.6896ms)
+✔ Football Chemistry: cannot advance until all tutorial steps are mastered (1.8501ms)
+✔ Sheep Chemistry: cannot advance until all tutorial steps are mastered (1.8095ms)
+✔ Cave Chemistry: cannot advance until all tutorial steps are mastered (1.3728ms)
+✔ last question and missing tutorial storage cannot bypass the gate; perfect work can advance (1.2543ms)
+✔ quiz mistakes use authoritative bank answers and must finish learning AND copying in question order (8.153ms)
+✔ quiz validation rejects made-up IDs and a bad batch without registering partial data; correct answers need no penalty (0.5942ms)
+✔ quiz source reads existing questions endpoint, not client-supplied solutions (1.3402ms)
+✔ HTTP practice allows copying current reviewed question, but blocks next at final 9-3=6 until copying passes (132.447ms)
+✔ each difficulty supplies five distinct questions per subject and filters correctly (4.1253ms)
+✔ direct answer clicks respect stun, invalid indices, old rounds and single scoring (2.3175ms)
+✔ play with bot immediately preserves selected mode and difficulty and leaves the queue (1.0978ms)
+✔ a late bot request never replaces an already paired human opponent (0.4917ms)
+✔ automatic timeout and manual bot request do not create duplicate matches (3.488ms)
+✔ HTTP polling switches an existing searching ticket directly to bot play (62.8371ms)
+✔ explicit bot route immediately starts both question modes and is idempotent (29.2209ms)
+✔ explicit bot route requires a valid ticket and preserves a raced human match (12.4039ms)
+✔ two devices get the same authoritative questions, distinct seats and no leaked answer (0.947ms)
+✔ different subject selections pair into one mixed 15-question match (0.5523ms)
+✔ 120-second threshold creates bot exactly once and excludes late human (2.1011ms)
+✔ cancel removes queue ticket; leaving or disconnecting a match awards opponent (0.5009ms)
+✔ server rejects firing before start, enforces cooldown and does not accept client points (1.0156ms)
+✔ server collision awards one player and advances round only once (0.6497ms)
+✔ wrong hit stuns player and round timeout / complete game produces result (18.179ms)
+✔ planets roam, turn and stay inside bounds with identical positions on both clients (2.3189ms)
+✔ abandoned queue expires instead of creating a bot (0.294ms)
+✔ bot plays through normal bullets and can earn points without client input (5.9891ms)
+✔ HTTP join, poll, leave and invalid-session paths work over real socket (73.034ms)
+✔ unknown creates a specific saved hint, repeated unknown deepens it and retries are idempotent (7.1922ms)
+✔ a wrong answer on checking also requests useful guidance; correct answer still needs original criteria (1.2115ms)
+✔ guidance errors or malformed output keep committed answers and step intact (1.4953ms)
+✔ old lesson records accept new hints without resetting plan and reopened state retains guidance (1.0476ms)
+✔ journal survives a fresh server with no local files, including learning and completed copying (11.707ms)
+✔ large Unicode journals split into safe cells, retry is idempotent, stale writer cannot overwrite progress (33.079ms)
+✔ missing secret, wrong secret, damaged rows and a missing setup never silently become an empty journal (2.2808ms)
+✔ HTTP does not acknowledge learning changes until Sheet confirms; a failed write can safely retry (58.0312ms)
+✔ setup refuses a conflicting existing tab and invalidates optimistic revisions (1.8269ms)
+✔ invalid learning plan is retried once within one shared time budget before saving (5.2976ms)
+✔ repeated malformed plans report the exact field and remain retryable without saving invalid state (1.4737ms)
+✔ plan adapter supplies required schema without changing evaluation requests (0.9682ms)
+✔ only Physics/Chemistry imperfect knowledge scores create records, registration is idempotent (0.8299ms)
+✔ pending and in-progress views never return plan, reference, expected answers or solution (0.6972ms)
+✔ wrong and unknown answers explain just the current step, check again, never advance (1.2913ms)
+✔ solution unlocks only after every step is answered correctly; score stays unchanged (0.7801ms)
+✔ retry is idempotent, stale answers and empty input do not produce events or call AI (0.8393ms)
+✔ AI failures and malformed plans/evaluations keep the last committed state (0.8332ms)
+✔ overlapping requests cannot skip steps (0.9778ms)
+✔ journal survives restart with verification phase, transcript, idempotency and completion (19.2244ms)
+✔ disk failure does not acknowledge or advance an answer (1.4721ms)
+✔ real practice grading and timeout register remediation, hide answer leaks, leave scores and perfect work intact (4.5413ms)
+✔ Planet opts every subject into tutoring while practice Biology remains excluded (2.7152ms)
+✔ HTTP tutor start/answer/history uses server-owned records and rejects made-up IDs (121.5643ms)
+✔ journal login verifies the Users sheet and authoritative role; credentials never become a token payload (0.8551ms)
+✔ Gemini adapter requests structured JSON, ignores thought content and never accepts partial output (0.4035ms)
+ℹ tests 185
+ℹ suites 0
+ℹ pass 171
+ℹ fail 14
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1311.2595
+
+✖ failing tests:
+
+test at essay.test.mjs:266:1
+✖ standalone TuLuan reader restores the corrected main script without replacing rank or legacy submission helpers (4.9403ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  true !== false
+  
+      at TestContext.<anonymous> (file:///D:/code%20game/KHTN6/outputs/biology/baseline/PlanetServer/essay.test.mjs:275:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: true,
+    expected: false,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at match-history.test.mjs:44:1
+✖ finished Planet match writes compatible history and raises the same user rank without duplicate names (5.343ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  false !== true
+  
+      at TestContext.<anonymous> (file:///D:/code%20game/KHTN6/outputs/biology/baseline/PlanetServer/match-history.test.mjs:46:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.start (node:internal/test_runner/test:1191:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:385:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at match-history.test.mjs:57:49
+✖ Code.gs: practice history round-trips subject/chapter while old rows remain blank (1.793ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  false !== true
+  
+      at TestContext.<anonymous> (file:///D:/code%20game/KHTN6/outputs/biology/baseline/PlanetServer/match-history.test.mjs:59:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at match-history.test.mjs:70:1
+✖ lesson metadata preserves other columns and follows named headers instead of fixed indexes (1.6946ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  false !== true
+  
+      at TestContext.<anonymous> (file:///D:/code%20game/KHTN6/outputs/biology/baseline/PlanetServer/match-history.test.mjs:74:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at match-history.test.mjs:81:1
+✖ corrected user main script routes match saves through POST and restores essay GET (5.8167ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + undefined
+  - 'legacy-test'
+  
+      at TestContext.<anonymous> (file:///D:/code%20game/KHTN6/outputs/biology/baseline/PlanetServer/match-history.test.mjs:93:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: 'legacy-test',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at match-history.test.mjs:96:1
+✖ retries are idempotent per player, including both human seats in the same match (1.6408ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + undefined
+  - true
+  
+      at TestContext.<anonymous> (file:///D:/code%20game/KHTN6/outputs/biology/baseline/PlanetServer/match-history.test.mjs:98:18)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at match-history.test.mjs:103:1
+✖ essay, draw and signed duel points add to the weekly total without normalization (1.6167ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  undefined !== 90
+  
+      at TestContext.<anonymous> (file:///D:/code%20game/KHTN6/outputs/biology/baseline/PlanetServer/match-history.test.mjs:105:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: 90,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at match-history.test.mjs:111:1
+✖ invalid records never append and named extra columns are preserved (1.7373ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  false !== true
+  
+      at TestContext.<anonymous> (file:///D:/code%20game/KHTN6/outputs/biology/baseline/PlanetServer/match-history.test.mjs:117:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at match-history.test.mjs:120:1
+✖ rank works from match history without a progress sheet and preserves old practice rows (2.6391ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  90 !== 450
+  
+      at TestContext.<anonymous> (file:///D:/code%20game/KHTN6/outputs/biology/baseline/PlanetServer/match-history.test.mjs:123:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 90,
+    expected: 450,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at match-history.test.mjs:159:1
+✖ new week resets the ranking by filtering, without deleting historical results (1.8134ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  90 !== 450
+  
+      at TestContext.<anonymous> (file:///D:/code%20game/KHTN6/outputs/biology/baseline/PlanetServer/match-history.test.mjs:161:18)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 90,
+    expected: 450,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at match-history.test.mjs:170:1
+✖ duplicate match rows and ID aliases never inflate the weekly sum; progress is not added twice (1.3939ms)
+  TypeError: sheets.History.data[2] is not iterable
+      at TestContext.<anonymous> (file:///D:/code%20game/KHTN6/outputs/biology/baseline/PlanetServer/match-history.test.mjs:172:52)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+
+test at match-history.test.mjs:178:1
+✖ completed essay and multiple-choice practice add once through the same persistent result API (1.482ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  false !== true
+  
+      at TestContext.<anonymous> (file:///D:/code%20game/KHTN6/outputs/biology/baseline/PlanetServer/match-history.test.mjs:181:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at match-history.test.mjs:187:1
+✖ offline retry keeps the completion week instead of assigning points to the upload week (1.6502ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  false !== true
+  
+      at TestContext.<anonymous> (file:///D:/code%20game/KHTN6/outputs/biology/baseline/PlanetServer/match-history.test.mjs:190:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at match-history.test.mjs:204:49
+✖ Code.gs: screenshot layout round-trips and ranks (1.6199ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  false !== true
+  
+      at TestContext.<anonymous> (file:///D:/code%20game/KHTN6/outputs/biology/baseline/PlanetServer/match-history.test.mjs:209:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

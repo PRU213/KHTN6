@@ -117,8 +117,8 @@ public class PopupKetQuaController : MonoBehaviour
         rtScroll.anchorMin = new Vector2(0.5f, 0.5f);
         rtScroll.anchorMax = new Vector2(0.5f, 0.5f);
         rtScroll.pivot = new Vector2(0.5f, 0.5f);
-        rtScroll.anchoredPosition = new Vector2(0f, -45f);
-        rtScroll.sizeDelta = new Vector2(740f, 240f);
+        rtScroll.anchoredPosition = new Vector2(0f, -65f);
+        rtScroll.sizeDelta = new Vector2(740f, 210f);
 
         scrollNhanXet = scrollObj.GetComponent<ScrollRect>();
         scrollNhanXet.horizontal = false;
@@ -340,6 +340,7 @@ public class PopupKetQuaController : MonoBehaviour
         bool isPassed = LastResult != null && LastResult.score >= 5.0f;
         int currentHp = GameData.Instance != null ? GameData.Instance.currentHealth : 3;
         bool isGameOver = !isPassed && currentHp <= 0;
+        bool needsBiologyTutor = TuLuanController.Instance != null && TuLuanController.Instance.HasPendingBiologyTutor;
 
         // 1. Báo cho TuLuanController biết để xử lý logic:
         // - Nếu >= 5: Tiêu diệt quái và load lại game để tiếp tục di chuyển
@@ -351,7 +352,7 @@ public class PopupKetQuaController : MonoBehaviour
         }
 
         // 2. Nếu người chơi còn sống và cần làm tiếp câu khác trong TuLuan, unload popup
-        if (!isPassed && !isGameOver)
+        if ((!isPassed && !isGameOver) || needsBiologyTutor)
         {
             Scene popupScene = SceneManager.GetSceneByName("PopupKetQua");
             if (popupScene.isLoaded)
